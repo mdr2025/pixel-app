@@ -1,0 +1,25 @@
+
+
+.pdfBackgroundContainer{
+    position: absolute;
+    bottom: 0%;
+    width: 100%;
+    z-index: -1;
+}
+.blueLetter{
+    color: #1b2955;
+    font-weight: bold;
+    margin:0px;
+    }
+.redLetter{
+    color: #d41d1d;
+    font-weight: bold;
+    margin:0px;
+}
+/* .pdfBackgroundContainer .logo{
+    width: 80px;
+    height: 60px;
+    position: absolute;
+    bottom: 5%;
+    left: 2%
+} */

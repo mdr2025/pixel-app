@@ -1,0 +1,120 @@
+<?php
+
+namespace PixelApp\ServiceProviders;
+
+use Illuminate\Console\Scheduling\Schedule;
+use CRUDServices\ConfigManagers\ConfigManager;
+use Illuminate\Support\ServiceProvider;
+use PixelApp\Console\Commands\CreateCrudService;
+use PixelApp\Console\Commands\CreateStatisticCommand;
+use PixelApp\Console\Commands\RefreshTheProject;
+use PixelApp\Console\Commands\TenantCompanyApprovingTest;
+use Illuminate\Contracts\Debug\ExceptionHandler as LaravelExceptionHandlerInterface;
+use PixelApp\Config\ConfigValueManager;
+use PixelApp\Config\PixelConfigManager;
+use PixelApp\Console\Commands\CreateInterfaceCommand;
+use PixelApp\Console\Commands\CreateTrait;
+use PixelApp\Console\Commands\PixelAppInitCommands\PreparePixelApp;
+use PixelApp\Console\Commands\TenantSeedCommand;
+use PixelApp\CustomLibs\PixelCycleManagers\IOEncryptionManager\IOEncryptionManager;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppClients\PixelAdminPanelAppClient;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppsConnectionManager;
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+use PixelApp\Exceptions\PixelAppExceptionHandler;
+use PixelApp\Jobs\UsersModule\AuthJobs\UserRevokedAccessTokensDeleterJob;
+use PixelApp\PixelMacroableExtenders\PixelMacroableExtender;
+use PixelApp\ServiceProviders\Traits\ConfigFilesHandling;
+use Throwable;
+
+class PixelAppPackageServiceProvider extends ServiceProvider
+{ 
+    
+    use ConfigFilesHandling;
+ 
+    public function register()
+    {
+        //merging config files
+        $this->mergeConfigFiles(); 
+        $this->registerIOEncryptionObjects();
+        // Bind the custom exception handler
+        //$this->app->singleton(LaravelExceptionHandlerInterface::class, PixelAppExceptionHandler::class);
+    }
+
+    public function boot()
+    {
+        $this->prepareConfigFilesPublishing();
+  
+        PixelTenancyManager::RegisterPixelTenancyOnNeed($this->app);
+
+        $this->extendMacroables();
+
+        $this->booIOEncryptionFuncs();
+        $this->scheduledObjectsHandling();
+        $this->defineCommands();
+         
+    }
+
+    protected function defineCommands() : void
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                PreparePixelApp::class,
+                CreateInterfaceCommand::class,
+                CreateTrait::class,
+                RefreshTheProject::class,
+                TenantCompanyApprovingTest::class,
+                TenantSeedCommand::class
+            ]);
+        }
+    }
+ 
+    protected function registerIOEncryptionObjects() : void
+    {
+        IOEncryptionManager::registerObjects($this->app);
+    }
+
+    protected function booIOEncryptionFuncs() : void
+    {
+        IOEncryptionManager::bootFuncs();
+    }
+
+    // protected function registerPixelAppDefaultServiceProviders() : void
+    // {
+    //     $providers = ConfigValueManager::getPixelAppDefaultProviders();
+        
+    //     foreach ($providers as $provider) 
+    //     {
+    //         if (class_exists($provider)) 
+    //         {
+    //             $this->app->register($provider);
+    //         }  
+    //     }
+    // }
+      
+    protected function extendMacroables() : void
+    { 
+        foreach(PixelConfigManager::getPixelMacroableExtenders() as $extenderClass)
+        {
+            if(is_subclass_of($extenderClass , PixelMacroableExtender::class))
+            {
+                $extender = new $extenderClass();
+                $extender->extendMacroable();
+            }
+        }
+    }
+    /**
+     * Define the application's command schedule.
+     *
+     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @return void
+     */
+    protected function scheduledObjectsHandling()
+    {
+        $this->app->booted(function ()
+        {
+            $schedule = $this->app->make(Schedule::class);
+            $schedule->job(UserRevokedAccessTokensDeleterJob::class)->daily()->at('00:00');
+        });
+        
+    }
+}

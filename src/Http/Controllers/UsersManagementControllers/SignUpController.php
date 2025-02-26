@@ -1,0 +1,117 @@
+<?php
+
+namespace PixelApp\Http\Controllers\UsersManagementControllers;
+
+namespace PixelApp\Http\Controllers\WorkSector\UsersModule\UserTypeControllers;
+
+use PixelApp\Http\Controllers\PixelBaseController as Controller;
+use PixelApp\Models\WorkSector\UsersModule\User;
+use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+use PixelApp\Filters\MultiFilters;
+use PixelApp\Models\PixelModelManager;
+use PixelApp\Services\AuthenticationServices\UserAuthServices\EmailVerificationServices\UserVerificationNotificationResendingService;
+use PixelApp\Services\UsersManagement\EmailChangerService\EmailChangerService;
+use PixelApp\Services\UsersManagement\Statistics\SignupList\SignupUserStatisticsBuilder;
+use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\SignUpAccountStatusChanger;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
+
+class SignUpController extends Controller
+{
+    protected function getUserModelClass() : string
+    {
+        return PixelModelManager::getUserModelClass();
+    }
+
+    public function index(Request $request)
+    {
+//        BasePolicy::check('readSignUpList', User::class);
+
+        $data = QueryBuilder::for( $this->getUserModelClass() )
+            ->with(['profile', 'profile.country', 'department'])
+            ->allowedFilters($this->filters())
+            ->activeSignup()
+            ->datesFiltering()
+            ->customOrdering()
+            ->when($request->has('filter.email_verified_at'), function ($query) use ($request) {
+                if ($request->input('filter.email_verified_at') == 'verified') {
+                    return $query->whereNotNull('email_verified_at');
+                } elseif ($request->input('filter.email_verified_at') == 'not verified') {
+                    return $query->whereNull('email_verified_at');
+                }
+            })
+            ->paginate($request?->pageSize ?? 10);
+
+         $statistics = (new SignupUserStatisticsBuilder())->getStatistics();
+
+
+        return Response::success(['list' => $data, 'statistics' => $statistics]);
+    }
+
+    public function show($user): string
+    {
+//        BasePolicy::check('readSignUpList', User::class);
+        $user = $this->getUserModelClass()::findOrFail($user);
+        return Response::success(["item" => $user->only("id" , "email")]);
+    }
+
+    public function changeAccountEmail( $user) : JsonResponse
+    {
+//        BasePolicy::check('editSignUpUsers', User::class);
+        $user = $this->getUserModelClass()::findOrFail($user);
+        return (new EmailChangerService($user))->change();
+    }
+
+    /**
+     * @return JsonResponse
+     * reVerify user by email post data
+     */
+    public function resendVerificationTokenToUserEmail(): JsonResponse
+    {
+        return (new UserVerificationNotificationResendingService())->resend();
+    }
+
+    /**
+     * @param User $user
+     * @return JsonResponse
+     * reVerify user by user id route param
+     */
+    public function reVerifyEmail($user): JsonResponse
+    {
+        $user = $this->getUserModelClass()::findOrFail($user);
+        return (new UserVerificationNotificationResendingService())->setAuthenticatable($user)->resend();
+    }
+
+    public function changeAccountStatus($user): JsonResponse
+    {
+//        BasePolicy::check('editSignUpUsers', User::class);
+        $user = $this->getUserModelClass()::findOrFail($user);
+        return (new SignUpAccountStatusChanger($user))->change();
+    }
+
+    public function filters(): array
+    {
+        return  [
+            AllowedFilter::custom('created_at' , new MultiFilters(['created_at' , 'accepted_at'])),
+
+            "status",
+            AllowedFilter::exact("gender", "profile.gender"),
+            AllowedFilter::partial("national_id_number", "profile.national_id_number"),
+            AllowedFilter::partial("passport_number", "profile.passport_number"),
+            AllowedFilter::partial("country", "profile.country.name"),
+            AllowedFilter::callback('name', function (Builder $query, $value) {
+                $query->where('first_name', 'LIKE', "%{$value}%")
+                    ->orWhere('last_name', 'LIKE', "%{$value}%")
+                    ->orWhere('mobile', 'LIKE', "%{$value}%")
+                    ->orWhere('email', 'LIKE', "%{$value}%");
+            })
+        ];
+    }
+
+ 
+    public function export(){}
+}

@@ -1,0 +1,28 @@
+server {
+
+    listen 80;
+    server_name erp.local, *.erp.local;
+    root /var/www/html/erp_system_backend/public;
+
+    index index.php index.html;
+
+    location / {
+	 try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass php8-fpm:9000;
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+        fastcgi_read_timeout 300;
+    }
+
+    location ~ \.php$ {
+        return 404;
+    }
+
+    error_log /var/log/nginx/error.log;
+    access_log /var/log/nginx/access.log;
+}
