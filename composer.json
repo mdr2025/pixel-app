@@ -58,7 +58,7 @@
         }
     },
     "prefer-stable": true,
-    "repositories": [
+   "repositories": [
         {
             "type": "vcs",
             "url": "git@github.com:MuhammedALDRUBI/temporary-files-handlers.git"
@@ -110,6 +110,15 @@
         {
             "type": "vcs",
             "url": "git@github.com:MuhammedALDRUBI/pixel-dom-pdf.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:mdr2025/pixel-app.git"
         }
-    ]
+    ],
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
 }

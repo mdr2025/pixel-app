@@ -26,7 +26,16 @@ class UsersAPIRoutesRegistrar extends PixelRouteRegistrar
             $this->defineNormalAppRoutes(); 
         } 
     }
-
+    
+    
+    protected function definEmployeesListingUsersRoute()   : void
+    {
+        Route::get('list/employees', [UserController::class, 'list']); 
+    }
+    protected function definResbonsiablePersonsListingRoute()   : void
+    {
+        Route::get('list/responsible-persons', [UserController::class, 'list']);
+    }
     protected function defineUsersListingRoute() : void
     {
         Route::get('list/users', [UserController::class, 'list']);
@@ -73,6 +82,8 @@ class UsersAPIRoutesRegistrar extends PixelRouteRegistrar
             $this->defineExportRoute();
             $this->defineDefaultUsersListingRoute();
             $this->defineUsersListingRoute();
+            $this->definResbonsiablePersonsListingRoute();
+            $this->definEmployeesListingUsersRoute();
         });
     }
     

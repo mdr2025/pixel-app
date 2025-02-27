@@ -31,8 +31,9 @@ class AreasController extends Controller
         return Response::success(['list' => new AreasResource($data)]);
     }
 
-    public function show(Area $area)
+    public function show($area)
     {
+        $area = Area::findOrFail($area);
         return new SingleResource($area);
     }
 
@@ -76,7 +77,28 @@ class AreasController extends Controller
         return (new AreaDeletingService($area))->delete();
     }
 
-    public function import(){}
+    public function import()
+    {
+        $file = $import->file;
 
-    public function export(){}
+        return (new ImportBuilder())
+            ->file($file)
+            ->map(function ($item) {
+                $item = array_change_key_case($item);
+                return Area::create($item);
+            })
+            ->import();
+    }
+
+    public function export()
+    {
+        $taxes = QueryBuilder::for(Area::class)->allowedFilters($this->filterable)->datesFiltering()->customOrdering()->cursor();
+        $list  = new SheetCollection([
+            "Areas" => ExportBuilder::generator($taxes)
+        ]);
+        return (new ExportBuilder($request->type))
+            ->withSheet($list)
+            ->map(fn ($item) => ['No.' => $item['id'], 'Name' => $item['name'], 'Status' => $item['status']['label']])
+            ->name('Areas')->build();
+    }
 }

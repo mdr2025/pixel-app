@@ -14,8 +14,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class PixelBaseController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
-    
+ 
     public function paginateCollection($items, $perPage = 15, $page = null, $options = [],$type=null)
     {
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
