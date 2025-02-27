@@ -5,6 +5,7 @@ namespace PixelApp\Routes\RouteRegistrarTypes\UsersManagementRoutesRegistrars;
 use Illuminate\Support\Facades\Route;
 use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
+use PixelApp\Http\Controllers\UsersManagementControllers\SignUpController;
 use PixelApp\Routes\PixelRouteManager;
 
 class SignUpUsersAPIRoutesRegistrar extends PixelRouteRegistrar 

@@ -105,7 +105,7 @@ class PixelRouteManager
     {
         if (static::isItTenancySupportyerApp())
         {
-            Route::group(base_path('routes/tenant.php'));
+            Route::prefix()->group(base_path('routes/tenant.php'));
         }
     }
 

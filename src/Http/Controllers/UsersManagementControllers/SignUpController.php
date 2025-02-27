@@ -1,8 +1,6 @@
 <?php
 
-namespace PixelApp\Http\Controllers\UsersManagementControllers;
-
-namespace PixelApp\Http\Controllers\WorkSector\UsersModule\UserTypeControllers;
+namespace PixelApp\Http\Controllers\UsersManagementControllers; 
 
 use PixelApp\Http\Controllers\PixelBaseController as Controller;
 use PixelApp\Models\WorkSector\UsersModule\User;
