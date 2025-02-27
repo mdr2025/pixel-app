@@ -88,7 +88,11 @@ class PixelTenancyManager
     protected static function getPixelTenancyServiceProviderClass() : string
     {
         $tenancyServiceProviderClass = PixelConfigManager::getPixelTenancyServiceProviderClass();
-        if(is_subclass_of($tenancyServiceProviderClass , TenancyServiceProvider::class))
+        if(
+            $tenancyServiceProviderClass === TenancyServiceProvider::class
+            ||
+            is_subclass_of($tenancyServiceProviderClass , TenancyServiceProvider::class)
+          )
         {
             return $tenancyServiceProviderClass;
         }

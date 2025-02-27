@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\WorkSector\SystemConfigurationModels\RoleModel;
+use PixelApp\Models\SystemConfigurationModels\RoleModel;
 
 $highestRolePermisions = [
                                 ///////// system configurations /////////////

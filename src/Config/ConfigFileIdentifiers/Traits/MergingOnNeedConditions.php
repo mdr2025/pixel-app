@@ -1,5 +1,7 @@
 <?php
 
+namespace PixelApp\Config\ConfigFileIdentifiers\Traits;
+
 use Illuminate\Support\Facades\File;
 
 trait MergingOnNeedConditions

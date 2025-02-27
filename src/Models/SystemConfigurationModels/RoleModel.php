@@ -3,6 +3,7 @@
 namespace PixelApp\Models\SystemConfigurationModels;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use PixelApp\Models\PixelModelManager;
 use Spatie\Permission\Models\Role;
 
 class RoleModel extends Role
@@ -40,10 +41,14 @@ class RoleModel extends Role
     }
     public static function getLowestRoleName() : string
     {
-        return "User";
+        return "Default User";
     }
     public static function findLowestRole() : ?RoleModel
     {
         return static::where("name" , static::getLowestRoleName())->first();
+    }
+    public function user()
+    {
+        return $this->hasMany(PixelModelManager::getUserModelClass() , 'role_id');
     }
 }

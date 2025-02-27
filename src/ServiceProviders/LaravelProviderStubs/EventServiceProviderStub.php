@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
- use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use PixelApp\Events\EmailAuthenticatableEvents\EmailAuthenticatableRegisteredEvent;
 use PixelApp\Events\EmailAuthenticatableEvents\EmailChangingEvent;
 use PixelApp\Listeners\EmailAuthenticatableEventsListeners\EmailChangingMessageSenderListener;

@@ -17,17 +17,22 @@ class PixelModelManager
     public static function getUserModelClass() : string
     {
         $modelClass = PixelConfigManager::getUserModelClass() ;
-
+        $defaultUserModelClass = static::getDefaultPixelUserModelClass();
         if(!$modelClass)
         {
             dd("User model class is not set in pixel-config file");
         }
      
-        if(!is_subclass_of($modelClass , static::getDefaultPixelUserModelClass() ))
+        if(
+            $modelClass === $defaultUserModelClass
+            ||
+            is_subclass_of($modelClass , $defaultUserModelClass )
+            )
         {
-            dd("User model class must be child type of use PixelApp\Models\UsersModule\PixelUser type");
+            return $modelClass;
         }
-        return $modelClass;
+
+        dd("User model class must be child type of use PixelApp\Models\UsersModule\PixelUser type");
     }
  
     public static function getBaseTenantCompanyModelClass() : string
@@ -40,11 +45,12 @@ class PixelModelManager
         $modelClass = PixelConfigManager::getTenantCompanyModelClass() ;
         $baseTenantClass = static::getBaseTenantCompanyModelClass();
         
-        if(!$modelClass || !is_subclass_of($modelClass ,  $baseTenantClass))
+        if($modelClass === $baseTenantClass || is_subclass_of($modelClass ,  $baseTenantClass))
         {
-            dd("Tenant model class must be child type of $baseTenantClass type");
+            return $modelClass;
         }
-        return $modelClass;
+        
+        dd("Tenant model class must be child type of $baseTenantClass type");
     }
 
     public static function getProjectModelsPath() : string

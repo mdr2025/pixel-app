@@ -1,17 +1,14 @@
 <?php
 
 namespace PixelApp\Config;
-
-use Illuminate\Support\Facades\File;
-use PixelApp\Config\ConfigFileIdentifiers\ConfigFileIdentifier;
-use PixelApp\Config\ConfigValueGetters\ConfigValueGetters;
+ 
+use PixelApp\Config\ConfigFileIdentifiers\ConfigFileIdentifier; 
 use PixelApp\CustomLibs\PixelAppStubsManager\PixelAppStubsManager;
 use PixelApp\CustomLibs\PixelAppStubsManager\StubIdentifiers\StubIdentifier;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 
 class PixelConfigStubsManager extends PixelAppStubsManager
-{
-    use ConfigValueGetters;
+{ 
  
     public function getTenancyConfigFileIdentifierClass() : string
     {

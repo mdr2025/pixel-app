@@ -85,7 +85,44 @@ class DepartmentsController extends Controller
         return (new DepartmentDeletingService($department))->delete();
     }
 
-    public function export(){}
-    public function import(){}
-    public function downloadFileFormat(){}
+    public function import(ImportExcelRequest $request)
+    {
+        // BasePolicy::check('create', Department::class);
+        // $file = $request->file('file');
+        // $rules = [
+        //     'Name' => 'required|string|unique:departments,name',
+        // ];
+
+        // $columnHeaders =  ['Name'];
+        // $needed_columns = ['Name' => 'name']; // Dynamic array of column headers
+        // $relationNames = []; // Dynamic array of relation names
+
+        // try {
+
+        //     $this->excelService->import($file, $rules, new Department(), $columnHeaders, $relationNames, $needed_columns);
+        //     return response()->json(['message' => "data imported successfully"]);
+        // } catch (\Exception $e) {
+
+        //     return response()->json(['message' => $e->getMessage()], 406);
+        // }
+    }
+
+    public function export()
+    {
+        // BasePolicy::check('read', Department::class);
+        // // Retrieve the data to be exported
+        // $columnHeaders = ['Name'];
+        // $needed_columns = ['id', 'name']; // Dynamic array of column headers
+        // $relationNames = []; // Dynamic array of relation names
+        // $data = Department::get($needed_columns);
+
+        // $excelFile = $this->excelService->export($data->toArray(), new Department(), $columnHeaders, $relationNames);
+
+        // return response()->download($excelFile);
+    }
+    public function downloadFileFormat()
+    {
+        // BasePolicy::check('create', Department::class);
+        // return Excel::download(new DepartmentImportFormate(), 'format.xlsx',  WriteTypeExcel::XLSX, ['File-Name' => 'format_sample.xlsx']);
+    } 
 }

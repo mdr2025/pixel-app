@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
 use Spatie\QueryBuilder\AllowedFilter;  
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Country;
 use Stancl\Tenancy\Contracts\Tenant;
@@ -48,7 +50,18 @@ class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantW
         'domain',
         'sector',
         'country_id',
-        'logo'
+        'logo',
+        'mobile',
+        'address',
+        'employees_no',
+        'branches_no',
+        'registration_status',
+        'cr_no',
+        'parent_id',
+        'type',
+        'contractor_id',
+        'contractor_approved_status',
+        'main_company_approved_status'
     ];
     public static function getTableName() : string
     {
@@ -84,7 +97,18 @@ class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantW
             'logo',
             'hashed_id',
             'registration_status',
+            'employees_no',
+            'branches_no',
+            'package_status',
+            'mobile',
+            'address',
             'active',
+            'cr_no',
+            'contractor_approved_status',
+            'main_company_approved_status',
+            'type',
+            'contractor_id',
+            'parent_id',
             'created_at' ,
             'updated_at' ,
             'deleted_at'
@@ -92,6 +116,9 @@ class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantW
     }
     protected $casts = [
         "active" => "boolean",
+        'employees_no'=>'integer',
+        'branches_no'=>'integer',
+        'country_id'=>'integer',
     ];
 
     public function getConnectionName()
@@ -152,7 +179,7 @@ class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantW
     }
     public function generateCompanyIdString()  : self
     {
-        $this->company_id = "Co-" . $this->id;
+        $this->company_id = "Co-" . random_int(100000, 999999);
         return $this;
     }
 
@@ -197,6 +224,15 @@ class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantW
         return $this->hasOne(CompanyDefaultAdmin::class , "company_id" , "id");
     }
 
+    
+    public function parent()  : BelongsTo
+    {
+        return $this->belongsTo(TenantCompany::class ,'parent_id','id');
+    }
+    public function childern()  : HasMany
+    {
+        return $this->hasMany(TenantCompany::class,'parent_id','id');
+    }
     /**
      * To do later if it is necessary
      */

@@ -2,9 +2,13 @@
 
 namespace PixelApp\Models\SystemConfigurationModels;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use PixelApp\Models\PixelBaseModel;
 use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeededFromChildes;
+use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeedToAccessParentRelationships;
 
 /**
  * @property int $id
@@ -13,12 +17,12 @@ use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeededFromChilde
  * @property int $status
  * @property int $default
  */
-class Department extends PixelBaseModel implements NeededFromChildes
+class Department extends PixelBaseModel implements NeededFromChildes , NeedToAccessParentRelationships
 {
     use HasFactory;
     protected $table = "departments";
     const ROUTE_PARAMETER_NAME = "department";
-    protected $fillable = [ "name","parent_id","status" , "default"];
+    protected $fillable = [ "name","parent_id","status"  ];
 
     public function scopeActive($query)
     {
@@ -29,7 +33,10 @@ class Department extends PixelBaseModel implements NeededFromChildes
         'default' => 'boolean',
         'parent_id' => 'integer'
     ];
-
+    public function scopeWhereItIsParent(Builder | Relation $query)
+    {
+        $query->whereNull("parent_id"  );
+    }
     public function isActive() : bool
     {
         return (bool) $this->status;
@@ -49,8 +56,18 @@ class Department extends PixelBaseModel implements NeededFromChildes
             static::getTeamManagementDepartmentName() , "HR" , "Accounting"
         ];
     }
+    
+    public function getParentRelationshipsDetails(): array
+    {
+        return ["parent" => Department::class];
+    }
+
     public function parent()
     {
         return $this->belongsTo(Department::class, 'parent_id');
+    }
+    public function childDepartment() : HasOne
+    {
+        return $this->hasOne(Department::class, 'parent_id');
     }
 }

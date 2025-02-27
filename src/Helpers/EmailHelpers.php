@@ -1,10 +1,9 @@
 <?php
 
 namespace PixelApp\Helpers;
-
-use App\Models\CivilDefensePanel\CompanyModule\Company;
+ 
 use App\Services\SystemSettings\UsersModule\MailService;
-
+use PixelApp\Models\CompanyModule\TenantCompany;
 
 class EmailHelpers
 {
@@ -18,7 +17,7 @@ class EmailHelpers
 
     function codeExists($code, string $column)
     {
-        return Company::where($column, $code)->exists();
+        return TenantCompany::where($column, $code)->exists();
     }
 
     // public static function generateVerificationCode($model, string $column)

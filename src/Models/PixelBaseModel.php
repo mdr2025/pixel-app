@@ -10,10 +10,11 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use ReflectionClass;
-use RuntimeCaching\RuntimeCacheTypes\ParentModelRuntimeCache;
+use RuntimeCaching\RuntimeCacheTypes\ParentModelRuntimeCache; 
+use Statistics\Interfaces\ModelInterfaces\StatisticsProviderModel;
 
 
-class PixelBaseModel extends Model
+class PixelBaseModel extends Model implements StatisticsProviderModel
 {
     use UsingRunTimeCache, MustUploadModelFilesMethods, HasUUIDMethods;
     public static $snakeAttributes = false;
@@ -39,6 +40,11 @@ class PixelBaseModel extends Model
     {
         $title = Str::title($tableName);
         return Str::replace("_", " ", $title);
+    }
+    
+    public function getStatisticDateColumnName(): string
+    {
+        return "created_at";
     }
 
     public function __get($key)

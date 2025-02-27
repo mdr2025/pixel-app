@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Config\ConfigValueGetters;
+namespace PixelApp\Config\Traits;
 
 use PixelApp\Config\ConfigEnums\PixelAppTypeEnum; 
 use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\PixelAppACLConfigFileIdentifier;

@@ -101,7 +101,7 @@ class PixelRouteManager
         static::loadWebFileRoutes($callbackOnRouteRegistrar);
     } 
  
-    public function loadTenantRoutes()
+    public static function loadTenantRoutes()
     {
         if (static::isItTenancySupportyerApp())
         {

@@ -137,6 +137,16 @@ class UserController extends Controller
         ];
     }
 
-    public function export(){}
+    public function export(){
+        // BasePolicy::check('readEmployees', User::class);
+
+        // $columnHeaders = ['Name', 'Email', 'Mobile', 'Department', 'Role'];
+        // $needed_columns = ['id', 'name', 'email', 'mobile', 'department_id', 'role_id']; // Dynamic array of column headers
+        // $relationNames = ['department' => ['column' => 'name', 'display' => 'Department'], 'role' => ['column' => 'name', 'display' => 'Role']]; // Dynamic array of relation names
+        // $data = User::with(['department', 'role'])->get($needed_columns);
+
+        // $excelFile = $this->initExcelService()->export($data->toArray(), new User(), $columnHeaders, $relationNames);
+        // return response()->download($excelFile);
+    }
     
 }

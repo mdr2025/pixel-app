@@ -2,7 +2,7 @@
 
 namespace PixelApp\Config\ConfigFileIdentifiers\PixelAppRequiredPackagesConfigFileIdentifiers;
  
-use MergingOnNeedConditions;
+use PixelApp\Config\ConfigFileIdentifiers\Traits\MergingOnNeedConditions;
 use PixelApp\Config\ConfigFileIdentifiers\ConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\Interfaces\MergableConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\Interfaces\PublishableConfigFileIdentifier;

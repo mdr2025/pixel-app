@@ -26,7 +26,7 @@ use PixelApp\Routes\RouteRegistrarTypes\UsersManagementRoutesRegistrars\UserSign
 use PixelApp\ServiceProviders\RelatedPackagesServiceProviders\TenancyServiceProvider;
 
 return [ 
-    "pixel-app-type" =>  PixelAppTypeEnum::TENANT_APP_TYPE,
+    "pixel-app-type" =>  PixelAppTypeEnum::DEFAULT_PIXEL_APP_TYPE,
     "pixel-app-package-route-registrars" => [
         CompanyAuthenticationAPIRoutesRegistrar::class,
         UserAuthenticationAPIRoutesRegistrar::class,

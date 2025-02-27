@@ -19,7 +19,7 @@ use PixelApp\Config\ConfigFileIdentifiers\PixelAppRequiredPackagesConfigFileIden
 use PixelApp\Config\ConfigFileIdentifiers\PixelOptionalPackagesConfigFileIdentifires\TenancyConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\PixelAppACLConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\PixelAppConfigFileIdentifier;
-use PixelApp\Config\ConfigValueGetters\ConfigValueGetters;
+use PixelApp\Config\Traits\ConfigValueGetters;
 use PixelApp\CustomLibs\PixelAppStubsManager\PixelAppStubsManager;
 use PixelApp\CustomLibs\PixelAppStubsManager\StubIdentifiers\StubIdentifier;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
