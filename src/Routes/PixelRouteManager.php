@@ -20,7 +20,7 @@ class PixelRouteManager
                     );
     }
 
-    protected function initPixelRouteRegistrar(string $pixelRouteRegisstrarClass) : PixelRouteRegistrar
+    protected static function initPixelRouteRegistrar(string $pixelRouteRegisstrarClass) : PixelRouteRegistrar
     {
         if(is_subclass_of($pixelRouteRegisstrarClass , PixelRouteRegistrar::class))
         {

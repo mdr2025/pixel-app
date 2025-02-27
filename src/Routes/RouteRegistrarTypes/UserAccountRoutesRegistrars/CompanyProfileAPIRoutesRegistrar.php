@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Routes\RouteRegistrarTypes\UsersManagementRoutesRegistrars;
+namespace PixelApp\Routes\RouteRegistrarTypes\UserAccountRoutesRegistrars;
 
 use Illuminate\Support\Facades\Route;
 use PixelApp\Routes\PixelRouteRegistrar;

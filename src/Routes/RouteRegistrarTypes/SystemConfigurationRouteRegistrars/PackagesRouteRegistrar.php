@@ -1,7 +1,7 @@
 <?php
 
 
-namespace PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars;
+namespace PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars;
 
  
 use Illuminate\Support\Facades\Route;
