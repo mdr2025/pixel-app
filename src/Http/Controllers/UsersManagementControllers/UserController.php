@@ -9,12 +9,14 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use PixelApp\Filters\MultiFilters;
+use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\UserManagementResources\UsersListResource;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Services\UsersManagement\EmailChangerService\EmailChangerService;
 use PixelApp\Services\UsersManagement\Statistics\UsersList\UsersListStatisticsBuilder;
 use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\UserAccountStatusChanger;
 use PixelApp\Services\UsersManagement\UpdatingUserByAdminService\UpdatingUserByAdminService;
+use PixelAppCore\Services\PixelServiceManager;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -41,9 +43,10 @@ class UserController extends Controller
             ->customOrdering('created_at', 'desc')
             ->select("id", "name")
             ->get();
-
+        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(UsersListResource::class);
+         
         return response()->json([
-            "data" => UsersListResource::collection($data)
+            "data" => $resourceClass::collection($data)
         ]);
     }
 
@@ -99,22 +102,26 @@ class UserController extends Controller
 
     public function update($user): JsonResponse
     {
-//        BasePolicy::check('editEmployees', User::class);
+        //        BasePolicy::check('editEmployees', User::class);
         $user = $this->getUserModelClass()::findOrFail($user);
-        return (new UpdatingUserByAdminService($user))->change();
+        $service = PixelServiceManager::getServiceForServiceBaseType(UpdatingUserByAdminService::class);
+        return (new $service($user))->change();
     }
+
     public function changeAccountStatus( $user): JsonResponse
     {
-//        BasePolicy::check('editEmployees', User::class);
+        //        BasePolicy::check('editEmployees', User::class);
         $user = $this->getUserModelClass()::findOrFail($user);
-        return (new UserAccountStatusChanger($user))->change();
+        $service = PixelServiceManager::getServiceForServiceBaseType(UserAccountStatusChanger::class);
+        return (new $service($user))->change();
     }
 
     public function changeEmail($user): JsonResponse
     {
-//        BasePolicy::check('editEmployees', User::class);
+        //        BasePolicy::check('editEmployees', User::class);
         $user = $this->getUserModelClass()::findOrFail($user);
-        return (new EmailChangerService($user))->change();
+        $service = PixelServiceManager::getServiceForServiceBaseType(EmailChangerService::class);
+        return (new $service($user))->change();
     }
 
     public function filters(): array

@@ -6,8 +6,10 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Http\Requests\AuthenticationRequests\CompanyAuthenticationRequests\CompanyLoginRequest;
 use PixelApp\Http\Resources\AuthenticationResources\CompanyAuthenticationResources\ModelsResources\TenantCompanyResource;
+use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Models\CompanyModule\TenantCompany;
 use PixelApp\Services\Traits\GeneralValidationMethods;
 
@@ -23,7 +25,8 @@ class CompanyLoginService
 
     protected function getLoginResponse(): JsonResponse
     {
-        $data = (new TenantCompanyResource($this->company))->toArray(request());
+        $resource = PixelHttpResourceManager::getResourceForResourceBaseType(TenantCompanyResource::class);
+        $data = (new $resource($this->company))->toArray(request());
         $messages = ["Successful login , Welcome to company {$this->company->name} "];
         return Response::success($data, $messages);
     }
@@ -55,7 +58,8 @@ class CompanyLoginService
     {
         $companyId = $this->data["company_id"];
         $this->CheckRcNo($companyId);
-        $company = TenantCompany::where("company_id", $companyId)->first();
+        $tenantModelClass = PixelTenancyManager::getTenantCompanyModelClass();
+        $company = $tenantModelClass::where("company_id", $companyId)->first();
         if ($company) {
             $this->company = $company;
             return $this;
@@ -65,7 +69,8 @@ class CompanyLoginService
 
     private function CheckRcNo($companyId): void
     {
-        $companyWithRcNo = TenantCompany::where("cr_no", $companyId)->first();
+        $tenantModelClass = PixelTenancyManager::getTenantCompanyModelClass();
+        $companyWithRcNo = $tenantModelClass::where("cr_no", $companyId)->first();
 
         if ($companyWithRcNo) {
             throw new \Exception("You must log in using Company ID not CR No.");

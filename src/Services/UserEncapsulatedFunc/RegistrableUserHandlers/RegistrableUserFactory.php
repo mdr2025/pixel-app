@@ -4,6 +4,7 @@ namespace PixelApp\Services\UserEncapsulatedFunc\RegistrableUserHandlers;
 
 use Exception;
 use PixelApp\Http\Requests\AuthenticationRequests\UserAuthenticationRequests\RegistrableUserRequest;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\Traits\GeneralValidationMethods;
@@ -20,7 +21,7 @@ class RegistrableUserFactory
 
     protected function getRequestFormClass() : string
     {
-        return RegistrableUserRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(RegistrableUserRequest::class);
     }
 
     public function __construct(array $userData )

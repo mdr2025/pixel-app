@@ -3,6 +3,7 @@
 namespace PixelApp\Services\UserCompanyAccountServices\Signature; 
  
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\UpdatingServices\UpdatingService;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\UserAccountRequests\Signature\SignatureUpdatingRequest;
 
 class SignatureUpdatingService extends UpdatingService
@@ -18,6 +19,6 @@ class SignatureUpdatingService extends UpdatingService
 
     public function getRequestClass(): string
     {
-        return SignatureUpdatingRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(SignatureUpdatingRequest::class);
     }
 }

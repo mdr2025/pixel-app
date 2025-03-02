@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Requests\AuthenticationRequests\UserAuthenticationRequests\ResetPasswordRequest;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\UsersModule\PasswordReset;
 use PixelApp\Services\Traits\GeneralValidationMethods;
@@ -19,7 +20,7 @@ class PasswordResettingService
 
     protected function getRequestFormClass(): string
     {
-        return ResetPasswordRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(ResetPasswordRequest::class);
     }
 
     protected function initPasswordPropChanger() : PasswordChanger

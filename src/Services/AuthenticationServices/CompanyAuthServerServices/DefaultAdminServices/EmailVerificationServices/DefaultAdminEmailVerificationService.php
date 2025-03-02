@@ -4,6 +4,7 @@ namespace PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\Def
 
 use PixelApp\Events\TenancyEvents\CentralModelDataSyncNeedEvent;
 use PixelApp\Models\CompanyModule\CompanyDefaultAdmin;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\VerificationFuncs\VerificationBaseServices\EmailVerificationService;
 
 /**
@@ -16,7 +17,7 @@ class DefaultAdminEmailVerificationService extends EmailVerificationService
      */
     protected function getAuthenticatableClass(): string
     {
-        return CompanyDefaultAdmin::class;
+        return PixelModelManager::getModelForModelBaseType(CompanyDefaultAdmin::class);
     }
 
     protected function verifyAuthenticatable(): self

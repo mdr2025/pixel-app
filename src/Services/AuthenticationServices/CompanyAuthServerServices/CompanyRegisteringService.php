@@ -7,6 +7,7 @@ use Exception;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyRegistered;
 use PixelApp\Http\Requests\AuthenticationRequests\CompanyAuthenticationRequests\MainCompanyRegisterRequest;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Models\CompanyModule\TenantCompany;
 use PixelApp\Services\UserEncapsulatedFunc\RegistrableUserHandlers\RegistrableUserFactory;
   
@@ -84,6 +85,6 @@ use PixelApp\Services\UserEncapsulatedFunc\RegistrableUserHandlers\RegistrableUs
 
      protected function getRequestClass(): string
      {
-         return MainCompanyRegisterRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(MainCompanyRegisterRequest::class);
      }
  }

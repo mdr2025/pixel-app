@@ -4,6 +4,7 @@ namespace PixelApp\Services\AuthenticationServices\CompanyAuthServerServices;
 
 use Illuminate\Http\JsonResponse; 
 use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\CompanyFetchingService;
+use PixelAppCore\Services\PixelServiceManager;
 use Stancl\Tenancy\Contracts\Tenant;
 
 class CompanyCheckingSubDomainService
@@ -11,7 +12,8 @@ class CompanyCheckingSubDomainService
 
     protected function fetchTenant(string $subDomain) : ?Tenant
     {
-        return (new CompanyFetchingService())->fetchTenantCompany($subDomain);
+        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyFetchingService::class);
+        return (new $service())->fetchTenantCompany($subDomain);
     }
 
     public function checkSubDomainAvailability(string $subDomain) : JsonResponse

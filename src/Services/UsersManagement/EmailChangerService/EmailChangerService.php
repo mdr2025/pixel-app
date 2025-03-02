@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\UserManagementRequests\UserChangeEmailRequest;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\UserEncapsulatedFunc\CustomUpdatingService;
@@ -17,7 +18,7 @@ class EmailChangerService extends CustomUpdatingService
 
     protected function getRequestFormClass(): string
     {
-        return UserChangeEmailRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType( UserChangeEmailRequest::class);
     }
 
     /**

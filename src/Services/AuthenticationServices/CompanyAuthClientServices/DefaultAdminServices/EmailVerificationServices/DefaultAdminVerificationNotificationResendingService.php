@@ -3,6 +3,7 @@
 namespace PixelApp\Services\AuthenticationServices\CompanyAuthClientServices\DefaultAdminServices\EmailVerificationServices;
 
 use PixelApp\Models\CompanyModule\CompanyDefaultAdmin;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\VerificationFuncs\VerificationBaseServices\VerificationNotificationResendingService;
 
 class DefaultAdminVerificationNotificationResendingService extends VerificationNotificationResendingService
@@ -15,6 +16,6 @@ class DefaultAdminVerificationNotificationResendingService extends VerificationN
 
     protected function getAuthenticatableClass(): string
     {
-        return CompanyDefaultAdmin::class;
+        return PixelModelManager::getModelForModelBaseType(CompanyDefaultAdmin::class);
     }
 }

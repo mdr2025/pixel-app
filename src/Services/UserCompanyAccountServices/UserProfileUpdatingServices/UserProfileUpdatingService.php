@@ -5,6 +5,7 @@ namespace PixelApp\Services\UserCompanyAccountServices\UserProfileUpdatingServic
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\UpdatingServices\UpdatingService;
 use Exception;
 use PixelApp\Events\TenancyEvents\TenantModelDataSyncNeedEvent;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\UserAccountRequests\UpdateProfileRequest;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\EmailAuthenticatableSensitivePropChangers\EmailChanger;
 use PixelApp\Models\UsersModule\PixelUser;
@@ -19,7 +20,7 @@ class UserProfileUpdatingService extends UpdatingService
 
     protected function getRequestClass(): string
     {
-        return UpdateProfileRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(UpdateProfileRequest::class);
     }
 
     protected function getModelUpdatingFailingErrorMessage(): string

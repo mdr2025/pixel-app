@@ -3,6 +3,7 @@
 namespace PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers;
 
 use Exception;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\ExpectsSensitiveRequestData;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Traits\ExpectsSensitiveRequestDataFunc;
 
@@ -10,7 +11,13 @@ class StatusChanger extends UserSensitivePropChanger implements ExpectsSensitive
 {
     use ExpectsSensitiveRequestDataFunc;
 
-    protected int $statusValue = 0;
+    protected string $statusValue  ;
+    
+    public function __construct()
+    {
+        $this->setStatusInitValue();
+    }
+    
     public function getPropName() : string
     {
         return 'status';
@@ -19,6 +26,22 @@ class StatusChanger extends UserSensitivePropChanger implements ExpectsSensitive
     {
         return 'status';
     }
+    protected function getUserModelClass(): string
+    {
+        return PixelModelManager::getUserModelClass();
+    }
+
+    protected function getUserDefaultStatus()  :string
+    {
+        $userModelClass = $this->getUserModelClass();
+        return $userModelClass::UserDefaultInitStatusValue;
+    }
+
+    protected function setStatusInitValue() : void
+    {
+        $this->statusValue = $this->getUserDefaultStatus();
+    }
+
     public function approve() : self
     {
         $this->statusValue  = 'active';
@@ -82,8 +105,8 @@ class StatusChanger extends UserSensitivePropChanger implements ExpectsSensitive
         if($this->isChangeAllowableValue())
         {
             return $this->statusValue === 'active' ?
-                $this->getApprovedUserChangesArray() :
-                $this->composeChangesArray( $this->statusValue  );
+                   $this->getApprovedUserChangesArray() :
+                   $this->composeChangesArray( $this->statusValue  );
         }
         return [];
     }

@@ -10,6 +10,7 @@ use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use ValidatorLib\JSONValidator;
 use ValidatorLib\Validator;
 use PixelApp\Exceptions\JsonException;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 
 abstract class UpdatingBaseClass
 {
@@ -47,7 +48,7 @@ abstract class UpdatingBaseClass
 
     protected function getRequestFormClass(): string
     {
-        return RoleUpdatingRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(RoleUpdatingRequest::class);
     }
 
     /**

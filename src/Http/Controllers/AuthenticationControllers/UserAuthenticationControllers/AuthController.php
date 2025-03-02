@@ -4,6 +4,7 @@ namespace PixelApp\Http\Controllers\AuthenticationControllers\UserAuthentication
  
 use PixelApp\Http\Controllers\PixelBaseController as Controller;
 use Illuminate\Http\JsonResponse;
+use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\UserManagementResources\ModelResources\UserResource;
 use PixelApp\Models\PixelBaseModel;
 use PixelApp\Services\AuthenticationServices\UserAuthServices\EmailVerificationServices\UserEmailVerificationService;
@@ -13,38 +14,45 @@ use PixelApp\Services\AuthenticationServices\UserAuthServices\PasswordResettingS
 use PixelApp\Services\AuthenticationServices\UserAuthServices\PasswordResettingService\PasswordResettingService;
 use PixelApp\Services\AuthenticationServices\UserAuthServices\TokenRefreshingService\TokenRefreshingService;
 use PixelApp\Services\AuthenticationServices\UserAuthServices\UserRegisteringServices\UserRegisteringService;
+use PixelAppCore\Services\PixelServiceManager;
 
 class AuthController extends Controller
 { 
     public function login() : JsonResponse
     {
-        return (new LoginService())->login();
+        $service = PixelServiceManager::getServiceForServiceBaseType(LoginService::class);
+        return (new $service())->login();
     }
 
     public function register(): JsonResponse
     {
-        return (new UserRegisteringService())->create();
+        $service = PixelServiceManager::getServiceForServiceBaseType(UserRegisteringService::class);
+        return (new $service())->create();
     }
 
     public function verifyEmail(): JsonResponse
     {
-        return (new UserEmailVerificationService())->verify();
+        $service = PixelServiceManager::getServiceForServiceBaseType(UserEmailVerificationService::class);
+        return (new $service())->verify();
     }
 
     public function logout(): JsonResponse
     {
-        return (new LogoutService())->logout();
+        $service = PixelServiceManager::getServiceForServiceBaseType(LogoutService::class);
+        return (new $service())->logout();
 
     }
 
     public function forgetPassword(): JsonResponse
     {
-        return (new PasswordResetNotificationSenderService())->send();
+        $service = PixelServiceManager::getServiceForServiceBaseType(PasswordResetNotificationSenderService::class);
+        return (new $service())->send();
     }
 
     public function resetPassword(): JsonResponse
     { 
-        return (new PasswordResettingService())->reset();
+        $service = PixelServiceManager::getServiceForServiceBaseType(PasswordResettingService::class);
+        return (new $service())->reset();
     }
 
     /**
@@ -52,7 +60,8 @@ class AuthController extends Controller
      */
     public function refreshToken(): JsonResponse
     {
-        return (new TokenRefreshingService())->refreshToken();
+        $service = PixelServiceManager::getServiceForServiceBaseType(TokenRefreshingService::class);
+        return (new $service())->refreshToken();
     }
 
     public function getLoggedUser(): UserResource
@@ -63,7 +72,8 @@ class AuthController extends Controller
          */ 
         $loggedUser = auth()->user();
         $loggedUser->load(["role:id,name", "role.permissions:name,id"]);
-        return new UserResource(auth()->user($loggedUser));
+        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(UserResource::class);
+        return new $resourceClass(auth()->user($loggedUser));
     }
 }
   //        AuthenticatableUserManagement

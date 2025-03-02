@@ -2,7 +2,7 @@
 
 namespace PixelApp\Services\CoreServices;
 
-use App\Exceptions\JsonException;
+use PixelApp\Exceptions\JsonException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Http\Requests\AuthenticationRequests\CompanyAuthenticationRequests\CheckStatusRequest;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Models\CompanyModule\TenantCompany;
 use PixelApp\Services\Traits\GeneralValidationMethods;
 
@@ -23,7 +24,7 @@ class CompanyCheckingStatusService
  
     protected function getRequestFormClass() : string
     {
-        return CheckStatusRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(CheckStatusRequest::class);
     }
      
     function isVerified()
@@ -76,17 +77,18 @@ class CompanyCheckingStatusService
                 "message" => "Your company account has been approved , kindly check your email for company id"
             ], 422);
 
-        }elseif ($this->getTenantRegistrationStatus() == "pending") 
-        {
-            return response()->json([
-                "message" => "Your company account has not been approved yet"
-            ], 422);
-
         } elseif ($this->getTenantRegistrationStatus() == "rejected") 
         {
             return response()->json([
                 "message" => "Your company account has been rejected"
             ], 422);
+        }else
+        {
+            //in this case status == "pending"
+            return response()->json([
+                "message" => "Your company account has not been approved yet"
+            ], 422);
+
         }
     }
 }

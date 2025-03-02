@@ -3,7 +3,9 @@
 namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations;
  
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\StoringServices\MultiRowStoringService;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\SystemConfigurationRequests\Branches\StoringBranchRequest;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Branch;
 
 class BranchStoringService extends MultiRowStoringService
@@ -21,11 +23,11 @@ class BranchStoringService extends MultiRowStoringService
 
     protected function getModelClass(): string
     {
-        return Branch::class;
+        return PixelModelManager::getModelForModelBaseType(Branch::class);
     }
 
     protected function getRequestClass(): string
     {
-        return StoringBranchRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(StoringBranchRequest::class);
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Requests\SystemConfigurationRequests\RoleRequests\RoleStoringRequest;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use Spatie\Permission\Models\Permission; 
 use ValidatorLib\JSONValidator;
@@ -52,7 +53,8 @@ class RoleStoringService
 
     private function PermissionsArrayHandler(array $permissions): array
     {
-        return Permission::whereIn("name", $permissions)->orderBy("id")->pluck("id")->toArray();
+        $permissionClass = PixelModelManager::getModelForModelBaseType(Permission::class);
+        return $permissionClass::whereIn("name", $permissions)->orderBy("id")->pluck("id")->toArray();
     }
 
     /**

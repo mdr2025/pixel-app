@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use PixelApp\Exceptions\JsonException;
 use PixelApp\Http\Requests\AuthenticationRequests\UserAuthenticationRequests\LoginRequest;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Services\Traits\GeneralValidationMethods;
 
@@ -23,7 +24,7 @@ class LoginService
 
     protected function getRequestFormClass(): string
     {
-        return LoginRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(LoginRequest::class);
     }
 
     /**

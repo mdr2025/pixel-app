@@ -6,6 +6,7 @@ use PixelApp\Exceptions\JsonException;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\UserManagementRequests\UserUpdatingRequest;
 use PixelApp\Services\UserEncapsulatedFunc\CustomUpdatingService;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitiveDataChanger;
@@ -16,7 +17,7 @@ class UpdatingUserByAdminService extends CustomUpdatingService
 {
     protected function getRequestFormClass(): string
     {
-        return UserUpdatingRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(UserUpdatingRequest::class);
     }
 
     protected function initUserSensitiveDataChanger() : UserSensitiveDataChanger

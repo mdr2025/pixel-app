@@ -4,6 +4,7 @@ namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOp
  
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\UpdatingServices\UpdatingService;
 use Exception;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\SystemConfigurationRequests\Branches\UpdatingBranchRequest;
 use PixelApp\Models\PixelBaseModel;
 
@@ -30,7 +31,7 @@ class BranchUpdatingService extends UpdatingService
 
     protected function getRequestClass(): string
     {
-        return UpdatingBranchRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(UpdatingBranchRequest::class);
     }
     protected function doBeforeSuccessResponding(): void
     {

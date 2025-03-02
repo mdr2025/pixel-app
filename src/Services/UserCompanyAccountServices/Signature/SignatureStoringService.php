@@ -3,7 +3,9 @@
 namespace PixelApp\Services\UserCompanyAccountServices\Signature; 
 
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\StoringServices\SingleRowStoringService;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\UserAccountRequests\Signature\SignatureStoringRequest;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\UsersModule\Signature;
 
 class SignatureStoringService extends SingleRowStoringService
@@ -20,11 +22,11 @@ class SignatureStoringService extends SingleRowStoringService
 
     protected function getModelClass(): string
     {
-        return Signature::class;
+        return PixelModelManager::getModelForModelBaseType(Signature::class);
     }
 
     protected function getRequestClass(): string
     {
-        return SignatureStoringRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(SignatureStoringRequest::class);
     }
 }

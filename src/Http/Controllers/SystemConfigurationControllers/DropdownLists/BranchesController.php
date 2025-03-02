@@ -9,11 +9,13 @@ use PixelApp\Http\Controllers\PixelBaseController as Controller;
 use Spatie\QueryBuilder\QueryBuilder;
 use PixelApp\Http\Resources\SingleResource;
 use Illuminate\Support\Facades\Response;
+use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\SystemConfigurationResources\DropdownLists\Branches\BranchResource;
 use PixelApp\Models\SystemConfigurationModels\Branch;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchDeletingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchStoringService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchUpdatingService;
+use PixelAppCore\Services\PixelServiceManager;
 
 class BranchesController extends Controller
 {
@@ -47,7 +49,8 @@ class BranchesController extends Controller
     public function show( $branch)
     {
         $branch = Branch::findOrFail($branch);
-        return new SingleResource($branch);
+        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(SingleResource::class);
+        return new $resourceClass($branch);
     }
 
     function list()
@@ -58,7 +61,8 @@ class BranchesController extends Controller
             ->allowedFilters(['name'])
             ->customOrdering('created_at', 'desc')
             ->get(['id', 'name']);
-        return BranchResource::collection($data);
+        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(BranchResource::class);
+        return $resourceClass::collection($data);
     }
 
     function subBranches()
@@ -68,7 +72,8 @@ class BranchesController extends Controller
             ->active()
             ->customOrdering('created_at', 'desc')
             ->get(['id', 'name']);
-        return BranchResource::collection($data);
+        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(BranchResource::class);
+        return $resourceClass::collection($data);
     }
 
     /**
@@ -78,7 +83,8 @@ class BranchesController extends Controller
      */
     public function store()
     {
-        return (new BranchStoringService())->create();
+        $service = PixelServiceManager::getServiceForServiceBaseType(BranchStoringService::class);
+        return (new $service())->create();
     }
 
     /**
@@ -88,7 +94,8 @@ class BranchesController extends Controller
     public function update($branch): JsonResponse
     {
         $branch = Branch::findOrFail($branch);
-        return (new BranchUpdatingService($branch))->update();
+        $service = PixelServiceManager::getServiceForServiceBaseType(BranchUpdatingService::class);
+        return (new $service($branch))->update();
     }
 
     /**
@@ -98,7 +105,8 @@ class BranchesController extends Controller
     public function destroy( $branch): JsonResponse
     {
         $branch = Branch::findOrFail($branch);
-        return (new BranchDeletingService($branch))->delete();
+        $service = PixelServiceManager::getServiceForServiceBaseType(BranchDeletingService::class);
+        return (new $service($branch))->delete();
     }
 
     public function import(ImportFile $import)

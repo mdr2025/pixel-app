@@ -13,12 +13,14 @@ use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\CompanyLo
 use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\CompanyRegisteringService;
 use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\CompanyCheckingStatusService;
 use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\DefaultAdminServices\EmailVerificationServices\DefaultAdminEmailVerificationService;
+use PixelAppCore\Services\PixelServiceManager;
 
 class CompanyAuthServerController extends Controller
 {
     public function register() : JsonResponse
     {
-        return (new CompanyRegisteringService())->create();
+        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyRegisteringService::class);
+        return (new $service())->create();
     }
 
     /**
@@ -26,17 +28,20 @@ class CompanyAuthServerController extends Controller
      */
     public function login() : JsonResponse
     {
-        return (new CompanyLoginService())->login();
+        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyLoginService::class);
+        return (new $service())->login();
     }
 
     public function verifyDefaultAdminEmail(): JsonResponse
     {
-        return (new DefaultAdminEmailVerificationService())->verify();
+        $service = PixelServiceManager::getServiceForServiceBaseType(DefaultAdminEmailVerificationService::class);
+        return (new $service())->verify();
     }
 
     public function checkStatus(): JsonResponse
     {
-        return (new CompanyCheckingStatusService())->checkStatus();
+        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyCheckingStatusService::class);
+        return (new $service())->checkStatus();
     }
 
     /**
@@ -44,7 +49,8 @@ class CompanyAuthServerController extends Controller
      */
     public function forgetId() : JsonResponse
     {
-         return (new CompanyForgettingIdService())->resendCompanyId();
+        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyForgettingIdService::class);
+         return (new $service())->resendCompanyId();
     } 
 
     /**
@@ -52,16 +58,19 @@ class CompanyAuthServerController extends Controller
      */
     public function fetchCompany() : JsonResponse
     {
-        return (new CompanyFetchingService())->getTenantCompanyDomainResponse();
+        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyFetchingService::class);
+        return (new $service())->getTenantCompanyDomainResponse();
     }
  
     public function checkSubDomain($subdomain) : JsonResponse
     {
-        return (new CompanyCheckingSubDomainService())->checkSubDomainAvailability($subdomain);
+        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyCheckingSubDomainService::class);
+        return (new $service())->checkSubDomainAvailability($subdomain);
     }
 
     public function checkCrNo($crNo)   : JsonResponse
     { 
-       return (new CompanyCheckingCrNoService)->checkCrNoValidity($crNo);
+        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyCheckingCrNoService::class);
+       return (new $service)->checkCrNoValidity($crNo);
     }
 }

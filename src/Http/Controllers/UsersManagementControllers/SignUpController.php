@@ -15,6 +15,7 @@ use PixelApp\Services\AuthenticationServices\UserAuthServices\EmailVerificationS
 use PixelApp\Services\UsersManagement\EmailChangerService\EmailChangerService;
 use PixelApp\Services\UsersManagement\Statistics\SignupList\SignupUserStatisticsBuilder;
 use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\SignUpAccountStatusChanger;
+use PixelAppCore\Services\PixelServiceManager;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -59,9 +60,10 @@ class SignUpController extends Controller
 
     public function changeAccountEmail( $user) : JsonResponse
     {
-//        BasePolicy::check('editSignUpUsers', User::class);
-        $user = $this->getUserModelClass()::findOrFail($user);
-        return (new EmailChangerService($user))->change();
+        //        BasePolicy::check('editSignUpUsers', User::class);
+        $user = $this->getUsverModelClass()::findOrFail($user);
+        $service = PixelServiceManager::getServiceForServiceBaseType(EmailChangerService::class);
+        return (new $service($user))->change();
     }
 
     /**
@@ -70,7 +72,8 @@ class SignUpController extends Controller
      */
     public function resendVerificationTokenToUserEmail(): JsonResponse
     {
-        return (new UserVerificationNotificationResendingService())->resend();
+        $service = PixelServiceManager::getServiceForServiceBaseType(UserVerificationNotificationResendingService::class);
+        return (new $service())->resend();
     }
 
     /**
@@ -81,14 +84,16 @@ class SignUpController extends Controller
     public function reVerifyEmail($user): JsonResponse
     {
         $user = $this->getUserModelClass()::findOrFail($user);
-        return (new UserVerificationNotificationResendingService())->setAuthenticatable($user)->resend();
+        $service = PixelServiceManager::getServiceForServiceBaseType(UserVerificationNotificationResendingService::class);
+        return (new $service())->setAuthenticatable($user)->resend();
     }
 
     public function changeAccountStatus($user): JsonResponse
     {
 //        BasePolicy::check('editSignUpUsers', User::class);
         $user = $this->getUserModelClass()::findOrFail($user);
-        return (new SignUpAccountStatusChanger($user))->change();
+        $service = PixelServiceManager::getServiceForServiceBaseType(SignUpAccountStatusChanger::class);
+        return (new $service($user))->change();
     }
 
     public function filters(): array

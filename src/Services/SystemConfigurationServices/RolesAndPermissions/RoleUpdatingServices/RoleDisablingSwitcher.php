@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\SystemConfigurationRequests\RoleRequests\RoleSwitchingRequest;
 use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleUsersManagement\RoleUsersManager;
 use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleUsersManagement\SwitchBackAllRolePreviousUsers;
@@ -37,7 +38,7 @@ class RoleDisablingSwitcher extends UpdatingBaseClass
 
     protected function getRequestFormClass(): string
     {
-        return RoleSwitchingRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(RoleSwitchingRequest::class);
     }
 
     /**

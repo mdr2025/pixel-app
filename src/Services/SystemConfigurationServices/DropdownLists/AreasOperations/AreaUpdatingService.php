@@ -1,10 +1,10 @@
 <?php
 
 namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations;
-
-use App\Http\Requests\WorkSector\SystemConfigurations\Areas\UpdatingAreaRequest;
+ 
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\UpdatingServices\UpdatingService;
-
+use PixelApp\Http\Requests\PixelHttpRequestManager;
+use PixelApp\Http\Requests\SystemConfigurationRequests\Areas\UpdatingAreaRequest;
 
 class AreaUpdatingService extends UpdatingService
 {
@@ -21,7 +21,7 @@ class AreaUpdatingService extends UpdatingService
 
     protected function getRequestClass(): string
     {
-        return UpdatingAreaRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(UpdatingAreaRequest::class);
     }
 
 

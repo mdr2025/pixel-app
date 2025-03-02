@@ -3,6 +3,7 @@
 namespace  PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers;
 
 use Exception;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\UserManagementRequests\UserStatusUpdatingRequest;
 use PixelApp\Services\UsersManagement\StatusChangerServices\AccountStatusChanger;
 
@@ -10,7 +11,7 @@ class UserAccountStatusChanger extends AccountStatusChanger
 {
     protected function getRequestFormClass(): string
     {
-        return UserStatusUpdatingRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(UserStatusUpdatingRequest::class);
     }
 
     /**

@@ -7,6 +7,7 @@ use PixelApp\Http\Controllers\PixelBaseController as Controller;
 use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\SystemConfigurationResources\RolesAndPermissions\PermissionsResource;
 use PixelApp\Http\Resources\SystemConfigurationResources\RolesAndPermissions\RoleShowResource;
 use PixelApp\Http\Resources\SystemConfigurationResources\RolesAndPermissions\RolesListResource;
@@ -15,6 +16,7 @@ use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleDeleti
 use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleStoringService;
 use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleUpdatingServices\RoleDisablingSwitcher;
 use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleUpdatingServices\RoleInfoUpdatingService;
+use PixelAppCore\Services\PixelServiceManager;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -30,33 +32,39 @@ class RolesController extends Controller
     { 
         BasePolicy::check('read', Role::class);
         $data = RoleModel::orderBy('disabled', 'asc')->orderBy('default', 'desc')->get();
-        return RolesListResource::collection($data);
+        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(RolesListResource::class);
+        return $resourceClass::collection($data); 
     }
 
     public function list()
     {
         BasePolicy::check('read', Role::class);
         $data = RoleModel::where('id', '<>', 1)->get();
-        return RolesListResource::collection($data);
+        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(RolesListResource::class);
+        return $resourceClass::collection($data); 
     }
 
     function show($id)
     {
         BasePolicy::check('read', Role::class); 
-        return new RoleShowResource(RoleModel::find($id));
+        $role = RoleModel::findOrFail($id);
+        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(RoleShowResource::class);
+        return new $resourceClass($role);
     }
 
     public function store(Request $request): JsonResponse
     {
         BasePolicy::check('create', Role::class); 
-        return (new RoleStoringService())->create($request);
+        $service = PixelServiceManager::getServiceForServiceBaseType(RoleStoringService::class);
+        return (new $service())->create($request);
     }
 
     public function update($id, Request $request): JsonResponse
     {
         BasePolicy::check('edit', Role::class); 
         $role = RoleModel::findOrFail($id);
-        return (new RoleInfoUpdatingService($role))->change($request);
+        $service = PixelServiceManager::getServiceForServiceBaseType(RoleInfoUpdatingService::class);
+        return (new $service($role))->change($request);
     }
 
 
@@ -70,14 +78,16 @@ class RolesController extends Controller
     {
         BasePolicy::check('edit', Role::class); 
         $role = RoleModel::findOrFail($id);
-        return (new RoleDisablingSwitcher($role))->change($request);
+        $service = PixelServiceManager::getServiceForServiceBaseType(RoleDisablingSwitcher::class);
+        return (new $service($role))->change($request);
     }
 
     public function destroy($id): JsonResponse
     {
         BasePolicy::check('delete', Role::class); 
         $role = RoleModel::findOrFail($id);
-        return (new RoleDeletingService($role))->delete(true);
+        $service = PixelServiceManager::getServiceForServiceBaseType(RoleDeletingService::class);
+        return (new $service($role))->delete(true);
     }
 
     public function allPermission()
@@ -85,6 +95,7 @@ class RolesController extends Controller
         BasePolicy::check('read', Role::class); 
 
         $permissions = Permission::pluck('name')->get();
-        return PermissionsResource::collection($permissions);
+        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(PermissionsResource::class);
+        return $resourceClass::collection($permissions); 
     }
 }

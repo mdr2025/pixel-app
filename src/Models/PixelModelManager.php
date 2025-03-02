@@ -4,11 +4,12 @@ namespace PixelApp\Models;
 
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Config\PixelConfigManager;
-use PixelApp\CustomLibs\Tenancy\PixelTenancyManager; 
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+use PixelApp\Models\Traits\AlternativeModelMethods;
 
 class PixelModelManager
 {
-
+    use AlternativeModelMethods ;
     public static function getDefaultPixelUserModelClass() : string
     {
         return PixelUser::class;

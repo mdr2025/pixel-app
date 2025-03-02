@@ -3,6 +3,7 @@
 namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\CitiesService;
 
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\UpdatingServices\UpdatingService;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\SystemConfigurationRequests\Cities\UpdatingCitiesRequest;
 
 class CitiesUpdatingService extends UpdatingService
@@ -20,7 +21,7 @@ class CitiesUpdatingService extends UpdatingService
 
     protected function getRequestClass(): string
     {
-        return UpdatingCitiesRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(UpdatingCitiesRequest::class);
     }
 
 }

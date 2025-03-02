@@ -8,12 +8,14 @@ use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Resources\AuthenticationResources\CompanyAuthenticationResources\TenantCompanyProfileResource;
 use Stancl\Tenancy\Contracts\Tenant;
 use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\CompanyFetchingService;
- 
+use PixelAppCore\Services\PixelServiceManager;
+
 class CompanyProfileGettingServerService 
 { 
     protected function fetchTenantByDomain(?string $companyDomain = null) : ?Tenant
     {
-        return (new CompanyFetchingService())->fetchTenantCompany($companyDomain);
+        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyFetchingService::class);
+        return (new $service())->fetchTenantCompany($companyDomain);
     } 
     
     protected function getCompanyDomainQueryString(Request $request) : string

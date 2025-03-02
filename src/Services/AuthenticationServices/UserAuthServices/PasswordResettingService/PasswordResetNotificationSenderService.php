@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use PixelApp\Exceptions\JsonException;
 use PixelApp\Http\Requests\AuthenticationRequests\UserAuthenticationRequests\ForgetPasswordRequest;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\UsersModule\PasswordReset;
 use PixelApp\Services\Traits\GeneralValidationMethods;
@@ -27,7 +28,7 @@ class PasswordResetNotificationSenderService
 
     protected function getRequestFormClass(): string
     {
-        return ForgetPasswordRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(ForgetPasswordRequest::class);
     }
 
     protected function logoutUser() : void

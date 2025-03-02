@@ -8,8 +8,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Http\Requests\AuthenticationRequests\CompanyAuthenticationRequests\CompanyIdForgettingRequest;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Models\CompanyModule\CompanyDefaultAdmin;
 use PixelApp\Models\CompanyModule\TenantCompany;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Notifications\Company\TenantCompanyForgettingIdNotification;
 use PixelApp\Services\Traits\GeneralValidationMethods;
 
@@ -21,7 +23,7 @@ class CompanyForgettingIdService
     protected ?TenantCompany $company = null;
     protected function getRequestFormClass(): string
     {
-        return CompanyIdForgettingRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(CompanyIdForgettingRequest::class);
     }
 
     protected function getResponse(): JsonResponse
@@ -60,7 +62,8 @@ class CompanyForgettingIdService
      */
     protected function fetchCompanyAdmin(): ?CompanyDefaultAdmin
     {
-        return CompanyDefaultAdmin::where("email", $this->data["email"])->first();
+        $modelClass = PixelModelManager::getModelForModelBaseType(CompanyDefaultAdmin::class);
+        return $modelClass::where("email", $this->data["email"])->first();
     }
 
     protected function setCompanyDefaultAdmin(): self

@@ -7,6 +7,7 @@ use PixelApp\Interfaces\EmailAuthenticatable;
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\StoringServices\SingleRowStoringService;
 use Exception;
 use PixelApp\Http\Requests\AuthenticationRequests\UserAuthenticationRequests\RegisterRequest;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\PasswordChanger;
 use PixelApp\Models\UsersModule\PixelUser;
@@ -19,7 +20,7 @@ class UserRegisteringService extends SingleRowStoringService
 
     protected function getRequestClass(): string
     {
-        return RegisterRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(RegisterRequest::class); 
     }
 
     protected function getModelClass(): string

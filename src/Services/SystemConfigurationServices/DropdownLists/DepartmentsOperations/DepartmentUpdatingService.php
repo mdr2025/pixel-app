@@ -3,6 +3,7 @@
 namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations;
 
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\UpdatingServices\UpdatingService;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\SystemConfigurationRequests\Departments\UpdatingDepartmentRequest;
 
 class DepartmentUpdatingService extends UpdatingService
@@ -20,7 +21,7 @@ class DepartmentUpdatingService extends UpdatingService
 
     protected function getRequestClass(): string
     {
-        return UpdatingDepartmentRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(UpdatingDepartmentRequest::class);
     }
 
 }

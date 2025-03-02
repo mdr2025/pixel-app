@@ -1,10 +1,12 @@
 <?php
 
 namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations;
-
-use App\Http\Requests\WorkSector\SystemConfigurations\Areas\StoringAreaRequest as AreasStoringAreaRequest;
-use App\Models\WorkSector\CountryModule\Area;
+ 
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\StoringServices\MultiRowStoringService;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
+use PixelApp\Http\Requests\SystemConfigurationRequests\Areas\StoringAreaRequest;
+use PixelApp\Models\PixelModelManager;
+use PixelApp\Models\SystemConfigurationModels\CountryModule\Area;
 
 class AreaStoringService extends MultiRowStoringService
 {
@@ -21,12 +23,12 @@ class AreaStoringService extends MultiRowStoringService
 
     protected function getModelClass(): string
     {
-        return Area::class;
+        return PixelModelManager::getModelForModelBaseType(Area::class);
     }
 
     protected function getRequestClass(): string
     {
-        return AreasStoringAreaRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(StoringAreaRequest::class);
     }
 
 }

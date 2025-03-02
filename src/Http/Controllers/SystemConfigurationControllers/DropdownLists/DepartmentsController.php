@@ -10,10 +10,12 @@ use PixelApp\Http\Controllers\PixelBaseController as Controller;
 use Spatie\QueryBuilder\QueryBuilder;
 use PixelApp\Http\Resources\SingleResource;
 use Illuminate\Support\Facades\Response;
+use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Models\SystemConfigurationModels\Department;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentDeletingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentStoringService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentUpdatingService;
+use PixelAppCore\Services\PixelServiceManager;
 use Rap2hpoutre\FastExcel\SheetCollection;
 
 class DepartmentsController extends Controller
@@ -34,7 +36,8 @@ class DepartmentsController extends Controller
     {
         BasePolicy::check('read', Department::class);
         $department = Department::findOrFail($department);
-        return new SingleResource($department);
+        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(SingleResource::class);
+        return new $resourceClass($department);
     }
 
     function list()
@@ -58,7 +61,8 @@ class DepartmentsController extends Controller
      */
     public function store(): JsonResponse
     {
-        return (new DepartmentStoringService())->create();
+        $service = PixelServiceManager::getServiceForServiceBaseType(DepartmentStoringService::class);
+        return (new $service())->create();
     }
 
     /**
@@ -70,7 +74,8 @@ class DepartmentsController extends Controller
     {
          //need policy here
         $department = Department::findOrFail($department);
-        return (new DepartmentUpdatingService($department))->update();
+        $service = PixelServiceManager::getServiceForServiceBaseType(DepartmentUpdatingService::class);
+        return (new $service($department))->update();
     }
 
    /**
@@ -82,7 +87,8 @@ class DepartmentsController extends Controller
     {
         //need policy here
         $department = Department::findOrFail($department);
-        return (new DepartmentDeletingService($department))->delete();
+        $service = PixelServiceManager::getServiceForServiceBaseType(DepartmentDeletingService::class);
+        return (new $service($department))->delete();
     }
 
     public function import(ImportExcelRequest $request)

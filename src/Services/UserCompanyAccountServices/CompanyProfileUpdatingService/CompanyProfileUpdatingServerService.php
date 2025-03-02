@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use PixelApp\CustomLibs\Tenancy\PixelTenancy;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Http\Requests\AuthenticationRequests\CompanyAuthenticationRequests\UpdateCompanyProfileRequest;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use Stancl\Tenancy\Contracts\Tenant;
 use PixelApp\Models\CompanyModule\TenantCompany;
 
@@ -53,7 +54,7 @@ class CompanyProfileUpdatingServerService extends UpdatingService
 
     protected function getRequestClass(): string
     {
-        return UpdateCompanyProfileRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(UpdateCompanyProfileRequest::class);
     }
 
     protected function getModelUpdatingFailingErrorMessage(): string

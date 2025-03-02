@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Http\Requests\AuthenticationRequests\CompanyAuthenticationRequests\CompanyFetchingRequest;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
+use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\AuthenticationResources\CompanyAuthenticationResources\ModelsResources\TenantCompanyResource;
 use PixelApp\Models\CompanyModule\TenantCompany;
 use PixelApp\Services\Traits\GeneralValidationMethods;
@@ -32,7 +34,7 @@ class CompanyFetchingService
 
     protected function getRequestFormClass() : string
     {
-        return CompanyFetchingRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(CompanyFetchingRequest::class);
     }
 
     protected function getTenantCompanyModelClass() : string
@@ -56,7 +58,8 @@ class CompanyFetchingService
         $this->setCompanyDomain();
         if($tenant = $this->fetchTenantComopanyModel())
         {
-            $data = (new TenantCompanyResource($tenant))->toArray(request());
+            $resource = PixelHttpResourceManager::getResourceForResourceBaseType(TenantCompanyResource::class);
+            $data = (new $resource($tenant))->toArray(request());
             return Response::success($data);
         }
         return Response::error("FAiled to found a tenant company has this domain");

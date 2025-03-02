@@ -11,6 +11,7 @@ use Laravel\Passport\RefreshToken;
 use Laravel\Passport\Token;
 use Lcobucci\JWT\Parser as JwtParser;
 use PixelApp\Http\Requests\AuthenticationRequests\UserAuthenticationRequests\TokenRefreshingRequest;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\Traits\GeneralValidationMethods;
 use PixelApp\Services\UserEncapsulatedFunc\UserTokensHandlers\UserTokensGenerator;
@@ -25,7 +26,7 @@ class TokenRefreshingService
 
     protected function getRequestFormClass(): string
     {
-        return TokenRefreshingRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(TokenRefreshingRequest::class);
     }
 
     /**

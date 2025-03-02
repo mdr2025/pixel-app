@@ -9,12 +9,14 @@ use PixelApp\Http\Controllers\PixelBaseController as Controller;
 use Spatie\QueryBuilder\QueryBuilder;
 use PixelApp\Http\Resources\SingleResource;
 use Illuminate\Support\Facades\Response;
+use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\SystemConfigurationResources\DropdownLists\Areas\AreasListResource;
 use PixelApp\Http\Resources\SystemConfigurationResources\DropdownLists\Areas\AreasResource;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Area;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\AreaDeletingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\AreaStoringService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\AreaUpdatingService;
+use PixelAppCore\Services\PixelServiceManager;
 use Rap2hpoutre\FastExcel\SheetCollection; 
 
 class AreasController extends Controller
@@ -28,13 +30,15 @@ class AreasController extends Controller
             ->customOrdering()
             ->paginate($request->pageSize ?? 10);
 
-        return Response::success(['list' => new AreasResource($data)]);
+        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(AreasResource::class);
+        return Response::success(['list' => new $resourceClass($data)]);
     }
 
     public function show($area)
     {
         $area = Area::findOrFail($area);
-        return new SingleResource($area);
+        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(SingleResource::class);
+        return new $resourceClass($area);
     }
 
     function list()
@@ -45,7 +49,8 @@ class AreasController extends Controller
             ->customOrdering('created_at', 'desc')
             ->get(['id', 'name', 'city_id']);
         
-        return AreasListResource::collection($data);
+        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(AreasListResource::class);
+        return $resourceClass::collection($data);
     }
 
     /**
@@ -54,7 +59,8 @@ class AreasController extends Controller
      */
     public function store()
     {
-        return (new AreaStoringService())->create();
+        $service = PixelServiceManager::getServiceForServiceBaseType(AreaStoringService::class);
+        return (new $service())->create();
     }
 
     /**
@@ -64,7 +70,8 @@ class AreasController extends Controller
     public function update( $area): JsonResponse
     {
         $area = Area::findOrFail($area);
-        return (new AreaUpdatingService($area))->update();
+        $service = PixelServiceManager::getServiceForServiceBaseType(AreaUpdatingService::class);
+        return (new $service($area))->update();
     }
 
     /**
@@ -74,7 +81,8 @@ class AreasController extends Controller
     public function destroy($area): JsonResponse
     {
         $area = Area::findOrFail($area);
-        return (new AreaDeletingService($area))->delete();
+        $service = PixelServiceManager::getServiceForServiceBaseType(AreaDeletingService::class);
+        return (new $service($area))->delete();
     }
 
     public function import()

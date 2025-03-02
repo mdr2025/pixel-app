@@ -11,6 +11,7 @@ use PixelApp\Http\Resources\AuthenticationResources\CompanyAuthenticationResourc
 use PixelApp\Services\UserCompanyAccountServices\CompanyProfileGettingService\CompanyProfileGettingServerService;
 use PixelApp\Services\UserCompanyAccountServices\CompanyProfileUpdatingService\CompanyProfileUpdatingServerService;
 use PixelApp\Services\UserCompanyAccountServices\CompanyUpdateAdmin\CompanyChangeDefaultAdminServerService;
+use PixelAppCore\Services\PixelServiceManager;
 use Stancl\Tenancy\Contracts\Tenant;
 
 class UserCompanyAccountServerController extends Controller
@@ -18,7 +19,8 @@ class UserCompanyAccountServerController extends Controller
 
     public function companyProfile() : JsonResponse
     {    
-        return (new CompanyProfileGettingServerService())->getResponse(); 
+        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyProfileGettingServerService::class);
+        return (new $service())->getResponse(); 
     }
   
     /**
@@ -26,7 +28,8 @@ class UserCompanyAccountServerController extends Controller
      */
     public function updateCompanyProfile(Request $request): JsonResponse
     {
-        $response = (new CompanyProfileUpdatingServerService())->update();
+        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyProfileUpdatingServerService::class);
+        $response = (new $service())->update();
         return $this->checkResponse($response, $request);
     }
     protected function checkResponse(JsonResponse $response, Request $request): JsonResponse
@@ -41,8 +44,9 @@ class UserCompanyAccountServerController extends Controller
 
     public function updateAdminInfo()
     {
+        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyChangeDefaultAdminServerService::class);
         //for now only
-        return (new CompanyChangeDefaultAdminServerService())->update();
+        return (new $service())->update();
     }
   
     // public function companyBranchList()
