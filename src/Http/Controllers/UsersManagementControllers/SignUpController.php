@@ -10,12 +10,15 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use PixelApp\Filters\MultiFilters;
+use PixelApp\Http\Requests\UserManagementRequests\SignupUserApprovingRequest;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Services\AuthenticationServices\UserAuthServices\EmailVerificationServices\UserVerificationNotificationResendingService;
 use PixelApp\Services\UsersManagement\EmailChangerService\EmailChangerService;
 use PixelApp\Services\UsersManagement\Statistics\SignupList\SignupUserStatisticsBuilder;
 use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\SignUpAccountStatusChanger;
-use PixelAppCore\Services\PixelServiceManager;
+use PixelApp\Services\PixelServiceManager;
+use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\SignUpUserStatusChangerServices\SignUpAccountApprovingService;
+use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\SignUpUserStatusChangerServices\SignUpAccountRejectingService;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -88,14 +91,22 @@ class SignUpController extends Controller
         return (new $service())->setAuthenticatable($user)->resend();
     }
 
-    public function changeAccountStatus($user): JsonResponse
-    {
+    public function approveAccount($user) : JsonResponse
+    { 
 //        BasePolicy::check('editSignUpUsers', User::class);
         $user = $this->getUserModelClass()::findOrFail($user);
-        $service = PixelServiceManager::getServiceForServiceBaseType(SignUpAccountStatusChanger::class);
-        return (new $service($user))->change();
+        $service = PixelServiceManager::getServiceForServiceBaseType(SignUpAccountApprovingService::class);
+        return (new $service($user))->approve();
     }
 
+    public function rejectAccount(int $user) : JsonResponse
+    {
+        //        BasePolicy::check('editSignUpUsers', User::class);
+        $user = $this->getUserModelClass()::findOrFail($user);
+        $service = PixelServiceManager::getServiceForServiceBaseType(SignUpAccountRejectingService::class);
+        return (new $service($user))->reject();
+    }
+    
     public function filters(): array
     {
         return  [

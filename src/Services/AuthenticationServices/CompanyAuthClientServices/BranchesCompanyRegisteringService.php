@@ -4,7 +4,7 @@ namespace PixelApp\Services\AuthenticationServices\CompanyAuthClientServices;
 
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Http\Requests\AuthenticationRequests\CompanyAuthenticationRequests\BranchesCompanyRegisterRequest;
-use PixelApp\Http\Requests\PixelHtppRequestManager;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 
 /**
  * @todo : need to check later ... maybe it needs to remove this service
@@ -13,7 +13,7 @@ class BranchesCompanyRegisteringService extends CompanyRegisteringService
 {
     protected function getRequestClass(): string
     {
-        return PixelHtppRequestManager::getRequestForRequestBaseType(BranchesCompanyRegisterRequest::class);
+        return PixelHttpRequestManager::getRequestForRequestBaseType(BranchesCompanyRegisterRequest::class);
     }
 
     protected function getTenantCompanyModelClass() : string

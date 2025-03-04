@@ -11,7 +11,7 @@ use PixelApp\Http\Resources\UserAccountResources\UserProfileSpecificDataResource
 use PixelApp\Services\UserCompanyAccountServices\UserProfileUpdatingServices\UserProfileUpdatingService;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\UserCompanyAccountServices\PasswordChangerService\PasswordChangerService;
-use PixelAppCore\Services\PixelServiceManager;
+use PixelApp\Services\PixelServiceManager;
 
 class UserProfileController extends Controller
 {

@@ -16,7 +16,7 @@ use PixelApp\Services\UsersManagement\EmailChangerService\EmailChangerService;
 use PixelApp\Services\UsersManagement\Statistics\UsersList\UsersListStatisticsBuilder;
 use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\UserAccountStatusChanger;
 use PixelApp\Services\UsersManagement\UpdatingUserByAdminService\UpdatingUserByAdminService;
-use PixelAppCore\Services\PixelServiceManager;
+use PixelApp\Services\PixelServiceManager;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 

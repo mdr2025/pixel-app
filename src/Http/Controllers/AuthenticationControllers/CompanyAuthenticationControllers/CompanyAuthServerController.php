@@ -13,7 +13,7 @@ use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\CompanyLo
 use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\CompanyRegisteringService;
 use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\CompanyCheckingStatusService;
 use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\DefaultAdminServices\EmailVerificationServices\DefaultAdminEmailVerificationService;
-use PixelAppCore\Services\PixelServiceManager;
+use PixelApp\Services\PixelServiceManager;
 
 class CompanyAuthServerController extends Controller
 {

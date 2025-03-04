@@ -16,7 +16,7 @@ use PixelApp\Models\SystemConfigurationModels\CountryModule\Area;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\AreaDeletingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\AreaStoringService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\AreaUpdatingService;
-use PixelAppCore\Services\PixelServiceManager;
+use PixelApp\Services\PixelServiceManager;
 use Rap2hpoutre\FastExcel\SheetCollection; 
 
 class AreasController extends Controller

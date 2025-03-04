@@ -16,7 +16,7 @@ use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleDeleti
 use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleStoringService;
 use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleUpdatingServices\RoleDisablingSwitcher;
 use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleUpdatingServices\RoleInfoUpdatingService;
-use PixelAppCore\Services\PixelServiceManager;
+use PixelApp\Services\PixelServiceManager;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 

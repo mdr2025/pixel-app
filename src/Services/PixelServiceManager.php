@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelAppCore\Services;
+namespace PixelApp\Services;
 
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 

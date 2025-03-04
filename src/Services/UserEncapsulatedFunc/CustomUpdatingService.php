@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
+use PixelApp\Interfaces\EmailAuthenticatable;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\Traits\GeneralValidationMethods;
 use PixelApp\Services\UsersManagement\Interfaces\AdminChangerInterface;
@@ -14,9 +15,9 @@ abstract class CustomUpdatingService
 {
     use GeneralValidationMethods;
 
-    protected PixelUser | Authenticatable $user;
+    protected PixelUser | Authenticatable | EmailAuthenticatable $user;
 
-    public function __construct(PixelUser | Authenticatable $user)
+    public function __construct(PixelUser | Authenticatable |EmailAuthenticatable $user)
     {
         $this->user = $user;
     }

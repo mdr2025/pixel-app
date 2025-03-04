@@ -11,7 +11,9 @@ use PixelApp\Http\Resources\AuthenticationResources\CompanyAuthenticationResourc
 use PixelApp\Services\UserCompanyAccountServices\CompanyProfileGettingService\CompanyProfileGettingServerService;
 use PixelApp\Services\UserCompanyAccountServices\CompanyProfileUpdatingService\CompanyProfileUpdatingServerService;
 use PixelApp\Services\UserCompanyAccountServices\CompanyUpdateAdmin\CompanyChangeDefaultAdminServerService;
-use PixelAppCore\Services\PixelServiceManager;
+use PixelApp\Services\PixelServiceManager;
+use PixelApp\Services\UserCompanyAccountServices\CompanyBranchesListServices\CompanyBranchesListServerService;
+use PixelApp\Services\UserCompanyAccountServices\BranchStatusChangingServices\BranchStatusChangingServerService;
 use Stancl\Tenancy\Contracts\Tenant;
 
 class UserCompanyAccountServerController extends Controller
@@ -49,39 +51,16 @@ class UserCompanyAccountServerController extends Controller
         return (new $service())->update();
     }
   
-    // public function companyBranchList()
-    // {
-    //     $companyId = tenant()->getTenantKey();
-    //     $branches  = QueryBuilder::for(TenantCompany::class)
-    //         ->allowedFilters([
-    //             AllowedFilter::exact("status", "main_company_PixelApproved_status"),
-    //             AllowedFilter::custom('name',new MultiFilters([
-    //                 'name',
-    //                 'defaultAdmin.email'
-    //             ])),
-    //             "company_id"
-    //         ])
-    //         ->where('parent_id', $companyId)
-    //         ->with(['country' , 'defaultAdmin'])
-    //         ->paginate(request()->pageSize ?? 10);
-    //     return response()->json(['list' => $branches]);
-    // }
+    public function companyBranchList()
+    {
+        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyBranchesListServerService::class);
+        return (new $service)->list();
+    }
 
-    // public function changeBranchStatus(ChangeBranchCompanyStatusRequest $request , $id)
-    // {
-    //     $status = $request->get('status');
-    //     $company = TenantCompany::find($id);
-    //     if (!$company) {
-    //         return Response::error(["Company not found."]);
-    //     }
-
-    //     if ($company->main_company_PixelApproved_status !== 'pending') {
-    //         return Response::error(["Status cannot be changed."]);
-    //     }
-
-    //     $company->main_company_PixelApproved_status = $status;
-    //     $company->save();
-    //     return Response::success([], ["Status changed successfully."]);
-    // }
+    public function changeBranchStatus( $id)
+    {
+        $service = PixelServiceManager::getServiceForServiceBaseType(BranchStatusChangingServerService::class);
+        return (new $service($id))->change(); 
+    }
 
 }

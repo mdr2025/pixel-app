@@ -27,7 +27,7 @@ class CompanyLoginService
     {
         $resource = PixelHttpResourceManager::getResourceForResourceBaseType(TenantCompanyResource::class);
         $data = (new $resource($this->company))->toArray(request());
-        $messages = ["Successful login , Welcome to company {$this->company->name} "];
+        $messages = ["Successful login , Welcome to company " . $this->company->name ];
         return Response::success($data, $messages);
     }
 
@@ -36,7 +36,8 @@ class CompanyLoginService
      */
     protected function checkCompanyApprovment(): self
     {
-        if (!$this->company->isApproved()) {
+        if (!$this->company->isApproved())
+        {
             throw new Exception("This company account is not approved yet !");
         }
         return $this;
@@ -44,23 +45,29 @@ class CompanyLoginService
 
     protected function checkCompanyActivity(): self
     {
-        if (!$this->company->isActive()) {
+        if (!$this->company->isActive())
+        {
             throw new Exception("This company account is inactive");
         }
         return $this;
     }
 
+    protected function fetchCompanyById(int $companyId) : ?TenantCompany
+    {
+        $tenantModelClass = PixelTenancyManager::getTenantCompanyModelClass();
+        return $tenantModelClass::where("company_id", $companyId)->first();
+    }
     /**
      * @return $this
      * @throws Exception
      */
-    function setCompany(): self
+    protected function setCompany(): self
     {
         $companyId = $this->data["company_id"];
-        $this->CheckRcNo($companyId);
-        $tenantModelClass = PixelTenancyManager::getTenantCompanyModelClass();
-        $company = $tenantModelClass::where("company_id", $companyId)->first();
-        if ($company) {
+        $this->CheckRcNo($companyId); 
+        
+        if ($company = $this->fetchCompanyById($companyId))
+        {
             $this->company = $company;
             return $this;
         }

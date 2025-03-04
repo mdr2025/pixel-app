@@ -12,7 +12,7 @@ use PixelApp\Models\SystemConfigurationModels\CountryModule\City;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\CitiesService\CitiesDeletingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\CitiesService\CitiesStoringService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\CitiesService\CitiesUpdatingService;
-use PixelAppCore\Services\PixelServiceManager;
+use PixelApp\Services\PixelServiceManager;
 
 class CitiesController extends Controller
 {

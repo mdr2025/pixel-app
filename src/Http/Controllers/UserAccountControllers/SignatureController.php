@@ -10,7 +10,7 @@ use PixelApp\Models\UsersModule\Signature;
 use PixelApp\Services\UserCompanyAccountServices\Signature\SignatureDeletingService;
 use PixelApp\Services\UserCompanyAccountServices\Signature\SignatureStoringService;
 use PixelApp\Services\UserCompanyAccountServices\Signature\SignatureUpdatingService;
-use PixelAppCore\Services\PixelServiceManager;
+use PixelApp\Services\PixelServiceManager;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class SignatureController extends Controller

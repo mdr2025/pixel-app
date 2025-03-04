@@ -14,7 +14,7 @@ use PixelApp\Services\AuthenticationServices\UserAuthServices\PasswordResettingS
 use PixelApp\Services\AuthenticationServices\UserAuthServices\PasswordResettingService\PasswordResettingService;
 use PixelApp\Services\AuthenticationServices\UserAuthServices\TokenRefreshingService\TokenRefreshingService;
 use PixelApp\Services\AuthenticationServices\UserAuthServices\UserRegisteringServices\UserRegisteringService;
-use PixelAppCore\Services\PixelServiceManager;
+use PixelApp\Services\PixelServiceManager;
 
 class AuthController extends Controller
 { 

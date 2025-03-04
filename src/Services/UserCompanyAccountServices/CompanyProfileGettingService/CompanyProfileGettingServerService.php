@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Resources\AuthenticationResources\CompanyAuthenticationResources\TenantCompanyProfileResource;
 use Stancl\Tenancy\Contracts\Tenant;
 use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\CompanyFetchingService;
-use PixelAppCore\Services\PixelServiceManager;
+use PixelApp\Services\PixelServiceManager;
 
 class CompanyProfileGettingServerService 
 { 

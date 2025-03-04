@@ -15,7 +15,7 @@ use PixelApp\Models\SystemConfigurationModels\Department;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentDeletingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentStoringService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentUpdatingService;
-use PixelAppCore\Services\PixelServiceManager;
+use PixelApp\Services\PixelServiceManager;
 use Rap2hpoutre\FastExcel\SheetCollection;
 
 class DepartmentsController extends Controller

@@ -6,7 +6,7 @@ use Illuminate\Validation\Rule;
 use PixelApp\Models\UsersModule\PixelUser;
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 
-class SignupUserStatusUpdatingRequest extends BaseFormRequest
+class SignupUserRejectingRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -35,9 +35,7 @@ class SignupUserStatusUpdatingRequest extends BaseFormRequest
     {
         $status = request()->input("status");
         return [
-            'status' => ["required", "string" , Rule::in(PixelUser::SIGN_UP_STATUS_CHANGING_VALUES)],
-            "role_id" => [  Rule::requiredIf( $status == "active") , "integer", "exists:roles,id"],
-            "department_id" => [ Rule::requiredIf( $status == "active" ) , "integer", "exists:departments,id"]
+            'status' => ["required", "string" , Rule::in(["rejected"])]
         ];
     }
 }

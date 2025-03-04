@@ -29,12 +29,16 @@ class SignUpUsersAPIRoutesRegistrar extends PixelRouteRegistrar
 
     protected function defineExportRoute() : void
     {
-        Route::get('/signup-list/excel/export', [SignUpController::class, 'export']);
+        Route::get('signup-list/excel/export', [SignUpController::class, 'export']);
     }
-
-    protected function defineChangeAccountStatusRoute() : void
+    
+    protected function defineRejectingSignupUserRoute() : void
     {
-        Route::put('signup-list/status/{user}', [SignUpController::class, 'changeAccountStatus']);
+        Route::put('signup-list/reject/{user}', [SignUpController::class, 'rejectAccount']);
+    }
+    protected function defineApprovingSignupUserRoute() : void
+    {
+        Route::put('signup-list/approve/{user}', [SignUpController::class, 'approveAccount']);
     }
 
     protected function defineReverifyEmailRoute() : void
@@ -73,7 +77,8 @@ class SignUpUsersAPIRoutesRegistrar extends PixelRouteRegistrar
             $this->defineChangeEmailRoute();
             $this->defineResendEmailVerificationRoute();
             $this->defineReverifyEmailRoute();
-            $this->defineChangeAccountStatusRoute();
+            $this->defineApprovingSignupUserRoute();
+            $this->defineRejectingSignupUserRoute();
             $this->defineExportRoute();
         });
     }

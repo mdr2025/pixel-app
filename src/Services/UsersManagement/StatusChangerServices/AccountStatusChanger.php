@@ -52,15 +52,7 @@ abstract class AccountStatusChanger extends CustomUpdatingService
         }
         return false;
     }
-    /**
-     * @return $this
-     * @throws Exception
-     */
-    protected function setUserRelationships(): self
-    {
-        return $this;
-    }
-
+ 
     /**
      * @throws Exception
      */
@@ -98,7 +90,7 @@ abstract class AccountStatusChanger extends CustomUpdatingService
     protected function changerFun(): JsonResponse
     {
         DB::beginTransaction();
-        $this->checkConditionsBeforeStart()->changeUserStatus()->setUserRelationships();
+        $this->checkConditionsBeforeStart()->changeUserStatus();
         if ($this->saveUserChanges())
         {
             DB::commit();

@@ -4,7 +4,7 @@ namespace PixelApp\Services\AuthenticationServices\CompanyAuthServerServices;
 
 use Illuminate\Http\JsonResponse; 
 use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\CompanyFetchingService;
-use PixelAppCore\Services\PixelServiceManager;
+use PixelApp\Services\PixelServiceManager;
 use Stancl\Tenancy\Contracts\Tenant;
 
 class CompanyCheckingSubDomainService
