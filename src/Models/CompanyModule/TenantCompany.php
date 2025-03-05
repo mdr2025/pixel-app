@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+use PixelApp\Interfaces\OnlyAdminPanelQueryable;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Country;
 use Stancl\Tenancy\Contracts\Tenant;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
@@ -33,7 +35,7 @@ use Stancl\Tenancy\Events\TenantSaved;
 use Stancl\Tenancy\Events\TenantUpdated;
 use Stancl\Tenancy\Events\UpdatingTenant; 
 
-class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantWithDatabase , OwnsRelationships , MustUploadModelFiles
+class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantWithDatabase , OwnsRelationships , MustUploadModelFiles ,  OnlyAdminPanelQueryable
 {
     use HasFactory ,  HasDatabase ;
     use CentralConnection,
@@ -72,19 +74,7 @@ class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantW
     {
         return ['domain',  'sector'];
     }
-    
-    /**
-     * Only queryable in admin panel or monolith app (in central app aprt)
-     */
-    protected function newBaseQueryBuilder()
-    {
-        if(!PixelTenancyManager::isTenantQueryable())
-        {
-            throw new Exception("Can't execute any query on tenant model for this app type ");
-        }
-        parent::newBaseQueryBuilder();
-    }
-
+     
     public static function getCustomColumns(): array
     {
         return [
@@ -221,7 +211,8 @@ class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantW
 
     public function defaultAdmin()  : HasOne
     {
-        return $this->hasOne(CompanyDefaultAdmin::class , "company_id" , "id");
+        $defaultAdminClass = PixelModelManager::getModelForModelBaseType(CompanyDefaultAdmin::class );
+        return $this->hasOne($defaultAdminClass , "company_id" , "id");
     }
 
     

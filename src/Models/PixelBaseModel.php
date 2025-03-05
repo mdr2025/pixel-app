@@ -9,6 +9,8 @@ use CRUDServices\FilesOperationsHandlers\FilePathsRetrievingHandler\FileFullPath
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+use PixelApp\Interfaces\OnlyAdminPanelQueryable;
 use ReflectionClass;
 use RuntimeCaching\RuntimeCacheTypes\ParentModelRuntimeCache; 
 use Statistics\Interfaces\ModelInterfaces\StatisticsProviderModel;
@@ -36,6 +38,19 @@ class PixelBaseModel extends Model implements StatisticsProviderModel
             $model->setParentToRunTimeCache();
         });
     }
+       /**
+     * Only queryable in admin panel or monolith app (in central app aprt)
+     */
+    protected function newBaseQueryBuilder()
+    {
+        if($this instanceof OnlyAdminPanelQueryable && !PixelTenancyManager::isItAdminPanelApp())
+        {
+            dd("Can't execute any query on " . static::class . " model in this app type ");
+        }
+
+        parent::newBaseQueryBuilder();
+    }
+    
     static public function getTableTitle(string $tableName): string
     {
         $title = Str::title($tableName);

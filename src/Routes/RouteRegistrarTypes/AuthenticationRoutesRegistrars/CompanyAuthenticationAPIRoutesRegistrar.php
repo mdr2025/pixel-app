@@ -59,11 +59,17 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
         Route::post('company/verify-email', [CompanyAuthClientController::class , 'verifyDefaultAdminEmail']);
     }
 
+    protected function defineCompanyDefaultAdminUpdatingServerRoute() : void
+    {
+        Route::post('company/update-default-admin-info', [CompanyAuthServerController::class , 'updateDefaultAdminInfo']);
+    }
+  
     protected function defineCompanyServerEmailVerificationRoute() : void
     {
         Route::post('company/verify-email', [CompanyAuthServerController::class , 'verifyDefaultAdminEmail']);
     }
   
+    
     protected function defineCompanyClientForgetIdRoute() : void
     {
         Route::post('company/forget-id', [CompanyAuthClientController::class , 'forgetId'])->middleware('reqLimit') ;

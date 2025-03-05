@@ -10,12 +10,14 @@ use PixelApp\Traits\interfacesCommonMethods\EmailAuthenticatableMethods;
 use PixelApp\Traits\interfacesCommonMethods\TenancyDataSyncHelperMethods;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+use PixelApp\Interfaces\OnlyAdminPanelQueryable;
 use Stancl\Tenancy\Contracts\Tenant;
 
-class CompanyDefaultAdmin extends PixelBaseModel implements EmailAuthenticatable
+class CompanyDefaultAdmin extends PixelBaseModel implements EmailAuthenticatable ,OnlyAdminPanelQueryable
 // , NeedsTenantDataSync
 {
-    use Notifiable , EmailAuthenticatableMethods '
+    use Notifiable , EmailAuthenticatableMethods ;
     //', TenancyDataSyncHelperMethods;
 
     protected $table = "tenant_default_admins";
@@ -31,7 +33,7 @@ class CompanyDefaultAdmin extends PixelBaseModel implements EmailAuthenticatable
 
     public function Company()  : BelongsTo
     {
-        return $this->belongsTo(TenantCompany::class , "company_id" , "id");
+        return $this->belongsTo( PixelTenancyManager::getTenantCompanyModelClass() , "company_id" , "id");
     }
     public function getConnectionName()
     {

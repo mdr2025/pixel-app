@@ -4,11 +4,22 @@ namespace  PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatu
 
 use Exception;
 use PixelApp\Services\UsersManagement\StatusChangerServices\AccountStatusChanger;
+use Illuminate\Http\Request;
 
 abstract class SignUpAccountStatusChanger extends AccountStatusChanger
 { 
     abstract protected function getRequestFormClass(): string;
  
+    protected function getRequest()  :Request
+    {
+        return request();
+    }
+    protected function mergeStatusValueToRequest(string $statusValue) : void
+    {
+        $request = $this->getRequest();
+        $dataToMerge = array_merge($request->all() , ["status" => $statusValue]);
+        $request->merge($dataToMerge);
+    }
     /**
      * @return $this
      * @throws Exception

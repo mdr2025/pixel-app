@@ -18,6 +18,11 @@ class CompanySettingsAPIRoutesRegistrar extends PixelRouteRegistrar
         } 
     }
     
+    protected function defineUpdateAdminInfoRoute() : void
+    {    
+        Route::put('profile/update-admin', [UserCompanySettingController::class, 'updateAdminInfo']);
+    }
+
     protected function defineCompanyResettingRoute() : void
     { 
         Route::post('reset-data', [UserCompanySettingController::class, 'resetData']);
@@ -30,6 +35,7 @@ class CompanySettingsAPIRoutesRegistrar extends PixelRouteRegistrar
         $routeRegistrar->group(function()
         {
             $this->defineCompanyResettingRoute();  
+            $this->defineUpdateAdminInfoRoute();
         });
     }
     

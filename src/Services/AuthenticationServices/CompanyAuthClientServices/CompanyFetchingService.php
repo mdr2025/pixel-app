@@ -2,11 +2,14 @@
 
 namespace PixelApp\Services\AuthenticationServices\CompanyAuthClientServices;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\ClientBaseServices\AdminPanelConnectingClientService;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppRouteIdentifiersFactories\AdminPanelRouteIdentifierFactories\CompanyAuthRouteIdentifierFactories\FecthTenantCompanyRouteIdentifierFactory;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppRouteIdentifiersFactories\PixelAppRouteIdentifierFactory;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+use PixelApp\Models\CompanyModule\CompanyDefaultAdmin;
+use PixelApp\Models\PixelModelManager;
 use Stancl\Tenancy\Contracts\Tenant;
 
 class CompanyFetchingService extends AdminPanelConnectingClientService
@@ -37,14 +40,38 @@ class CompanyFetchingService extends AdminPanelConnectingClientService
         return $response->getData(true);
     }
 
+    protected function initNewDefaultAdmin(array $attributes) : CompanyDefaultAdmin
+    {
+        $modelClass = PixelModelManager::getModelForModelBaseType(CompanyDefaultAdmin::class);
+        return new $modelClass($attributes["defaultAdmin"]);
+    }
+    protected function setTenantDefaultAdminRelation(Tenant | Model $tenant , array $attributes) : void
+    {
+        if(array_key_exists("defaultAdmin" , $attributes))
+        {
+            $tenant->setRelation("defaultAdmin" , $this->initNewDefaultAdmin($attributes));
+        }
+    }
+
+    protected function setTenantRelations(Tenant | Model $tenant , array $attributes) : void
+    {
+        $this->setTenantDefaultAdminRelation($tenant , $attributes);
+    }
+    
+    protected function initNewTenant(array $attributes) : Tenant | Model 
+    {
+        $tenantClass = PixelTenancyManager::getTenantCompanyModelClass();
+        return new $tenantClass($attributes);
+    }
     public function fetchTenantCompany() : ?Tenant
     {
         $response = $this->getResponse();
         $attributes = $this->getResponseArray($response);
         if(!empty($attributes))
         {
-            $tenantClass = PixelTenancyManager::getTenantCompanyModelClass();
-            new $tenantClass($attributes);
+            $tenant = $this->initNewTenant($attributes);
+            $this->setTenantRelations($tenant , $attributes);
+            return $tenant;
         }
         return null;
         

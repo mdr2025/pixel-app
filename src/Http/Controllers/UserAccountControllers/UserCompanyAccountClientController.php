@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Response;
 use PixelApp\Models\CompanyModule\TenantCompany;
 use PixelApp\Services\UserCompanyAccountServices\CompanyProfileGettingService\CompanyProfileGettingClientService;
 use PixelApp\Services\UserCompanyAccountServices\CompanyProfileUpdatingService\CompanyProfileUpdatingClientService;
-use PixelApp\Services\UserCompanyAccountServices\CompanyUpdateAdmin\CompanyChangeDefaultAdminServerService;
 use PixelApp\Services\UserCompanyAccountServices\CompanyBranchesListServices\CompanyBranchesListClientService;
 use PixelApp\Services\UserCompanyAccountServices\BranchStatusChangingServices\BranchStatusChangingClientService;
 use PixelApp\Services\PixelServiceManager;
@@ -34,13 +33,6 @@ class UserCompanyAccountClientController extends Controller
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(CompanyProfileUpdatingClientService::class);
         return (new $service())->getResponse(); 
-    }
-
-    public function updateAdminInfo()
-    {
-        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyChangeDefaultAdminServerService::class);
-        //for now only
-        return (new $service())->update();
     }
  
     public function companyBranchList()

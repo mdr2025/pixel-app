@@ -5,6 +5,7 @@ namespace PixelApp\Services\UserCompanyAccountServices\CompanyUpdateAdmin;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use PixelApp\Exceptions\CustomJsonException;
+use PixelApp\Exceptions\JsonException;
 use PixelApp\Models\CompanyModule\CompanyDefaultAdmin;
 use PixelApp\Models\CompanyModule\TenantCompany;
 use PixelApp\Models\PixelModelManager;
@@ -115,12 +116,12 @@ class CompanyChangeDefaultAdminServerService
     }
 
     /**
-     * @throws CustomJsonException
+     * @throws  JsonException
      */
     protected function checkAdminRole(): self
     {
         if (auth()->user()->role_id != 1) {
-            throw new CustomJsonException("you can't change admin email");
+            throw new JsonException("you can't change admin email");
         }
         return $this;
     }

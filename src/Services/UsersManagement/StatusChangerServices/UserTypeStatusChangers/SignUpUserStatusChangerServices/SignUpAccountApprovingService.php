@@ -22,7 +22,7 @@ class SignUpAccountApprovingService extends SignUpAccountStatusChanger
     public function __construct(PixelUser | Authenticatable |EmailAuthenticatable $user)
     {
         parent::__construct($user);
-        $this->mergeApprovingStatusToRequest();
+        $this->mergeStatusValueToRequest("active");
     }
 
     //it is just an alias method
@@ -31,16 +31,6 @@ class SignUpAccountApprovingService extends SignUpAccountStatusChanger
         return $this->change();
     }
 
-    protected function getRequest()  :Request
-    {
-        return request();
-    }
-    protected function mergeApprovingStatusToRequest() : void
-    {
-        $request = $this->getRequest();
-        $dataToMerge = array_merge($request->all() , ["status" => "active"]);
-        $request->merge($dataToMerge);
-    }
 
     protected static function getApprovingRequestFormBaseClass() :  string
     {
@@ -53,20 +43,20 @@ class SignUpAccountApprovingService extends SignUpAccountStatusChanger
 
     public static function mustCheckRoleId() : void
     {
-        static::$signUpApprovmentPropChangers[] = UserRoleChanger::class ;
+        static::$signUpApprovmentPropChangers[UserRoleChanger::class] = UserRoleChanger::class ;
         static::getApprovingRequestFormBaseClass()::mustCheckRoleId();
     }
 
     
     public static function mustCheckDepartmentId() : void
     {
-        static::$signUpApprovmentPropChangers[] = DepartmentChanger::class ;
+        static::$signUpApprovmentPropChangers[ DepartmentChanger::class] = DepartmentChanger::class ;
         static::getApprovingRequestFormBaseClass()::mustCheckDepartmentId();
     }
    
     public static function mustCheckBranchId() : void
     {
-        static::$signUpApprovmentPropChangers[] = BranchChanger::class ;
+        static::$signUpApprovmentPropChangers[BranchChanger::class] = BranchChanger::class ;
         static::getApprovingRequestFormBaseClass()::mustCheckBranchId();
     }
 

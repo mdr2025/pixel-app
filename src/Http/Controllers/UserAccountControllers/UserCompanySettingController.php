@@ -8,6 +8,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Requests\UserAccountRequests\ResetCompanyDataRequest;
 use PixelApp\Jobs\ResetCompanyDataJob;
+use PixelApp\Services\PixelServiceManager;
+use PixelApp\Services\UserCompanyAccountServices\CompanyUpdateAdmin\CompanyChangeDefaultAdminClientService;
 
 class UserCompanySettingController extends Controller
 { 
@@ -20,6 +22,13 @@ class UserCompanySettingController extends Controller
         }
         ResetCompanyDataJob::dispatch();
         return Response::success([], ["Reset Data Process Will Be Finished Within Few Minutes, PixelAppreciate Your Patience."]);
+    }
+  
+  
+    public function updateAdminInfo()
+    {
+        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyChangeDefaultAdminClientService::class);
+        return (new $service())->update();
     }
   
 }

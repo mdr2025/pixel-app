@@ -32,6 +32,11 @@ class CompanyAuthServerController extends Controller
         return (new $service())->login();
     }
 
+    public function updateDefaultAdminInfo() : JsonResponse
+    {
+        $service = PixelServiceManager::getServiceForServiceBaseType();
+        return (new $service)->update();
+    }
     public function verifyDefaultAdminEmail(): JsonResponse
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(DefaultAdminEmailVerificationService::class);

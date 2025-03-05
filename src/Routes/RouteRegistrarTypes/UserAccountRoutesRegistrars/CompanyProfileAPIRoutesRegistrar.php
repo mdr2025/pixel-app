@@ -27,17 +27,7 @@ class CompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
             $this->defineAdminPanelRoutes(); 
         } 
     }
-
-    protected function defineUpdateAdminInfoServerRoute() : void
-    {    
-        Route::put('profile/update-admin', [UserCompanyAccountServerController::class, 'updateAdminInfo']);
-    }
-
-    protected function defineUpdateAdminInfoClientRoute() : void
-    {    
-        Route::put('profile/update-admin', [UserCompanyAccountClientController::class, 'updateAdminInfo']);
-    }
-
+  
     protected function defineUpdateCompanyProfileServerRoute() : void
     {
         Route::post('profile/update', [UserCompanyAccountServerController::class, 'updateCompanyProfile']);
@@ -66,8 +56,7 @@ class CompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
         $routeRegistrar->group(function()
         {
             $this->defineCompanyProfileClientRoute(); 
-            $this->defineUpdateCompanyProfileClientRoute();
-            $this->defineUpdateAdminInfoClientRoute(); 
+            $this->defineUpdateCompanyProfileClientRoute(); 
         });
     }
     protected function defineCompanyProfileServerRoutes(RouteRegistrar $routeRegistrar ) : void
@@ -77,8 +66,7 @@ class CompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
         $routeRegistrar->group(function()
         {
             $this->defineCompanyProfileServerRoute(); 
-            $this->defineUpdateCompanyProfileServerRoute();
-            $this->defineUpdateAdminInfoServerRoute(); 
+            $this->defineUpdateCompanyProfileServerRoute(); 
         });
     }
     
