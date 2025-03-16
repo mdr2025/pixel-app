@@ -65,6 +65,9 @@ class BranchesRouteRegistrar extends PixelRouteRegistrar
             $this->defineBranchesListingRoute(); 
             $this->defineSubBranchesListingRoute();
             $this->defineChildBranchesListingRoute();
+            $this->defineImportableFormatDownloadingRoute();
+            $this->defineImportingRoute();
+            $this->defineExportingRoute();
         });
     }
     
