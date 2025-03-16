@@ -16,6 +16,8 @@ use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOpera
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentStoringService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentUpdatingService;
 use PixelApp\Services\PixelServiceManager;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\ExpImpServices\ExportingServices\DepartmentsExportingService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\ExpImpServices\ImportingFunc\DepartmentsImporter;
 use Rap2hpoutre\FastExcel\SheetCollection;
 
 class DepartmentsController extends Controller
@@ -91,8 +93,20 @@ class DepartmentsController extends Controller
         return (new $service($department))->delete();
     }
 
-    public function import(ImportExcelRequest $request)
+    public function importableFormalDownload() 
     {
+        $importer = PixelServiceManager::getServiceForServiceBaseType(DepartmentsImporter::class);
+        return (new $importer())->downloadFormat();
+    
+        // BasePolicy::check('create', Department::class);
+        // return Excel::download(new DepartmentImportFormate(), 'format.xlsx',  WriteTypeExcel::XLSX, ['File-Name' => 'format_sample.xlsx']);
+    } 
+
+    public function import()
+    {
+        $importer = PixelServiceManager::getServiceForServiceBaseType(DepartmentsImporter::class);
+        return (new $importer())->import();
+
         // BasePolicy::check('create', Department::class);
         // $file = $request->file('file');
         // $rules = [
@@ -115,6 +129,9 @@ class DepartmentsController extends Controller
 
     public function export()
     {
+        $service = PixelServiceManager::getServiceForServiceBaseType(DepartmentsExportingService::class);
+        return (new $service())->baseExport();
+
         // BasePolicy::check('read', Department::class);
         // // Retrieve the data to be exported
         // $columnHeaders = ['Name'];
@@ -126,9 +143,4 @@ class DepartmentsController extends Controller
 
         // return response()->download($excelFile);
     }
-    public function downloadFileFormat()
-    {
-        // BasePolicy::check('create', Department::class);
-        // return Excel::download(new DepartmentImportFormate(), 'format.xlsx',  WriteTypeExcel::XLSX, ['File-Name' => 'format_sample.xlsx']);
-    } 
 }

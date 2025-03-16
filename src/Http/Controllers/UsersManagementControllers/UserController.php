@@ -17,6 +17,7 @@ use PixelApp\Services\UsersManagement\Statistics\UsersList\UsersListStatisticsBu
 use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\UserAccountStatusChanger;
 use PixelApp\Services\UsersManagement\UpdatingUserByAdminService\UpdatingUserByAdminService;
 use PixelApp\Services\PixelServiceManager;
+use PixelApp\Services\UsersManagement\ExpImpServices\UserTypesExpImpServices\UserTypeExpImpServices\UserTypeExportingService;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -146,7 +147,8 @@ class UserController extends Controller
 
     public function export(){
         // BasePolicy::check('readEmployees', User::class);
-
+        $service = PixelServiceManager::getServiceForServiceBaseType(UserTypeExportingService::class);
+        return (new $service)->basicExport();
         // $columnHeaders = ['Name', 'Email', 'Mobile', 'Department', 'Role'];
         // $needed_columns = ['id', 'name', 'email', 'mobile', 'department_id', 'role_id']; // Dynamic array of column headers
         // $relationNames = ['department' => ['column' => 'name', 'display' => 'Department'], 'role' => ['column' => 'name', 'display' => 'Role']]; // Dynamic array of relation names

@@ -16,6 +16,8 @@ use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperatio
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchStoringService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchUpdatingService;
 use PixelApp\Services\PixelServiceManager;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\ExpImpServices\ExportingServices\BranchesExportingService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\ExpImpServices\ImportingFunc\BranchesImporter;
 
 class BranchesController extends Controller
 {
@@ -46,12 +48,6 @@ class BranchesController extends Controller
 
         return Response::success( $data->toArray());
     }
-    public function show( $branch)
-    {
-        $branch = Branch::findOrFail($branch);
-        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(SingleResource::class);
-        return new $resourceClass($branch);
-    }
 
     function list()
     {
@@ -76,6 +72,12 @@ class BranchesController extends Controller
         return $resourceClass::collection($data);
     }
 
+    public function show( $branch)
+    {
+        $branch = Branch::findOrFail($branch);
+        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(SingleResource::class);
+        return new $resourceClass($branch);
+    }
     /**
      * @param Request $request
      * @return JsonResponse
@@ -109,29 +111,41 @@ class BranchesController extends Controller
         return (new $service($branch))->delete();
     }
 
-    public function import(ImportFile $import)
+    public function importableFormalDownload() 
     {
-        $file = $import->file;
+        $importer = PixelServiceManager::getServiceForServiceBaseType(BranchesImporter::class);
+        return (new $importer())->downloadFormat();
+    }
 
-        return (new ImportBuilder())
-            ->file($file)
-            ->map(function ($item) {
-                $item = array_change_key_case($item);
-                return Branch::create($item);
-            })
-            ->import();
+    public function import()
+    {
+        $importer = PixelServiceManager::getServiceForServiceBaseType(BranchesImporter::class);
+        return (new $importer())->import();
+
+        // $file = $import->file;
+
+        // return (new ImportBuilder())
+        //     ->file($file)
+        //     ->map(function ($item) {
+        //         $item = array_change_key_case($item);
+        //         return Branch::create($item);
+        //     })
+        //     ->import();
     }
 
     public function export()
     {
-        $taxes = QueryBuilder::for(Branch::class)->allowedFilters($this->filterable)->datesFiltering()->customOrdering()->cursor();
-        $list  = new SheetCollection([
-            "Branches" => ExportBuilder::generator($taxes)
-        ]);
-        return (new ExportBuilder($request->type))
-            ->withSheet($list)
-            ->map(fn ($item) => ['No.' => $item['id'], 'Name' => $item['name'], 'Status' => $item['status']['label']])
-            ->name('Branches')->build();
+        $service = PixelServiceManager::getServiceForServiceBaseType(BranchesExportingService::class);
+        return (new $service())->baseExport();
+
+        // $taxes = QueryBuilder::for(Branch::class)->allowedFilters($this->filterable)->datesFiltering()->customOrdering()->cursor();
+        // $list  = new SheetCollection([
+        //     "Branches" => ExportBuilder::generator($taxes)
+        // ]);
+        // return (new ExportBuilder($request->type))
+        //     ->withSheet($list)
+        //     ->map(fn ($item) => ['No.' => $item['id'], 'Name' => $item['name'], 'Status' => $item['status']['label']])
+        //     ->name('Branches')->build();
     }
     
 }

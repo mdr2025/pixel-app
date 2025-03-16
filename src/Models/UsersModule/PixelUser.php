@@ -135,6 +135,7 @@ implements
         return $this->belongsTo(Department::class)->select('id', 'name');
     }
 
+
     public function scopeNotSuperAdmin($query)
     {
         $query->where('role_id', '!=', 1);
@@ -150,6 +151,16 @@ implements
         $query->whereIn('status', $this::SIGN_UP_STATUS)->where('user_type', 'signup');
     }
  
+    public function scopeUser($query)
+    {
+        $query->where("user_type" , 'user');
+    }
+
+    public function scopeSignUpUser($query)
+    {
+        $query->where("user_type" , 'signup');
+    }
+
     public function scopeActive($query)
     {
         $query->where('status', 'pending');

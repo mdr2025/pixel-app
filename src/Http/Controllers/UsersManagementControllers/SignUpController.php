@@ -17,6 +17,7 @@ use PixelApp\Services\UsersManagement\EmailChangerService\EmailChangerService;
 use PixelApp\Services\UsersManagement\Statistics\SignupList\SignupUserStatisticsBuilder;
 use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\SignUpAccountStatusChanger;
 use PixelApp\Services\PixelServiceManager;
+use PixelApp\Services\UsersManagement\ExpImpServices\UserTypesExpImpServices\SignUpUsersExpImpServices\SignUpUsersExportingService;
 use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\SignUpUserStatusChangerServices\SignUpAccountApprovingService;
 use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\SignUpUserStatusChangerServices\SignUpAccountRejectingService;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -127,7 +128,10 @@ class SignUpController extends Controller
     }
 
  
-    public function export(){
+    public function export()
+    {
+        $service = PixelServiceManager::getServiceForServiceBaseType(SignUpUsersExportingService::class);
+        return (new $service)->basicExport();
         // BasePolicy::check('readSignUpList', User::class);
         // $columnHeaders = ['First Name', 'Last Name', 'Name', 'Email', 'Mobile'];
         // $needed_columns = ['id', 'first_name', 'last_name', 'name', 'email', 'mobile']; // Dynamic array of column headers

@@ -6,14 +6,12 @@ use PixelApp\Http\Controllers\PixelBaseController as Controller;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Resources\AuthenticationResources\CompanyAuthenticationResources\TenantCompanyProfileResource;
 use PixelApp\Services\UserCompanyAccountServices\CompanyProfileGettingService\CompanyProfileGettingServerService;
 use PixelApp\Services\UserCompanyAccountServices\CompanyProfileUpdatingService\CompanyProfileUpdatingServerService;
 use PixelApp\Services\PixelServiceManager;
 use PixelApp\Services\UserCompanyAccountServices\CompanyBranchesListServices\CompanyBranchesListServerService;
 use PixelApp\Services\UserCompanyAccountServices\BranchStatusChangingServices\BranchStatusChangingServerService;
-use Stancl\Tenancy\Contracts\Tenant;
 
 class UserCompanyAccountServerController extends Controller
 {

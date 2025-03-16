@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "081e27f09c2f524d0b65ca1b1c24de5e",
+    "content-hash": "f1c3990b3b5b88d1b15d0c99f11ca268",
     "packages": [
         {
             "name": "brick/math",
-            "version": "0.12.2",
+            "version": "0.12.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/math.git",
-                "reference": "901eddb1e45a8e0f689302e40af871c181ecbe40"
+                "reference": "866551da34e9a618e64a819ee1e01c20d8a588ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/math/zipball/901eddb1e45a8e0f689302e40af871c181ecbe40",
-                "reference": "901eddb1e45a8e0f689302e40af871c181ecbe40",
+                "url": "https://api.github.com/repos/brick/math/zipball/866551da34e9a618e64a819ee1e01c20d8a588ba",
+                "reference": "866551da34e9a618e64a819ee1e01c20d8a588ba",
                 "shasum": ""
             },
             "require": {
@@ -56,7 +56,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/math/issues",
-                "source": "https://github.com/brick/math/tree/0.12.2"
+                "source": "https://github.com/brick/math/tree/0.12.3"
             },
             "funding": [
                 {
@@ -64,7 +64,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-02-26T10:21:45+00:00"
+            "time": "2025-02-28T13:11:00+00:00"
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -2288,16 +2288,16 @@
         },
         {
             "name": "muhammed-aldrubi/exp-imp-management",
-            "version": "1.0.14",
+            "version": "1.0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MuhammedALDRUBI/exp-imp-management.git",
-                "reference": "fdc92ce5e6b888a806c256da9a8a895410b31dd2"
+                "reference": "eef5c29fc33a9676c2145fb4c04f875686c438c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MuhammedALDRUBI/exp-imp-management/zipball/fdc92ce5e6b888a806c256da9a8a895410b31dd2",
-                "reference": "fdc92ce5e6b888a806c256da9a8a895410b31dd2",
+                "url": "https://api.github.com/repos/MuhammedALDRUBI/exp-imp-management/zipball/eef5c29fc33a9676c2145fb4c04f875686c438c4",
+                "reference": "eef5c29fc33a9676c2145fb4c04f875686c438c4",
                 "shasum": ""
             },
             "require": {
@@ -2306,7 +2306,7 @@
                 "muhammed-aldrubi/pixel-dom-pdf": "^1.0.17",
                 "muhammed-aldrubi/temporary-files-handlers": "^1.0.2",
                 "php": "^7.3|^8.0",
-                "pixel-softwares/crud-services": "^1.1.3",
+                "pixel-softwares/crud-services": "^1.1.7",
                 "pixel-softwares/custom-file-system": "^1.0.4",
                 "pixel-softwares/file-info-data-manager": "^1.0.1",
                 "pixel-softwares/validator-lib": "^1.0.7",
@@ -2337,10 +2337,10 @@
             ],
             "description": "description",
             "support": {
-                "source": "https://github.com/MuhammedALDRUBI/exp-imp-management/tree/1.0.14",
+                "source": "https://github.com/MuhammedALDRUBI/exp-imp-management/tree/1.0.16",
                 "issues": "https://github.com/MuhammedALDRUBI/exp-imp-management/issues"
             },
-            "time": "2024-12-12T07:16:11+00:00"
+            "time": "2025-03-13T00:47:19+00:00"
         },
         {
             "name": "muhammed-aldrubi/pixel-dom-pdf",
@@ -4024,16 +4024,16 @@
         },
         {
             "name": "pixel-softwares/crud-services",
-            "version": "1.1.4",
+            "version": "1.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Pixel-Softwares-com/crud-services.git",
-                "reference": "74e8e8b2c997d48230a35d27f51392de40002201"
+                "reference": "b37e888eac529fea32754f8978ce380832ec7e4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Pixel-Softwares-com/crud-services/zipball/74e8e8b2c997d48230a35d27f51392de40002201",
-                "reference": "74e8e8b2c997d48230a35d27f51392de40002201",
+                "url": "https://api.github.com/repos/Pixel-Softwares-com/crud-services/zipball/b37e888eac529fea32754f8978ce380832ec7e4d",
+                "reference": "b37e888eac529fea32754f8978ce380832ec7e4d",
                 "shasum": ""
             },
             "require": {
@@ -4068,10 +4068,10 @@
             ],
             "description": "CRUDServices Package",
             "support": {
-                "source": "https://github.com/Pixel-Softwares-com/crud-services/tree/1.1.4",
+                "source": "https://github.com/Pixel-Softwares-com/crud-services/tree/1.1.7",
                 "issues": "https://github.com/Pixel-Softwares-com/crud-services/issues"
             },
-            "time": "2025-01-23T10:39:55+00:00"
+            "time": "2025-03-13T00:37:02+00:00"
         },
         {
             "name": "pixel-softwares/custom-file-system",
@@ -4162,16 +4162,16 @@
         },
         {
             "name": "pixel-softwares/data-resource-instructors",
-            "version": "1.0.10",
+            "version": "1.0.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Pixel-Softwares-com/data-resource-instructors.git",
-                "reference": "b687a871bf9b16a25da89ac185e614fe0728cd5e"
+                "reference": "f3282a2d82c2d1fa17f667555a895e6f5d8617ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Pixel-Softwares-com/data-resource-instructors/zipball/b687a871bf9b16a25da89ac185e614fe0728cd5e",
-                "reference": "b687a871bf9b16a25da89ac185e614fe0728cd5e",
+                "url": "https://api.github.com/repos/Pixel-Softwares-com/data-resource-instructors/zipball/f3282a2d82c2d1fa17f667555a895e6f5d8617ed",
+                "reference": "f3282a2d82c2d1fa17f667555a895e6f5d8617ed",
                 "shasum": ""
             },
             "require": {
@@ -4202,10 +4202,10 @@
             ],
             "description": "description",
             "support": {
-                "source": "https://github.com/Pixel-Softwares-com/data-resource-instructors/tree/1.0.10",
+                "source": "https://github.com/Pixel-Softwares-com/data-resource-instructors/tree/1.0.15",
                 "issues": "https://github.com/Pixel-Softwares-com/data-resource-instructors/issues"
             },
-            "time": "2025-02-13T15:10:33+00:00"
+            "time": "2025-03-10T15:19:41+00:00"
         },
         {
             "name": "pixel-softwares/file-info-data-manager",
@@ -4851,16 +4851,16 @@
         },
         {
             "name": "ramsey/collection",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/collection.git",
-                "reference": "a4b48764bfbb8f3a6a4d1aeb1a35bb5e9ecac4a5"
+                "reference": "3c5990b8a5e0b79cd1cf11c2dc1229e58e93f109"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/collection/zipball/a4b48764bfbb8f3a6a4d1aeb1a35bb5e9ecac4a5",
-                "reference": "a4b48764bfbb8f3a6a4d1aeb1a35bb5e9ecac4a5",
+                "url": "https://api.github.com/repos/ramsey/collection/zipball/3c5990b8a5e0b79cd1cf11c2dc1229e58e93f109",
+                "reference": "3c5990b8a5e0b79cd1cf11c2dc1229e58e93f109",
                 "shasum": ""
             },
             "require": {
@@ -4868,25 +4868,22 @@
             },
             "require-dev": {
                 "captainhook/plugin-composer": "^5.3",
-                "ergebnis/composer-normalize": "^2.28.3",
-                "fakerphp/faker": "^1.21",
+                "ergebnis/composer-normalize": "^2.45",
+                "fakerphp/faker": "^1.24",
                 "hamcrest/hamcrest-php": "^2.0",
-                "jangregor/phpstan-prophecy": "^1.0",
-                "mockery/mockery": "^1.5",
+                "jangregor/phpstan-prophecy": "^2.1",
+                "mockery/mockery": "^1.6",
                 "php-parallel-lint/php-console-highlighter": "^1.0",
-                "php-parallel-lint/php-parallel-lint": "^1.3",
-                "phpcsstandards/phpcsutils": "^1.0.0-rc1",
-                "phpspec/prophecy-phpunit": "^2.0",
-                "phpstan/extension-installer": "^1.2",
-                "phpstan/phpstan": "^1.9",
-                "phpstan/phpstan-mockery": "^1.1",
-                "phpstan/phpstan-phpunit": "^1.3",
-                "phpunit/phpunit": "^9.5",
-                "psalm/plugin-mockery": "^1.1",
-                "psalm/plugin-phpunit": "^0.18.4",
-                "ramsey/coding-standard": "^2.0.3",
-                "ramsey/conventional-commits": "^1.3",
-                "vimeo/psalm": "^5.4"
+                "php-parallel-lint/php-parallel-lint": "^1.4",
+                "phpspec/prophecy-phpunit": "^2.3",
+                "phpstan/extension-installer": "^1.4",
+                "phpstan/phpstan": "^2.1",
+                "phpstan/phpstan-mockery": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpunit/phpunit": "^10.5",
+                "ramsey/coding-standard": "^2.3",
+                "ramsey/conventional-commits": "^1.6",
+                "roave/security-advisories": "dev-latest"
             },
             "type": "library",
             "extra": {
@@ -4924,19 +4921,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ramsey/collection/issues",
-                "source": "https://github.com/ramsey/collection/tree/2.0.0"
+                "source": "https://github.com/ramsey/collection/tree/2.1.0"
             },
-            "funding": [
-                {
-                    "url": "https://github.com/ramsey",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/ramsey/collection",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2022-12-31T21:50:55+00:00"
+            "time": "2025-03-02T04:48:29+00:00"
         },
         {
             "name": "ramsey/uuid",

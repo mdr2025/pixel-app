@@ -20,6 +20,20 @@ class BranchesRouteRegistrar extends PixelRouteRegistrar
             $this->defineTenantAppRoutes(); 
         } 
     }
+    protected function defineImportableFormatDownloadingRoute() : void
+    {
+        Route::get('system-configs/branches/format-downloading', [BranchesController::class, 'importableFormalDownload']);
+    }
+   
+    protected function defineImportingRoute() : void
+    {
+        Route::get('system-configs/branches/import', [BranchesController::class, 'import']);
+    }
+    
+    protected function defineExportingRoute() : void
+    {
+        Route::get('system-configs/branches/export', [BranchesController::class, 'export']);
+    }
 
     protected function defineChildBranchesListingRoute() : void
     {

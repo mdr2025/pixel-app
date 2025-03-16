@@ -3,12 +3,8 @@
 namespace PixelApp\Http\Controllers\UserAccountControllers;
 
 use PixelApp\Http\Controllers\PixelBaseController as Controller;
-use PixelApp\Http\Resources\SystemAdminPanel\WorkSector\CompanyModule\CompanyAuth\TenantCompanyProfileResource;
 use Exception;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
-use PixelApp\Models\CompanyModule\TenantCompany;
+use Illuminate\Http\JsonResponse; 
 use PixelApp\Services\UserCompanyAccountServices\CompanyProfileGettingService\CompanyProfileGettingClientService;
 use PixelApp\Services\UserCompanyAccountServices\CompanyProfileUpdatingService\CompanyProfileUpdatingClientService;
 use PixelApp\Services\UserCompanyAccountServices\CompanyBranchesListServices\CompanyBranchesListClientService;
@@ -24,8 +20,7 @@ class UserCompanyAccountClientController extends Controller
         $service = PixelServiceManager::getServiceForServiceBaseType(CompanyProfileGettingClientService::class);
         return (new $service())->getResponse();
     }
- 
-    
+  
     /**
      * @throws Exception
      */

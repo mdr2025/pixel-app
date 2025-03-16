@@ -17,28 +17,24 @@ use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\AreaStoringService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\AreaUpdatingService;
 use PixelApp\Services\PixelServiceManager;
-use Rap2hpoutre\FastExcel\SheetCollection; 
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\AreaShowService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\AreasIndexingService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\ExpImpServices\AreasExportingServices\AreaExportingService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\ExpImpServices\AreasImportingFunc\AreasImporter;
+ 
 
 class AreasController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $data = QueryBuilder::for(Area::class)
-            ->with(['city', 'city.country'])
-            ->allowedFilters(['name', 'city.name', 'city.country.name'])
-            ->datesFiltering()
-            ->customOrdering()
-            ->paginate($request->pageSize ?? 10);
-
-        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(AreasResource::class);
-        return Response::success(['list' => new $resourceClass($data)]);
+        $service = PixelServiceManager::getServiceForServiceBaseType(AreasIndexingService::class);
+        return (new $service)->index();
     }
 
     public function show($area)
     {
-        $area = Area::findOrFail($area);
-        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(SingleResource::class);
-        return new $resourceClass($area);
+        $service = PixelServiceManager::getServiceForServiceBaseType(AreaShowService::class);
+        return (new $service($area))->show();
     }
 
     function list()
@@ -84,29 +80,40 @@ class AreasController extends Controller
         $service = PixelServiceManager::getServiceForServiceBaseType(AreaDeletingService::class);
         return (new $service($area))->delete();
     }
+ 
+    public function importableFormalDownload() 
+    {
+        $importer = PixelServiceManager::getServiceForServiceBaseType(AreasImporter::class);
+        return (new $importer())->downloadFormat();
+    }
 
     public function import()
     {
-        $file = $import->file;
+        $importer = PixelServiceManager::getServiceForServiceBaseType(AreasImporter::class);
+        return (new $importer())->import();
+        // $file = $import->file;
 
-        return (new ImportBuilder())
-            ->file($file)
-            ->map(function ($item) {
-                $item = array_change_key_case($item);
-                return Area::create($item);
-            })
-            ->import();
+        // return (new ImportBuilder())
+        //     ->file($file)
+        //     ->map(function ($item) {
+        //         $item = array_change_key_case($item);
+        //         return Area::create($item);
+        //     })
+        //     ->import();
     }
 
     public function export()
     {
-        $taxes = QueryBuilder::for(Area::class)->allowedFilters($this->filterable)->datesFiltering()->customOrdering()->cursor();
-        $list  = new SheetCollection([
-            "Areas" => ExportBuilder::generator($taxes)
-        ]);
-        return (new ExportBuilder($request->type))
-            ->withSheet($list)
-            ->map(fn ($item) => ['No.' => $item['id'], 'Name' => $item['name'], 'Status' => $item['status']['label']])
-            ->name('Areas')->build();
+        $service = PixelServiceManager::getServiceForServiceBaseType(AreaExportingService::class);
+        return (new $service())->baseExport();
+
+        // $taxes = QueryBuilder::for(Area::class)->allowedFilters($this->filterable)->datesFiltering()->customOrdering()->cursor();
+        // $list  = new SheetCollection([
+        //     "Areas" => ExportBuilder::generator($taxes)
+        // ]);
+        // return (new ExportBuilder($request->type))
+        //     ->withSheet($list)
+        //     ->map(fn ($item) => ['No.' => $item['id'], 'Name' => $item['name'], 'Status' => $item['status']['label']])
+        //     ->name('Areas')->build();
     }
 }

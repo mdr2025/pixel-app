@@ -29,6 +29,21 @@ class AreasRouteRegistrar extends PixelRouteRegistrar
         } 
     }
 
+    protected function defineImportableFormatDownloadingRoute() : void
+    {
+        Route::get('system-configs/areas/format-downloading', [AreasController::class, 'importableFormalDownload']);
+    }
+   
+    protected function defineImportingRoute() : void
+    {
+        Route::get('system-configs/areas/import', [AreasController::class, 'import']);
+    }
+    
+    protected function defineExportingRoute() : void
+    {
+        Route::get('system-configs/areas/export', [AreasController::class, 'export']);
+    }
+
     protected function defineAreasListingRoute() : void
     {
         Route::get('list/areas', [AreasController::class, 'list']);
@@ -47,6 +62,9 @@ class AreasRouteRegistrar extends PixelRouteRegistrar
         {
             $this->defineAreasResourceRoute(); 
             $this->defineAreasListingRoute(); 
+            $this->defineExportingRoute();
+            $this->defineImportingRoute();
+            $this->defineImportableFormatDownloadingRoute();
         });
     }
     
