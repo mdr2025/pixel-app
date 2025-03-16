@@ -8,13 +8,5 @@ use PixelApp\Services\UsersManagement\ExpImpServices\UsersExpImpGeneralFuncs\Use
 class UserTypePDFExporter extends UserPDFExporter
 {
     use  ExporterQueryBuilderCustomization ;
-  
-    public function getViewRelevantPathForSelfConstructing() : string
-    {
-        /**
-         * @todo later
-         */
-        return "";
-    }
    
 }

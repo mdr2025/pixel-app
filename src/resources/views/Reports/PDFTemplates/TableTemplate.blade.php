@@ -26,14 +26,14 @@
     <table>
         <thead>
         <tr>
-            @foreach($DataKeys as $key)
+            @foreach($keys as $key)
                 <th>{{$key}}</th>
             @endforeach
         </tr>
         </thead>
 
         <tbody>
-        @foreach($Data as $row)
+        @foreach($data as $row)
             <tr>
                 @foreach($row as $value)
                     <td>{{$value}}</td>

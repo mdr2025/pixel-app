@@ -18,13 +18,10 @@ class UserPDFExporter extends PDFExporter implements SelfConstructableExporter ,
     {
         return PixelModelManager::getUserModelClass();
     }
- 
+  
     public function getViewRelevantPathForSelfConstructing() : string
     {
-        /**
-         * @todo later
-         */
-        return "";
+        return "pixel-app::Reports.PDFTemplates";
     }
 
 }

@@ -13,4 +13,8 @@ abstract class DropDownListPDFExporter extends PDFExporter implements SelfConstr
 {
     use  ExporterSelfConstructing , ExporterQueryBuilderCustomization , ExporterQueryAllowedFiltersSetting;
    
+    public function getViewRelevantPathForSelfConstructing() : string
+    {
+        return "pixel-app::Reports.PDFTemplates";
+    }
 }

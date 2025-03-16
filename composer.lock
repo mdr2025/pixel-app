@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f1c3990b3b5b88d1b15d0c99f11ca268",
+    "content-hash": "b8bf6512ec379539ada3ca085e58e220",
     "packages": [
         {
             "name": "brick/math",
@@ -2288,16 +2288,16 @@
         },
         {
             "name": "muhammed-aldrubi/exp-imp-management",
-            "version": "1.0.16",
+            "version": "1.0.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MuhammedALDRUBI/exp-imp-management.git",
-                "reference": "eef5c29fc33a9676c2145fb4c04f875686c438c4"
+                "reference": "a3f0959199b4a09779013fb5c33f6efab042685a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MuhammedALDRUBI/exp-imp-management/zipball/eef5c29fc33a9676c2145fb4c04f875686c438c4",
-                "reference": "eef5c29fc33a9676c2145fb4c04f875686c438c4",
+                "url": "https://api.github.com/repos/MuhammedALDRUBI/exp-imp-management/zipball/a3f0959199b4a09779013fb5c33f6efab042685a",
+                "reference": "a3f0959199b4a09779013fb5c33f6efab042685a",
                 "shasum": ""
             },
             "require": {
@@ -2337,10 +2337,10 @@
             ],
             "description": "description",
             "support": {
-                "source": "https://github.com/MuhammedALDRUBI/exp-imp-management/tree/1.0.16",
+                "source": "https://github.com/MuhammedALDRUBI/exp-imp-management/tree/1.0.17",
                 "issues": "https://github.com/MuhammedALDRUBI/exp-imp-management/issues"
             },
-            "time": "2025-03-13T00:47:19+00:00"
+            "time": "2025-03-16T04:09:53+00:00"
         },
         {
             "name": "muhammed-aldrubi/pixel-dom-pdf",

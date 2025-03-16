@@ -51,6 +51,7 @@ class PixelAppPackageServiceProvider extends ServiceProvider
         $this->booIOEncryptionFuncs();
         $this->scheduledObjectsHandling();
         $this->defineCommands();
+        $this->handlePixelAppViews();
          
     }
 
@@ -68,6 +69,33 @@ class PixelAppPackageServiceProvider extends ServiceProvider
         }
     }
  
+    protected function getProjectViewsPath() : string
+    {
+        return resource_path('views/vendor/pixel-app');
+    }
+
+    protected function getPixelAppViewsPath() : string
+    {
+        return __DIR__ . "/resources/views"  ;
+    }
+
+    protected function makeViewsPublishable() : void
+    {
+        $this->publishes([
+            $this->getPixelAppViewsPath() => $this->getProjectViewsPath()
+        ] , "pixel-app-views");
+    }
+
+    protected function loadPixelAppViews() : void
+    {
+        $this->loadViewsFrom( $this->getPixelAppViewsPath() , "pixel-app");
+    }
+    
+    protected function handlePixelAppViews() : void
+    {
+        $this->loadPixelAppViews();
+        $this->makeViewsPublishable();
+    }
     protected function registerIOEncryptionObjects() : void
     {
         IOEncryptionManager::registerObjects($this->app);

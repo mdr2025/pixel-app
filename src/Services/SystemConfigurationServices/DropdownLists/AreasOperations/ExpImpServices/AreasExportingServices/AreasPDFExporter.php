@@ -16,10 +16,5 @@ class AreasPDFExporter extends DropDownListPDFExporter
     {
         return PixelModelManager::getModelForModelBaseType(Area::class);
     }
-
-    public function getViewRelevantPathForSelfConstructing() : string
-    {
-        return "";
-    }
  
 }

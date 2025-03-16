@@ -15,10 +15,5 @@ class PDFExporter extends DropDownListPDFExporter
     {
         return PixelModelManager::getModelForModelBaseType(Branch::class);
     }
-
-    public function getViewRelevantPathForSelfConstructing() : string
-    {
-        return "";
-    }
  
 }
