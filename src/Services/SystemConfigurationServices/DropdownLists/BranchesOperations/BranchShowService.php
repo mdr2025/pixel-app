@@ -5,15 +5,15 @@ namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOpera
 use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\SingleResource;
 use PixelApp\Models\PixelModelManager;
-use PixelApp\Models\SystemConfigurationModels\CountryModule\Area;
+use PixelApp\Models\SystemConfigurationModels\Branch;
 use PixelApp\Services\CoreServices\ModelShowService;
 
-class AreaShowService extends ModelShowService
+class BranchShowService extends ModelShowService
 {
      
     protected function getModelClass() : string
     {
-        return PixelModelManager::getModelForModelBaseType(Area::class);
+        return PixelModelManager::getModelForModelBaseType(Branch::class);
     }
 
     protected function getShowingResource() 

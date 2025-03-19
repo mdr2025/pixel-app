@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\CitiesService;
+namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\CitiesServices;
 
 use CRUDServices\CRUDServiceTypes\DeletingServices\DeletingService;
 

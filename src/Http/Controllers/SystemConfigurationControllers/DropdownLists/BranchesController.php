@@ -16,8 +16,13 @@ use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperatio
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchStoringService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchUpdatingService;
 use PixelApp\Services\PixelServiceManager;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\BranchShowService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchesListingingService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchessIndexingService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\ChildrenBranchesListingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\ExpImpServices\ExportingServices\BranchesExportingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\ExpImpServices\ImportingFunc\BranchesImporter;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\SubBranchesListingService;
 
 class BranchesController extends Controller
 {
@@ -28,55 +33,72 @@ class BranchesController extends Controller
 
     public function index(Request $request)
     {
-        $data = QueryBuilder::for(Branch::class)
-            ->allowedFilters($this->filterable)
-            ->with(['parent'])
-            ->datesFiltering()
-            ->customOrdering()
-            ->paginate($request->pageSize ?? 10);
+        $service = PixelServiceManager::getServiceForServiceBaseType(BranchessIndexingService::class);
+        return (new $service)->index();
 
-        return Response::success(['list' => $data]);
+        // $data = QueryBuilder::for(Branch::class)
+        //     ->allowedFilters($this->filterable)
+        //     ->with(['parent'])
+        //     ->datesFiltering()
+        //     ->customOrdering()
+        //     ->paginate($request->pageSize ?? 10);
+
+        // return Response::success(['list' => $data]);
     }
-    public function listChildrenBranches()
-    {
-        $data = QueryBuilder::for(Branch::class)
-            ->whereNull('parent_id')
-            ->allowedFilters($this->filterable)
-            ->datesFiltering()
-            ->customOrdering('created_at', 'asc')
-            ->first();
-
-        return Response::success( $data->toArray());
-    }
-
+    
     function list()
     {
-        $total = Branch::query()->active()->count();
-        $data = QueryBuilder::for(Branch::class)
-            ->scopes("active")
-            ->allowedFilters(['name'])
-            ->customOrdering('created_at', 'desc')
-            ->get(['id', 'name']);
-        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(BranchResource::class);
-        return $resourceClass::collection($data);
+        $service = PixelServiceManager::getServiceForServiceBaseType(BranchesListingingService::class);
+        return (new $service)->list();
+
+
+        // $total = Branch::query()->active()->count();
+        // $data = QueryBuilder::for(Branch::class)
+        //     ->scopes("active")
+        //     ->allowedFilters(['name'])
+        //     ->customOrdering('created_at', 'desc')
+        //     ->get(['id', 'name']);
+        // $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(BranchResource::class);
+        // return $resourceClass::collection($data);
+    }
+
+    public function listChildrenBranches()
+    {
+        $service = PixelServiceManager::getServiceForServiceBaseType(ChildrenBranchesListingService::class);
+        return (new $service)->list();
+
+        // $data = QueryBuilder::for(Branch::class)
+        //     ->whereNull('parent_id')
+        //     ->allowedFilters($this->filterable)
+        //     ->datesFiltering()
+        //     ->customOrdering('created_at', 'asc')
+        //     ->first();
+
+        // return Response::success( $data->toArray());
     }
 
     function subBranches()
     {
-        $data = QueryBuilder::for(Branch::class)->with('parent')
-            ->allowedFilters(['name', 'parent_id'])
-            ->active()
-            ->customOrdering('created_at', 'desc')
-            ->get(['id', 'name']);
-        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(BranchResource::class);
-        return $resourceClass::collection($data);
+        $service = PixelServiceManager::getServiceForServiceBaseType(SubBranchesListingService::class);
+        return (new $service)->list();
+
+        // $data = QueryBuilder::for(Branch::class)->with('parent')
+        //     ->allowedFilters(['name', 'parent_id'])
+        //     ->active()
+        //     ->customOrdering('created_at', 'desc')
+        //     ->get(['id', 'name']);
+        // $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(BranchResource::class);
+        // return $resourceClass::collection($data);
     }
 
     public function show( $branch)
     {
-        $branch = Branch::findOrFail($branch);
-        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(SingleResource::class);
-        return new $resourceClass($branch);
+        $service = PixelServiceManager::getServiceForServiceBaseType(BranchShowService::class);
+        return (new $service($branch))->list();
+
+        // $branch = Branch::findOrFail($branch);
+        // $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(SingleResource::class);
+        // return new $resourceClass($branch);
     }
     /**
      * @param Request $request

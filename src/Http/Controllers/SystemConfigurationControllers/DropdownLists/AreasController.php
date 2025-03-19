@@ -19,6 +19,7 @@ use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\
 use PixelApp\Services\PixelServiceManager;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\AreaShowService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\AreasIndexingService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\AreasListingingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\ExpImpServices\AreasExportingServices\AreaExportingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\ExpImpServices\AreasImportingFunc\AreasImporter;
  
@@ -39,14 +40,18 @@ class AreasController extends Controller
 
     function list()
     {
-        $data = QueryBuilder::for(Area::class)
-            ->allowedFilters(['name', 'city_id'])
-            ->active()
-            ->customOrdering('created_at', 'desc')
-            ->get(['id', 'name', 'city_id']);
+        $service = PixelServiceManager::getServiceForServiceBaseType(AreasListingingService::class);
+        return (new $service)->list();
+
+
+        // $data = QueryBuilder::for(Area::class)
+        //     ->allowedFilters(['name', 'city_id'])
+        //     ->active()
+        //     ->customOrdering('created_at', 'desc')
+        //     ->get(['id', 'name', 'city_id']);
         
-        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(AreasListResource::class);
-        return $resourceClass::collection($data);
+        // $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(AreasListResource::class);
+        // return $resourceClass::collection($data);
     }
 
     /**

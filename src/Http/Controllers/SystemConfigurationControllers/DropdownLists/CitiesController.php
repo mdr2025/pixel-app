@@ -9,31 +9,40 @@ use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\SystemConfigurationResources\DropdownLists\Cities\CityResource;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\City;
-use PixelApp\Services\SystemConfigurationServices\DropdownLists\CitiesService\CitiesDeletingService;
-use PixelApp\Services\SystemConfigurationServices\DropdownLists\CitiesService\CitiesStoringService;
-use PixelApp\Services\SystemConfigurationServices\DropdownLists\CitiesService\CitiesUpdatingService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\CitiesServices\CitiesDeletingService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\CitiesServices\CitiesStoringService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\CitiesServices\CitiesUpdatingService;
 use PixelApp\Services\PixelServiceManager;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\CitiesServices\CitiesIndexingService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\CitiesServices\CitiesListingService;
 
 class CitiesController extends Controller
 {
 
     function index()
     {
-        $data = QueryBuilder::for(City::class)
-            ->with('country')
-            ->allowedFilters(['name', 'country_id'])
-            ->customOrdering('id', 'asc')
-            ->paginate(request()->pageSize ?? 10);
-        return Response::success(['list' => $data]);
+        $service = PixelServiceManager::getServiceForServiceBaseType(CitiesIndexingService::class);
+        return (new $service)->index();
+
+        // $data = QueryBuilder::for(City::class)
+        //     ->with('country')
+        //     ->allowedFilters(['name', 'country_id'])
+        //     ->customOrdering('id', 'asc')
+        //     ->paginate(request()->pageSize ?? 10);
+        // return Response::success(['list' => $data]);
     }
+
     function list()
     {
-        $data = QueryBuilder::for(City::class)
-            ->allowedFilters(['name', 'country_id'])
-            ->customOrdering('id', 'asc')
-            ->get(['id', 'name', 'country_id']);
-        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(CityResource::class);
-        return $resourceClass::collection($data); 
+        $service = PixelServiceManager::getServiceForServiceBaseType(CitiesListingService::class);
+        return (new $service)->list();
+
+        // $data = QueryBuilder::for(City::class)
+        //     ->allowedFilters(['name', 'country_id'])
+        //     ->customOrdering('id', 'asc')
+        //     ->get(['id', 'name', 'country_id']);
+        // $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(CityResource::class);
+        // return $resourceClass::collection($data); 
     }
 
     public function store()

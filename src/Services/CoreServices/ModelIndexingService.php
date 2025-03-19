@@ -13,7 +13,7 @@ abstract class ModelIndexingService
     protected QueryBuilder $query ;
     abstract protected function getModelClass() : string;
     
-    abstract protected function getIndexingResource() : string;
+    abstract protected function respond($data) ;
     
     protected function getRequets() : Request
     {
@@ -46,11 +46,9 @@ abstract class ModelIndexingService
         $this->eagerLoadRelations();
         $this->setAllowedFilters();
         $this->setCustomScopes();
-
         $data = $this->paginateData();
-         
-        $resourceClass = $this->getIndexingResource();
-        return Response::success(['list' => new $resourceClass($data)]);
+
+        return $this->respond($data);
 
     }
 

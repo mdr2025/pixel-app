@@ -16,46 +16,57 @@ use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOpera
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentStoringService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentUpdatingService;
 use PixelApp\Services\PixelServiceManager;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentShowService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentsIndexingService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentsListingingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\ExpImpServices\ExportingServices\DepartmentsExportingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\ExpImpServices\ImportingFunc\DepartmentsImporter;
 use Rap2hpoutre\FastExcel\SheetCollection;
 
 class DepartmentsController extends Controller
 {
-    public function index(Request $request)
-    {
-        BasePolicy::check('read', Department::class);
+    public function index()
+    { 
+        $service = PixelServiceManager::getServiceForServiceBaseType(DepartmentsIndexingService::class);
+        return (new $service)->index();
 
-        $data = QueryBuilder::for(Department::class)->with('parent')
-            ->allowedFilters(["name", "status"])
-            ->datesFiltering()->customOrdering()
-            ->paginate($request?->pageSize ?? 10);
+        // BasePolicy::check('read', Department::class);
+        // $data = QueryBuilder::for(Department::class)->with('parent')
+        //     ->allowedFilters(["name", "status"])
+        //     ->datesFiltering()->customOrdering()
+        //     ->paginate($request?->pageSize ?? 10);
 
-        return Response::success(['list' => $data]);
+        // return Response::success(['list' => $data]);
     }
 
     public function show($department)
     {
-        BasePolicy::check('read', Department::class);
-        $department = Department::findOrFail($department);
-        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(SingleResource::class);
-        return new $resourceClass($department);
+        $service = PixelServiceManager::getServiceForServiceBaseType(DepartmentShowService::class);
+        return (new $service($department))->show();
+
+        // BasePolicy::check('read', Department::class);
+        // $department = Department::findOrFail($department);
+        // $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(SingleResource::class);
+        // return new $resourceClass($department);
     }
 
     function list()
     {
-        
-        $total = Department::active()->count();
+        $service = PixelServiceManager::getServiceForServiceBaseType(DepartmentsListingingService::class);
+        return (new $service)->list();
 
-        $data = QueryBuilder::for(Department::class)
-                            ->with('parent')
-                            ->allowedFilters(['name'])
-                            ->active()
-                            ->customOrdering('created_at', 'desc')
-                            ->get(['id', 'name']);
+
+        // $total = Department::active()->count();
+
+        // $data = QueryBuilder::for(Department::class)
+        //                     ->with('parent')
+        //                     ->allowedFilters(['name'])
+        //                     ->active()
+        //                     ->customOrdering('created_at', 'desc')
+        //                     ->get(['id', 'name']);
         
             
-        return Response::successList($total, $data);
+        // return Response::successList($total, $data);
     }
 
    /**

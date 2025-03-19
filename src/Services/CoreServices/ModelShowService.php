@@ -10,24 +10,23 @@ abstract class ModelShowService
     
     protected Model $model ;
     
+    abstract protected function getModelClass() : string; 
+
+    abstract protected function respond() ;
+    
     public function __construct(int $key , string $fetchingColumn = 'id')
     {
         $this->model = $this->fetchModelByColumn($key , $fetchingColumn);
     }
 
-    abstract protected function getModelClass() : string; 
-
-    abstract protected function getShowingResource() ;
-    
     protected function fetchModelByColumn(int $key , string $fetchingColumn = 'id') : Model
     {
         $modelClass = $this->getModelClass();
         return $modelClass::where($fetchingColumn , $key)->firstOrFail();
     }
 
-    public function show() : JsonResource
+    public function show() 
     { 
-        $resourceClass = $this->getShowingResource();
-        return new $resourceClass($this->model);
+        return $this->respond();
     }
 }

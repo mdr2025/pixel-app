@@ -18,6 +18,8 @@ use PixelApp\Services\UsersManagement\Statistics\SignupList\SignupUserStatistics
 use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\SignUpAccountStatusChanger;
 use PixelApp\Services\PixelServiceManager;
 use PixelApp\Services\UsersManagement\ExpImpServices\UserTypesExpImpServices\SignUpUsersExpImpServices\SignUpUsersExportingService;
+use PixelApp\Services\UsersManagement\IndexingServices\SignUpUsersIndexingService;
+use PixelApp\Services\UsersManagement\ShowServices\SignUpUserShowService;
 use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\SignUpUserStatusChangerServices\SignUpAccountApprovingService;
 use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\SignUpUserStatusChangerServices\SignUpAccountRejectingService;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -30,36 +32,42 @@ class SignUpController extends Controller
         return PixelModelManager::getUserModelClass();
     }
 
-    public function index(Request $request)
+    public function index()
     {
+        $service = PixelServiceManager::getServiceForServiceBaseType(SignUpUsersIndexingService::class);
+        return (new $service)->index();
+
 //        BasePolicy::check('readSignUpList', User::class);
 
-        $data = QueryBuilder::for( $this->getUserModelClass() )
-            ->with(['profile', 'profile.country', 'department'])
-            ->allowedFilters($this->filters())
-            ->activeSignup()
-            ->datesFiltering()
-            ->customOrdering()
-            ->when($request->has('filter.email_verified_at'), function ($query) use ($request) {
-                if ($request->input('filter.email_verified_at') == 'verified') {
-                    return $query->whereNotNull('email_verified_at');
-                } elseif ($request->input('filter.email_verified_at') == 'not verified') {
-                    return $query->whereNull('email_verified_at');
-                }
-            })
-            ->paginate($request?->pageSize ?? 10);
+        // $data = QueryBuilder::for( $this->getUserModelClass() )
+        //     ->with(['profile', 'profile.country', 'department'])
+        //     ->allowedFilters($this->filters())
+        //     ->activeSignup()
+        //     ->datesFiltering()
+        //     ->customOrdering()
+        //     ->when($request->has('filter.email_verified_at'), function ($query) use ($request) {
+        //         if ($request->input('filter.email_verified_at') == 'verified') {
+        //             return $query->whereNotNull('email_verified_at');
+        //         } elseif ($request->input('filter.email_verified_at') == 'not verified') {
+        //             return $query->whereNull('email_verified_at');
+        //         }
+        //     })
+        //     ->paginate($request?->pageSize ?? 10);
 
-         $statistics = (new SignupUserStatisticsBuilder())->getStatistics();
+        //  $statistics = (new SignupUserStatisticsBuilder())->getStatistics();
 
 
-        return Response::success(['list' => $data, 'statistics' => $statistics]);
+        // return Response::success(['list' => $data, 'statistics' => $statistics]);
     }
 
     public function show($user): string
     {
+        $service = PixelServiceManager::getServiceForServiceBaseType(SignUpUserShowService::class);
+        return (new $service($user))->show();
+
 //        BasePolicy::check('readSignUpList', User::class);
-        $user = $this->getUserModelClass()::findOrFail($user);
-        return Response::success(["item" => $user->only("id" , "email")]);
+        // $user = $this->getUserModelClass()::findOrFail($user);
+        // return Response::success(["item" => $user->only("id" , "email")]);
     }
 
     public function changeAccountEmail( $user) : JsonResponse
@@ -108,24 +116,24 @@ class SignUpController extends Controller
         return (new $service($user))->reject();
     }
     
-    public function filters(): array
-    {
-        return  [
-            AllowedFilter::custom('created_at' , new MultiFilters(['created_at' , 'accepted_at'])),
+    // public function filters(): array
+    // {
+    //     return  [
+    //         AllowedFilter::custom('created_at' , new MultiFilters(['created_at' , 'accepted_at'])),
 
-            "status",
-            AllowedFilter::exact("gender", "profile.gender"),
-            AllowedFilter::partial("national_id_number", "profile.national_id_number"),
-            AllowedFilter::partial("passport_number", "profile.passport_number"),
-            AllowedFilter::partial("country", "profile.country.name"),
-            AllowedFilter::callback('name', function (Builder $query, $value) {
-                $query->where('first_name', 'LIKE', "%{$value}%")
-                    ->orWhere('last_name', 'LIKE', "%{$value}%")
-                    ->orWhere('mobile', 'LIKE', "%{$value}%")
-                    ->orWhere('email', 'LIKE', "%{$value}%");
-            })
-        ];
-    }
+    //         "status",
+    //         AllowedFilter::exact("gender", "profile.gender"),
+    //         AllowedFilter::partial("national_id_number", "profile.national_id_number"),
+    //         AllowedFilter::partial("passport_number", "profile.passport_number"),
+    //         AllowedFilter::partial("country", "profile.country.name"),
+    //         AllowedFilter::callback('name', function (Builder $query, $value) {
+    //             $query->where('first_name', 'LIKE', "%{$value}%")
+    //                 ->orWhere('last_name', 'LIKE', "%{$value}%")
+    //                 ->orWhere('mobile', 'LIKE', "%{$value}%")
+    //                 ->orWhere('email', 'LIKE', "%{$value}%");
+    //         })
+    //     ];
+    // }
 
  
     public function export()

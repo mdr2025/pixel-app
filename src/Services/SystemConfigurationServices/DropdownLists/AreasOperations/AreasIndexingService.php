@@ -2,6 +2,7 @@
 
 namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations;
 
+use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\SystemConfigurationResources\DropdownLists\Areas\AreasResource;
 use PixelApp\Models\PixelModelManager;
@@ -28,6 +29,12 @@ class AreasIndexingService extends ModelIndexingService
     protected function eagerLoadRelations() : void
     {
         $this->query->with(['city', 'city.country']);
+    }
+
+    protected function respond($data)
+    {
+        $resourceClass = $this->getIndexingResource();
+        return Response::success(['list' => new $resourceClass($data)]);
     }
    
 }
