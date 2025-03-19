@@ -120,7 +120,7 @@ class PixelConfigManager
 
         $configs = require $configFilePath;
         $configs = array_merge($configs , $keys);
-        $configFileContent = "<?php return " . var_export($configs) . " ;";
+        $configFileContent = "<?php return " . var_export($configs , true) . " ;";
 
         File::put($configFilePath , $configFileContent);
     }

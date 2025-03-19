@@ -51,7 +51,7 @@ abstract class ConfigFileIdentifier
     }
     public static function getPackageConfigBasePath() : string
     {
-        return __DIR__ . "/../ConfigFiles";
+        return realpath( __DIR__ . "/../ConfigFiles" );
     }
   
 }
