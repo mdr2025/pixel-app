@@ -1,10 +1,10 @@
 <?php
 
-namespace PixelApp\CustomLibs\PixelAppStubsManager;
+namespace PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager;
 
 use CustomFileSystem\CustomFileHandler;
 use Illuminate\Support\Facades\File;
-use PixelApp\CustomLibs\PixelAppStubsManager\StubIdentifiers\StubIdentifier;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\StubIdentifiers\StubIdentifier;
 
 class PixelAppStubsManager
 {

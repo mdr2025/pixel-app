@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\CustomLibs\PixelAppStubsManager\StubIdentifiers;
+namespace PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\StubIdentifiers;
 
 class StubIdentifier
 {

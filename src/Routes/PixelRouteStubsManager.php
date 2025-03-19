@@ -2,8 +2,8 @@
 
 namespace PixelApp\Routes;
  
-use PixelApp\CustomLibs\PixelAppStubsManager\PixelAppStubsManager;
-use PixelApp\CustomLibs\PixelAppStubsManager\StubIdentifiers\StubIdentifier; 
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\PixelAppStubsManager;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\StubIdentifiers\StubIdentifier; 
 class PixelRouteStubsManager extends PixelAppStubsManager
 {
 

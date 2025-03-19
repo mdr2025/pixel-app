@@ -4,8 +4,8 @@ namespace PixelApp\ServiceProviders;
  
 use Illuminate\Support\Str; 
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
-use PixelApp\CustomLibs\PixelAppStubsManager\PixelAppStubsManager;
-use PixelApp\CustomLibs\PixelAppStubsManager\StubIdentifiers\StubIdentifier;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\PixelAppStubsManager;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\StubIdentifiers\StubIdentifier;
 
 class LaravelServiceProviderStubsManager extends PixelAppStubsManager
 { 

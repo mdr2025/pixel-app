@@ -2,8 +2,8 @@
 
 namespace PixelApp\Models;
  
-use PixelApp\CustomLibs\PixelAppStubsManager\PixelAppStubsManager;
-use PixelApp\CustomLibs\PixelAppStubsManager\StubIdentifiers\StubIdentifier; 
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\PixelAppStubsManager;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\StubIdentifiers\StubIdentifier; 
 
 class PixelModelStubsManager extends PixelAppStubsManager
 {
