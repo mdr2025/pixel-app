@@ -14,6 +14,7 @@ use PixelApp\Config\ConfigValueManager;
 use PixelApp\Config\PixelConfigManager;
 use PixelApp\Console\Commands\CreateInterfaceCommand;
 use PixelApp\Console\Commands\CreateTrait;
+use PixelApp\Console\Commands\PixelAppInitCommands\DefaultFontsHandling;
 use PixelApp\Console\Commands\PixelAppInitCommands\PreparePixelApp;
 use PixelApp\Console\Commands\TenantSeedCommand;
 use PixelApp\CustomLibs\PixelCycleManagers\IOEncryptionManager\IOEncryptionManager;
@@ -60,6 +61,7 @@ class PixelAppPackageServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 PreparePixelApp::class,
+                DefaultFontsHandling::class,
                 CreateInterfaceCommand::class,
                 CreateTrait::class,
                 RefreshTheProject::class,
@@ -76,7 +78,7 @@ class PixelAppPackageServiceProvider extends ServiceProvider
 
     protected function getPixelAppViewsPath() : string
     {
-        return __DIR__ . "/resources/views"  ;
+        return realpath( __DIR__ . "/resources/views"  );
     }
 
     protected function makeViewsPublishable() : void

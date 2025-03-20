@@ -2,7 +2,8 @@
 
 namespace PixelApp\Console\Commands\PixelAppInitCommands;
 
-use Illuminate\Console\Command; 
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 
 class DefaultFontsHandling extends Command
 {
@@ -26,7 +27,7 @@ class DefaultFontsHandling extends Command
     {
         if(class_exists(\PixelDomPdf\DomPdfExntendingCode\PixelDomPdf::class))
         {
-            $this->call("php artisan pixel-dom-pdf:register-fonts");
+            Artisan::call("pixel-dom-pdf:register-fonts");
         }
     }
     
