@@ -15,7 +15,7 @@ class PixelModelStubsManager extends PixelAppStubsManager
     
     protected function getPixeModelStubsPath() : string
     {
-        return __DIR__ . "/LaravelModelStubs";
+        return  realpath(__DIR__ . "/LaravelModelStubs");
     }
     
     protected function getPixelModelStubFilePath(string $fileName) : string

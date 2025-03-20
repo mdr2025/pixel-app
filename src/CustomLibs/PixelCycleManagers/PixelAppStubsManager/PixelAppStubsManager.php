@@ -8,7 +8,7 @@ use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\StubIdentifiers\
 
 class PixelAppStubsManager
 {
-    protected array $instances = [];
+    protected static array $instances = [];
     // protected array $replacedStubIdentifiers = [];
 
     private function __construct(){}

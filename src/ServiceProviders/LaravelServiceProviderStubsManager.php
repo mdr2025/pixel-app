@@ -26,7 +26,7 @@ class LaravelServiceProviderStubsManager extends PixelAppStubsManager
 
     protected function getLaravelServiceProviderPixelStubsPath() : string
     {
-        return __DIR__ . "/LaravelProviderStubs";
+        return realpath(__DIR__ . "/LaravelProviderStubs");
     }
     
     protected function getLaravelServiceProviderPixelStubPath(string $relevantPath) : string
@@ -91,7 +91,7 @@ class LaravelServiceProviderStubsManager extends PixelAppStubsManager
         {
             $tenancyRoutesPlaceHolder = "--loading-tenant-routes--";
          
-            $replace =  PixelTenancyManager::isItTenancySupportyerApp() ?
+            $replace =  PixelTenancyManager::DoesItNeedTenantRoutes() ?
                         "PixelRouteManager::loadTenantRoutes();" :
                         ""; // an empty string needed to remove placeholder string
     

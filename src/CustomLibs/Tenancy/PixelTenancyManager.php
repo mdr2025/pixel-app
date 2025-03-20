@@ -9,6 +9,7 @@ use PixelApp\Http\Middleware\TenancyCustomMiddlewares\ActiveTenantCompany;
 use PixelApp\Http\Middleware\TenancyCustomMiddlewares\ApprovedTenantCompany;
 use PixelApp\Models\CompanyModule\TenantCompany;
 use PixelApp\Models\PixelModelManager;
+use PixelApp\Routes\PixelRouteManager;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -22,6 +23,11 @@ class PixelTenancyManager
         return !PixelConfigManager::isItNormalApp();
     }
 
+    public static function DoesItNeedTenantRoutes() :bool
+    {
+        return PixelRouteManager::DoesItNeedTenantRoutes();
+    }
+    
     public static function isItMonolithTenancyApp() : bool
     {
         return PixelConfigManager::isItMonolithTenancyApp();

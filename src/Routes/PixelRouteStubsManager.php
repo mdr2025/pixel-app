@@ -7,14 +7,14 @@ use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\StubIdentifiers\
 class PixelRouteStubsManager extends PixelAppStubsManager
 {
 
-    public static function isItTenancySupportyerApp() : bool
+    public static function DoesItNeedTenantRoutes() : bool
     {
-        return PixelRouteManager::isItTenancySupportyerApp();
+        return PixelRouteManager::DoesItNeedTenantRoutes();
     }
     
     protected static function getPackageRouteStubsPath() : string
     {
-        return __DIR__ . "/RouteFileStubs";
+        return realpath(__DIR__ . "/RouteFileStubs");
     }
   
     protected static function getPackageRouteFileStubPath(string $stubFileName) : string
@@ -59,7 +59,7 @@ class PixelRouteStubsManager extends PixelAppStubsManager
         static::replaceApiRouteStubFile();
         static::replaceWebRouteStubFile();
 
-        if(static::isItTenancySupportyerApp())
+        if(static::DoesItNeedTenantRoutes())
         {
             static::replaceTenantRouteStubFile();
         }

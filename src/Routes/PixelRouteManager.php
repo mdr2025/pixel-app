@@ -103,7 +103,7 @@ class PixelRouteManager
  
     public static function loadTenantRoutes()
     {
-        if (static::isItTenancySupportyerApp())
+        if (static::DoesItNeedTenantRoutes())
         {
             Route::prefix()->group(base_path('routes/tenant.php'));
         }
@@ -119,6 +119,11 @@ class PixelRouteManager
         return PixelTenancyManager::isItMonolithTenancyApp();
     }
  
+    public static function DoesItNeedTenantRoutes() : bool
+    {
+        return static::isItTenantApp() || static::isItMonolithTenancyApp();
+    }
+    
     public static function isItAdminPanelApp() : bool
     {
         return PixelTenancyManager::isItAdminPanelApp();

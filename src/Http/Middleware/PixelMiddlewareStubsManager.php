@@ -16,7 +16,7 @@ class PixelMiddlewareStubsManager extends PixelAppStubsManager
     
     protected function getPixelMiddlewareStubsPath() : string
     {
-        return __DIR__ . "/PixelMiddlewareStubs";
+        return realpath( __DIR__ . "/PixelMiddlewareStubs");
     }
     
     protected function getPixelMiddlewareStubFilePath(string $fileName) : string

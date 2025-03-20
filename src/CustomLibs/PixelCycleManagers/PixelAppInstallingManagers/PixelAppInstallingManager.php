@@ -94,7 +94,7 @@ class PixelAppInstallingManager
 
     protected static function handleDefaultFonts() : void
     {
-        Artisan::call("pixel-app:handle-default-fonts");
+        Artisan::call("php artisan pixel-app:handle-default-fonts");
     }
 
 }

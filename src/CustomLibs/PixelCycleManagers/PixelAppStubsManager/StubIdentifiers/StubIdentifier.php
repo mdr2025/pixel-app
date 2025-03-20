@@ -39,7 +39,7 @@ class StubIdentifier
         return $this;
     }
 
-    public function getContentCallback() : ?string
+    public function getContentCallback() : ?callable
     {
         return $this->contentCallback;
     }

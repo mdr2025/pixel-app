@@ -26,7 +26,7 @@ class DefaultFontsHandling extends Command
     {
         if(class_exists(\PixelDomPdf\DomPdfExntendingCode\PixelDomPdf::class))
         {
-            $this->call("pixel-dom-pdf:register-fonts");
+            $this->call("php artisan pixel-dom-pdf:register-fonts");
         }
     }
     
