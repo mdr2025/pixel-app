@@ -74,6 +74,7 @@ class PreparePixelApp extends Command
     {
         $appType = $this->askForAppType();
         PixelAppInstallingManager::install($appType);
+        $this->info("pixel app package has been installed successfully !");
     }
     
     protected function uninstallApp() : void

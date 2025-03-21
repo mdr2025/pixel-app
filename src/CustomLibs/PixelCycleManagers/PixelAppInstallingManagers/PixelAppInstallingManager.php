@@ -22,6 +22,7 @@ class PixelAppInstallingManager
     {
         static::forAppType($appType);
         static::installPackageConfigFiles(); 
+        static::installPackageRoutesFiles();
         static::installLaravelServiceProviders();
         static::installPackageMiddlewareStubs();
         static::installPackageModels();

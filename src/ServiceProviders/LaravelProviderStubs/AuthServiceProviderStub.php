@@ -7,7 +7,7 @@ use AuthorizationManagement\IndependentGateManagement\IndependentGateManagers\In
 use AuthorizationManagement\PolicyManagement\PolicyManagers\PolicyManager;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
-use PixelApp\Config\ConfigValueManager;
+
 
 class AuthServiceProvider extends ServiceProvider
 {
