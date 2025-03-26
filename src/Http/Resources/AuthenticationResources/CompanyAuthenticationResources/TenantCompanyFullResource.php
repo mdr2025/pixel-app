@@ -3,6 +3,7 @@
 namespace PixelApp\Http\Resources\AuthenticationResources\CompanyAuthenticationResources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Models\CompanyModule\TenantCompany;
 
 /**
@@ -17,9 +18,16 @@ class TenantCompanyFullResource extends JsonResource
          */
         return $attrs;
     }
+
+    protected function getTenantCompanyProfileResourceClass() : string
+    {
+        PixelHttpResourceManager::getResourceForResourceBaseType(TenantCompanyProfileResource::class);
+    }
+
     protected function getTenantProfileAttrs($request) : array
     {
-        return (new TenantCompanyProfileResource($this->resource))->toArray($request);
+        $resourceClass = $this->getTenantCompanyProfileResourceClass();
+        return (new $resourceClass($this->resource))->toArray($request);
     }
     /**
      * Transform the resource into an array.

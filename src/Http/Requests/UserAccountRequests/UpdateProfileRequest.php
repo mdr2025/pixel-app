@@ -18,8 +18,7 @@ class UpdateProfileRequest extends BaseFormRequest implements NeedsModelKeyAdvan
      * @return bool
      */
     public function authorize(): bool
-    {
-        return true;
+    { 
         return BasePolicy::check('edit', UserProfile::class);
     }
 
@@ -60,6 +59,7 @@ class UpdateProfileRequest extends BaseFormRequest implements NeedsModelKeyAdvan
     public function rules()
     {
         return [
+            "email" => ["required" , "string" , "email"],
             "full_name" => ["nullable" , "string"],
             "mobile" => ["required" , "string"],
             "profile.gender" => ["nullable" , "string"  ],
@@ -69,10 +69,6 @@ class UpdateProfileRequest extends BaseFormRequest implements NeedsModelKeyAdvan
             "profile.passport_number" => ["nullable" , "string" ],
             "profile.marital_status" => ["nullable" , "string" , Rule::in( UserProfile::MARTIAL_STATUSES )],
             "profile.military_status" => ["nullable" , "string", Rule::in( UserProfile::MILITARY_STATUSES )],
-            /**
-             * @todo @usman 
-             * use this method for all cases like this
-             */
             "profile.logo" => ["nullable" , (new SingleFileOrSinglePathString())->allowImageFilesOnly() ],
             "profile.date_of_birth" => ["nullable" , "date"],
             'attachments' => ["nullable" , "array"],

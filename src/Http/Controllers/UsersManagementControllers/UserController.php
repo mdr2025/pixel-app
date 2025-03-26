@@ -19,7 +19,7 @@ use PixelApp\Services\UsersManagement\UpdatingUserByAdminService\UpdatingUserByA
 use PixelApp\Services\PixelServiceManager;
 use PixelApp\Services\UsersManagement\ExpImpServices\UserTypesExpImpServices\UserTypeExpImpServices\UserTypeExportingService;
 use PixelApp\Services\UsersManagement\IndexingServices\UserTypeIndexingService;
-use PixelApp\Services\UsersManagement\ListingServices\DefaultUsersListingingService;
+use PixelApp\Services\UsersManagement\ListingServices\DefaultUsersListingService;
 use PixelApp\Services\UsersManagement\ListingServices\UserTypeListingingService;
 use PixelApp\Services\UsersManagement\ShowServices\UserTypeShowService;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -80,7 +80,7 @@ class UserController extends Controller
         //         })
         //     ])
         //     ->with(["profile:user_id,logo"])
-        //     ->activeEmployees()
+        //     ->activeUsers()
         //     ->customOrdering('created_at', 'desc')
         //     ->select("id", "name")
         //     ->get();
@@ -93,7 +93,7 @@ class UserController extends Controller
 
     public function listDefaultUser()
     {
-        $service = PixelServiceManager::getServiceForServiceBaseType(DefaultUsersListingingService::class);
+        $service = PixelServiceManager::getServiceForServiceBaseType(DefaultUsersListingService::class);
         return (new $service)->list();
 
         // $data = QueryBuilder::for( $this->getUserModelClass() )

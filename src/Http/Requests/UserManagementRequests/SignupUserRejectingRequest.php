@@ -32,8 +32,7 @@ class SignupUserRejectingRequest extends BaseFormRequest
      * @return array
      */
     public function rules($data)
-    {
-        $status = request()->input("status");
+    { 
         return [
             'status' => ["required", "string" , Rule::in(["rejected"])]
         ];

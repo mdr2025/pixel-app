@@ -31,7 +31,7 @@ class AreasRouteRegistrar extends PixelRouteRegistrar
 
     protected function defineImportableFormatDownloadingRoute() : void
     {
-        Route::get('system-configs/areas/format-downloading', [AreasController::class, 'importableFormalDownload']);
+        Route::get('system-configs/download-file-format/areas', [AreasController::class, 'importableFormalDownload']);
     }
    
     protected function defineImportingRoute() : void

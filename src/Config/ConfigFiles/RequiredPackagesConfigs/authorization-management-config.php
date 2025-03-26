@@ -5,11 +5,13 @@ use PixelApp\Models\SystemConfigurationModels\Branch;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Area;
 use PixelApp\Models\SystemConfigurationModels\Department;
 use PixelApp\Models\UsersModule\PixelUser;
+use PixelApp\Models\UsersModule\UserProfile;
 use PixelApp\Policies\AuthenticationPolicies\CompanyModulePolicies\CompanyModulePolicy;
 use PixelApp\Policies\AuthenticationPolicies\UsersModulePolicies\UsersModulePolicy;
 use PixelApp\Policies\IndependentGates\SuperAdminIndependentGates;
 use PixelApp\Policies\SystemConfigurationPolicies\DropDownListPolicies\DropDownListPolicy;
 use PixelApp\Policies\SystemConfigurationPolicies\RolesAndPermissionsPolicies\RolesAndPermissionsPolicies;
+use PixelApp\Policies\UserManagementPolicies\UserProfilePolicy;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -28,6 +30,7 @@ return [
        
         /** Authentication Policies */
         TenantCompany::class                  => CompanyModulePolicy::class,
+        UserProfile::class     => UserProfilePolicy::class,
         PixelUser::class                     => UsersModulePolicy::class,
     ],
     "independent_gates" => [

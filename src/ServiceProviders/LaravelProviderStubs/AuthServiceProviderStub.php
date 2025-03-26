@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\WorkSector\UsersModule\RefreshToken;
+use PixelApp\Models\UsersModule\RefreshToken;
 use AuthorizationManagement\IndependentGateManagement\IndependentGateManagers\IndependentGateManager;
 use AuthorizationManagement\PolicyManagement\PolicyManagers\PolicyManager;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;

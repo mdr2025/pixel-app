@@ -18,7 +18,7 @@ use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperatio
 use PixelApp\Services\PixelServiceManager;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\BranchShowService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchesListingingService;
-use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchessIndexingService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchesIndexingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\ChildrenBranchesListingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\ExpImpServices\ExportingServices\BranchesExportingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\ExpImpServices\ImportingFunc\BranchesImporter;
@@ -33,7 +33,7 @@ class BranchesController extends Controller
 
     public function index(Request $request)
     {
-        $service = PixelServiceManager::getServiceForServiceBaseType(BranchessIndexingService::class);
+        $service = PixelServiceManager::getServiceForServiceBaseType(BranchesIndexingService::class);
         return (new $service)->index();
 
         // $data = QueryBuilder::for(Branch::class)

@@ -11,7 +11,7 @@ trait HasTranslations
     {
         $attributes = parent::toArray();
         foreach ($this->getTranslatableAttributes() as $field) {
-            $attributes[$field] = $this->getTranslation($field, PixelAppCore()->getLocale());
+            $attributes[$field] = $this->getTranslation($field, app()->getLocale());
         }
         return $attributes;
     }

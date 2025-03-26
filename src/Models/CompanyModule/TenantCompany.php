@@ -145,6 +145,11 @@ class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantW
         $query->where('registration_status',  'approved');
     }
 
+    public function scopeIsApproved($query)
+    {
+        $query->where('registration_status', '<>', 'pending');
+    }
+    
     public function isActive() : bool
     {
         return $this->active;
@@ -173,16 +178,20 @@ class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantW
         return $this;
     }
 
+
     public function scopeFilter($query)
     {
         AllowedFilter::callback('details', function (Builder $query, $value) {
             $query->Where('name', 'like', "%" . $value . "%")
-                  ->orWhere('company_id', 'like', "%" . $value . "%");
-
-            /** To do later */
-//                   ->orWhereHas('contacts', function ($query) use ($value) {
-//                    $query->where('contact_No', 'like', "%" . $value . "%");
-//                });
+                ->orWhere('company_id', 'like', "%" . $value . "%")
+                ->orWhereHas('defaultAdmin', function ($query) use ($value) {
+                    $query->where('email', 'like', "%" . $value . "%")
+                          ->orHhere('first_name', 'like', "%" . $value . "%")
+                          ->orWhere('last_name', 'like', "%" . $value . "%") ;
+                })
+                ->orWhereHas('contacts', function ($query) use ($value) {
+                    $query->where('contact_No', 'like', "%" . $value . "%");
+                });
         });
     }
 
@@ -224,12 +233,10 @@ class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantW
     {
         return $this->hasMany(TenantCompany::class,'parent_id','id');
     }
-    /**
-     * To do later if it is necessary
-     */
-//    public function contacts()
-//    {
-//        return $this->hasMany(CompanyContact::class);
-//    }
+    
+   public function contacts()
+   {
+       return $this->hasMany(CompanyContact::class);
+   }
 
 }

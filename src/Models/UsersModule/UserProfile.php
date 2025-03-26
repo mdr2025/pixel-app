@@ -28,7 +28,6 @@ class UserProfile extends PixelBaseModel implements MustUploadModelFiles , NeedT
         'marital_status',
         'military_status',
         'date_of_birth',
-        'gender',
         'passport_number',
         'national_id_number',
         "user_id"

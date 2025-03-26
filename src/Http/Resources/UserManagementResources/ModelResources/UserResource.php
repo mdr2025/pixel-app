@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use JsonSerializable;
+use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\SystemConfigurationResources\DropdownLists\Departments\DepartmentResource;
 use PixelApp\Http\Resources\SystemConfigurationResources\RolesAndPermissions\RoleResource;
 
@@ -19,7 +20,7 @@ class UserResource extends JsonResource
     /**
      * @todo later
      */
-    // private function appendBranchInfo(array $dataArrayToChange = []): array
+    // protected function appendBranchInfo(array $dataArrayToChange = []): array
     // {
     //     if ($branch = $this->branch )
     //     {
@@ -27,45 +28,39 @@ class UserResource extends JsonResource
     //     }
     //     return $dataArrayToChange;
     // }
-    private function appendDepartmentInfo(array $dataArrayToChange = []): array
+    
+    protected function getDepartmentResourceClass() : string
+    {
+        return PixelHttpResourceManager::getResourceForResourceBaseType(DepartmentResource::class);
+    }
+
+    protected function appendDepartmentInfo(array $dataArrayToChange = []): array
     {
         if ($department = $this->department)
         {
-            $dataArrayToChange["department"] =  new DepartmentResource($department);
+            $resourceClass = $this->getDepartmentResourceClass();
+            $dataArrayToChange["department"] =  new $resourceClass($department);
         }
         return $dataArrayToChange;
     }
 
-    private function appendRolePermissions(array $dataArrayToChange = []): array
+    protected function getRoleResourceClass() : string
+    {
+        return PixelHttpResourceManager::getResourceForResourceBaseType(RoleResource::class);
+    }
+
+    protected function appendRolePermissions(array $dataArrayToChange = []): array
     {
         if ($role = $this->role)
         {
-            $dataArrayToChange["role"] = new RoleResource($role);
+            $resourceClass = $this->getRoleResourceClass();
+            $dataArrayToChange["role"] = new $resourceClass($role);
 
             $dataArrayToChange["permissions"] = $role->permissions()->pluck("name")->toArray();
         }
         return $dataArrayToChange;
     }
-
-    // private function getUserData() : array
-    // {
-    //     if(!$this->resource) { return [];}
-    //     return [
-    //                 "id" => $this->resource->id,
-    //                 "email" => $this->resource->email,
-    //                 "first_name" => $this->resource->first_name,
-    //                 "last_name"  => $this->resource->last_name,
-    //                 "name" => $this->resource->name,
-    //                 "full_name" => $this->resource->full_name,
-    //                 "mobile" => $this->resource->mobile,
-    //                 "accepted_at" => $this->resource->accepted_at,
-    //                 "employee_id" => $this->resource->employee_id,
-    //                 "status" =>   User::UserStatusNames[ $this->resource->status ] ,
-    //                 "remember_token" => $this->resource->remember_token,
-    //                 "created_at" => $this->resource->created_at,
-    //             ];
-    // }
-
+  
     protected function setRequest(Request $request) : void
     {
         $this->request = $request;
@@ -76,11 +71,11 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        $this->setRequest($request);
-        // $data = $this->getUserData();
+        $this->setRequest($request); 
         $data = $this->appendRolePermissions();
+        $data = $this->appendDepartmentInfo($data);
         return array_merge($data , parent::toArray($request));
-        // $data = $this->appendDepartmentInfo($data);
+
         //return $this->appendBranchInfo($data);
     }
 }

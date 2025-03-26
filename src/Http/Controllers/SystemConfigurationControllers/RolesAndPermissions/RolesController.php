@@ -39,7 +39,7 @@ class RolesController extends Controller
     public function list()
     {
         BasePolicy::check('read', Role::class);
-        $data = RoleModel::where('id', '<>', 1)->get();
+        $data = RoleModel::nonDefaultRole()->get();
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(RolesListResource::class);
         return $resourceClass::collection($data); 
     }
@@ -62,7 +62,7 @@ class RolesController extends Controller
     public function update($id, Request $request): JsonResponse
     {
         BasePolicy::check('edit', Role::class); 
-        $role = RoleModel::findOrFail($id);
+        $role = RoleModel::nonDefaultRole()->find($id);
         $service = PixelServiceManager::getServiceForServiceBaseType(RoleInfoUpdatingService::class);
         return (new $service($role))->change($request);
     }

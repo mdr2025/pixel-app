@@ -16,27 +16,18 @@ class PermissionController extends Controller
     public function store(Request $request)
     {
         BasePolicy::check('create', Permission::class);
-        (new RolesAndPermissionsPolicies())->create();
+        
+        $actions = ['read', 'create', 'edit', 'delete'];
         $data = [];
 
         foreach ($request->data as $permission) {
-            if ($permission["isCrud"] == 1) {
-                $data[] = [
-                    'name' => "read_{$permission['name']}",
-                    "guard_name" => "api",
-                ];
-                $data[] = [
-                    'name' => "create_{$permission['name']}",
-                    "guard_name" => "api",
-                ];
-                $data[] = [
-                    'name' => "edit_{$permission['name']}",
-                    "guard_name" => "api",
-                ];
-                $data[] = [
-                    'name' => "delete_{$permission['name']}",
-                    "guard_name" => "api",
-                ];
+            if ($permission["isCrud"] == 1) { 
+                foreach ($actions as $action) {
+                    $data[] = [
+                        'name' => "{$action}_{$permission['name']}",
+                        "guard_name" => "api",
+                    ];
+                }
             } else {
                 $data[] = [
                     'name' => $permission['name'],

@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use JsonSerializable;
+use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\SystemConfigurationResources\DropdownLists\Cities\CityResource;
 use PixelApp\Http\Resources\SystemConfigurationResources\DropdownLists\Countries\CountryResource;
 
@@ -13,22 +14,34 @@ class UserProfileResource extends JsonResource
 {
     protected Request $request;
 
-    private function appendCityInfo(array $dataArrayToChange = []): array
+    protected function getCityResourceClass() : string
+    {
+        return PixelHttpResourceManager::getResourceForResourceBaseType(CityResource::class);
+    }
+
+    protected function appendCityInfo(array $dataArrayToChange = []): array
     {
         if ($city = $this->resource->city)
         {
-            $dataArrayToChange["city"] =  (new CityResource($city))->toArray($this->request); ;
+            $resourceClass = $this->getCityResourceClass();
+            $dataArrayToChange["city"] =  (new $resourceClass($city))->toArray($this->request); ;
             unset($this->resource->city);
         }
         return $dataArrayToChange;
     }
 
-    private function getCountryInfo(): array
+    protected function getCountryResourceClass() : string
+    {
+        return PixelHttpResourceManager::getResourceForResourceBaseType(CountryResource::class);
+    }
+
+    protected function getCountryInfo(): array
     {
         $data = [];
         if ($country = $this->resource->country)
         {
-            $data["country"] = (new CountryResource( $country ) )->toArray($this->request);;
+            $resourceClass = $this->getCountryResourceClass();
+            $data["country"] = (new $resourceClass( $country ) )->toArray($this->request);;
             unset($this->resource->country);
         }
 

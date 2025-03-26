@@ -34,7 +34,28 @@ return [
             'driver' => 'local',
             'root' => storage_path('app'),
         ],
-
+        'front_separated' => [
+            /**
+             * - Use it when frontend is separated from backend but both on the same server
+             * - Using it when they are server separated maybe not work ... Depends on the provided folder's path permissions
+             * Where :
+             * BACKEND_APP_URL : is the url to the backend 's laravel project
+             *
+             * Notes :
+             * 1 - Don't forget to generate a shortcut link from storage folder => public folder in laravel backend project
+             * 2 - The root and url values will be overwritten in tenant context after the tenancy is initialized
+             * and will be returned t their old values after the tenancy is reverted
+             * 3 - There is n differences between public and front_separated 's roots ... they will be used in the backend
+             */
+            'driver' => 'local',
+            'root' => storage_path('disks/public'),
+            'url' =>  rtrim(env('BACKEND_APP_URL') , "/") . '/public/storage',
+            'visibility' => 'public',
+//            'driver' => 'local',
+//            'root' => storage_path('app/public'),
+//            'url' =>  rtrim(env('BACKEND_APP_URL') , "/") . '/public/storage',
+//            'visibility' => 'public',
+        ],
         'public' => [
             /**
              * - Use it when frontend is mixed with backend in the same project

@@ -4,6 +4,7 @@ namespace PixelApp\Http\Resources\UserAccountResources;
  
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\UserManagementResources\ModelResources\UserAttachmentsResource;
 use PixelApp\Http\Resources\UserManagementResources\ModelResources\UserProfileResource;
 use PixelApp\Http\Resources\UserManagementResources\ModelResources\UserResource;
@@ -12,20 +13,38 @@ class UserFullResource extends JsonResource
 {
     protected Request $request;
 
-    private function appendAttachments(array $dataArrayToChange = []): array
+    
+    protected function getUserAttachmentsResourceClass() : string
     {
-         $dataArrayToChange["user"]["attachments"] = UserAttachmentsResource::collection($this->resource->attachments);
+        return PixelHttpResourceManager::getResourceForResourceBaseType(UserAttachmentsResource::class);
+    }
+    protected function appendAttachments(array $dataArrayToChange = []): array
+    {
+         $dataArrayToChange["user"]["attachments"] = $this->getUserAttachmentsResourceClass()::collection($this->resource->attachments);
         return $dataArrayToChange;
     }
-    private function appendProfileInfo(array $dataArrayToChange = []): array
+
+    protected function getUserProfileResourceClass() : string
     {
-        $dataArrayToChange["user"]["profile"] = new UserProfileResource($this->resource->profile) ;
+        return PixelHttpResourceManager::getResourceForResourceBaseType(UserProfileResource::class);
+    }
+
+    protected function appendProfileInfo(array $dataArrayToChange = []): array
+    {
+        $resourceClass = $this->getUserProfileResourceClass();
+        $dataArrayToChange["user"]["profile"] = new $resourceClass($this->resource->profile) ;
         return $dataArrayToChange;
+    }
+
+    protected function getUserResourceClass() : string
+    {
+        return PixelHttpResourceManager::getResourceForResourceBaseType(UserResource::class);
     }
 
     protected function getUserMainData() : array
     {
-        return [ "user" =>  (new UserResource($this->resource))->toArray($this->request) ];
+        $resourceClass = $this->getUserResourceClass();
+        return [ "user" =>  (new $resourceClass($this->resource))->toArray($this->request) ];
     }
 
     protected function setRequest(Request $request) : void

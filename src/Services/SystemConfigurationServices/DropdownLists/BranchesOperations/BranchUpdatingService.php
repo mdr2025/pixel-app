@@ -6,12 +6,12 @@ use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\UpdatingServices\Updati
 use Exception;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\SystemConfigurationRequests\Branches\UpdatingBranchRequest;
-use PixelApp\Models\PixelBaseModel;
+use PixelApp\Models\SystemConfigurationModels\Branch;
 
 class BranchUpdatingService extends UpdatingService
 {
 
-    public function __construct(PixelBaseModel $branch)
+    public function __construct(Branch $branch)
     {
         if (!is_null(request()->status) && $branch->id == 1)
         {
@@ -33,6 +33,10 @@ class BranchUpdatingService extends UpdatingService
     {
         return PixelHttpRequestManager::getRequestForRequestBaseType(UpdatingBranchRequest::class);
     }
+
+    /**
+     * @todo to check later 
+     */
     protected function doBeforeSuccessResponding(): void
     {
         $model = $this->Model ;

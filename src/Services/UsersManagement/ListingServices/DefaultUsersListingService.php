@@ -2,16 +2,15 @@
 
 namespace PixelApp\Services\UsersManagement\ListingServices;
   
-use PixelApp\Models\PixelModelManager;
-use PixelApp\Models\SystemConfigurationModels\Department; 
+use PixelApp\Models\PixelModelManager; 
 use PixelApp\Services\CoreServices\ModelListingService;
 use PixelApp\Services\UsersManagement\SpatieAllowedFilters\UserTypeListingAllowedFilters;
 
-class DefaultUsersListingingService extends ModelListingService
+class DefaultUsersListingService extends ModelListingService
 {
     protected function getModelClass() : string
     {
-        return PixelModelManager::getModelForModelBaseType(Department::class);
+        return PixelModelManager::getUserModelClass();
     } 
  
     protected function setAllowedFilters() : void

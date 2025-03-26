@@ -23,6 +23,11 @@ class RoleModel extends Role
     {
         return $this->where('default', 1);
     }
+    
+    public function scopeNonDefaultRole()
+    {
+        return $this->where('default', 0);
+    }
     public function isActive() : bool
     {
         return $this->disabled == 0;
@@ -31,6 +36,7 @@ class RoleModel extends Role
     {
         return (bool) $this->default;
     }
+    
     public static function getHighestRoleName() : string
     {
         return "Super Admin";

@@ -25,7 +25,7 @@ class RoleStoringRequest extends BaseFormRequest
     {
         return [
             'name' => ['required', 'string', 'unique:roles,name'],
-            'permissions' => ['nullable', 'array', 'min:1']
+            'permissions' => ['required', 'array', 'min:1']
         ];
     }
 }
