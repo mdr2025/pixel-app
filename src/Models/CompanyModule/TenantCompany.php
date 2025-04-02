@@ -149,7 +149,12 @@ class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantW
     {
         $query->where('registration_status', '<>', 'pending');
     }
-    
+     
+    public function getTenantLogo() : string
+    {
+        return $this->getFileFullPathAttrValue('logo');
+    }
+
     public function isActive() : bool
     {
         return $this->active;

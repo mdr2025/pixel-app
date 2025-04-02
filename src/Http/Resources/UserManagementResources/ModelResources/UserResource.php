@@ -49,6 +49,16 @@ class UserResource extends JsonResource
         return PixelHttpResourceManager::getResourceForResourceBaseType(RoleResource::class);
     }
 
+    protected function appendCompanyLogo(array $dataArrayToChange) : array
+    { 
+        if($tenant = tenant())
+        {
+            $dataArrayToChange['company_logo'] = $tenant->getFileFullPathAttrValue('logo') ;
+        }
+
+        return $dataArrayToChange;
+    }
+
     protected function appendRolePermissions(array $dataArrayToChange = []): array
     {
         if ($role = $this->role)
@@ -74,6 +84,8 @@ class UserResource extends JsonResource
         $this->setRequest($request); 
         $data = $this->appendRolePermissions();
         $data = $this->appendDepartmentInfo($data);
+        $data = $this->appendCompanyLogo($data);
+        
         return array_merge($data , parent::toArray($request));
 
         //return $this->appendBranchInfo($data);

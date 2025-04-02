@@ -64,7 +64,10 @@ class ManyToManySelectedRequestDataMerger
     }
     protected static function mergeRequestNewData(): void
     {
-        self::$request->merge(self::getRelationshipRequestNewData());
+        if (self::$request->has(self::$requestKeyName))
+        {
+            self::$request->merge(self::getRelationshipRequestNewData());
+        }
     }
 
     public static function setRequest(): Request

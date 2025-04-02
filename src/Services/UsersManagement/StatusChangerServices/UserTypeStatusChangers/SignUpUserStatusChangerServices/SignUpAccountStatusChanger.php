@@ -7,9 +7,7 @@ use PixelApp\Services\UsersManagement\StatusChangerServices\AccountStatusChanger
 use Illuminate\Http\Request;
 
 abstract class SignUpAccountStatusChanger extends AccountStatusChanger
-{ 
-    abstract protected function getRequestFormClass(): string;
- 
+{  
     protected function getRequest()  :Request
     {
         return request();

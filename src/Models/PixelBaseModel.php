@@ -6,6 +6,7 @@ use PixelApp\Traits\interfacesCommonMethods\HasUUIDMethods;
 use PixelApp\Traits\interfacesCommonMethods\MustUploadModelFilesMethods;
 use PixelApp\Traits\interfacesCommonMethods\UsingRunTimeCache;
 use CRUDServices\FilesOperationsHandlers\FilePathsRetrievingHandler\FileFullPathsHandler;
+use CRUDServices\FilesOperationsHandlers\FilesHandler;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -62,32 +63,24 @@ class PixelBaseModel extends Model implements StatisticsProviderModel
         return "created_at";
     }
 
-    public function __get($key)
+    public function getAttribute($key)
     {
         if (ParentModelRuntimeCache::NeedToAccessParentRelationships($this) && array_key_exists($key, $this->getParentRelationshipsDetails()))
         {
             return $this->getParentRelationshipValue($key);
         }
 
-        return parent::__get($key);
+        return parent::getAttribute($key);
     }
-
+  
     public function toArray()
     {
         if (FileFullPathsHandler::MustUploadModelFiles($this)) {
-            return $this->getNewAttrsArray();
+            return $this->getPathCompletedAttrsArray();
         }
         return parent::toArray();
     }
-
-
-    /**
-     * @todo o check later
-     */
-    public function getTenantPictureUrl()
-    {
-        return "https://" . app()['request']->getHost();
-    }
+  
     
     public static function getTableName(): string
     {

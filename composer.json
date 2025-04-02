@@ -114,5 +114,10 @@
             "type": "vcs",
             "url": "git@github.com:mdr2025/pixel-app.git"
         }
-    ]
+    ],
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
 }
