@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\UserManagementRequests\UserChangeEmailRequest;
+use PixelApp\Interfaces\EmailAuthenticatable;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\UserEncapsulatedFunc\CustomUpdatingService;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\EmailAuthenticatableSensitivePropChangers\EmailChanger;
@@ -28,21 +29,26 @@ class EmailChangerService extends CustomUpdatingService
     {
         if(!$this->emailChanger)
         {
-            $this->emailChanger = (new EmailChanger())->setData($this->data)->setAuthenticatable($this->user);
+            $this->emailChanger = (new EmailChanger())->setData($this->data)->setAuthenticatable($this->model);
         }
         return $this->emailChanger;
     }
 
-    protected function appendUserPrimaryToRequest() : void
+    protected function appendAuthenticatabePrimaryToRequest() : void
     {
         request()->merge([
-                            "id" => $this->user->id
+                            $this->model->getKeyName() => $this->model->getKey()
                         ]);
     }
-    public function __construct(Authenticatable|PixelUser $user)
+    public function __construct(EmailAuthenticatable $model)
     {
-        parent::__construct($user);
-        $this->appendUserPrimaryToRequest();
+        if(! $model instanceof EmailAuthenticatable)
+        {
+            dd("The model wanted to change its password must implement EmailAuthenticatable interface");
+        }
+
+        parent::__construct($model);
+        $this->appendAuthenticatabePrimaryToRequest();
     }
 
     /**
@@ -54,7 +60,7 @@ class EmailChangerService extends CustomUpdatingService
         $this->initEmailChanger()->changeAuthenticatableProp();
         if($this->emailChanger->checkAuthenticatableChanging())
         {
-            if ($this->user->save())
+            if ($this->model->save())
             {
                 $this->emailChanger->fireCommittingEvents();
                 return Response::success([], ["Email Changed Successfully"]);

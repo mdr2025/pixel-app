@@ -22,7 +22,7 @@ class UpdatingUserByAdminService extends CustomUpdatingService
 
     protected function initUserSensitiveDataChanger() : UserSensitiveDataChanger
     {
-        return new UserSensitiveDataChanger($this->user , $this->data);
+        return new UserSensitiveDataChanger($this->model , $this->data);
     }
 
 

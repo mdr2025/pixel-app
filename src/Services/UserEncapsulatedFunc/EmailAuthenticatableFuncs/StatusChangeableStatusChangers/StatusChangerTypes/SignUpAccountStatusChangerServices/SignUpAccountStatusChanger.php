@@ -1,6 +1,6 @@
 <?php
 
-namespace  PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\SignUpUserStatusChangerServices;
+namespace  PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\StatusChangeableStatusChangers\StatusChangerTypes\SignUpAccountStatusChangerServices;
 
 use Exception;
 use PixelApp\Services\UsersManagement\StatusChangerServices\AccountStatusChanger;
@@ -25,7 +25,7 @@ abstract class SignUpAccountStatusChanger extends AccountStatusChanger
      */
     protected function checkConditionsBeforeStart()  : self
     {
-        if($this->user->user_type != "signup")
+        if(!$this->model->isSignUpAccount())
         {
             throw new Exception("Can't change user status");
         }

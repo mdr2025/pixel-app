@@ -5,7 +5,7 @@ namespace PixelApp\Http\Requests\UserManagementRequests;
 use Illuminate\Validation\Rule; 
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 
-class SignupUserApprovingRequest extends BaseFormRequest
+class SignupAccountApprovingRequest extends BaseFormRequest
 {
     protected static bool $mustCheckRoleId = false;
     protected static bool $mustCheckDepartmentId = false;

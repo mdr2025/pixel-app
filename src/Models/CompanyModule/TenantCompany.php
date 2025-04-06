@@ -34,10 +34,11 @@ use Stancl\Tenancy\Events\TenantDeleted;
 use Stancl\Tenancy\Events\TenantSaved;
 use Stancl\Tenancy\Events\TenantUpdated;
 use Stancl\Tenancy\Events\UpdatingTenant; 
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantWithDatabase , OwnsRelationships , MustUploadModelFiles ,  OnlyAdminPanelQueryable
 {
-    use HasFactory ,  HasDatabase ;
+    use HasFactory ,  HasDatabase  , SoftDeletes;
     use CentralConnection,
         HasInternalKeys,
         HasDataColumn,

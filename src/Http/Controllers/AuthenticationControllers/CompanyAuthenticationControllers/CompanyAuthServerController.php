@@ -32,6 +32,9 @@ class CompanyAuthServerController extends Controller
         return (new $service())->login();
     }
 
+    /**
+     * @todo later .... writing the service class name 
+     */
     public function updateDefaultAdminInfo() : JsonResponse
     {
         $service = PixelServiceManager::getServiceForServiceBaseType();

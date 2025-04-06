@@ -23,7 +23,7 @@ abstract class UserSensitivePropChanger
     {
         if(! $authenticatable instanceof Model )
         {
-            throw new Exception("Authenticatable must be a Model child type");
+            dd("Authenticatable must be a Model child type");
         }
         $this->authenticatable = $authenticatable;
         return $this;

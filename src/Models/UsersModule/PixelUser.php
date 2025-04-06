@@ -22,6 +22,7 @@ use PixelApp\Interfaces\HasUUID;
 use PixelApp\Interfaces\TenancyInterfaces\NeedsCentralDataSync;
 use PixelApp\Models\CompanyModule\CompanyDefaultAdmin;
 use PixelApp\Models\SystemConfigurationModels\Department;
+use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\StatusChangeableAccount;
 use PixelApp\Traits\interfacesCommonMethods\EmailAuthenticatableMethods;
 use PixelApp\Traits\interfacesCommonMethods\TenancyDataSyncHelperMethods;
 use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeededFromChildes;
@@ -35,7 +36,8 @@ implements
     NeededFromChildes,
     AuthenticatableContract,
     AuthorizableContract,
-    EmailAuthenticatable
+    EmailAuthenticatable ,
+    StatusChangeableAccount
     //,NeedsCentralDataSync
 {
     use  Authenticatable, Authorizable, HasApiTokens, HasFactory, Notifiable, EmailAuthenticatableMethods, SoftDeletes;
@@ -87,6 +89,35 @@ implements
     {
         return static::UserStatusNames[$statusIntValue] ?? static::UserDefaultInitStatusValue;
     }
+
+    public function isSystemMemberAccount()  :bool
+    {
+        return $this->user_type == "user";
+    }
+
+    public function isSignUpAccount() : bool
+    {
+        return $this->user_type == "signup";
+    }
+
+    public function getApprovingStatusValue()  :string
+    {
+        return "active";
+    }
+
+    public function getAccountApprovingProps()
+    { 
+        return [
+            "accepted_at" => now(),
+            "user_type" => "user"
+        ];
+    }
+
+    public function getDefaultStatusValue() : string
+    {
+        return "pending";
+    }
+
     public function generateName(): void
     {
         $this->name = "{$this->first_name} {$this->last_name}";

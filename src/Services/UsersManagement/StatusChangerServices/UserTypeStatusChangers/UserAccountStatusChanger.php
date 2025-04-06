@@ -5,26 +5,13 @@ namespace  PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatu
 use Exception;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\UserManagementRequests\UserStatusUpdatingRequest;
-use PixelApp\Services\UsersManagement\StatusChangerServices\AccountStatusChanger;
+use PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\StatusChangeableStatusChangers\StatusChangerTypes\SystemMemberAccountStatusChanger;
 
-class UserAccountStatusChanger extends AccountStatusChanger
+class UserAccountStatusChanger extends SystemMemberAccountStatusChanger
 {
     protected function getRequestFormClass(): string
     {
         return PixelHttpRequestManager::getRequestForRequestBaseType(UserStatusUpdatingRequest::class);
     }
-
-    /**
-     * @return $this
-     * @throws Exception
-     * Protecting condition - For avoiding to call api to change status to a value used for another user type
-     */
-    protected function checkConditionsBeforeStart()  : self
-    {
-        if($this->user->user_type != "user")
-        {
-            throw new Exception("Can't change user status");
-        }
-        return $this;
-    }
+ 
 }

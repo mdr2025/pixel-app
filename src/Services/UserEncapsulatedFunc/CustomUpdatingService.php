@@ -3,7 +3,7 @@
 namespace PixelApp\Services\UserEncapsulatedFunc;
 
 use Exception;
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 use PixelApp\Interfaces\EmailAuthenticatable;
@@ -15,11 +15,16 @@ abstract class CustomUpdatingService
 {
     use GeneralValidationMethods;
 
-    protected PixelUser | Authenticatable | EmailAuthenticatable $user;
+    protected Model | EmailAuthenticatable $model;
 
-    public function __construct(PixelUser | Authenticatable |EmailAuthenticatable $user)
+    public function __construct(Model |EmailAuthenticatable $model)
     {
-        $this->user = $user;
+        if(!$model instanceof Model)
+        {
+            dd("The object wanted to update by CustomUpdatingService must be a Modl typed child !");
+        }
+        
+        $this->model = $model;
     }
     /**
      * @return void
@@ -30,17 +35,22 @@ abstract class CustomUpdatingService
         /**
          * @todo need to review later
          */
-        if(!$this->user->isEditableUser()&& !$this instanceof AdminChangerInterface)
+        if(!$this->model->isEditableUser()&& !$this instanceof AdminChangerInterface)
         {
             throw new Exception("Can't edit a default admin !");
         }
+    }
+
+    protected function checkPreConditions() : void
+    {
+        $this->checkDefaultAdmin();
     }
 
     /** the common operations will be done (like validation Operations) .... then the main functionality will be called */
     public function change(): JsonResponse | bool
     {
         try {
-                $this->checkDefaultAdmin();
+                $this->checkPreConditions();
 
                 $this->initValidator()->validateRequest()->setRequestData();
 

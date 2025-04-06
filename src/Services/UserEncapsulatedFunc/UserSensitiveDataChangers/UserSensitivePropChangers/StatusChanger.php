@@ -3,10 +3,15 @@
 namespace PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers;
 
 use Exception;
-use PixelApp\Models\PixelModelManager;
+use Illuminate\Database\Eloquent\Model; 
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\ExpectsSensitiveRequestData;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Traits\ExpectsSensitiveRequestDataFunc;
+use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\StatusChangeableAccount;
 
+
+/**
+ * @property StatusChangeableAccount $authenticatable
+ */
 class StatusChanger extends UserSensitivePropChanger implements ExpectsSensitiveRequestData
 {
     use ExpectsSensitiveRequestDataFunc;
@@ -17,49 +22,58 @@ class StatusChanger extends UserSensitivePropChanger implements ExpectsSensitive
     {
         $this->setStatusInitValue();
     }
-    
+
+    public function setAuthenticatable( ?Model $authenticatable): self
+    {
+        $this->isItStatusChangeableModel($authenticatable);
+        return parent::setAuthenticatable($authenticatable);
+    }
+
+    protected function isItStatusChangeableModel(?Model $authenticatable) : void
+    {
+        if(! $authenticatable instanceof StatusChangeableAccount)
+        {
+            //for development only
+            dd("The Authenticatable account wanted to change its status must implement StatusChangeableAccount interface");
+        }
+    }
+
     public function getPropName() : string
     {
         return 'status';
     }
+
     public function getPropRequestKeyDefaultName(): string
     {
         return 'status';
     }
-    protected function getUserModelClass(): string
-    {
-        return PixelModelManager::getUserModelClass();
-    }
-
-    protected function getUserDefaultStatus()  :string
-    {
-        $userModelClass = $this->getUserModelClass();
-        return $userModelClass::UserDefaultInitStatusValue;
+ 
+    protected function getAuthenticatableDefaultStatus()  :string
+    { 
+        return $this->authenticatable->getDefaultStatusValue();
     }
 
     protected function setStatusInitValue() : void
     {
-        $this->statusValue = $this->getUserDefaultStatus();
+        $this->statusValue = $this->getAuthenticatableDefaultStatus();
     }
 
     public function approve() : self
     {
-        $this->statusValue  = 'active';
+        $this->statusValue  = $this->authenticatable->getApprovingStatusValue();
         return $this;
     }
 
-    protected function getAcceptedUserProps() : array
+    protected function getAcceptedAuthenticatableProps() : array
     {
-        return [
-            "accepted_at" => now(),
-            "user_type" => "user"
-        ];
+        return $this->authenticatable->getAccountApprovingProps();
     }
-    protected function getApprovedUserChangesArray() : array
+
+    protected function getApprovedAuthenticatableChangesArray() : array
     {
         return [
-                    $this->getPropName() => 'active' ,
-                    ...$this->getAcceptedUserProps()
+                    $this->getPropName() => $this->authenticatable->getApprovingStatusValue() ,
+                    ...$this->getAcceptedAuthenticatableProps()
                ];
     }
 
@@ -73,6 +87,10 @@ class StatusChanger extends UserSensitivePropChanger implements ExpectsSensitive
         return $status ?? throw new Exception("Status value isn't sent");
     }
 
+    public function isChangeAllowableValue() : bool
+    {
+        return $this->statusValue != 'pending';
+    }
     /**
      * @throws Exception
      */
@@ -85,10 +103,6 @@ class StatusChanger extends UserSensitivePropChanger implements ExpectsSensitive
         }
     }
 
-    public function isChangeAllowableValue() : bool
-    {
-        return $this->statusValue != 'pending';
-    }
     /**
      * @return int
      */
@@ -105,7 +119,7 @@ class StatusChanger extends UserSensitivePropChanger implements ExpectsSensitive
         if($this->isChangeAllowableValue())
         {
             return $this->statusValue === 'active' ?
-                   $this->getApprovedUserChangesArray() :
+                   $this->getApprovedAuthenticatableChangesArray() :
                    $this->composeChangesArray( $this->statusValue  );
         }
         return [];

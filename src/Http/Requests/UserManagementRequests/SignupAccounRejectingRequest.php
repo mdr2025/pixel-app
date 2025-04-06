@@ -2,11 +2,10 @@
 
 namespace PixelApp\Http\Requests\UserManagementRequests;
  
-use Illuminate\Validation\Rule;
-use PixelApp\Models\UsersModule\PixelUser;
+use Illuminate\Validation\Rule; 
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 
-class SignupUserRejectingRequest extends BaseFormRequest
+class SignupAccounRejectingRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
