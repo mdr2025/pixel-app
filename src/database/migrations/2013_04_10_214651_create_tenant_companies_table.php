@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use PixelApp\Models\CompanyModule\TenantCompany;
 
 class CreateTenantCompaniesTable extends Migration
 {
@@ -22,8 +23,9 @@ class CreateTenantCompaniesTable extends Migration
             $table->string('sector');
             $table->string('logo')->nullable() ;
             $table->foreignId("country_id")->constrained("countries")->cascadeOnUpdate();
-            $table->boolean('active')->default(1)->comment("By default it is active and pending ");
-            $table->enum('registration_status', TenantCompany::REGISTRATIONS_STATUSES )->default(TenantCompany::REGISTRATIONS_DEFAULT_STATUS);
+            $table->enum('status', TenantCompany::REGISTRATIONS_STATUSES )->default(TenantCompany::REGISTRATIONS_DEFAULT_STATUS);
+            $table->enum('account_type', TenantCompany::CompanyAccountAllowedTypes  )->default(TenantCompany::CompanyAccountDefaultType );
+            $table->timestamp('accepted_at')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
             $table->json('data')->nullable();

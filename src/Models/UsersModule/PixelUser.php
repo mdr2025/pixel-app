@@ -90,6 +90,15 @@ implements
         return static::UserStatusNames[$statusIntValue] ?? static::UserDefaultInitStatusValue;
     }
 
+    public function getSignUpAccountStatusChangableValues() : array
+    {
+        return ["active", "rejected"];
+    }
+    public function getAcceptedAccountStatusChangableValues() : array
+    {
+        return ["active", "inactive"];
+    }
+
     public function isSystemMemberAccount()  :bool
     {
         return $this->user_type == "user";

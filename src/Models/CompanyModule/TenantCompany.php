@@ -35,8 +35,10 @@ use Stancl\Tenancy\Events\TenantSaved;
 use Stancl\Tenancy\Events\TenantUpdated;
 use Stancl\Tenancy\Events\UpdatingTenant; 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\StatusChangeableAccount;
 
-class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantWithDatabase , OwnsRelationships , MustUploadModelFiles ,  OnlyAdminPanelQueryable
+class TenantCompany extends PixelBaseModel
+                    implements Tenant , HasUUID , TenantWithDatabase , OwnsRelationships , MustUploadModelFiles ,  OnlyAdminPanelQueryable , StatusChangeableAccount
 {
     use HasFactory ,  HasDatabase  , SoftDeletes;
     use CentralConnection,
@@ -45,8 +47,11 @@ class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantW
         TenantRun;
 
     protected $table = "tenant_companies";
-    const REGISTRATIONS_STATUSES =  ['pending', 'approved', 'rejected'];
-    const REGISTRATIONS_DEFAULT_STATUS =  'pending' ;
+
+    const CompanyAccountAllowedTypes = ["signup" , "company"];
+    const CompanyAccountDefaultType = "signup";
+    const REGISTRATIONS_DEFAULT_STATUS = "pending";
+    const REGISTRATIONS_STATUSES = ["pending" , "active" , "inactive" , "rejected"];
 
     public $fillable = [
         'name',
@@ -58,7 +63,6 @@ class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantW
         'address',
         'employees_no',
         'branches_no',
-        'registration_status',
         'cr_no',
         'parent_id',
         'type',
@@ -87,26 +91,25 @@ class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantW
             'country_id',
             'logo',
             'hashed_id',
-            'registration_status',
+            'status',
             'employees_no',
             'branches_no',
             'package_status',
             'mobile',
             'address',
-            'active',
             'cr_no',
             'contractor_approved_status',
             'main_company_approved_status',
             'type',
             'contractor_id',
-            'parent_id',
+            'account_type',
             'created_at' ,
             'updated_at' ,
+            'accepted_at',
             'deleted_at'
         ];
     }
     protected $casts = [
-        "active" => "boolean",
         'employees_no'=>'integer',
         'branches_no'=>'integer',
         'country_id'=>'integer',
@@ -143,12 +146,12 @@ class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantW
 
     public function scopeApproved($query)
     {
-        $query->where('registration_status',  'approved');
+        $query->where('status',  'active');
     }
 
     public function scopeIsApproved($query)
     {
-        $query->where('registration_status', '<>', 'pending');
+        $query->where('status', 'active');
     }
      
     public function getTenantLogo() : string
@@ -158,26 +161,69 @@ class TenantCompany extends PixelBaseModel implements Tenant , HasUUID , TenantW
 
     public function isActive() : bool
     {
-        return $this->active;
+        return $this->status = $this->getApprovingStatusValue();
     }
 
     public function isApproved()  : bool
     {
-        return $this->registration_status == 'approved';
+        return $this->isActive();
+    }
+
+    
+    public function getSignUpAccountStatusChangableValues() : array
+    {
+        return ["active", "rejected"];
+    }
+    
+    public function getAcceptedAccountStatusChangableValues() : array
+    {
+        return ["active", "inactive"];
+    }
+
+    public function isSystemMemberAccount()  :bool
+    {
+        return $this->account_type == "company";
+    }
+
+    public function isSignUpAccount() : bool
+    {
+        return $this->account_type == "signup";
+    }
+
+    public function getApprovingStatusValue()  :string
+    {
+        return "active";
+    }
+
+    public function getAccountApprovingProps()
+    { 
+        return [
+            "accepted_at" => now(),
+            "account_type" => "company"
+        ];
+    }
+
+    public function getDefaultStatusValue() : string
+    {
+        return "pending";
     }
 
     public function approveCompany() : self
     {
-        $this->registration_status = "approved";
-        $this->active = 1;
+        $this->status = "active"; 
+        $this->accepted_at = now();
+        $this->account_type = "company";
         return $this;
     }
+
     public function returnToDefaultRegistrationStatus() : self
     {
-        $this->registration_status = static::REGISTRATIONS_DEFAULT_STATUS;
-        $this->active = 1;
+        $this->status = $this->getDefaultStatusValue(); 
+        $this->accepted_at = null;
+        $this->account_type = "signup";
         return $this;
     }
+
     public function generateCompanyIdString()  : self
     {
         $this->company_id = "Co-" . random_int(100000, 999999);

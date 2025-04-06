@@ -34,18 +34,17 @@ abstract class AccountStatusChanger extends CustomUpdatingService
 
     public function __construct(Model $model)
     {
-        if(!$model instanceof EmailAuthenticatable)
-        {   
-            dd("The account wanted to change its status must implment EmailAuthenticatable interface");
-        }
-
-        
         if(!$model instanceof StatusChangeableAccount)
         {   
             dd("The account wanted to change its status must implment StatusChangeableAccount interface");
         }
   
         parent::__construct($model);
+    }
+
+    protected function sendNotification(string $notificationClass) : void
+    {
+        $this->model->notify(new $notificationClass); 
     }
 
     protected function getNotificationClass() : ?string
@@ -59,7 +58,7 @@ abstract class AccountStatusChanger extends CustomUpdatingService
     { 
         if( $notificationClass = $this->getNotificationClass() )
         {
-            $this->model->notify(new $notificationClass); 
+            $this->sendNotification($notificationClass);
         } 
     }
 
