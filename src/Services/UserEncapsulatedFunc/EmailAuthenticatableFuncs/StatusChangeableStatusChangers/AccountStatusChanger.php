@@ -63,6 +63,11 @@ abstract class AccountStatusChanger extends CustomUpdatingService
         } 
     }
 
+    protected function afterStatusTransaction() : void
+    {
+        $this->sendStatusChangingNotification();
+    }
+
     protected function saveAuthenticatableChanges() : bool
     {
         if($this->statusChanger->checkAuthenticatableChanging())
@@ -113,7 +118,9 @@ abstract class AccountStatusChanger extends CustomUpdatingService
         if ($this->saveAuthenticatableChanges())
         {
             DB::commit();
-            $this->sendStatusChangingNotification();
+            
+            $this->afterStatusTransaction();
+            
             return Response::success([], ["Account Status Changed Successfully"]);
         }
         return Response::error(["Failed To Change Account Status !"]);
