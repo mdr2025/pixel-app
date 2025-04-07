@@ -50,7 +50,7 @@ class UserProfileUpdatingService extends UpdatingService
     {
         if(!$this->emailChanger)
         {
-            $this->emailChanger = (new EmailChanger())->setData($data)->setAuthenticatable($this->Model);
+            $this->emailChanger = (new EmailChanger($this->Model ))->setData($data) ;
         }
         return $this->emailChanger;
     }
@@ -103,7 +103,7 @@ class UserProfileUpdatingService extends UpdatingService
      */
     protected function doBeforeSuccessResponding(): void
    {
-       $this->emailChanger->fireCommittingEvents();
+       $this->emailChanger->fireCommittingDefaultEvents();
        $this->fireTenantModelDataSyncNeedEvent();
    }
 

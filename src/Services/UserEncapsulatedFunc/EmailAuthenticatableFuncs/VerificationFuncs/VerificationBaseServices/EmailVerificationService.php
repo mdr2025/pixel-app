@@ -34,7 +34,7 @@ abstract class EmailVerificationService
     protected function verifyAuthenticatable(): self
     {
         /**  @var VerificationPropsChanger $AuthenticatableVerificationPropsChanger  */
-        $AuthenticatableVerificationPropsChanger = (new VerificationPropsChanger())->setAuthenticatable( $this->EmailAuthenticatable );
+        $AuthenticatableVerificationPropsChanger = new VerificationPropsChanger($this->EmailAuthenticatable);
         $AuthenticatableVerificationPropsChanger->verify()->changeAuthenticatablePropOrFail();
 
         return $this->EmailAuthenticatable->save() ?

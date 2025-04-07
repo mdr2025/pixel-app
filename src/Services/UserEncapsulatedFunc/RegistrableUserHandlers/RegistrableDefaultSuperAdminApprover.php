@@ -84,7 +84,7 @@ class RegistrableDefaultSuperAdminApprover
         if($this->notApprovedAdmin->isVerified())
         {
             /**  @var VerificationPropsChanger $AuthenticatableVerificationPropsChanger  */
-            $AuthenticatableVerificationPropsChanger = (new VerificationPropsChanger())->setAuthenticatable( $this->user );
+            $AuthenticatableVerificationPropsChanger =  new VerificationPropsChanger( $this->user );
 
             $AuthenticatableVerificationPropsChanger->verify()->changeAuthenticatablePropOrFail();
         }

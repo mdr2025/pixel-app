@@ -103,7 +103,7 @@ class EmailAuthenticatableVerificationNotificationSender
     protected function setAuthenticatableVerificationProps(): string|bool
     {
         /**  @var VerificationPropsChanger $AuthenticatableVerificationPropsChanger  */
-        $AuthenticatableVerificationPropsChanger = (new VerificationPropsChanger())->setAuthenticatable( $this->EmailAuthenticatable );
+        $AuthenticatableVerificationPropsChanger = new VerificationPropsChanger($this->EmailAuthenticatable);
 
         $AuthenticatableVerificationPropsChanger->requireToVerify( $this::$verificationLinkGenerator )
                                                 ->changeAuthenticatablePropOrFail();
