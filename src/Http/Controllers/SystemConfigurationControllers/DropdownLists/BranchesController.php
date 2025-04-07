@@ -17,7 +17,7 @@ use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperatio
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchUpdatingService;
 use PixelApp\Services\PixelServiceManager;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\BranchShowService;
-use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchesListingingService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchesListingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchesIndexingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\ChildrenBranchesListingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\ExpImpServices\ExportingServices\BranchesExportingService;
@@ -48,7 +48,7 @@ class BranchesController extends Controller
     
     function list()
     {
-        $service = PixelServiceManager::getServiceForServiceBaseType(BranchesListingingService::class);
+        $service = PixelServiceManager::getServiceForServiceBaseType(BranchesListingService::class);
         return (new $service)->list();
 
 

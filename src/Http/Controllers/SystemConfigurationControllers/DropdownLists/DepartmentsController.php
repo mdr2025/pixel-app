@@ -18,7 +18,7 @@ use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOpera
 use PixelApp\Services\PixelServiceManager;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentShowService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentsIndexingService;
-use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentsListingingService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentsListingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\ExpImpServices\ExportingServices\DepartmentsExportingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\ExpImpServices\ImportingFunc\DepartmentsImporter;
 use Rap2hpoutre\FastExcel\SheetCollection;
@@ -52,7 +52,7 @@ class DepartmentsController extends Controller
 
     function list()
     {
-        $service = PixelServiceManager::getServiceForServiceBaseType(DepartmentsListingingService::class);
+        $service = PixelServiceManager::getServiceForServiceBaseType(DepartmentsListingService::class);
         return (new $service)->list();
 
 
