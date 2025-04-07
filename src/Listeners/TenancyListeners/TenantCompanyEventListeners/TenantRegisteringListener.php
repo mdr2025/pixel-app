@@ -3,29 +3,11 @@
 namespace PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners;
 
  use Exception;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\DefaultAdminServices\EmailVerificationServices\DefaultAdminVerificationNotificationResendingService;
-use PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\VerificationFuncs\VerificationNotificationSenders\EmailAuthenticatableVerificationNotificationSender;
+use Illuminate\Contracts\Queue\ShouldQueue; 
 
 class TenantRegisteringListener implements ShouldQueue
 {
-
-    /**
-     * @throws Exception
-     */
-    protected function initDefaultAdminVerificationNotificationSender($event): EmailAuthenticatableVerificationNotificationSender
-    {
-        return DefaultAdminVerificationNotificationResendingService::initVerificationNotificationSender($event->tenant->defaultAdmin);
-    }
-
-    /**
-     * @throws Exception
-     */
-    protected function sendDefaultAdminVerificationNotificationSender($event): void
-    {
-        $this->initDefaultAdminVerificationNotificationSender($event)->sendEmailVerificationNotification();
-    }
-
+ 
     protected function generateCompanyIdString($event): self
     {
         $event->tenant->generateCompanyIdString();
@@ -42,6 +24,6 @@ class TenantRegisteringListener implements ShouldQueue
      */
     public function handle($event)
     {
-        $this->generateCompanyIdString($event)->sendDefaultAdminVerificationNotificationSender($event);
+        $this->generateCompanyIdString($event);
     }
 }

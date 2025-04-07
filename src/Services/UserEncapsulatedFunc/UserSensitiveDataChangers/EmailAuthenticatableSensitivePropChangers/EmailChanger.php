@@ -14,6 +14,7 @@ class EmailChanger extends EmailAuthenticatableSensitivePropChanger implements E
     private bool $emailHasChange = false;
     private ?VerificationPropsChanger $verificationPropsChanger = null;
     protected string $oldEmail = "";
+    protected ?string $emailNewValue  = null;
 
     public function getPropName() : string
     {
@@ -32,7 +33,7 @@ class EmailChanger extends EmailAuthenticatableSensitivePropChanger implements E
         if(!$this->verificationPropsChanger)
         {
             /** @var VerificationPropsChanger|UserSensitivePropChanger|null $verificationPropsChanger */
-            $verificationPropsChanger = (new VerificationPropsChanger())->setAuthenticatable( $this->authenticatable);
+            $verificationPropsChanger = new VerificationPropsChanger($this->authenticatable) ;
             $this->verificationPropsChanger = $verificationPropsChanger;
         }
         return $this->verificationPropsChanger;
@@ -63,19 +64,24 @@ class EmailChanger extends EmailAuthenticatableSensitivePropChanger implements E
     /**
      * @throws Exception
      */
-    protected function DoesEmailHasChange() : bool
+    protected function DoesEmailHaveChange() : bool
     {
-        $propNewValue = $this->getPropNewRequestValue();
-        return  $this->emailHasChange =  $propNewValue && $propNewValue !== $this->authenticatable->{ $this->getPropName() };
+        return  $this->emailHasChange =  $this->emailNewValue && $this->emailNewValue !== $this->authenticatable->{ $this->getPropName() };
     }
 
+    protected function setEmailNewValue() : void
+    {
+        $this->emailNewValue = $this->getPropNewRequestValue();
+    }
 
     /**
      * @throws Exception
      */
     public function getPropChangesArray(): array
-    {
-        if($this->DoesEmailHasChange())
+    {  
+        $this->setEmailNewValue();
+
+        if($this->DoesEmailHaveChange())
         {
             $this->requireUserToVerifyEmail()->setUserOldEmailAttr();
             return array_merge(
@@ -85,18 +91,22 @@ class EmailChanger extends EmailAuthenticatableSensitivePropChanger implements E
         }
         return [];
     }
+ 
+    public function callOnEmailChange(callable $callback) : void
+    {
+        if($this->emailHasChange)
+        {
+            call_user_func($callback , [$this->emailNewValue , $this->oldEmail]);
+        }
+    }
 
     /**
      * @return void
      * @throws Exception
      */
-    public function fireCommittingEvents() : void
+    public function fireCommittingDefaultEvents() : void
     {
-        /**
-         * Must check user because this method can be used before getPropChangesArray or changeUserProp methods
-         * So if user is not set an unexpected failing will happen
-         */
-        if($this->emailHasChange && $this->checkAuthenticatable())
+        if($this->emailHasChange)
         {
             event(new EmailChangingEvent($this->authenticatable , $this->oldEmail));
         }

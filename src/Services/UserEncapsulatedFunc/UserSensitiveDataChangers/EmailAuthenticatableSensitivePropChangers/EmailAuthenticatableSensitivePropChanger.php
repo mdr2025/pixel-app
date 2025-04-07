@@ -10,6 +10,11 @@ use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensiti
 abstract class EmailAuthenticatableSensitivePropChanger extends UserSensitivePropChanger
 {
 
+    public function __construct(Model $authenticatable)
+    {
+        $this->setAuthenticatable($authenticatable);
+    }
+
     public function setAuthenticatable(?Model $authenticatable): UserSensitivePropChanger
     {
         if(! $authenticatable instanceof EmailAuthenticatable)

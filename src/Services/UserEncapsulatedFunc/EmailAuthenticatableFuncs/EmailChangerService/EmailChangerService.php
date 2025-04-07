@@ -20,7 +20,7 @@ class EmailChangerService extends CustomUpdatingService
     {
         if(!$this->emailChanger)
         {
-            $this->emailChanger = (new EmailChanger())->setData($this->data)->setAuthenticatable($this->model);
+            $this->emailChanger = (new EmailChanger($this->model))->setData($this->data);
         }
         return $this->emailChanger;
     }
@@ -35,18 +35,39 @@ class EmailChangerService extends CustomUpdatingService
         parent::__construct($model); 
     }
 
+    protected function fireCommittingEvents() : void
+    {
+        $this->emailChanger->fireCommittingDefaultEvents();
+    }
+
+    protected function saveModelChanges() : void
+    {
+        $this->model->save();
+    }
+
+    protected function checkAuthenticatableChanging() : bool
+    {
+        return $this->emailChanger->checkAuthenticatableChanging();
+    }
+
+    protected function changeAuthenticatableProp() : void
+    {
+        $this->initEmailChanger()->changeAuthenticatableProp();
+    }
     /**
      * @return JsonResponse
      * @throws Exception
      */
     protected function changerFun(): JsonResponse
     {
-        $this->initEmailChanger()->changeAuthenticatableProp();
-        if($this->emailChanger->checkAuthenticatableChanging())
+        $this->changeAuthenticatableProp();
+
+        if($this->checkAuthenticatableChanging())
         {
-            if ($this->model->save())
+            if ($this->saveModelChanges())
             {
-                $this->emailChanger->fireCommittingEvents();
+                $this->fireCommittingEvents();
+
                 return Response::success([], ["Email Changed Successfully"]);
             }
                 return Response::error(["Failed To Change Email"]);
