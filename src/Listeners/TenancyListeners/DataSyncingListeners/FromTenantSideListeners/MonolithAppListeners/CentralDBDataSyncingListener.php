@@ -39,7 +39,7 @@ class CentralDBDataSyncingListener extends TenancyDataSyncingListener
 
     protected function getOnlySyncableAttrs() : array
     {
-        return $this->tenantModel->only( $this->event->getSyncedAttributeNames() );
+        return $this->event->getUpdatedData();
     }
 
     /**
@@ -55,9 +55,9 @@ class CentralDBDataSyncingListener extends TenancyDataSyncingListener
         }
 
         return $centralAppModelClass::where(
-                                                $this->event->getCentralModelIdKeyName() ,
+                                                $this->event->getModelIdKeyName() ,
                                                 "=",
-                                                $this->event->getCentralModelIdKeyValue()
+                                                $this->event->getModelIdKeyValue()
                                             )->first();
     }
 
@@ -74,11 +74,11 @@ class CentralDBDataSyncingListener extends TenancyDataSyncingListener
             }
         });
     }
-    protected function setTenantModel() :self
-    {
-        $this->tenantModel = $this->event->getTenantModel();
-        return $this;
-    }
+    // protected function setTenantModel() :self
+    // {
+    //     $this->tenantModel = $this->event->getTenantModel();
+    //     return $this;
+    // }
 
     protected function getTenant() : ?Tenant
     {
@@ -102,7 +102,9 @@ class CentralDBDataSyncingListener extends TenancyDataSyncingListener
         $this->setEvent($event);
         if( $this->getTenant() ) // if there is no tenant ... it is a default admin panel user ... no need to sync anything
         {
-            $this->setTenantModel()->syncTenantDefaultUserData();
+            $this
+            //->setTenantModel()
+            ->syncTenantDefaultUserData();
         }
     }
 }

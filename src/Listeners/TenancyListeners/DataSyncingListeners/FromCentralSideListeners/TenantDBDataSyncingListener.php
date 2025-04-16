@@ -33,7 +33,7 @@ class TenantDBDataSyncingListener implements ShouldQueue
 
     protected function getOnlySyncableAttrs(): array
     {
-        return $this->centralModel->only($this->event->getSyncedAttributeNames());
+        return $this->event->getUpdatedData();
     }
 
     /**
@@ -48,9 +48,9 @@ class TenantDBDataSyncingListener implements ShouldQueue
             $this->throwFailingException("Tenant app model class must be a Model type !");
         }
         return $TenantAppModelClass::where(
-                                                $this->event->getTenantModelIdKeyName(),
+                                                $this->event->getModelIdKeyName(),
                                                 "=",
-                                                $this->event->getTenantModelIdKeyValue()
+                                                $this->event->getModelIdKeyValue()
                                             )->first();
     }
 
@@ -73,11 +73,11 @@ class TenantDBDataSyncingListener implements ShouldQueue
     /**
      * @return $this
      */
-    protected function setCentralModel(): self
-    {
-        $this->centralModel = $this->event->getCentralModel();
-        return $this;
-    }
+    // protected function setCentralModel(): self
+    // {
+    //     $this->centralModel = $this->event->getCentralModel();
+    //     return $this;
+    // }
 
     protected function setEvent(TenantDBDataSyncingEvent $event): self
     {
@@ -92,6 +92,8 @@ class TenantDBDataSyncingListener implements ShouldQueue
      */
     public function handle(TenantDBDataSyncingEvent $event)
     {
-        $this->setEvent($event)->setCentralModel()->syncTenantModelData();
+        $this->setEvent($event)
+        //->setCentralModel()
+        ->syncTenantModelData();
     }
 }
