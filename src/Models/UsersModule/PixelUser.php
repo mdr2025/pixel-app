@@ -17,14 +17,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+use PixelApp\Events\TenancyEvents\DataSyncingEvents\TenancyDataSyncingEvent;
 use PixelApp\Interfaces\EmailAuthenticatable;
 use PixelApp\Interfaces\HasUUID;
-use PixelApp\Interfaces\TenancyInterfaces\NeedsCentralDataSync;
-use PixelApp\Models\CompanyModule\CompanyDefaultAdmin;
+use PixelApp\Interfaces\TenancyInterfaces\CanSyncData;
 use PixelApp\Models\SystemConfigurationModels\Department;
+use PixelApp\Models\TenancyDataSyncingEventFactories\UsersModule\TenantUserDataSyncingEventFactory;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\StatusChangeableAccount;
 use PixelApp\Traits\interfacesCommonMethods\EmailAuthenticatableMethods;
-use PixelApp\Traits\interfacesCommonMethods\TenancyDataSyncHelperMethods;
 use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeededFromChildes;
 use Spatie\Permission\Models\Role;
 
@@ -37,12 +38,11 @@ implements
     AuthenticatableContract,
     AuthorizableContract,
     EmailAuthenticatable ,
-    StatusChangeableAccount
-    //,NeedsCentralDataSync
+    StatusChangeableAccount,
+    CanSyncData
 {
     use  Authenticatable, Authorizable, HasApiTokens, HasFactory, Notifiable, EmailAuthenticatableMethods, SoftDeletes;
-    //use TenancyDataSyncHelperMethods;
-
+  
     public static $snakeAttributes = false;
 
     const USER_STATUS = ["active", "inactive"]; // Database column values
@@ -57,7 +57,7 @@ implements
         "rejected"
     ];
     const UserAllowedTypes = ["user", "signup"];
-    const UserDEFAULT_TYPE = "signup"; 
+    const UserDefaultType = "signup"; 
 
     protected $table = "users";
     protected $fillable = [
@@ -77,7 +77,10 @@ implements
 
     protected $casts = [
         'role_id' => 'integer',
-        'default_user' => 'boolean'
+        'default_user' => 'boolean',
+        'department_id' => 'integer',
+        'branch_id' => 'integer',
+        'accepted_at' => 'datetime'
     ];
 
     protected $hidden = [
@@ -203,11 +206,12 @@ implements
 
     public function scopeActive($query)
     {
-        $query->where('status', 'pending');
+        $query->where('status', 'active');
     }
+
     public function isDefaultUser(): bool
     {
-        return $this->role_id == 1;
+        return $this->role_id == 1 || $this->default_user == 1;
     }
 
 
@@ -216,48 +220,29 @@ implements
     //        return $this->belongsTo(Branch::class);
     //    }
     //
+
+    public function getTenancyDataSyncingEvent() : ?TenancyDataSyncingEvent
+    {
+        if($this->canSyncData())
+        {
+            return (new TenantUserDataSyncingEventFactory($this))->createTenancyDataSyncingEvent();
+        }
+
+        return null; 
+    }
+
     public function canSyncData(): bool
     {
-        return $this->isDefaultUser() && tenant();
+        return PixelTenancyManager::isItTenancySupportyerApp() 
+               &&
+               tenant()
+               &&
+               $this->isDefaultUser();
     }
+
     public function isEditableUser(): bool
     {
         return !$this->isDefaultUser(); // add the conditions you need to make this user editable frm users management module
     }
-    public function getCentralAppModelClass(): string
-    {
-        return CompanyDefaultAdmin::class;
-    }
 
-    public function getCentralAppModelIdentifierKeyName(): string
-    {
-        return $this->getEmailColumnName();
-    }
-
-    /**
-     * @return int|string
-     * it is an alias for getOriginalIdentifierValue method
-     */
-    public function getCentralAppModelIdentifierOriginalValue(): int|string
-    {
-        return $this->getOriginalIdentifierValue();
-    }
-
-    public function getSyncedAttributeNames(): array
-    {
-        /**
-         * Here we can return any field we want ... there is no need to return the fields those are exist in fillables
-         * because we are here customize the data will be saved in database ... it is not data coming from the request
-         */
-        return [
-            $this->getEmailColumnName(),
-            $this->getEmailVerificationDateColumnName(),
-            $this->getEmailVerificationTokenColumnName(),
-            'first_name',
-            'last_name',
-            'name',
-            'password',
-            'mobile',
-        ];
-    }
 }

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Interfaces\OnlyAdminPanelQueryable;
+use PixelApp\Traits\DataSyncHelperMethods;
 use ReflectionClass;
 use RuntimeCaching\RuntimeCacheTypes\ParentModelRuntimeCache; 
 use Statistics\Interfaces\ModelInterfaces\StatisticsProviderModel;
@@ -19,7 +20,7 @@ use Statistics\Interfaces\ModelInterfaces\StatisticsProviderModel;
 
 class PixelBaseModel extends Model implements StatisticsProviderModel
 {
-    use UsingRunTimeCache, MustUploadModelFilesMethods, HasUUIDMethods;
+    use UsingRunTimeCache, MustUploadModelFilesMethods, HasUUIDMethods , DataSyncHelperMethods;
     public static $snakeAttributes = false;
 
     /**

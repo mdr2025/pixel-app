@@ -22,6 +22,7 @@ trait TenancyDataSyncHelperMethods
         }
         return $this->getKeyName();
     }
+    
     protected function determineIdentifierKeyValue() : string|int
     {
         if($this instanceof NeedsTenancyDataSync)

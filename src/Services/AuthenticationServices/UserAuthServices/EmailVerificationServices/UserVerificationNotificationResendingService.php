@@ -5,10 +5,14 @@ namespace PixelApp\Services\AuthenticationServices\UserAuthServices\EmailVerific
 use PixelApp\Interfaces\EmailAuthenticatable;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\VerificationFuncs\VerificationBaseServices\VerificationNotificationResendingService;
 
+/**
+ * @property PixelUser $EmailAuthenticatable
+ */
 class UserVerificationNotificationResendingService extends VerificationNotificationResendingService
 {
 
@@ -37,4 +41,14 @@ class UserVerificationNotificationResendingService extends VerificationNotificat
         }
         return $authenticatable;
     }
+
+    protected function sendEmailVerificationNotification() : bool
+    {
+        $sendingResult = parent::sendEmailVerificationNotification();
+
+        PixelTenancyManager::handleTenancySyncingData($this->EmailAuthenticatable);
+        //event(new TenantModelDataSyncNeedEvent($this->EmailAuthenticatable));
+        
+        return $sendingResult;
+    }    
 }

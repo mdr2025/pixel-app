@@ -2,6 +2,7 @@
 
 namespace PixelApp\Services\AuthenticationServices\UserAuthServices\EmailVerificationServices;
 
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Events\TenancyEvents\TenantModelDataSyncNeedEvent;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\UsersModule\PixelUser;
@@ -11,8 +12,7 @@ use PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\Verificatio
  * @property PixelUser $EmailAuthenticatable
  */
 class UserEmailVerificationService extends EmailVerificationService
-{
-
+{ 
     /**
      * @return string
      */
@@ -24,10 +24,10 @@ class UserEmailVerificationService extends EmailVerificationService
     protected function verifyAuthenticatable(): EmailVerificationService
     {
         parent::verifyAuthenticatable();
-        if($this->EmailAuthenticatable->canSyncData())
-        {
-            event(new TenantModelDataSyncNeedEvent($this->EmailAuthenticatable));
-        }
+ 
+        PixelTenancyManager::handleTenancySyncingData($this->EmailAuthenticatable);
+        //event(new TenantModelDataSyncNeedEvent($this->EmailAuthenticatable));
+         
         return $this;
     }
 }

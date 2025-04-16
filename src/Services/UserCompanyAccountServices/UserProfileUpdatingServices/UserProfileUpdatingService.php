@@ -4,7 +4,7 @@ namespace PixelApp\Services\UserCompanyAccountServices\UserProfileUpdatingServic
 
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\UpdatingServices\UpdatingService;
 use Exception;
-use PixelApp\Events\TenancyEvents\TenantModelDataSyncNeedEvent;
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\UserAccountRequests\UpdateProfileRequest;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\EmailAuthenticatableSensitivePropChangers\EmailChanger;
@@ -33,12 +33,23 @@ class UserProfileUpdatingService extends UpdatingService
         return "Your Profile Updated Successfully !";
     }
 
+    protected function catchModelEmailOldValue() : void
+    {
+        $emailKey =  $this->Model->getEmailColumnName();
+        $this->Model->catchKeyValueTemporarlly($emailKey);
+    }
+
+    protected function onAfterDbTransactionStart(): void
+    {
+        $this->catchModelEmailOldValue();
+    }
+
     /**
      * @param array $data
      * @return void
      * @throws Exception
      */
-    protected function PasswordValueHandler(array $data): void
+    protected function HandlePasswordValue(array $data): void
     {
         (new PasswordChanger())->setData($data)->setAuthenticatable($this->Model)->changeAuthenticatableProp();
     }
@@ -53,24 +64,9 @@ class UserProfileUpdatingService extends UpdatingService
             $this->emailChanger = (new EmailChanger($this->Model ))->setData($data) ;
         }
         return $this->emailChanger;
-    }
-
-    protected function prepareModelForDataSync() : void
-    {
-        /**
-         * @todo later 
-         */
-        if($this->Model->isDirty() && $this->Model->canSyncData())
-        {
-            $this->Model->setOriginalIdentifierValue();
-        }
-    }
-    /**
-     * @param array $data
-     * @return void
-     * @throws Exception
-     */
-    protected function checkUserEmailChanging(array $data): void
+    } 
+    
+    protected function HandleUserEmailChanging(array $data): void
     {
         $this->initEmailChanger($data)->changeAuthenticatableProp();
     }
@@ -83,28 +79,34 @@ class UserProfileUpdatingService extends UpdatingService
         /** Generate a new name frm first & last names after filling the Model's data */
         $this->Model->generateName();
 
-        $this->PasswordValueHandler($currentDataRow);
-        $this->checkUserEmailChanging($currentDataRow);
-        $this->prepareModelForDataSync();
+        $this->HandlePasswordValue($currentDataRow);
+        $this->HandleUserEmailChanging($currentDataRow); 
    }
 
     /**
      * @throws Exception
      */
-    protected function fireTenantModelDataSyncNeedEvent() : void
+   protected function syncTenancyData() : void
    {
-       if( $this->Model->wasChanged() && $this->Model->canSyncData())
+       if( $this->Model->wasChanged() )
        {
-           event( new TenantModelDataSyncNeedEvent($this->Model) );
+           PixelTenancyManager::handleTenancySyncingData($this->Model);
        }
    }
+
+   protected function fireEmailChangingEvent() : void
+   {
+        //will fire an event f email has changed only
+        $this->emailChanger->fireCommittingDefaultEvents();
+   }
+
     /**
      * @throws Exception
      */
     protected function doBeforeSuccessResponding(): void
    {
-       $this->emailChanger->fireCommittingDefaultEvents();
-       $this->fireTenantModelDataSyncNeedEvent();
+       $this->fireEmailChangingEvent();
+       $this->syncTenancyData();
    }
 
 }

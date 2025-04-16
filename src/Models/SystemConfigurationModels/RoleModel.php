@@ -12,6 +12,9 @@ class RoleModel extends Role
 
     protected $casts = [
         'disabled' => 'boolean',
+        'editable' => 'boolean',
+        'deletable' => 'boolean',
+        'status' => 'boolean',
         'default' => 'boolean'
     ];
 

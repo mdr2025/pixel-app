@@ -9,12 +9,7 @@ use PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\StatusChang
 
 
 abstract class SystemMemberAccountStatusChanger extends AccountStatusChanger
-{
-    // protected function getRequestFormClass(): string
-    // {
-    //     return PixelHttpRequestManager::getRequestForRequestBaseType(UserStatusUpdatingRequest::class);
-    // }
-
+{ 
     /**
      * @return $this
      * @throws Exception

@@ -16,7 +16,7 @@ class PixelAppACLConfigFileIdentifier extends PixelBaseConfigFileIdentifier
      */
     public function getFileName() : string
     {
-        return "pixel-app-package-acl";
+        return "acl";
     }
  
 }

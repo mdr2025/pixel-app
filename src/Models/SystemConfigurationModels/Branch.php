@@ -11,7 +11,7 @@ use PixelApp\Models\PixelBaseModel;
  * @property int $status
  * @property int $default
  */
-class Branch extends PixelBaseModel
+class Branch extends PixelBaseModel 
 {
     use HasFactory;
     protected $table = "branches";
@@ -31,6 +31,11 @@ class Branch extends PixelBaseModel
     public function scopeDefault($query)
     {
         $query->where('default', 1);
+    }
+    
+    public function scopeIsBranch($query): array
+    {
+        return $query->where("id", ">", 1);
     }
 
     public function isActive()  :bool

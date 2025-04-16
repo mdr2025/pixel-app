@@ -2,17 +2,10 @@
 
 namespace PixelApp\Services\UserCompanyAccountServices\CompanyUpdateAdmin;
 
-use Illuminate\Http\JsonResponse;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
-use JsonException;
-use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\ClientBaseServices\AdminPanelConnectingClientService;
-use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppClients\PixelAdminPanelAppClient;
-use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppRouteIdentifiersFactories\AdminPanelRouteIdentifierFactories\CompanyAuthRouteIdentifierFactories\CompanyDefaultAdminRouteIdentifierFactory;
-use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppRouteIdentifiersFactories\PixelAppRouteIdentifierFactory;
-use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppsConnectionManager;
-use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
-use PixelApp\Events\TenancyEvents\TenantModelDataSyncNeedEvent;
+use JsonException;use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Http\Requests\UserAccountRequests\CompanyDefaultAdminUpdatingRequest;
 use PixelApp\Models\CompanyModule\CompanyDefaultAdmin;
 use PixelApp\Models\CompanyModule\TenantCompany;
@@ -20,7 +13,6 @@ use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\Traits\GeneralValidationMethods;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\UserRoleChanger;
-use Stancl\Tenancy\Contracts\Tenant;
 
 class CompanyChangeDefaultAdminClientService  
 {
@@ -182,33 +174,39 @@ class CompanyChangeDefaultAdminClientService
         return $this;
     }
 
-    protected function defaultAdminUpdatingInfoRouteIdentifierFactory() : PixelAppRouteIdentifierFactory
-    {
-        return new CompanyDefaultAdminRouteIdentifierFactory($this->getTenant()->domain);
-    }
+    // protected function defaultAdminUpdatingInfoRouteIdentifierFactory() : PixelAppRouteIdentifierFactory
+    // {
+    //     return new CompanyDefaultAdminRouteIdentifierFactory($this->getTenant()->domain);
+    // }
      
-    protected function syncForTenantApp() : JsonResponse
-    {
-        $adminPAnelClientName = PixelAdminPanelAppClient::getClientName();
-        $routeIdentifier = $this->defaultAdminUpdatingInfoRouteIdentifierFactory()->createRouteIdentifier();
-        return PixelAppsConnectionManager::Singleton()->connectOn($adminPAnelClientName )->requestOnRoute($routeIdentifier);
-    }
+    // protected function syncForTenantApp() : JsonResponse
+    // {
+    //     $adminPAnelClientName = PixelAdminPanelAppClient::getClientName();
+    //     $routeIdentifier = $this->defaultAdminUpdatingInfoRouteIdentifierFactory()->createRouteIdentifier();
+    //     return PixelAppsConnectionManager::Singleton()->connectOn($adminPAnelClientName )->requestOnRoute($routeIdentifier);
+    // }
 
-    protected function sycnForMonolithApp() : void
-    {
-        event(new TenantModelDataSyncNeedEvent($this->newAdminUser));
-    }
+    // protected function sycnForMonolithApp() : void
+    // {
+    //     event(new TenantModelDataSyncNeedEvent($this->newAdminUser));
+    // }
+
     protected function syncDataWithAdminPanel(): void
     {
-        if(PixelTenancyManager::isItMonolithTenancyApp() && $this->newAdminUser->canSyncData())
-        {
-            $this->sycnForMonolithApp();
-        }
+ 
+        PixelTenancyManager::handleTenancySyncingData($this->newAdminUser);
+        //event(new TenantModelDataSyncNeedEvent($this->newAdminUser));
+         
 
-        if(PixelTenancyManager::isItTenantApp())
-        {
-            $this->syncForTenantApp();
-        }
+        // if(PixelTenancyManager::isItMonolithTenancyApp() && $this->newAdminUser->canSyncData())
+        // {
+        //     $this->sycnForMonolithApp();
+        // }
+
+        // if(PixelTenancyManager::isItTenantApp())
+        // {
+        //     $this->syncForTenantApp();
+        // }
     }
 
     protected function switchAdminsRoles() : self
@@ -225,6 +223,8 @@ class CompanyChangeDefaultAdminClientService
             DB::beginTransaction();
             $this->switchAdminsRoles();
             DB::commit();
+            
+            $this->syncDataWithAdminPanel();
             
             return Response::success([] , ["message" => "Company Admin Has Been Updated"]);
         } catch (\Throwable $e)

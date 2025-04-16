@@ -11,11 +11,17 @@ use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAp
 use PixelApp\CustomLibs\Tenancy\DomainTenantResolvers\CustomDomainTenantResolver;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager ;
 use PixelApp\Events\TenancyEvents\CentralModelDataSyncNeedEvent;
+use PixelApp\Events\TenancyEvents\DataSyncingEvents\FromCentralSideEvents\TenantDBDataSyncingEvent;
+use PixelApp\Events\TenancyEvents\DataSyncingEvents\FromTenantSideEvents\MonolithAppEvents\CentralDBDataSyncingEvent;
+use PixelApp\Events\TenancyEvents\DataSyncingEvents\FromTenantSideEvents\SeparatedTenantAppEvents\AdminPanelDBDataSyncingEvent;
 use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApproved;
 use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyRegistered;
 use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantDefaultAdminNewEmailHavingEvent;
 use PixelApp\Events\TenancyEvents\TenantModelDataSyncNeedEvent;
 use PixelApp\Listeners\TenancyListeners\CentralModelDataSyncNeedListener;
+use PixelApp\Listeners\TenancyListeners\DataSyncingListeners\FromCentralSideListeners\TenantDBDataSyncingListener;
+use PixelApp\Listeners\TenancyListeners\DataSyncingListeners\FromTenantSideListeners\MonolithAppListeners\CentralDBDataSyncingListener;
+use PixelApp\Listeners\TenancyListeners\DataSyncingListeners\FromTenantSideListeners\SeparatedTenantAppListeners\AdminPanelDBDataSyncingListener;
 use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\TenantCompanyApprovingListener;
 use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\TenantDefaultAdminEmailVerificationSenderListener;
 use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\TenantRegisteringListener;
@@ -104,13 +110,22 @@ class TenancyServiceProvider extends ServiceProvider
             Events\SyncedResourceSaved::class => [
 //                Listeners\UpdateSyncedResource::class,
             ],
-            CentralModelDataSyncNeedEvent::class => [
-                CentralModelDataSyncNeedListener::class
+            TenantDBDataSyncingEvent::class => [
+                TenantDBDataSyncingListener::class
             ],
-            TenantModelDataSyncNeedEvent::class =>
-            [
-                TenantModelDataSyncNeedListener::class
+            CentralDBDataSyncingEvent::class => [
+                CentralDBDataSyncingListener::class
             ],
+            AdminPanelDBDataSyncingEvent::class => [
+                AdminPanelDBDataSyncingListener::class
+            ],
+            // CentralModelDataSyncNeedEvent::class => [
+            //     CentralModelDataSyncNeedListener::class
+            // ],
+            // TenantModelDataSyncNeedEvent::class =>
+            // [
+            //     TenantModelDataSyncNeedListener::class
+            // ],
             // Fired only when a synced resource is changed in a different DB than the origin DB (to avoid infinite loops)
             Events\SyncedResourceChangedInForeignDatabase::class => [],
         ];

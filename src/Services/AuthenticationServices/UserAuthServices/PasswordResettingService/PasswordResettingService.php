@@ -5,10 +5,12 @@ namespace PixelApp\Services\AuthenticationServices\UserAuthServices\PasswordRese
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Http\Requests\AuthenticationRequests\UserAuthenticationRequests\ResetPasswordRequest;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\UsersModule\PasswordReset;
+use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\Traits\GeneralValidationMethods;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\PasswordChanger;
 
@@ -16,7 +18,7 @@ class PasswordResettingService
 {
     use GeneralValidationMethods;
 
-    private PasswordReset $passwordReset;
+    protected PasswordReset $passwordReset;
 
     protected function getRequestFormClass(): string
     {
@@ -44,20 +46,41 @@ class PasswordResettingService
         return $this;
     }
 
+    protected function handleTenancySyncingData(PixelUser $user)
+    { 
+        PixelTenancyManager::handleTenancySyncingData($user);
+        //event(new TenantModelDataSyncNeedEvent($this->user)); 
+    }
+    
     protected function getUserModelClass() : string
     {
         return PixelModelManager::getUserModelClass();
+    }
+
+    protected function updateUserPassword(PixelUser $user) : bool
+    {
+        return $user?->update( $this->getNewPasswordData() ) ?? false;
+    }
+
+    protected function fetchUser() : ?PixelUser
+    {
+        return $this->getUserModelClass()::where("email", $this->passwordReset->email)->first();
     }
     /**
      * @return $this
      * @throws Exception
      */
-    private function resetUserPassword(): self
+    protected function resetUserPassword(): self
     {
-        if(! $this->getUserModelClass()::where("email", $this->passwordReset->email)->update( $this->getNewPasswordData() ) )
+        $user = $this->fetchUser();
+        
+        if(! $this->updateUserPassword($user) )
         {
             throw new Exception("Failed To Reset Password");
         }
+
+        $this->handleTenancySyncingData($user);
+
         return $this;
     }
 

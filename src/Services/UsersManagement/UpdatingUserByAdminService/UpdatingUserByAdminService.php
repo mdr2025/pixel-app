@@ -12,9 +12,17 @@ use PixelApp\Services\UserEncapsulatedFunc\CustomUpdatingService;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitiveDataChanger;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\DepartmentChanger;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\UserRoleChanger;
+use PixelApp\Services\UsersManagement\Traits\EditableUserCheckingMethods;
 
 class UpdatingUserByAdminService extends CustomUpdatingService
 {
+    use EditableUserCheckingMethods; 
+    
+    protected function checkPreConditions() : void
+    {
+        $this->checkDefaultAdmin($this->model);
+    }
+
     protected function getRequestFormClass(): string
     {
         return PixelHttpRequestManager::getRequestForRequestBaseType(UserUpdatingRequest::class);

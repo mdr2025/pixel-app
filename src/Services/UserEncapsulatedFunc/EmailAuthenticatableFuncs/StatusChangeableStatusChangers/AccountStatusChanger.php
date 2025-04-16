@@ -23,15 +23,7 @@ abstract class AccountStatusChanger extends CustomUpdatingService
 {
     protected int $status;
     protected ?StatusChanger $statusChanger = null;
-
-    //Here We get the convenient Notification Class by mapping it to status value
-    // that is more dynamic and with this solution there is no need to more if conditions
-    // protected static $statusNotificationMap = [
-    //     'active' => ActiveRegistrationNotification::class,
-    //     'inactive' => InactiveRegistrationNotification::class,
-    //     'rejected' => RejectedRegistrationNotification::class,
-    // ];
-
+ 
     public function __construct(Model $model)
     {
         if(!$model instanceof StatusChangeableAccount)

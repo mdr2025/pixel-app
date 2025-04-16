@@ -65,10 +65,7 @@ class TenantCompany extends PixelBaseModel
         'branches_no',
         'cr_no',
         'parent_id',
-        'type',
-        'contractor_id',
-        'contractor_approved_status',
-        'main_company_approved_status'
+        'type'
     ];
     public static function getTableName() : string
     {

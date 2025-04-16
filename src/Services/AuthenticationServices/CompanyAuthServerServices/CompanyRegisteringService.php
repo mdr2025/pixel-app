@@ -62,22 +62,17 @@ use PixelApp\Services\UserEncapsulatedFunc\RegistrableUserHandlers\RegistrableUs
     /**
      * @throws Exception
      */
-    protected function doBeforeOperationStart(): void
+    protected function onAfterDbTransactionStart(): void
     {
         $this->anyAdditionActions();
         $this->overrideDefaultAdminData();
     }
 
-    protected function getTenantForEventFiring() : TenantCompany
-    {
-        return $this->Model;
-    }
-
     protected function fireRegisteredEvent() : void
     {
-        $tenant = $this->getTenantForEventFiring();
-        event(new TenantCompanyRegistered($tenant));
+        event(new TenantCompanyRegistered($this->Model));
     }
+    
     protected function doBeforeSuccessResponding(): void
     {
         $this->fireRegisteredEvent();

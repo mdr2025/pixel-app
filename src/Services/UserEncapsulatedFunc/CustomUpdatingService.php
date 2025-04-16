@@ -26,24 +26,10 @@ abstract class CustomUpdatingService
         
         $this->model = $model;
     }
-    /**
-     * @return void
-     * @throws Exception
-     */
-    protected function checkDefaultAdmin() : void
-    {
-        /**
-         * @todo need to review later
-         */
-        if(!$this->model->isEditableUser()&& !$this instanceof AdminChangerInterface)
-        {
-            throw new Exception("Can't edit a default admin !");
-        }
-    }
-
+ 
     protected function checkPreConditions() : void
-    {
-        $this->checkDefaultAdmin();
+    { 
+        return;
     }
 
     /** the common operations will be done (like validation Operations) .... then the main functionality will be called */

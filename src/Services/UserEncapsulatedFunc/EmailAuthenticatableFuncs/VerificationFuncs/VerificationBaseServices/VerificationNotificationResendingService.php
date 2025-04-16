@@ -90,6 +90,11 @@ abstract class VerificationNotificationResendingService
                                                                      ->setFrontendRootPath( static::getFrontendRootPath() );
     }
 
+    protected function sendEmailVerificationNotification() : bool
+    {
+        return $this::initVerificationNotificationSender( $this->EmailAuthenticatable )->sendEmailVerificationNotification() ;
+    }
+
 
     /**
      * @return Model|EmailAuthenticatable
@@ -150,7 +155,7 @@ abstract class VerificationNotificationResendingService
             /** Doesn't need to validate request everytime ... because the email can be set by setter method */
 
             $this->setProcessableAuthenticatable();
-            if( $this::initVerificationNotificationSender( $this->EmailAuthenticatable )->sendEmailVerificationNotification() )
+            if( $this->sendEmailVerificationNotification() )
             {
                 return Response::success([], ["Verification Link Has Sent Successfully"]);
             }

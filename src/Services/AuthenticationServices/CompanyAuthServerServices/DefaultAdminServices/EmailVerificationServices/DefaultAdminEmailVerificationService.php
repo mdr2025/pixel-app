@@ -2,6 +2,7 @@
 
 namespace PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\DefaultAdminServices\EmailVerificationServices;
 
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Events\TenancyEvents\CentralModelDataSyncNeedEvent;
 use PixelApp\Models\CompanyModule\CompanyDefaultAdmin;
 use PixelApp\Models\PixelModelManager;
@@ -23,9 +24,9 @@ class DefaultAdminEmailVerificationService extends EmailVerificationService
     protected function verifyAuthenticatable(): self
     {
         parent::verifyAuthenticatable();
-        if ($this->EmailAuthenticatable->tenant()->isApproved()) {
-            event(new CentralModelDataSyncNeedEvent($this->EmailAuthenticatable));
-        }
+        
+        PixelTenancyManager::handleTenancySyncingData($this->EmailAuthenticatable);
+           
         return $this;
     }
 }

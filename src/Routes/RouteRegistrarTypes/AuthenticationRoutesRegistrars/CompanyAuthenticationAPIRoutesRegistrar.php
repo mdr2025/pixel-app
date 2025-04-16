@@ -64,6 +64,11 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
         Route::post('company/update-default-admin-info', [CompanyAuthServerController::class , 'updateDefaultAdminInfo']);
     }
   
+    protected function defineCompanyDefaultAdminsyncingDataServerRoute() : void
+    {
+        Route::post('company/sync-default-admin-data', [CompanyAuthServerController::class , 'syncDefaultAdminData']);
+    }
+
     protected function defineCompanyServerEmailVerificationRoute() : void
     {
         Route::post('company/verify-email', [CompanyAuthServerController::class , 'verifyDefaultAdminEmail']);
@@ -125,6 +130,7 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
            $this->defineCheckSubdomainServerRoute();
            $this->defineCheckCrNoServerRoute();
            $this->definefetchCompanyRoute();
+           $this->defineCompanyDefaultAdminsyncingDataServerRoute();
         });
     }
 

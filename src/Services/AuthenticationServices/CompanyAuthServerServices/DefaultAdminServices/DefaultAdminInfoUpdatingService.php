@@ -11,6 +11,9 @@ use PixelApp\Models\PixelModelManager;
 use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\CompanyFetchingService;
 use PixelApp\Services\PixelServiceManager;
 
+/**
+ * to check sync later
+ */
 class DefaultAdminInfoUpdatingService extends UpdatingService
 { 
     public function __construct()
@@ -51,7 +54,7 @@ class DefaultAdminInfoUpdatingService extends UpdatingService
         $this->Model->forceFill($defaultAdminAttrs);
     }
 
-    protected function doBeforeOperationStart(): void
+    protected function onAfterDbTransactionStart(): void
     {
         $this->fillTenantCompanyDefaultAdminBeforeUpdating();
     }

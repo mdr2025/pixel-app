@@ -3,10 +3,12 @@
 namespace PixelApp\CustomLibs\Tenancy;
 
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Eloquent\Model;
 use PixelApp\Config\PixelConfigManager;
 use PixelApp\ServiceProviders\RelatedPackagesServiceProviders\TenancyServiceProvider;
 use PixelApp\Http\Middleware\TenancyCustomMiddlewares\ActiveTenantCompany;
 use PixelApp\Http\Middleware\TenancyCustomMiddlewares\ApprovedTenantCompany;
+use PixelApp\Interfaces\TenancyInterfaces\CanSyncData;
 use PixelApp\Models\CompanyModule\TenantCompany;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Routes\PixelRouteManager;
@@ -41,6 +43,18 @@ class PixelTenancyManager
     public static function isItTenantApp() : bool
     {
         return PixelConfigManager::isItTenantApp();
+    }
+
+    public static function handleTenancySyncingData(Model $model) : void
+    {
+        if(
+            static::isItTenancySupportyerApp() 
+            &&
+            $model instanceof CanSyncData 
+           )
+        {
+            $model->getTenancyDataSyncingEvent()?->fireEvent();
+        }
     }
 
     public static function isTenantQueryable() : bool

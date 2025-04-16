@@ -4,21 +4,20 @@ namespace PixelApp\Models\CompanyModule;
 
 use PixelApp\Models\PixelBaseModel ;
 use PixelApp\Interfaces\EmailAuthenticatable;
-use PixelApp\Interfaces\TenancyInterfaces\NeedsTenantDataSync;
-use PixelApp\Models\WorkSector\UsersModule\User;
 use PixelApp\Traits\interfacesCommonMethods\EmailAuthenticatableMethods;
-use PixelApp\Traits\interfacesCommonMethods\TenancyDataSyncHelperMethods;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+use PixelApp\Events\TenancyEvents\DataSyncingEvents\TenancyDataSyncingEvent;
 use PixelApp\Interfaces\OnlyAdminPanelQueryable;
-use Stancl\Tenancy\Contracts\Tenant;
+use PixelApp\Interfaces\TenancyInterfaces\CanSyncData;
+use PixelApp\Models\TenancyDataSyncingEventFactories\CompanyModule\DefaultAdminDataSyncingEventFactory;
 
-class CompanyDefaultAdmin extends PixelBaseModel implements EmailAuthenticatable ,OnlyAdminPanelQueryable
-// , NeedsTenantDataSync
+
+class CompanyDefaultAdmin extends PixelBaseModel implements EmailAuthenticatable ,OnlyAdminPanelQueryable , CanSyncData
+
 {
     use Notifiable , EmailAuthenticatableMethods ;
-    //', TenancyDataSyncHelperMethods;
 
     protected $table = "tenant_default_admins";
     protected $fillable = [
@@ -39,48 +38,28 @@ class CompanyDefaultAdmin extends PixelBaseModel implements EmailAuthenticatable
     {
         return config("database.defaultCentralConnection");
     }
-    public function getSyncedAttributeNames(): array
-    {
-        /**
-         * Here we can return any field we want ... there is no need to return the fields those are exist in fillables
-         * because we are here customize the data will be saved in database ... it is not data coming from the request
-         */
-        return [
-            $this->getEmailColumnName() ,
-            $this->getEmailVerificationDateColumnName(),
-            $this->getEmailVerificationTokenColumnName(),
-            'first_name',
-            'last_name',
-            'name',
-            'password',
-            'mobile',
-        ];
-    }
-
+ 
     /**
-     * @return Tenant | TenantCompany
+     * @return TenantCompany
      */
-    public function tenant(): Tenant
+    public function tenant(): TenantCompany
     {
         return $this->Company;
     }
 
-    public function getTenantAppModelClass(): string
+    public function getTenancyDataSyncingEvent() : ?TenancyDataSyncingEvent
     {
-        return User::class;
+        if($this->canSyncData())
+        {
+            return (new DefaultAdminDataSyncingEventFactory($this))->createTenancyDataSyncingEvent();
+        }
+
+        return null;
+        
     }
 
-    public function getTenantAppModelIdentifierKeyName(): string
+    public function canSyncData() :bool
     {
-        return $this->getEmailColumnName();
-    }
-
-    /**
-     * @return int|string
-     * it is an alias for getOriginalIdentifierValue method
-     */
-    public function getTenantAppModelIdentifierOriginalValue(): int|string
-    {
-        return $this->getOriginalIdentifierValue();
+        return $this->tenant->isApproved();
     }
 }

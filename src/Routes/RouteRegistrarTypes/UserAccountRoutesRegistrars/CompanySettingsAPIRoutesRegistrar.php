@@ -20,7 +20,7 @@ class CompanySettingsAPIRoutesRegistrar extends PixelRouteRegistrar
     
     protected function defineUpdateAdminInfoRoute() : void
     {    
-        Route::put('profile/update-admin', [UserCompanySettingController::class, 'updateAdminInfo']);
+        Route::put('profile/update-admin', [UserCompanySettingController::class, 'changeDefaultAdmin']);
     }
 
     protected function defineCompanyResettingRoute() : void

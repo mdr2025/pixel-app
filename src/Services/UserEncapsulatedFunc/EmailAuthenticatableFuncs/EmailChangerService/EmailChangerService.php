@@ -10,9 +10,9 @@ use PixelApp\Services\UserEncapsulatedFunc\CustomUpdatingService;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\EmailAuthenticatableSensitivePropChangers\EmailChanger;
 
 class EmailChangerService extends CustomUpdatingService
-{
+{ 
     protected ?EmailChanger $emailChanger = null;
- 
+  
     /**
      * @throws Exception
      */

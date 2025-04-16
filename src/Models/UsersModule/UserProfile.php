@@ -51,7 +51,7 @@ class UserProfile extends PixelBaseModel implements MustUploadModelFiles , NeedT
 
     public function getParentRelationshipsDetails(): array
     {
-        return ["user" =>  static::getUserModelClass() ];
+        return ["user" =>  static::getUserModelClass()  , "country" => Country::class ];
     }
 
     public function getModelFileInfoArray(): array

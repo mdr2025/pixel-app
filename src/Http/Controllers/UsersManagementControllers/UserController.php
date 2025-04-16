@@ -32,7 +32,7 @@ class UserController extends Controller
         return PixelModelManager::getUserModelClass();
     }
 
-    public function index(Request $request)
+    public function index()
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(UserTypeIndexingService::class);
         return (new $service)->index();

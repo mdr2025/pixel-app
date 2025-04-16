@@ -25,7 +25,7 @@ class UserCompanySettingController extends Controller
     }
   
   
-    public function updateAdminInfo()
+    public function changeDefaultAdmin()
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(CompanyChangeDefaultAdminClientService::class);
         return (new $service())->update();
