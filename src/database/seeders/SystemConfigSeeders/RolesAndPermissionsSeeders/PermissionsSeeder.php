@@ -13,7 +13,7 @@ class PermissionsSeeder extends Seeder
 
     protected function getHighestRoleConfigKey() : string
     {
-        return Str::replace(" "  , "_" , RoleModel::getHighestRoleName());
+        return RoleModel::getHighestRoleName();
     }
     protected function getAllPermissionStrings()  :array
     {

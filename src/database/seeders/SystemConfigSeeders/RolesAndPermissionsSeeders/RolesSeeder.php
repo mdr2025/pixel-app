@@ -26,7 +26,7 @@ class RolesSeeder extends Seeder
     }
     protected function getDefaultRoleDefaultPermissions(string $role) : array
     {
-        return $this->defaultPermissions[str_replace(" " , "_" , $role)];
+        return $this->defaultPermissions[ $role ];
     }
     protected function getDefaultRoleStringArray() : array
     {

@@ -50,7 +50,7 @@ class PixelBaseModel extends Model implements StatisticsProviderModel
             dd("Can't execute any query on " . static::class . " model in this app type ");
         }
 
-        parent::newBaseQueryBuilder();
+        return parent::newBaseQueryBuilder();
     }
     
     static public function getTableTitle(string $tableName): string

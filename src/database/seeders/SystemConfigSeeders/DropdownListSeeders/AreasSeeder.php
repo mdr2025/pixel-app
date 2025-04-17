@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\File;
 
 class AreasSeeder extends Seeder
 {
+    protected function getAreasJsonFilePath() : string
+    {
+        return realpath(__DIR__ . "/../../Data/areas.json");
+    }
     /**
      * Run the database seeds.
      *
@@ -16,7 +20,7 @@ class AreasSeeder extends Seeder
     public function run()
     {
         try{
-            $json = File::get('database/seeders/Data/areas.json');
+            $json = File::get($this->getAreasJsonFilePath());
             $areas = json_decode($json, true);
             // laravel collection bad thing
             $chunks = array_chunk($areas, 300);

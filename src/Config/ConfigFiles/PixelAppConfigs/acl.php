@@ -44,9 +44,9 @@ $highestRolePermisions = [
 
 $lowestRolePermisions = ["read_profile"];
 
-$acl[]["permissions"][$highestRoleName] = $highestRolePermisions;
-$acl[]["permissions"][$lowestRoleName] = $lowestRolePermisions;
-$acl[]["roles"] = [$highestRoleName , $lowestRoleName];
-$acl[]["default_roles"] = [$highestRoleName , $lowestRoleName];
+$acl["permissions"][$highestRoleName] = $highestRolePermisions;
+$acl["permissions"][$lowestRoleName] = $lowestRolePermisions;
+$acl["roles"] = [$highestRoleName , $lowestRoleName];
+$acl["default_roles"] = [$highestRoleName , $lowestRoleName];
 
 return $acl;

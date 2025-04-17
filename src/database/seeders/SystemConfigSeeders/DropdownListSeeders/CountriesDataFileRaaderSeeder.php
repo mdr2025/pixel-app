@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\File;
 
 class CountriesDataFileRaaderSeeder extends Seeder {
 
+    protected function getCountriesJsonFilePath() : string
+    {
+        return realpath(__DIR__ . "/../../Data/countries.json");
+    }
+
 	 /**
      * Run the database seeds.
      *
@@ -15,7 +20,7 @@ class CountriesDataFileRaaderSeeder extends Seeder {
      */
     public function run()
     {
-        $json = File::get('../../Data/countries.json');
+        $json = File::get($this->getCountriesJsonFilePath());
         $countries = json_decode($json, true);
         DB::table('countries')->insert($countries);
     }

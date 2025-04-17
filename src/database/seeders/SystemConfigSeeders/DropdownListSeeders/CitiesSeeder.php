@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\File;
 
 class CitiesSeeder extends Seeder
 {
+
+    protected function getCitiesJsonFilePath() : string
+    {
+        return realpath(__DIR__ . "/../../Data/cities.json");
+    }
     /**
      * Run the database seeds.
      *
@@ -17,8 +22,9 @@ class CitiesSeeder extends Seeder
     {
 
 
-        try{
-            $json = File::get('database/seeders/Data/cities.json');
+        try{ 
+            
+            $json = File::get($this->getCitiesJsonFilePath());
             $cities = json_decode($json, true);
             DB::table('cities')->insert($cities);
         }catch(\Throwable $exception)

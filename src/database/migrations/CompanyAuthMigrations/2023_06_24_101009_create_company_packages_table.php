@@ -19,7 +19,8 @@ class CreateCompanyPackagesTable extends Migration
         Schema::create('company_packages', function (Blueprint $table) {
             $table->id();
             $table->foreignId('package_id')->constrained('packages')->cascadeOnDelete();
-            $table->foreignId('company_id')->constrained('companies')->cascadeOnDelete();
+            $table->foreignId('company_id')->constrained('tenant_companies')->cascadeOnDelete();
+            //$table->foreignId('company_id')->constrained('companies')->cascadeOnDelete();
             $table->enum('subscription_type', ['monthly', 'yearly']);
             $table->date('subscription_start_date');
             $table->date('subscription_end_date');
