@@ -40,9 +40,9 @@ class EmailChangerService extends CustomUpdatingService
         $this->emailChanger->fireCommittingDefaultEvents();
     }
 
-    protected function saveModelChanges() : void
+    protected function saveModelChanges() : bool
     {
-        $this->model->save();
+        return $this->model->save();
     }
 
     protected function checkAuthenticatableChanging() : bool

@@ -49,9 +49,10 @@ class UserTypeListingingService extends ModelListingService
     protected function respond($data)
     { 
         $resourceClass = $this->getListingResource();
+        $data = $resourceClass::collection($data)->toArray( $this->getRequest() );
         
         return response()->json([
-                                    "data" => $resourceClass::collection($data)
+                                    "data" => $data
                                 ]); 
     }
    

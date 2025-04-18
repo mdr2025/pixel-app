@@ -42,7 +42,7 @@ class DefaultUsersListingService extends ModelListingService
     protected function respond($data)
     {   
         return response()->json([
-                                    "data" => $data
+                                    "data" => $data->toArray()
                                 ]); 
     }
    

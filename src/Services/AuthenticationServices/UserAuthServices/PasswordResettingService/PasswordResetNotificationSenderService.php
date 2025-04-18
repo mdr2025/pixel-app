@@ -18,6 +18,8 @@ use PixelApp\Models\UsersModule\PasswordReset;
 use PixelApp\Services\Traits\GeneralValidationMethods;
 use PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\SignatureEmailLinkGenerators\SignatureEmailLinkGenerator;
 use PixelApp\Notifications\UserNotifications\ResetPasswordFormLinkNotification;
+use PixelApp\Services\AuthenticationServices\UserAuthServices\LogoutService\LogoutService;
+use PixelApp\Services\PixelServiceManager;
 
 class PasswordResetNotificationSenderService
 {
@@ -31,12 +33,18 @@ class PasswordResetNotificationSenderService
         return PixelHttpRequestManager::getRequestForRequestBaseType(ForgetPasswordRequest::class);
     }
 
+    protected function initLogoutService() : LogoutService
+    {
+        $service =  PixelServiceManager::getServiceForServiceBaseType(LogoutService::class);
+        return new $service();
+    }
     protected function logoutUser() : void
     {
-        if(auth()->user())
-        {
-            auth()->logout();
-        }
+        $this->initLogoutService()->logout();
+        // if(auth()->user())
+        // {
+        //     auth()->logout();
+        // }
     }
 
 

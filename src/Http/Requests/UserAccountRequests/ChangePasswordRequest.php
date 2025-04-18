@@ -24,8 +24,8 @@ class ChangePasswordRequest extends BaseFormRequest
     public function rules()
     {
         return [
-                "old_password" =>  ["bail", "required", "string",  "min:8", "max:255"],
-                "new_password" =>  ["bail", "required", "string", "confirmed",  "min:8"],
+                "old_password" =>  [ "required", "string",  "min:8", "max:255"],
+                "new_password" =>  [ "required", "string", "confirmed",  "min:8"],
         ];
     }
 }

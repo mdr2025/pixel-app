@@ -38,7 +38,7 @@ class DepartmentsListingService extends ModelListingService
     {
         $total = $this->getTotalActiveDepartments();
             
-        return Response::successList($total, $data); 
+        return Response::successList($total, $data->toArray()); 
     }
    
 }

@@ -8,15 +8,17 @@ class PixelHttpRequestManager
 
     public static function setRequestAlternative(string $baseRequestClass , string $alternaticveRequestClass) : void
     {
-        if($baseRequestClass == $alternaticveRequestClass 
-        ||
-        is_subclass_of($alternaticveRequestClass , $baseRequestClass)
+        if(
+            $baseRequestClass !== $alternaticveRequestClass 
+            &&
+            !is_subclass_of($alternaticveRequestClass , $baseRequestClass)
         )
         {
-            static::$requestAlternatives[$baseRequestClass] = $alternaticveRequestClass;
+            dd("The alternative $alternaticveRequestClass Request class must be a child type class of $baseRequestClass !" );    
         }
 
-        dd("The alternative $alternaticveRequestClass Request class must be a child type class of $baseRequestClass !" );
+        static::$requestAlternatives[$baseRequestClass] = $alternaticveRequestClass;
+        
     }
 
     public static function getRequestForRequestBaseType(string $baseRequestClass ) : string

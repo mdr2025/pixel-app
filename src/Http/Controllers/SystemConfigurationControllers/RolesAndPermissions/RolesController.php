@@ -94,7 +94,7 @@ class RolesController extends Controller
     {
         BasePolicy::check('read', Role::class); 
 
-        $permissions = Permission::pluck('name')->get();
+        $permissions = Permission::get('name');
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(PermissionsResource::class);
         return $resourceClass::collection($permissions); 
     }

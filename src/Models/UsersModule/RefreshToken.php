@@ -19,7 +19,7 @@ class RefreshToken extends PassportRefreshToken
 
     public function fill(array $attributes)
     {
-        if(array_key_exists("id" , $attributes))
+        if(!array_key_exists("id" , $attributes))
         {
             $attributes["id"] = $this->generateTokenId();
         }

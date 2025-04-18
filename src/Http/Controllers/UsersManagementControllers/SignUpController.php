@@ -73,7 +73,7 @@ class SignUpController extends Controller
     public function changeAccountEmail( $user) : JsonResponse
     {
         //        BasePolicy::check('editSignUpUsers', User::class);
-        $user = $this->getUsverModelClass()::findOrFail($user);
+        $user = $this->getUserModelClass()::findOrFail($user);
         $service = PixelServiceManager::getServiceForServiceBaseType(EmailChangerService::class);
         return (new $service($user))->change();
     }

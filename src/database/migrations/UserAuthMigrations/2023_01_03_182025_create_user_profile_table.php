@@ -16,7 +16,7 @@ class CreateUserProfileTable extends Migration
     {
         Schema::create('user_profile', function (Blueprint $table) {
             $table->enum('gender', ['male', 'female'])->default('male');
-            $table->string('picture')->nullable();
+            $table->string('logo')->nullable();
             $table->enum('marital_status' , UserProfile::MARTIAL_STATUSES)->nullable();
             $table->enum('military_status' , UserProfile::MILITARY_STATUSES)->nullable();
             $table->date('date_of_birth')->nullable();

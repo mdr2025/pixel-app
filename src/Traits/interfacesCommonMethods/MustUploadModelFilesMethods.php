@@ -3,6 +3,7 @@
 namespace PixelApp\Traits\interfacesCommonMethods;
 
 use CRUDServices\FilesOperationsHandlers\FilePathsRetrievingHandler\FileFullPathsHandler;
+use CRUDServices\Interfaces\MustUploadModelFiles;
 
 trait MustUploadModelFilesMethods
 {
@@ -74,5 +75,11 @@ trait MustUploadModelFilesMethods
         $this->fill($oldAttrsArray);
 
         return $ProcessedAttrsArray;
+    }
+
+    public function getDocumentStoragePath(string $fileName) : string
+    {
+        /** @var MustUploadModelFiles $this */
+        return $this->getDocumentsStorageFolderName() . "/" . $fileName;
     }
 }

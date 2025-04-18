@@ -1,7 +1,8 @@
 <?php
 
 namespace PixelApp\Services\CoreServices;
- 
+
+use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 
 abstract class ModelListingService
@@ -13,7 +14,12 @@ abstract class ModelListingService
     abstract protected function respond($data) ;
      
     abstract protected function setAllowedFilters() : void; 
-    
+
+    protected function getRequest()  :Request
+    {
+        return request();
+    }
+
     protected function getSelectedColumns() : array
     {
         return ['*'];
@@ -36,6 +42,8 @@ abstract class ModelListingService
         $this->query = QueryBuilder::for($modelClass);
     }
 
+    
+
     public function list() 
     {  
         $this->initSpatieQueryBuilder();  
@@ -43,7 +51,7 @@ abstract class ModelListingService
         $this->setCustomScopes();
 
         $data = $this->getData();
-        $this->respond($data);
+        return $this->respond($data);
          
     }
 

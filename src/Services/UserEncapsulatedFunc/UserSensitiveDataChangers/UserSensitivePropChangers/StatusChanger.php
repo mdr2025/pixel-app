@@ -16,12 +16,8 @@ class StatusChanger extends UserSensitivePropChanger implements ExpectsSensitive
 {
     use ExpectsSensitiveRequestDataFunc;
 
-    protected string $statusValue  ;
-    
-    public function __construct()
-    {
-        $this->setStatusInitValue();
-    }
+    protected ?string $statusValue = null ;
+     
 
     public function setAuthenticatable( ?Model $authenticatable): self
     {
@@ -53,9 +49,12 @@ class StatusChanger extends UserSensitivePropChanger implements ExpectsSensitive
         return $this->authenticatable->getDefaultStatusValue();
     }
 
-    protected function setStatusInitValue() : void
+    protected function setStatusDefaultValue() : void
     {
-        $this->statusValue = $this->getAuthenticatableDefaultStatus();
+        if(!$this->statusValue)
+        {
+            $this->statusValue = $this->getAuthenticatableDefaultStatus();
+        }
     }
 
     public function approve() : self
@@ -96,6 +95,8 @@ class StatusChanger extends UserSensitivePropChanger implements ExpectsSensitive
      */
     protected function prepareStatusValue() : void
     {
+        $this->setStatusDefaultValue();
+        
         if($this->statusValue == 'pending')
         {
             /**  isn't set manually by approve method ... so need to be set from request data */

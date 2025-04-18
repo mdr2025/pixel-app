@@ -27,7 +27,7 @@ class EmailAuthenticatableVerificationNotificationSender
 
     public static function initVerificationLinkGenerator(EmailAuthenticatable $EmailAuthenticatable) : SignatureEmailLinkGenerator
     {
-        if(static::$verificationLinkGenerator)
+        if(!static::$verificationLinkGenerator)
         {
             static::$verificationLinkGenerator = new SignatureEmailLinkGenerator($EmailAuthenticatable);
         }

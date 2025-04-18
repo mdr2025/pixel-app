@@ -27,4 +27,4 @@ class RolesListResource extends JsonResource
         ];
     }
 }
-}
+ 
