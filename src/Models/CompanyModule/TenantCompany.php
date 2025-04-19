@@ -156,9 +156,20 @@ class TenantCompany extends PixelBaseModel
         return $this->getFileFullPathAttrValue('logo');
     }
 
+    public function approve() : self
+    {
+        $this->status = $this->getApprovingStatusValue();
+        return $this;
+    }
+
+    public function activate() : self
+    {
+        return $this->approve();
+    }
+    
     public function isActive() : bool
     {
-        return $this->status = $this->getApprovingStatusValue();
+        return $this->status == $this->getApprovingStatusValue();
     }
 
     public function isApproved()  : bool

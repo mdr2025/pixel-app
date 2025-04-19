@@ -42,16 +42,7 @@ class CompanyLoginService
         }
         return $this;
     }
-
-    protected function checkCompanyActivity(): self
-    {
-        if (!$this->company->isActive())
-        {
-            throw new Exception("This company account is inactive");
-        }
-        return $this;
-    }
-
+  
     protected function fetchCompanyById(string $companyId) : ?TenantCompany
     {
         $tenantModelClass = PixelTenancyManager::getTenantCompanyModelClass();
@@ -64,7 +55,7 @@ class CompanyLoginService
     protected function setCompany(): self
     {
         $companyId = $this->data["company_id"];
-        $this->CheckRcNo($companyId); 
+        // $this->CheckRcNo($companyId); 
         
         if ($company = $this->fetchCompanyById($companyId))
         {
@@ -74,15 +65,15 @@ class CompanyLoginService
         throw new Exception("There is no such company in our database !");
     }
 
-    private function CheckRcNo($companyId): void
-    {
-        $tenantModelClass = PixelTenancyManager::getTenantCompanyModelClass();
-        $companyWithRcNo = $tenantModelClass::where("cr_no", $companyId)->first();
+    // private function CheckRcNo($companyId): void
+    // {
+    //     $tenantModelClass = PixelTenancyManager::getTenantCompanyModelClass();
+    //     $companyWithRcNo = $tenantModelClass::where("cr_no", $companyId)->first();
 
-        if ($companyWithRcNo) {
-            throw new \Exception("You must log in using Company ID not CR No.");
-        }
-    }
+    //     if ($companyWithRcNo) {
+    //         throw new \Exception("You must log in using Company ID not CR No.");
+    //     }
+    // }
 
     /**
      * @return $this
