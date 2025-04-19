@@ -25,6 +25,12 @@ class PixelAdminPanelAppClient extends PixelAppClient
         return "admin-panel-app-root-api";
     }
 
+    protected function composeRouteUrl(PixelAppRouteIdentifier $routeIdentifier)  :string
+    {
+        $uri = ltrim($routeIdentifier->getUri() , "/");
+        return $this->appRootApi . "/" . $uri;
+    }
+
     protected function getAppRootApi() : string
     {
         $key = $this->getAppRootApiConfigKeyName();
@@ -40,22 +46,26 @@ class PixelAdminPanelAppClient extends PixelAppClient
 
     protected function deleteRequest(PixelAppDeleteRouteIdentifier $routeIdentifier) : Response
     { 
-        return Http::delete($routeIdentifier->getUri() , $routeIdentifier->getData());
+        $url = $this->composeRouteUrl($routeIdentifier);
+        return Http::delete($url , $routeIdentifier->getData());
     }
 
     protected function putRequest(PixelAppPutRouteIdentifier $routeIdentifier) : Response
     { 
-        return Http::asForm()->put($routeIdentifier->getUri() , $routeIdentifier->getData());
+        $url = $this->composeRouteUrl($routeIdentifier);
+        return Http::asForm()->put($url , $routeIdentifier->getData());
     }
 
     protected function getRequest(PixelAppGetRouteIdentifier $routeIdentifier) : Response
     { 
-        return Http::get($routeIdentifier->getUri() , $routeIdentifier->getData());
+        $url = $this->composeRouteUrl($routeIdentifier);
+        return Http::get($url , $routeIdentifier->getData());
     }
 
     protected function postRequest(PixelAppPostRouteIdentifier $routeIdentifier) : Response
     {
-        return Http::asForm()->post($routeIdentifier->getUri() , $routeIdentifier->getData());
+        $url = $this->composeRouteUrl($routeIdentifier);
+        return Http::asForm()->post($url , $routeIdentifier->getData());
     }
 
     public function requestOnRoute(PixelAppRouteIdentifier $routeIdentifier) : JsonResponse

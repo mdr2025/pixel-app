@@ -52,7 +52,7 @@ class CompanyLoginService
         return $this;
     }
 
-    protected function fetchCompanyById(int $companyId) : ?TenantCompany
+    protected function fetchCompanyById(string $companyId) : ?TenantCompany
     {
         $tenantModelClass = PixelTenancyManager::getTenantCompanyModelClass();
         return $tenantModelClass::where("company_id", $companyId)->first();

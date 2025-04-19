@@ -11,7 +11,6 @@ use PixelApp\Services\AuthenticationServices\CompanyAuthClientServices\CompanyCh
 use PixelApp\Services\AuthenticationServices\CompanyAuthClientServices\CompanyForgettingIdService;
 use PixelApp\Services\AuthenticationServices\CompanyAuthClientServices\CompanyLoginService;
 use PixelApp\Services\AuthenticationServices\CompanyAuthClientServices\CompanyRegisteringService;
-use PixelApp\Services\AuthenticationServices\CompanyAuthClientServices\DefaultAdminServices\EmailVerificationServices\DefaultAdminEmailVerificationService;
 use PixelApp\Services\PixelServiceManager;
 
 class CompanyAuthClientController extends Controller
@@ -30,13 +29,7 @@ class CompanyAuthClientController extends Controller
         $service = PixelServiceManager::getServiceForServiceBaseType(CompanyLoginService::class);
         return (new $service())->getResponse();
     }
-
-    public function verifyDefaultAdminEmail(): JsonResponse
-    {
-        $service = PixelServiceManager::getServiceForServiceBaseType(DefaultAdminEmailVerificationService::class);
-        return (new $service())->getResponse();
-    }
-
+ 
     public function checkStatus()
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(CompanyCheckingStatusService::class);

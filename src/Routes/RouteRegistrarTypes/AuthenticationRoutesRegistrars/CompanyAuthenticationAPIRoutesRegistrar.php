@@ -53,12 +53,7 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
     {
         Route::post('company/check/status', [CompanyAuthServerController::class , 'checkStatus']);
     }
- 
-    protected function defineCompanyClientEmailVerificationRoute() : void
-    {
-        Route::post('company/verify-email', [CompanyAuthClientController::class , 'verifyDefaultAdminEmail']);
-    }
-
+  
     protected function defineCompanyDefaultAdminUpdatingServerRoute() : void
     {
         Route::post('company/update-default-admin-info', [CompanyAuthServerController::class , 'updateDefaultAdminInfo']);
@@ -145,8 +140,7 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
         {
            $this->defineCompanyClientLoginRoute();
            $this->defineCompanyClientRegisteringRoute();
-           $this->defineCompanyClientForgetIdRoute();
-           $this->defineCompanyClientEmailVerificationRoute();
+           $this->defineCompanyClientForgetIdRoute(); 
            $this->defineCompanyClientCheckStatusRoute();
            $this->defineCheckSubdomainClientRoute();
            $this->defineCheckCrNoClientRoute();

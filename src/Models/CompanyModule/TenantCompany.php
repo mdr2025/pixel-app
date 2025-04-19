@@ -223,7 +223,7 @@ class TenantCompany extends PixelBaseModel
 
     public function generateCompanyIdString()  : self
     {
-        $this->company_id = "Co-" . random_int(100000, 999999);
+        $this->company_id = "CO-" . random_int(100000, 999999);
         return $this;
     }
 
