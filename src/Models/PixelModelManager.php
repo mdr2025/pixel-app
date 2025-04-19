@@ -10,30 +10,39 @@ use PixelApp\Models\Traits\AlternativeModelMethods;
 class PixelModelManager
 {
     use AlternativeModelMethods ;
+
     public static function getDefaultPixelUserModelClass() : string
     {
         return PixelUser::class;
+    }
+
+    protected static function modelClassInstanceOfParentOrFail(string $modelClass , string $parentClass) : void
+    {  
+        if(
+            $modelClass !== $parentClass
+            &&
+            !is_subclass_of($modelClass , $parentClass )
+            )
+        {
+            //need the error message for development only
+            dd("$modelClass model class must be child type of use $parentClass type");
+        }    
     }
 
     public static function getUserModelClass() : string
     {
         $modelClass = PixelConfigManager::getUserModelClass() ;
         $defaultUserModelClass = static::getDefaultPixelUserModelClass();
+    
         if(!$modelClass)
         {
-            dd("User model class is not set in pixel-config file");
-        }
-     
-        if(
-            $modelClass === $defaultUserModelClass
-            ||
-            is_subclass_of($modelClass , $defaultUserModelClass )
-            )
-        {
-            return $modelClass;
-        }
+            return $defaultUserModelClass;
+        } 
 
-        dd("User model class must be child type of use PixelApp\Models\UsersModule\PixelUser type");
+        static::modelClassInstanceOfParentOrFail($modelClass , $defaultUserModelClass);
+        
+        return $modelClass;
+        
     }
  
     public static function getBaseTenantCompanyModelClass() : string
@@ -45,13 +54,15 @@ class PixelModelManager
     {
         $modelClass = PixelConfigManager::getTenantCompanyModelClass() ;
         $baseTenantClass = static::getBaseTenantCompanyModelClass();
-        
-        if($modelClass === $baseTenantClass || is_subclass_of($modelClass ,  $baseTenantClass))
+          
+        if(!$modelClass)
         {
-            return $modelClass;
+            return $baseTenantClass;
         }
+  
+        static::modelClassInstanceOfParentOrFail($modelClass , $baseTenantClass);
         
-        dd("Tenant model class must be child type of $baseTenantClass type");
+        return $modelClass; 
     }
 
     public static function getProjectModelsPath() : string

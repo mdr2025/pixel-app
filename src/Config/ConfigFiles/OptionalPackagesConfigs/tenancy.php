@@ -20,9 +20,7 @@ return [
      */
     'central_domains' => [
         '127.0.0.1',
-        'localhost',
-        'api.stg.fire-maintenance.com',
-        'stg.fire-maintenance.com',
+        'localhost', 
     ],
 
     /**

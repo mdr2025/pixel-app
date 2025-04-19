@@ -46,12 +46,12 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
     }
     protected function defineCompanyClientCheckStatusRoute() : void
     {
-        Route::post('company/check/status', [CompanyAuthClientController::class , 'checkStatus'])->middleware('reqLimit') ;
+        Route::post('company/check/status', [CompanyAuthClientController::class , 'checkStatus']);
     }
 
     protected function defineCompanyServerCheckStatusRoute() : void
     {
-        Route::post('company/check/status', [CompanyAuthServerController::class , 'checkStatus'])->middleware('reqLimit') ;
+        Route::post('company/check/status', [CompanyAuthServerController::class , 'checkStatus']);
     }
  
     protected function defineCompanyClientEmailVerificationRoute() : void
@@ -77,22 +77,22 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
     
     protected function defineCompanyClientForgetIdRoute() : void
     {
-        Route::post('company/forget-id', [CompanyAuthClientController::class , 'forgetId'])->middleware('reqLimit') ;
+        Route::post('company/forget-id', [CompanyAuthClientController::class , 'forgetId']);
     }
 
     protected function defineCompanyServerForgetIdRoute() : void
     {
-        Route::post('company/forget-id', [CompanyAuthServerController::class , 'forgetId'])->middleware('reqLimit') ;
+        Route::post('company/forget-id', [CompanyAuthServerController::class , 'forgetId']);
     }
  
     protected function defineCompanyClientLoginRoute() : void
     {
-        Route::post('company/login', [CompanyAuthClientController::class , 'login'])->middleware('reqLimit') ;
+        Route::post('company/login', [CompanyAuthClientController::class , 'login']);
     }
 
     protected function defineCompanyServerLoginRoute() : void
     {
-        Route::post('company/login', [CompanyAuthServerController::class , 'login'])->middleware('reqLimit') ;
+        Route::post('company/login', [CompanyAuthServerController::class , 'login']);
     }
 
     protected function defineCompanyClientRegisteringRoute() : void
@@ -114,6 +114,7 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
     {
         $routeRegistrar = $this->initCompanyRouteRegistrar();
         $this->attachCompanyGlobalMiddlewares($routeRegistrar);
+        $this->exceptServerRouteMiddlewares($routeRegistrar);
 
         if($domain)
         {
@@ -150,8 +151,8 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
            $this->defineCheckSubdomainClientRoute();
            $this->defineCheckCrNoClientRoute();
         });
-    }
-    
+    } 
+
     protected function attachCompanyGlobalMiddlewares(RouteRegistrar $routeRegistrar) : void
     {
         $routeRegistrar->middleware( 'api' );
