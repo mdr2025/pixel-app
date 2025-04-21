@@ -57,8 +57,9 @@ class StatusChanger extends UserSensitivePropChanger implements ExpectsSensitive
         }
     }
 
-    public function approve() : self
+    public function approve(Model $authenticatable) : self
     {
+        $this->setAuthenticatable($authenticatable);
         $this->statusValue  = $this->authenticatable->getApprovingStatusValue();
         return $this;
     }

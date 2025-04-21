@@ -19,7 +19,7 @@ abstract class SystemMemberAccountStatusChanger extends AccountStatusChanger
     {
         if(! $this->model->isSystemMemberAccount())
         {
-            throw new Exception("Can't change user status");
+            throw new Exception("Can't change account status");
         }
         return $this;
     }

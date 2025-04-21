@@ -40,8 +40,9 @@ use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\
 class TenantCompany extends PixelBaseModel
                     implements Tenant , HasUUID , TenantWithDatabase , OwnsRelationships , MustUploadModelFiles ,  OnlyAdminPanelQueryable , StatusChangeableAccount
 {
-    use HasFactory ,  HasDatabase  , SoftDeletes;
+    use HasFactory  , SoftDeletes;
     use CentralConnection,
+        HasDatabase,
         HasInternalKeys,
         HasDataColumn,
         TenantRun;
@@ -90,15 +91,15 @@ class TenantCompany extends PixelBaseModel
             'hashed_id',
             'status',
             'employees_no',
-            'branches_no',
+            'branches_no', 
             'package_status',
             'mobile',
             'address',
             'cr_no',
-            'contractor_approved_status',
-            'main_company_approved_status',
+            'contractor_approved_status',//later
+            'main_company_approved_status',//later
             'type',
-            'contractor_id',
+            'contractor_id',//later
             'account_type',
             'created_at' ,
             'updated_at' ,
@@ -166,7 +167,7 @@ class TenantCompany extends PixelBaseModel
     {
         return $this->approve();
     }
-    
+
     public function isActive() : bool
     {
         return $this->status == $this->getApprovingStatusValue();

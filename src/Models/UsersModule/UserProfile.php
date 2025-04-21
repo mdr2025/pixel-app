@@ -5,6 +5,7 @@ namespace PixelApp\Models\UsersModule;
 use CRUDServices\Interfaces\MustUploadModelFiles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use PixelApp\Database\Factories\UserModule\UserProfileFactory;
 use PixelApp\Models\PixelBaseModel;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Country;
@@ -73,5 +74,10 @@ class UserProfile extends PixelBaseModel implements MustUploadModelFiles , NeedT
     public function getDocumentsStorageFolderName(): string
     {
         return "users/" . $this->user->hashed_id ;
+    }
+
+    protected static function newFactory()
+    {
+        return UserProfileFactory::new();
     }
 }

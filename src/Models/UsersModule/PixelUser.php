@@ -18,6 +18,8 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+use PixelApp\Database\Factories\UserModule\AcceptedUserFactory;
+use PixelApp\Database\Factories\UserModule\SignUpUserFactory;
 use PixelApp\Events\TenancyEvents\DataSyncingEvents\TenancyDataSyncingEvent;
 use PixelApp\Interfaces\EmailAuthenticatable;
 use PixelApp\Interfaces\HasUUID;
@@ -44,6 +46,7 @@ implements
     use  Authenticatable, Authorizable, HasApiTokens, HasFactory, Notifiable, EmailAuthenticatableMethods, SoftDeletes;
   
     public static $snakeAttributes = false;
+    protected bool $fakedUsersStatus = false;
 
     const USER_STATUS = ["active", "inactive"]; // Database column values
     const SIGN_UP_STATUS = ["pending", "rejected"]; // Database column values
@@ -77,9 +80,7 @@ implements
 
     protected $casts = [
         'role_id' => 'integer',
-        'default_user' => 'boolean',
-        'department_id' => 'integer',
-        'branch_id' => 'integer',
+        'default_user' => 'boolean', 
         'accepted_at' => 'datetime'
     ];
 
@@ -172,13 +173,7 @@ implements
             OwnedRelationshipComponent::create("attachments", "user_id")->setUpdatingConditionColumns(['id', "user_id"])
         ];
     }
-
-    public function department(): BelongsTo
-    {
-        return $this->belongsTo(Department::class)->select('id', 'name');
-    }
-
-
+  
     public function scopeNotSuperAdmin($query)
     {
         $query->where('role_id', '!=', 1);
@@ -213,13 +208,7 @@ implements
     {
         return $this->role_id == 1 || $this->default_user == 1;
     }
-
-
-    //    public function branch()
-    //    {
-    //        return $this->belongsTo(Branch::class);
-    //    }
-    //
+ 
 
     public function getTenancyDataSyncingEvent() : ?TenancyDataSyncingEvent
     {
@@ -243,6 +232,24 @@ implements
     public function isEditableUser(): bool
     {
         return !$this->isDefaultUser(); // add the conditions you need to make this user editable frm users management module
+    }
+
+
+    public static function fakeAcceptedUsers() : void
+    {
+        static::$fakedUsersStatus = true;
+    }
+    
+    public static function fakeSignUpUsers() : void
+    {
+        static::$fakedUsersStatus = false;
+    }
+
+    protected static function newFactory()
+    {
+        return static::$fakedUsersStatus ? 
+               AcceptedUserFactory::new() :
+               SignUpUserFactory::new();;
     }
 
 }

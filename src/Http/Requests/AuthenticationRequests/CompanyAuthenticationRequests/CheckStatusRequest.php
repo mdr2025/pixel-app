@@ -2,9 +2,9 @@
 
 namespace PixelApp\Http\Requests\AuthenticationRequests\CompanyAuthenticationRequests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use ValidatorLib\CustomFormRequest\BaseFormRequest;
 
-class CheckStatusRequest extends FormRequest
+class CheckStatusRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

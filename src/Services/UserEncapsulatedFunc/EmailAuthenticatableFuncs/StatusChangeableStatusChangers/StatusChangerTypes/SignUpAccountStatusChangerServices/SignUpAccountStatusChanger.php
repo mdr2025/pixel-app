@@ -3,7 +3,7 @@
 namespace  PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\StatusChangeableStatusChangers\StatusChangerTypes\SignUpAccountStatusChangerServices;
 
 use Exception;
-use PixelApp\Services\UsersManagement\StatusChangerServices\AccountStatusChanger;
+use PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\StatusChangeableStatusChangers\AccountStatusChanger;
 use Illuminate\Http\Request;
 
 abstract class SignUpAccountStatusChanger extends AccountStatusChanger
@@ -27,7 +27,7 @@ abstract class SignUpAccountStatusChanger extends AccountStatusChanger
     {
         if(!$this->model->isSignUpAccount())
         {
-            throw new Exception("Can't change user status");
+            throw new Exception("Can't change account status");
         }
         return $this;
     }

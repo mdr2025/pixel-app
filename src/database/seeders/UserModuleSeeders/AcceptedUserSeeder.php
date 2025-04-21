@@ -18,7 +18,8 @@ class AcceptedUserSeeder extends Seeder
     {
         $factory = new AcceptedUserFactory();
         $factory->count(200)
-            ->has( UserProfile::factory()->withRoleState()->withDepartmentState()->count(1) )
-            ->create();
+                ->withRoleState()->withDepartmentState()
+                ->has( UserProfile::factory()->count(1) )
+                ->create();
     }
 }

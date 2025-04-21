@@ -92,7 +92,7 @@ class CompanyLoginService
     public function login(): JsonResponse
     {
         $this->initValidator()->validateRequest()->setRequestData();
-        $this->setCompanyId()->setCompany()->setCompanySlug()->checkCompanyActivity()->checkCompanyApprovment();
+        $this->setCompanyId()->setCompany()->setCompanySlug() ->checkCompanyApprovment();
         return $this->getLoginResponse();
     }
 

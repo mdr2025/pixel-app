@@ -67,7 +67,7 @@ class CompanyCheckingStatusService
         if (!$this->isVerified()) 
         {
             return response()->json([
-                "message" => "Your company registerd email has not been verified yet"
+                "message" => "Your company email has not been verified yet"
             ]);
         } 
         

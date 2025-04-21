@@ -8,13 +8,10 @@ use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAp
 
 class CheckingTenantStatusRouteIdentifierFactory extends PixelAppRouteIdentifierFactory
 {    
-    protected function getTenantDefaultAdminEmail() : string
-    {
-        return tenant()->defaultAdmin->email;
-    }
+     
     protected function getData() : array
     {
-        return [ "admin_email" => $this->getTenantDefaultAdminEmail() ];
+        return request()->all();
     }
     protected function getUri() : string
     {

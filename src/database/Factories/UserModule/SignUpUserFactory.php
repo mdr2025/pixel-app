@@ -17,7 +17,7 @@ class SignUpUserFactory extends UserFactory
         return array_merge(
             parent::definition(),
             [
-                'status' => User::SIGN_UP_STATUS[$this->faker->numberBetween(0,1)],
+                'status' => "pending",
             ]
         );
     }

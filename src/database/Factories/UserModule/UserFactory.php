@@ -6,11 +6,18 @@ use PixelApp\Models\UsersModule\PixelUser as User;
 use PixelApp\Database\Factories\PixelBaseFactory as Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use PixelApp\Models\SystemConfigurationModels\Department;
+use PixelApp\Models\SystemConfigurationModels\RoleModel;
 
 abstract class UserFactory extends Factory
 {
 
     protected $model = User::class;
+    
+    protected array $RoleIDS = [];
+    protected int $RolesCount = 1;
+    protected array $DepartmentIDS = [];
+    protected int $DepartmentsCount = 1;
     /**
      * Define the model's default state.
      *
@@ -23,7 +30,7 @@ abstract class UserFactory extends Factory
         return [
             'first_name' => $first_name,
             'last_name' => $last_name,
-            "name" => $first_name . " " , $last_name,
+            "name" => $first_name . " " . $last_name,
             'email' => $this->faker->unique()->safeEmail(),
             'password' => Hash::make(22442244),
             'mobile' => $this->faker->unique()->phoneNumber(),
@@ -45,6 +52,39 @@ abstract class UserFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'email_verified_at' => null,
+            ];
+        });
+    }
+  
+ 
+    protected function setRoleIDS()
+    {
+        $this->RoleIDS = RoleModel::pluck("id")->toArray();
+        $this->RolesCount = count($this->RoleIDS);
+    }
+
+    public function withRoleState() : Factory
+    {
+        $this->setRoleIDS();
+        return $this->state(function(array $attributes){
+            return [
+                'role_id' => $this->RoleIDS[rand(0 , $this->RolesCount)] ?? null
+            ];
+        });
+    }
+
+    protected function setDepartmentIDS()  : Factory
+    {
+        $this->DepartmentIDS = Department::pluck("id")->toArray();
+        $this->DepartmentsCount = count($this->DepartmentIDS);
+        return $this;
+    }
+    public function withDepartmentState()
+    {
+        $this->setDepartmentIDS();
+        return $this->state(function(array $attributes){
+            return [
+                'department_id' => $this->DepartmentIDS[rand(0 , $this->DepartmentsCount)] ?? null
             ];
         });
     }

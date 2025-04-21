@@ -2,9 +2,7 @@
 
 namespace PixelApp\Database\Factories\UserModule;
 
-
-use PixelApp\Models\UsersModule\PixelUser as User;
-
+ 
 class AcceptedUserFactory extends UserFactory
 {
 
@@ -18,7 +16,7 @@ class AcceptedUserFactory extends UserFactory
         return array_merge(
             parent::definition(),
             [
-                'status' => User::USER_STATUS[$this->faker->numberBetween(0,1)],
+                'status' => "active",
                 'accepted_at' => now(),
                 'user_type' => 'user'
             ]

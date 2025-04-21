@@ -1,15 +1,21 @@
 <?php
 
 namespace PixelApp\Services\UserEncapsulatedFunc\RegistrableUserHandlers;
-
+  
 use PixelApp\Interfaces\EmailAuthenticatable;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use PixelApp\Models\Interfaces\BelongsToBranch;
+use PixelApp\Models\Interfaces\BelongsToDepartment;
 use PixelApp\Models\PixelModelManager;
+use PixelApp\Models\SystemConfigurationModels\Branch;
+use PixelApp\Models\SystemConfigurationModels\Department;
 use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\EmailAuthenticatableSensitivePropChangers\VerificationPropsChanger;
+use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\BranchChanger;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\DefaultUserPopChanger;
+use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\DepartmentChanger;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\StatusChanger;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\UserRoleChanger;
 
@@ -95,7 +101,7 @@ class RegistrableDefaultSuperAdminApprover
      */
     protected function setAcceptedAdminStatus() : self
     {
-        (new StatusChanger())->approve()->setAuthenticatable( $this->user )->changeAuthenticatablePropOrFail();
+        (new StatusChanger())->approve($this->user)->changeAuthenticatablePropOrFail();
         return $this;
     }
     /**
@@ -110,6 +116,10 @@ class RegistrableDefaultSuperAdminApprover
         return $this;
     }
    
+    protected function getDepartmentModelClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(Department::class);
+    }
     /**
      * @return $this
      * @throws Exception
@@ -117,22 +127,35 @@ class RegistrableDefaultSuperAdminApprover
      */
     protected function setDefaultDepartment() : self
     {
-        // (new DepartmentChanger())->setAuthenticatable( $this->user )
-        //                          ->setDepartment( Department::findTeamManagementDepartment() )
-        //                          ->changeAuthenticatablePropOrFail();
+        if($this->user instanceof BelongsToDepartment)
+        { 
+            $departmentClass = $this->getDepartmentModelClass(Department::class);
+            (new DepartmentChanger())->setAuthenticatable( $this->user )
+                                     ->setDepartment( $departmentClass::findTeamManagementDepartment() )
+                                     ->changeAuthenticatablePropOrFail();
+        }
+        
         return $this;
     }
 
+    protected function getBranchModelClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(Branch::class);
+    }
     /**
      * @return $this
      * @throws Exception
       * @todo later : must be implemented by the child system (must be a func to do extra somthings by child classes )
      */
     protected function setHeadQuarterBranch() : self
-    {
-        // (new BranchChanger())->setAuthenticatable( $this->user )
-        //                      ->setBranch( Branch::findHeadquarter() )
-        //                      ->changeAuthenticatablePropOrFail();
+    { 
+        if($this->user instanceof BelongsToBranch)
+        {
+            $branchClass = $this->getBranchModelClass();
+            (new BranchChanger())->setAuthenticatable( $this->user ) 
+                                 ->setBranch( $branchClass::findHeadquarter() )
+                                 ->changeAuthenticatablePropOrFail(); 
+        }
         return $this;
     }
 
@@ -145,8 +168,10 @@ class RegistrableDefaultSuperAdminApprover
         /**
          * operations on user
          */
-        $this->setDefaultRole()->setAcceptedAdminStatus()->verifyAdmin()->convertToDefaultUser();
-
+        $this->setDefaultRole()->setDefaultDepartment() 
+            ->setHeadQuarterBranch()->setAcceptedAdminStatus()
+            ->verifyAdmin()->convertToDefaultUser();
+ 
         /**
          * returning the initialized and approved user
          */
