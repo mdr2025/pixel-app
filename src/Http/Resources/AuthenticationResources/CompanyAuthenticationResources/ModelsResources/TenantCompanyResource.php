@@ -14,7 +14,7 @@ class TenantCompanyResource extends JsonResource
 {
     protected array $nonDesiredAttrs = [ "country_id" ,"hashed_id" , "updated_at" , "deleted_at" , "data" ];
 
-    protected function nonDesiredColumnsFilteringCallback(mixed $value, string|int $key): bool
+    public function nonDesiredColumnsFilteringCallback(mixed $value, string|int $key): bool
     { 
         /**
          * Must Not be in nonDesiredAttrs array

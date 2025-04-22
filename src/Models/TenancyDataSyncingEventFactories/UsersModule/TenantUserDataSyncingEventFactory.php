@@ -68,7 +68,7 @@ class TenantUserDataSyncingEventFactory extends TenancyDataSyncingEventFactory
     protected function initAdminPanelDataSyncingRouteIdFactory() : PixelAppRouteIdentifierFactory
     {
         $companyDomain = $this->getCompanyDomain();
-        return new DefaultAdminDataSyncingRouteIdentifierFactory($companyDomain);
+        return new DefaultAdminDataSyncingRouteIdentifierFactory($companyDomain , $this->getUpdatedData());
     }
 
     protected function initEventForSyncingAdminPanelCase() :  AdminPanelDBDataSyncingEvent
@@ -110,7 +110,7 @@ class TenantUserDataSyncingEventFactory extends TenancyDataSyncingEventFactory
     }
 
     protected function getUpdatedData() : array
-    {
+    { 
         return $this->user->only( $this->getSyncedAttributeNames() );
     }
 

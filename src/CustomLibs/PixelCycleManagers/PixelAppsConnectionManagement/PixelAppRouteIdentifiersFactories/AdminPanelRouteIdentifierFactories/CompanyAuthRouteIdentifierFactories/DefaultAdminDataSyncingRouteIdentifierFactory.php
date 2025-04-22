@@ -11,9 +11,29 @@ class DefaultAdminDataSyncingRouteIdentifierFactory extends PixelAppRouteIdentif
 {   
     use CompanyDomainConstructable;
 
-    protected function getData() : array
+    protected array $updatedData = [];
+
+    public function __construct(string $companyDomain , array $updatedData)
     {
-        return array_merge(request()->all()  , ["company_domain" => $this->companyDomain]);
+        $this->setCompanyDomain($companyDomain);
+        
+        $this->setUpdatedData($updatedData);
+    }
+
+    public function setUpdatedData(array $data) : self
+    {
+        $this->updatedData = $data;
+        return $this;
+    }
+
+    public function getUpdatedData() : array
+    {
+        return $this->updatedData ;
+    }
+    
+    protected function getPayload() : array
+    {
+        return array_merge($this->getUpdatedData()  , ["company_domain" => $this->companyDomain]);
     }
 
     protected function getUri() : string
@@ -23,6 +43,6 @@ class DefaultAdminDataSyncingRouteIdentifierFactory extends PixelAppRouteIdentif
 
     public function createRouteIdentifier()  :PixelAppRouteIdentifier
     {
-        return (new PixelAppPostRouteIdentifier($this->getUri() , $this->getData() ));
+        return (new PixelAppPostRouteIdentifier($this->getUri() , $this->getPayload() ));
     }
 }
