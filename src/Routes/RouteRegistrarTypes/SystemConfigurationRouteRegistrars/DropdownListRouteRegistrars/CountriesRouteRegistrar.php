@@ -35,47 +35,44 @@ class CountriesRouteRegistrar extends PixelRouteRegistrar
     }
    
     protected function defineCountriesRoutes(RouteRegistrar $routeRegistrar ) : void
-    {
-        $this->attachGlobalMiddlewares($routeRegistrar);
-
+    {  
         $routeRegistrar->group(function()
         { 
             $this->defineCountriesListingRoute(); 
         });
     }
-    
-    protected function attachGlobalMiddlewares(RouteRegistrar $routeRegistrar) : void
-    {
-        $routeRegistrar->middleware( [ 'api' ] );
-    }
-
+     
     protected function initMainApiRouteRegistrar() : RouteRegistrar
     {
         return Route::prefix('api');
     }
-
-    protected function attachTenantMiddlewares(RouteRegistrar $routeRegistrar) : void
-    {
-        $tenantMiddlewares = PixelRouteManager::getTenantMiddlewares();
-        $routeRegistrar->middleware($tenantMiddlewares);
-    }
+ 
     protected function defineNormalAppRoutes() : void
     {
         $routeRegistrar = $this->initMainApiRouteRegistrar();
+
+        $this->attachGlobalMiddlewares($routeRegistrar);
+
         $this->defineCountriesRoutes($routeRegistrar);
     }
 
     protected function defineTenantAppRoutes() : void
     {
        $routeRegistrar = $this->initMainApiRouteRegistrar();
+
        $this->attachTenantMiddlewares($routeRegistrar);
+
        $this->defineCountriesRoutes($routeRegistrar);
     }
 
     protected function defineCentralDomainRoutes(string $domain) :void
     { 
         $routeRegistrar = $this->initMainApiRouteRegistrar();
+        
+        $this->attachGlobalMiddlewares($routeRegistrar);
+
         $routeRegistrar->domain($domain);
+        
         $this->defineCountriesRoutes($routeRegistrar);
     }
 

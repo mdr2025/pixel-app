@@ -50,63 +50,62 @@ class CompanyBranchesAPIRoutesRegistrar extends PixelRouteRegistrar
  
     protected function defineCompanyBranchesServerRoutes(RouteRegistrar $routeRegistrar ) : void
     {
-        $this->attachGlobalMiddlewares($routeRegistrar);
-
         $routeRegistrar->group(function()
         {
             $this->defineBranchStatusEditingServerRoute(); 
             $this->defineCompanyBranchesListingServerRoute(); 
         });
     }
+
     protected function defineCompanyBranchesClientRoutes(RouteRegistrar $routeRegistrar ) : void
     {
-        $this->attachGlobalMiddlewares($routeRegistrar);
-
         $routeRegistrar->group(function()
         {
             $this->defineBranchStatusEditingClientRoute(); 
             $this->defineCompanyBranchesListingClientRoute(); 
         });
     }
-    protected function attachGlobalMiddlewares(RouteRegistrar $routeRegistrar) : void
+
+    protected function getGlobalMiddlewares() : array
     {
-        $routeRegistrar->middleware( [ 'api' , 
+        return [ 'api' , 
         
         /**
          * @todo same note for admin microservice auth
          */
         'auth:api'
-        ] );
+        ] ;
     }
 
     protected function initMainApiRouteRegistrar() : RouteRegistrar
     {
         return Route::prefix('api/company');
     }
-
-    protected function attachTenantMiddlewares(RouteRegistrar $routeRegistrar) : void
-    {
-        $tenantMiddlewares = PixelRouteManager::getTenantMiddlewares();
-        $routeRegistrar->middleware($tenantMiddlewares);
-    }
-    
+ 
     protected function defineAdminPanelRoutes() : void
     {
         $routeRegistrar = $this->initMainApiRouteRegistrar();
+ 
+        $this->attachGlobalMiddlewares($routeRegistrar);
+
         $this->defineCompanyBranchesServerRoutes($routeRegistrar);
     }
 
     protected function defineTenantAppRoutes() : void
     {
        $routeRegistrar = $this->initMainApiRouteRegistrar();
+
        $this->attachTenantMiddlewares($routeRegistrar);
+
        $this->defineCompanyBranchesClientRoutes($routeRegistrar);
     }
  
     protected function defineMonolithTenancyAppRoutes() : void
     { 
         $routeRegistrar = $this->initMainApiRouteRegistrar();
+
         $this->attachTenantMiddlewares($routeRegistrar);
+
         $this->defineCompanyBranchesServerRoutes($routeRegistrar);
     }
 }

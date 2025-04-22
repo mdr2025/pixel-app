@@ -20,9 +20,11 @@ class CompanyFetchingService extends AdminPanelConnectingClientService
     {
         $this->setCompanyDomain($companyDomain);
     }
-    public function  setCompanyDomain(string $companyDomain)
+    
+    public function  setCompanyDomain(string $companyDomain) : self
     {
         $this->companyDomain = $companyDomain;
+        return $this;
     }
 
     protected function getRouteIdentifierFactory() : PixelAppRouteIdentifierFactory
@@ -51,7 +53,7 @@ class CompanyFetchingService extends AdminPanelConnectingClientService
         return $attributes["tenant"] ?? [];
     }
 
-    protected function setTenantRelations(Tenant | Model $tenant , array $attributes) : void
+    protected function setTenantRelations(Tenant|Model $tenant , array $attributes) : void
     {
         $relationsData = $this->getResponseRelationsData($attributes);
 
@@ -61,12 +63,12 @@ class CompanyFetchingService extends AdminPanelConnectingClientService
         }
     }
     
-    protected function initNewTenant(array $attributes) : Tenant | Model 
+    protected function initNewTenant(array $attributes) : Tenant|Model 
     {
         $attributes = $this->getResponseTenantData($attributes);
         if(empty($attributes))
         {
-            throw new Exception("Missed data ... no tenant compan yis found !");
+            throw new Exception("Missing data: no tenant company is found!"); 
         }
 
         $tenantClass = PixelTenancyManager::getTenantCompanyModelClass(); 
@@ -78,7 +80,7 @@ class CompanyFetchingService extends AdminPanelConnectingClientService
         
         }else
         {
-            $tenant->Fill($attributes);
+            $tenant->fill($attributes);
         }
 
         return $tenant;

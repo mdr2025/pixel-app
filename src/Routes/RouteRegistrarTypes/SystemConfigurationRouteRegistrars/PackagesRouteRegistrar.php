@@ -7,6 +7,7 @@ namespace PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars
 use Illuminate\Support\Facades\Route;
 use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
+use Illuminate\Support\Arr;
 use PixelApp\Routes\PixelRouteManager;
 
 class PackagesRouteRegistrar extends PixelRouteRegistrar 
@@ -40,55 +41,55 @@ class PackagesRouteRegistrar extends PixelRouteRegistrar
 
     protected function definePackagesServerRoutes(RouteRegistrar $routeRegistrar ) : void
     {
-        $this->attachGlobalMiddlewares($routeRegistrar);
-
         $routeRegistrar->group(function()
         {
             $this->definePackagesListingServerRoute();  
         });
     }
     protected function definePackagesClientRoutes(RouteRegistrar $routeRegistrar ) : void
-    {
-        $this->attachGlobalMiddlewares($routeRegistrar);
-
+    { 
         $routeRegistrar->group(function()
         {
             $this->definePackagesListingClientRoute();  
         });
     }
     
-    protected function attachGlobalMiddlewares(RouteRegistrar $routeRegistrar) : void
+    protected function getGlobalMiddlewares() : array
     {
-        $routeRegistrar->middleware( [ 'api' , 'auth:api'] );
+        return [ 'api' , 'auth:api']  ;
     }
 
     protected function initMainApiRouteRegistrar() : RouteRegistrar
     {
         return Route::prefix('api');
     }
-
-    protected function attachTenantMiddlewares(RouteRegistrar $routeRegistrar) : void
-    {
-        $tenantMiddlewares = PixelRouteManager::getTenantMiddlewares();
-        $routeRegistrar->middleware($tenantMiddlewares);
-    }
+ 
     protected function defineAdminPanelAppRoutes() : void
     {
         $routeRegistrar = $this->initMainApiRouteRegistrar();
+        
+        $this->attachGlobalMiddlewares($routeRegistrar);
+
         $this->definePackagesServerRoutes($routeRegistrar);
     }
 
     protected function defineTenantAppRoutes() : void
     {
        $routeRegistrar = $this->initMainApiRouteRegistrar();
+
        $this->attachTenantMiddlewares($routeRegistrar);
+
        $this->definePackagesClientRoutes($routeRegistrar);
     }
 
     protected function defineCentralDomainRoutes(string $domain) :void
     { 
         $routeRegistrar = $this->initMainApiRouteRegistrar();
+        
+        $this->attachGlobalMiddlewares($routeRegistrar);
+
         $routeRegistrar->domain($domain);
+        
         $this->definePackagesServerRoutes($routeRegistrar);
     }
 

@@ -138,7 +138,7 @@ class PixelRouteManager
     {
         return PixelTenancyManager::getCentralDomains();
     }
-    public static function getTenantMiddlewares() : array
+    public static function getTenancyMiddlewares() : array
     {
         return PixelTenancyManager::getTenantDefaultMiddlewares();
     }

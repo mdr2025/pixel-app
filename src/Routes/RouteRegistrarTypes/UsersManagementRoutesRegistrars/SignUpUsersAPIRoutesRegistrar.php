@@ -68,8 +68,6 @@ class SignUpUsersAPIRoutesRegistrar extends PixelRouteRegistrar
 
     protected function defineSignupUsersRoutes(RouteRegistrar $routeRegistrar ) : void
     {
-        $this->attachGlobalMiddlewares($routeRegistrar);
-
         $routeRegistrar->group(function()
         {
             $this->defineIndexRoute(); 
@@ -83,38 +81,42 @@ class SignUpUsersAPIRoutesRegistrar extends PixelRouteRegistrar
         });
     }
     
-    protected function attachGlobalMiddlewares(RouteRegistrar $routeRegistrar) : void
+    protected function getGlobalMiddlewares() : array
     {
-        $routeRegistrar->middleware( [ 'api' , 'auth:api'] );
+        return [ 'api' , 'auth:api']  ;
     }
 
     protected function initMainApiRouteRegistrar() : RouteRegistrar
     {
         return Route::prefix('api');
     }
-
-    protected function attachTenantMiddlewares(RouteRegistrar $routeRegistrar) : void
-    {
-        $tenantMiddlewares = PixelRouteManager::getTenantMiddlewares();
-        $routeRegistrar->middleware($tenantMiddlewares);
-    }
+ 
     protected function defineNormalAppRoutes() : void
     {
         $routeRegistrar = $this->initMainApiRouteRegistrar();
+        
+        $this->attachGlobalMiddlewares($routeRegistrar);
+
         $this->defineSignupUsersRoutes($routeRegistrar);
     }
 
     protected function defineTenantAppRoutes() : void
     {
        $routeRegistrar = $this->initMainApiRouteRegistrar();
+
        $this->attachTenantMiddlewares($routeRegistrar);
+
        $this->defineSignupUsersRoutes($routeRegistrar);
     }
 
     protected function defineCentralDomainRoutes(string $domain) :void
     { 
         $routeRegistrar = $this->initMainApiRouteRegistrar();
+
+        $this->attachGlobalMiddlewares($routeRegistrar);
+        
         $routeRegistrar->domain($domain);
+
         $this->defineSignupUsersRoutes($routeRegistrar);
     }
 

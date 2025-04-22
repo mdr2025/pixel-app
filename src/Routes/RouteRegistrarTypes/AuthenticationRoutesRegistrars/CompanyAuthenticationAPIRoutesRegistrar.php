@@ -108,7 +108,9 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
     protected function defineCompanyServerRoutes(?string $domain = null) : void
     {
         $routeRegistrar = $this->initCompanyRouteRegistrar();
-        $this->attachCompanyGlobalMiddlewares($routeRegistrar);
+
+        $this->attachGlobalMiddlewares($routeRegistrar);
+        
         $this->exceptServerRouteMiddlewares($routeRegistrar);
 
         if($domain)
@@ -133,7 +135,9 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
     protected function defineCompanyClientRoutes( string $domain ) : void
     {
         $routeRegistrar = $this->initCompanyRouteRegistrar();
-        $this->attachCompanyGlobalMiddlewares($routeRegistrar);
+
+        $this->attachGlobalMiddlewares($routeRegistrar);
+
         $routeRegistrar->domain($domain); 
         
         $routeRegistrar->group(function()
@@ -146,12 +150,7 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
            $this->defineCheckCrNoClientRoute();
         });
     } 
-
-    protected function attachCompanyGlobalMiddlewares(RouteRegistrar $routeRegistrar) : void
-    {
-        $routeRegistrar->middleware( 'api' );
-    }
-
+ 
     protected function initCompanyRouteRegistrar() : RouteRegistrar
     {
         return Route::prefix('api');
@@ -161,6 +160,7 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
     {
         $this->defineCompanyServerRoutes();
     }
+
     protected function defineTenantAppRoutes() : void
     {
         foreach(PixelRouteManager::getCentralDomains() as $domain)
@@ -168,6 +168,7 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
             $this->defineCompanyClientRoutes($domain);
         }
     }
+
     protected function defineMonolithTenancyAppRoutes() : void
     {
         foreach(PixelRouteManager::getCentralDomains() as $domain)

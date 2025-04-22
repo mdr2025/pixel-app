@@ -56,9 +56,7 @@ class BranchesRouteRegistrar extends PixelRouteRegistrar
     }
 
     protected function defineBranchesRoutes(RouteRegistrar $routeRegistrar ) : void
-    {
-        $this->attachGlobalMiddlewares($routeRegistrar);
-
+    {  
         $routeRegistrar->group(function()
         {
             $this->defineBranchesResourceRoute(); 
@@ -71,25 +69,22 @@ class BranchesRouteRegistrar extends PixelRouteRegistrar
         });
     }
     
-    protected function attachGlobalMiddlewares(RouteRegistrar $routeRegistrar) : void
+    protected function getGlobalMiddlewares() : array
     {
-        $routeRegistrar->middleware( [ 'api' , 'auth:api'] );
+        return [ 'api' , 'auth:api'] ;
     }
-
+      
     protected function initMainApiRouteRegistrar() : RouteRegistrar
     {
         return Route::prefix('api');
     }
-
-    protected function attachTenantMiddlewares(RouteRegistrar $routeRegistrar) : void
-    {
-        $tenantMiddlewares = PixelRouteManager::getTenantMiddlewares();
-        $routeRegistrar->middleware($tenantMiddlewares);
-    } 
+ 
     protected function defineTenantAppRoutes() : void
     {
        $routeRegistrar = $this->initMainApiRouteRegistrar();
+
        $this->attachTenantMiddlewares($routeRegistrar);
+
        $this->defineBranchesRoutes($routeRegistrar);
     } 
      
