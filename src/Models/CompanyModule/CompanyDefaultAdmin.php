@@ -11,13 +11,20 @@ use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Events\TenancyEvents\DataSyncingEvents\TenancyDataSyncingEvent;
 use PixelApp\Interfaces\OnlyAdminPanelQueryable;
 use PixelApp\Interfaces\TenancyInterfaces\CanSyncData;
+use PixelApp\Models\Interfaces\TrustedAttributesHandlerModel;
 use PixelApp\Models\TenancyDataSyncingEventFactories\CompanyModule\DefaultAdminDataSyncingEventFactory;
+use PixelApp\Models\Traits\TrustedAttributesHandlerModelMethods;
 
-
-class CompanyDefaultAdmin extends PixelBaseModel implements EmailAuthenticatable ,OnlyAdminPanelQueryable , CanSyncData
+class CompanyDefaultAdmin 
+      extends PixelBaseModel
+      implements EmailAuthenticatable ,OnlyAdminPanelQueryable , CanSyncData , TrustedAttributesHandlerModel
 
 {
-    use Notifiable , EmailAuthenticatableMethods ;
+    //laravel traits
+    use Notifiable  ;
+
+    //pixel custom traits
+    use EmailAuthenticatableMethods , TrustedAttributesHandlerModelMethods;
 
     protected $table = "tenant_default_admins";
     protected $fillable = [
@@ -30,21 +37,24 @@ class CompanyDefaultAdmin extends PixelBaseModel implements EmailAuthenticatable
         'company_id'
     ];
 
-    public function Company()  : BelongsTo
-    {
-        return $this->belongsTo( PixelTenancyManager::getTenantCompanyModelClass() , "company_id" , "id");
-    }
+   
+
     public function getConnectionName()
     {
         return config("database.defaultCentralConnection");
     }
  
+    public function tenant()  : BelongsTo
+    {
+        return $this->belongsTo( PixelTenancyManager::getTenantCompanyModelClass() , "company_id" , "id");
+    }
+
     /**
      * @return TenantCompany
      */
-    public function tenant(): TenantCompany
+    public function Company(): TenantCompany
     {
-        return $this->Company;
+        return $this->tenant;
     }
 
     public function getTenancyDataSyncingEvent() : ?TenancyDataSyncingEvent

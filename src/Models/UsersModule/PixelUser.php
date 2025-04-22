@@ -24,6 +24,7 @@ use PixelApp\Events\TenancyEvents\DataSyncingEvents\TenancyDataSyncingEvent;
 use PixelApp\Interfaces\EmailAuthenticatable;
 use PixelApp\Interfaces\HasUUID;
 use PixelApp\Interfaces\TenancyInterfaces\CanSyncData;
+use PixelApp\Models\Interfaces\BelongsToDepartment;
 use PixelApp\Models\SystemConfigurationModels\Department;
 use PixelApp\Models\TenancyDataSyncingEventFactories\UsersModule\TenantUserDataSyncingEventFactory;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\StatusChangeableAccount;
@@ -88,6 +89,27 @@ implements
         'password',
         'pivot'
     ];
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        $this->handleOptionalRelationCasts();
+    }
+
+    protected function handleOptionalRelationCasts() : void
+    {
+        if(method_exists($this , 'appendDepartmentIdCast'))
+        {
+            $this->appendDepartmentIdCast();
+        }
+
+        
+        if(method_exists($this , 'appendBranchIdCast'))
+        {
+            $this->appendBranchIdCast();
+        }
+    }
 
     public static function getStatusValue(int $statusIntValue): string
     {

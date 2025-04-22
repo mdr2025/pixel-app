@@ -5,7 +5,7 @@ namespace PixelApp\Models\SystemConfigurationModels\CountryModule;
 use PixelApp\Models\PixelBaseModel ;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Modules\Country\Database\factories\AreaFactory;
+use PixelApp\Database\Factories\SystemConfigurationFactories\AreaFactory;
 use PixelApp\Traits\HasTranslations;
 
 class Area extends PixelBaseModel

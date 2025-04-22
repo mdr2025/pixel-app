@@ -3,16 +3,22 @@
 namespace PixelApp\Models\SystemConfigurationModels\CountryModule;
 
 use PixelApp\Models\PixelBaseModel ;
-use PixelApp\Models\SystemAdminPanel\Company\CountryPackage;
-use Database\Factories\CountryFactory;
+use PixelApp\Models\SystemAdminPanel\Company\CountryPackage; 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use PixelApp\Database\Factories\SystemConfigurationFactories\CountryFactory;
+use PixelApp\Models\Interfaces\TrustedAttributesHandlerModel;
+use PixelApp\Models\Traits\TrustedAttributesHandlerModelMethods;
 use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeededFromChildes;
 
-class Country extends PixelBaseModel implements NeededFromChildes
+class Country extends PixelBaseModel implements NeededFromChildes , TrustedAttributesHandlerModel
 {
 
+    //laravel traits
     use SoftDeletes, HasFactory;
+
+    //pixel custom traits
+    use TrustedAttributesHandlerModelMethods;
 
     protected $fillable = [
         'name', 'code'

@@ -2,7 +2,7 @@
 
 namespace PixelApp\Http\Resources\AuthenticationResources\CompanyAuthenticationResources\ModelsResources;
 
-use PixelAppCore\Models\WorkSector\CompanyModule\TenantCompany;
+use PixelApp\Models\CompanyModule\TenantCompany;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -14,16 +14,42 @@ class TenantCompanyResource extends JsonResource
 {
     protected array $nonDesiredAttrs = [ "country_id" ,"hashed_id" , "updated_at" , "deleted_at" , "data" ];
 
+    protected function nonDesiredColumnsFilteringCallback(mixed $value, string|int $key): bool
+    { 
+        /**
+         * Must Not be in nonDesiredAttrs array
+         * &&
+         * Must not start with tenancy word
+         */
+        return !Str::startsWith($key , "tenancy_" ) && !in_array($key , $this->nonDesiredAttrs) ;
+         
+    }
+
+    protected function filterProps(array $props) : array
+    {
+        return Arr::where($props , [$this , 'nonDesiredColumnsFilteringCallback']);
+    }
+
+    protected function getRelationsProps(): array
+    {
+        return array_map(fn($relation) =>
+            is_object($relation) && method_exists($relation, 'toArray')
+                ? $this->filterProps($relation->toArray())
+                : $relation,
+            $this->resource->getRelations()
+        );
+    }
+
+    protected function getTenantCompanyProps() : array 
+    {
+        return $this->filterProps( $this->resource->attributesToArray() );
+    }
+
     protected function allAttrExceptNonDesired()  :array
     {
-        return Arr::where($this->resource->toArray() , function ($value , $key){
-            /**
-             * Must Not be in nonDesiredAttrs array
-             * &&
-             * Must not start with tenancy word
-             */
-            return !Str::startsWith($key , "tenancy_" ) && !in_array($key , $this->nonDesiredAttrs) ;
-        });
+        $data["tenant"] = $this->getTenantCompanyProps();
+        $data["relations"] = $this->getRelationsProps();
+        return $data;
     }
 
     protected function loadCountryData(): void

@@ -2,10 +2,10 @@
 
 namespace PixelApp\Models\SystemConfigurationModels\CountryModule;
 
-use PixelApp\Models\PixelBaseModel;
-use Database\Factories\CityFactory;
+use PixelApp\Models\PixelBaseModel; 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use PixelApp\Database\Factories\SystemConfigurationFactories\CityFactory;
 use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeededFromChildes;
 
 class City extends PixelBaseModel implements NeededFromChildes

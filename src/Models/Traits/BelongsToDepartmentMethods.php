@@ -19,7 +19,7 @@ trait BelongsToDepartmentMethods
         return $this->belongsTo(Department::class)->select('id', 'name');
     }
 
-    protected function appendBranchIdCast() : void
+    protected function appendDepartmentIdCast() : void
     {
         $this->casts['department_id'] = 'integer';
     }

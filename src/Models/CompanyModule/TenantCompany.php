@@ -35,17 +35,27 @@ use Stancl\Tenancy\Events\TenantSaved;
 use Stancl\Tenancy\Events\TenantUpdated;
 use Stancl\Tenancy\Events\UpdatingTenant; 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use PixelApp\Models\Interfaces\TrustedAttributesHandlerModel;
+use PixelApp\Models\Interfaces\TrustedRelationAttributesHandlerModel;
+use PixelApp\Models\Traits\TrustedAttributesHandlerModelMethods;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\StatusChangeableAccount;
 
 class TenantCompany extends PixelBaseModel
-                    implements Tenant , HasUUID , TenantWithDatabase , OwnsRelationships , MustUploadModelFiles ,  OnlyAdminPanelQueryable , StatusChangeableAccount
+                    implements Tenant , HasUUID , TenantWithDatabase , OwnsRelationships , MustUploadModelFiles ,  OnlyAdminPanelQueryable , StatusChangeableAccount , TrustedAttributesHandlerModel , TrustedRelationAttributesHandlerModel
 {
+    //laravel traits
     use HasFactory  , SoftDeletes;
+
+    //stancl package traits
     use CentralConnection,
         HasDatabase,
         HasInternalKeys,
         HasDataColumn,
         TenantRun;
+
+    //pixel custom traits
+    use TrustedAttributesHandlerModelMethods;
+
 
     protected $table = "tenant_companies";
 
@@ -299,5 +309,67 @@ class TenantCompany extends PixelBaseModel
    {
        return $this->hasMany(CompanyContact::class);
    }
+ 
+   protected function getDefaultAdminModelClass() : string
+   {
+        return PixelModelManager::getModelForModelBaseType(CompanyDefaultAdmin::class);
+   }
 
+   protected function fillDefaultAdminData(array $relationData) : void
+   {
+        $defaultAdminClass = $this->getDefaultAdminModelClass();
+        $defaultAdmin = new $defaultAdminClass();
+        
+        if($defaultAdmin instanceof TrustedAttributesHandlerModel)
+        {
+            $defaultAdmin->handleModelAttrs($relationData);
+        }else
+        {
+            $defaultAdmin->fill($relationData);
+        }
+
+        $this->setRelation("defaultAdmin" , $defaultAdmin);
+   }
+
+   protected function getCountryModelClass() : string
+   {
+        return PixelModelManager::getModelForModelBaseType(Country::class);
+   }
+
+   protected function fillCountryRelationData(array $relationData) : void
+   {
+        $countryClass = $this->getCountryModelClass();
+        $country = new $countryClass();
+        
+        if($country instanceof TrustedAttributesHandlerModel)
+        {
+            $country->handleModelAttrs($relationData);
+        }else
+        {
+            $country->fill($relationData);
+        }
+
+        $this->setRelation("country" , $country);
+   }
+
+   protected function fillRelationData(string $relation , array $relationData) : void
+   {
+        //not for all relations .... for specific types only
+        match($relation)
+        {
+            "defaultAdmin" => $this->fillDefaultAdminData($relationData) , 
+            "country" => $this->fillCountryRelationData($relationData),
+        };
+   }
+ 
+   public function handleRelationsAttrs(array $relations) : void
+   {
+        foreach($relations as $relation => $relationData)
+        {
+            if(is_string( $relation) && is_array($relationData) )
+            {
+                $this->fillRelationData($relation , $relationData);
+            }
+        }
+   }
 }

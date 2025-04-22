@@ -31,6 +31,7 @@ class PixelBaseModel extends Model implements StatisticsProviderModel
         parent::__construct($attributes);
         $this->generateUUID();
     }
+
     protected static function booted()
     {
         static::retrieved(function ($model) {
