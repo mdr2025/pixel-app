@@ -91,7 +91,7 @@ class UserController extends Controller
         // ]);
     }
 
-    public function listDefaultUser()
+    public function listDefaultUsers()
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(DefaultUsersListingService::class);
         return (new $service)->list();

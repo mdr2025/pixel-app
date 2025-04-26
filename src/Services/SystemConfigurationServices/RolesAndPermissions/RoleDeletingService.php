@@ -18,10 +18,9 @@ class RoleDeletingService
     private RoleUsersManager $usersManager;
     protected array $DefaultRoles;
 
-    public function __construct($id)
+    public function __construct(RoleModel $role)
     {
-        $roleModelClass = PixelModelManager::getModelForModelBaseType(RoleModel::class);
-        $this->role = $roleModelClass::find($id);
+        $this->role = $role;
         $this->DefaultRoles = config("acl.roles");
         $this->usersManager = new SwitchAllRoleUsersToDefaultRole($this->role);
     }

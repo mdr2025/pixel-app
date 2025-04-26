@@ -1,7 +1,8 @@
 <?php
 
 namespace PixelApp\Http\Requests\AuthenticationRequests\CompanyAuthenticationRequests;
- 
+
+use PixelApp\Rules\PhoneNumber;
 use ValidatorLib\CustomFormRequest\BaseFormRequest; 
 
 class DefaultAdminInfoUpdatingRequest extends BaseFormRequest 
@@ -30,7 +31,7 @@ class DefaultAdminInfoUpdatingRequest extends BaseFormRequest
                 "first_name"    => ["required", "string", "max:255"],
                 "last_name"     => ["required", "string", "max:255"],
                 "email"         => ["required", "email"],
-                "mobile"        => ["required", "string" , "max:20" ],
+                "mobile"        => ["required",  PhoneNumber::create() ],
                 "password"      => ["required", "string", "confirmed"],
             ];
     }

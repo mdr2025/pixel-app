@@ -11,12 +11,12 @@ class CitiesUpdatingService extends UpdatingService
 
     protected function getModelUpdatingFailingErrorMessage(): string
     {
-        return 'Failed To Update The Given CitiesUpdatingService !';
+        return 'Failed To Update The Given City !';
     }
 
     protected function getModelUpdatingSuccessMessage(): string
     {
-        return 'The CitiesUpdatingService Has Been Updated Successfully !';
+        return 'The City Has Been Updated Successfully !';
     }
 
     protected function getRequestClass(): string

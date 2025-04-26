@@ -3,6 +3,7 @@
 namespace PixelApp\Http\Requests\AuthenticationRequests\CompanyAuthenticationRequests;
 
 use CRUDServices\Interfaces\ValidationManagerInterfaces\NeedsModelKeyAdvancedValidation;
+use PixelApp\Rules\PhoneNumber;
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 use ValidatorLib\CustomValidationRules\FileValidationRules\SingleFileOrSinglePathString;
 
@@ -44,7 +45,7 @@ class BranchesCompanyRegisterRequest extends BaseFormRequest implements NeedsMod
                 "defaultAdmin.first_name" => ["required", "string", "max:255"],
                 "defaultAdmin.last_name" => ["required", "string", "max:255"],
                 "defaultAdmin.email" => ["required", "email"],
-                "defaultAdmin.mobile" => ["required", "string" , "max:20" ],
+                "defaultAdmin.mobile" => ["required", PhoneNumber::create() ],
                 "defaultAdmin.password" => ["required", "string", "confirmed"],
             ];
     }

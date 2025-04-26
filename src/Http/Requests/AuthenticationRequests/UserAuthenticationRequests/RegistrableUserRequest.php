@@ -3,6 +3,7 @@
 namespace PixelApp\Http\Requests\AuthenticationRequests\UserAuthenticationRequests;
 
 use Illuminate\Validation\Rule;
+use PixelApp\Rules\PhoneNumber;
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 use ValidatorLib\CustomValidationRules\FileValidationRules\SingleFileOrSinglePathString;
 
@@ -30,7 +31,7 @@ class RegistrableUserRequest extends BaseFormRequest
             "first_name" => ["required", "string", "max:255"],
             "last_name" => ["required", "string", "max:255"],
             'email' => ["required", "email" ,"unique:users,email"],
-            'mobile' => ["required", "string" , "max:20" , "unique:users,mobile"],
+            'mobile' => ["required",  PhoneNumber::create() , "unique:users,mobile"],
             "password" => ["required", "string", "confirmed"],
             "profile" => [ "nullable" , "array" ],
             "profile.*.country_id" => [ "nullable" , "numeric"  , "exists:countries,id"],

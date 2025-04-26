@@ -18,7 +18,7 @@ use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleUpdati
 use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleUpdatingServices\RoleInfoUpdatingService;
 use PixelApp\Services\PixelServiceManager;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Role; 
 
 class RolesController extends Controller
 {
@@ -36,10 +36,18 @@ class RolesController extends Controller
         return $resourceClass::collection($data); 
     }
 
-    public function list()
+    public function listAllRoles()
+    {
+         BasePolicy::check('read', Role::class);
+        $data = RoleModel::all();
+        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(RolesListResource::class);
+        return $resourceClass::collection($data); 
+    }
+
+    public function listDefaultRoles()
     {
         BasePolicy::check('read', Role::class);
-        $data = RoleModel::nonDefaultRole()->get();
+        $data = RoleModel::defaultRole()->get();
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(RolesListResource::class);
         return $resourceClass::collection($data); 
     }
@@ -92,7 +100,7 @@ class RolesController extends Controller
 
     public function allPermission()
     {
-        BasePolicy::check('read', Role::class); 
+        BasePolicy::check('read', Permission::class); 
 
         $permissions = Permission::get('name');
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(PermissionsResource::class);

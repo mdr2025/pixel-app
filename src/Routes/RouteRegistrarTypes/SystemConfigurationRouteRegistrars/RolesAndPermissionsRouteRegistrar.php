@@ -35,9 +35,14 @@ class RolesAndPermissionsRouteRegistrar extends PixelRouteRegistrar
         Route::put('roles/{role}/status', [RolesController::class, 'switchRole']);
     }
 
-    protected function defineListingRolesRoute() : void
+    protected function defineListingAllRolesRoute() : void
     {
-        Route::get('list/roles', [RolesController::class, 'list']);
+        Route::get('list/roles', [RolesController::class, 'listAllRoles']);
+    }
+
+    protected function defineListingDefaultRolesRoute() : void
+    {
+        Route::get('list/default-roles', [RolesController::class, 'listDefaultRoles']);
     }
 
     protected function defineGettingAllPermissionsRoute() : void
@@ -61,7 +66,8 @@ class RolesAndPermissionsRouteRegistrar extends PixelRouteRegistrar
             $this->defineAddPermissionRoute(); 
             $this->defineRolesResourceRoute();
             $this->defineGettingAllPermissionsRoute(); 
-            $this->defineListingRolesRoute(); 
+            $this->defineListingAllRolesRoute(); 
+            $this->defineListingDefaultRolesRoute(); 
             $this->defineSwitchingRoleRoute(); 
 
         });
@@ -69,7 +75,8 @@ class RolesAndPermissionsRouteRegistrar extends PixelRouteRegistrar
     
     protected function getGlobalMiddlewares() : array
     {
-        return [ 'api' , 'auth:api'] ;
+        return [ 'api'  , 'auth:api'
+        ] ;
     }
 
     protected function initMainApiRouteRegistrar() : RouteRegistrar

@@ -16,6 +16,8 @@ use PixelApp\Config\ConfigFileIdentifiers\PixelAppRequiredPackagesConfigFileIden
 use PixelApp\Config\ConfigFileIdentifiers\PixelAppRequiredPackagesConfigFileIdentifiers\PassportConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\PixelAppRequiredPackagesConfigFileIdentifiers\PermissionConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\PixelAppRequiredPackagesConfigFileIdentifiers\QueryBuilderConfigFileIdentifier;
+use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\ExcludedTenantsSeedingTablesFileIdentifier;
+use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\IOEncryptingHandlerFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\PixelOptionalPackagesConfigFileIdentifires\TenancyConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\PixelAppACLConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\PixelAppConfigFileIdentifier;
@@ -48,7 +50,9 @@ class PixelConfigManager
     {
         return [  
             static::getPackageBaseConfigFileIdentifierClass(),
-            static::getPixelAppACLConfigFileIdentifierClass() 
+            static::getPixelAppACLConfigFileIdentifierClass() ,
+            IOEncryptingHandlerFileIdentifier::class,
+            ExcludedTenantsSeedingTablesFileIdentifier::class
         ];
     }
  

@@ -42,7 +42,7 @@ class UsersAPIRoutesRegistrar extends PixelRouteRegistrar
     }
     protected function defineDefaultUsersListingRoute() : void
     {
-        Route::get('list/users-emails', [UserController::class, 'listDefaultUser']);
+        Route::get('list/users-emails', [UserController::class, 'listDefaultUsers']);
     }
     protected function defineExportRoute() : void
     {

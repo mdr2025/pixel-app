@@ -7,6 +7,7 @@ use CRUDServices\Interfaces\ValidationManagerInterfaces\NeedsModelKeyAdvancedVal
 use CRUDServices\Interfaces\ValidationManagerInterfaces\NeedsRelationshipsKeyAdvancedValidation;
 use Illuminate\Validation\Rule;
 use PixelApp\Models\UsersModule\UserProfile;
+use PixelApp\Rules\PhoneNumber;
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 use ValidatorLib\CustomValidationRules\FileValidationRules\SingleFileOrSinglePathString;
 
@@ -61,7 +62,7 @@ class UpdateProfileRequest extends BaseFormRequest implements NeedsModelKeyAdvan
         return [
             "email" => ["required" , "string" , "email"],
             "full_name" => ["nullable" , "string"],
-            "mobile" => ["required" , "string"],
+            "mobile" => ["required" ,  PhoneNumber::create()],
             "profile.gender" => ["nullable" , "string"  ],
             "profile.country_id" => ["nullable" , "string" ],
             "profile.city_id" => ["nullable" , "string" ],

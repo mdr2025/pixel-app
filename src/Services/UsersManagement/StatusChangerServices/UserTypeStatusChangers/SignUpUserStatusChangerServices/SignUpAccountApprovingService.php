@@ -63,7 +63,7 @@ class SignUpAccountApprovingService extends BaseSignUpAccountApprovingService
      * @return $this
      * @throws Exception
      */
-    protected function changeUserStatus(): self
+    protected function changeAuthenticatableStatus(): self
     {
         parent::changeAuthenticatableStatus();
         return $this->setUserRelationships();

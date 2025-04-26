@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('areas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('city_id')->constrained("areas")->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('city_id')->constrained("cities")->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
             $table->boolean('status')->default(1);
             $table->standardTime();

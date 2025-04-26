@@ -228,7 +228,7 @@ implements
 
     public function isDefaultUser(): bool
     {
-        return $this->role_id == 1 || $this->default_user == 1;
+        return $this->role_id == 1 && $this->default_user == 1;
     }
  
 

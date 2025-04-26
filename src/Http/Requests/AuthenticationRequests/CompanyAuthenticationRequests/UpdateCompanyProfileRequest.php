@@ -36,6 +36,7 @@ class UpdateCompanyProfileRequest extends BaseFormRequest implements NeedsModelK
     {
         return [
             "name" => ["required" , "string" ],
+            "address"          =>['nullable', 'string'],
             "country_id" => ["required" , "integer" ],
             'logo' => ['nullable' , new SingleFileOrSinglePathString()],
             "company_domain" => ["required" , "string"] ,

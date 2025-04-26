@@ -18,7 +18,11 @@ class BranchesRouteRegistrar extends PixelRouteRegistrar
         if(  PixelRouteManager::isItTenantApp() || PixelRouteManager::isItMonolithTenancyApp()  )
         {
             $this->defineTenantAppRoutes(); 
-        } 
+        } else
+        {
+
+            $this->defineNormalAppRoutes();
+        }
     }
     protected function defineImportableFormatDownloadingRoute() : void
     {
@@ -78,7 +82,16 @@ class BranchesRouteRegistrar extends PixelRouteRegistrar
     {
         return Route::prefix('api');
     }
- 
+
+    protected function defineNormalAppRoutes() : void
+    {
+       $routeRegistrar = $this->initMainApiRouteRegistrar();
+
+       $this->attachGlobalMiddlewares($routeRegistrar);
+
+       $this->defineBranchesRoutes($routeRegistrar);
+    } 
+
     protected function defineTenantAppRoutes() : void
     {
        $routeRegistrar = $this->initMainApiRouteRegistrar();

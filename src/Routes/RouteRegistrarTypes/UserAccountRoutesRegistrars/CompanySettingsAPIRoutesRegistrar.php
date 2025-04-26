@@ -15,7 +15,11 @@ class CompanySettingsAPIRoutesRegistrar extends PixelRouteRegistrar
         if(  PixelRouteManager::isItTenantApp() || PixelRouteManager::isItMonolithTenancyApp()  )
         {
             $this->defineTenantAppRoutes(); 
-        } 
+            
+        } else // for admin panel  + normal app
+        {
+            $this->defineNormalAppRoutes();
+        }
     }
     
     protected function defineUpdateAdminInfoRoute() : void
@@ -47,6 +51,16 @@ class CompanySettingsAPIRoutesRegistrar extends PixelRouteRegistrar
         return Route::prefix('api/company');
     }
  
+    
+    protected function defineNormalAppRoutes() : void
+    {
+       $routeRegistrar = $this->initMainApiRouteRegistrar();
+
+       $this->attachGlobalMiddlewares($routeRegistrar);
+
+       $this->defineCompanyResettingRoutes($routeRegistrar);
+    }
+
     protected function defineTenantAppRoutes() : void
     {
        $routeRegistrar = $this->initMainApiRouteRegistrar();

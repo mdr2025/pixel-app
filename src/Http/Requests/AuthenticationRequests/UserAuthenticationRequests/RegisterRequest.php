@@ -5,6 +5,7 @@ namespace PixelApp\Http\Requests\AuthenticationRequests\UserAuthenticationReques
 use CRUDServices\Interfaces\ValidationManagerInterfaces\NeedsModelKeyAdvancedValidation;
 use CRUDServices\Interfaces\ValidationManagerInterfaces\NeedsRelationshipsKeyAdvancedValidation;
 use Illuminate\Validation\Rule;
+use PixelApp\Rules\PhoneNumber;
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 use ValidatorLib\CustomValidationRules\FileValidationRules\SingleFileOrSinglePathString;
 
@@ -56,7 +57,7 @@ class RegisterRequest extends BaseFormRequest implements NeedsModelKeyAdvancedVa
             "first_name" => ["required", "string", "max:255"],
             "last_name" => ["required", "string", "max:255"],
             'email' => ["required", "email"],
-            'mobile' => ["required", "string" , "max:20" ],
+            'mobile' => ["required",  PhoneNumber::create() ],
             "password" => ["required", "string", "confirmed"],
             "profile" => [ "nullable" , "array" ],
             "profile.country_id" => [ "nullable" , "numeric"  ],
