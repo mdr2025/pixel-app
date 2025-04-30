@@ -19,7 +19,7 @@ class StatusChanger extends UserSensitivePropChanger implements ExpectsSensitive
     protected ?string $statusValue = null ;
      
 
-    public function setAuthenticatable( ?Model $authenticatable): self
+    public function setAuthenticatable(Model $authenticatable): self
     {
         $this->isItStatusChangeableModel($authenticatable);
         return parent::setAuthenticatable($authenticatable);

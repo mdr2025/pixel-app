@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations;
+namespace PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\DefaultAdminServices;
  
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\UpdatingServices\UpdatingService;
 use PixelApp\Http\Requests\AuthenticationRequests\CompanyAuthenticationRequests\DefaultAdminInfoUpdatingRequest;
@@ -29,7 +29,7 @@ class DefaultAdminInfoUpdatingService extends UpdatingService
 
     protected function getModelUpdatingFailingErrorMessage(): string
     {
-        return "Failed To Update The The default admin info !";
+        return "Failed To Update The default admin info !";
     }
 
     protected function getModelUpdatingSuccessMessage(): string

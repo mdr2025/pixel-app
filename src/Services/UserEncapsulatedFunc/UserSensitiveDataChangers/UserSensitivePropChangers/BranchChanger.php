@@ -5,9 +5,12 @@ namespace PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserS
 use Exception;
 use PixelApp\Models\SystemConfigurationModels\Branch;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\ExpectsSensitiveRequestData;
+use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\HasValidationRules;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Traits\ExpectsSensitiveRequestDataFunc;
 
-class BranchChanger extends UserSensitivePropChanger implements ExpectsSensitiveRequestData
+class BranchChanger 
+     extends UserSensitivePropChanger
+     implements ExpectsSensitiveRequestData , HasValidationRules
 {
     use ExpectsSensitiveRequestDataFunc;
 
@@ -34,6 +37,11 @@ class BranchChanger extends UserSensitivePropChanger implements ExpectsSensitive
     public function getPropRequestKeyDefaultName(): string
     {
         return 'branch_id';
+    }
+
+    public function getValidationRules() : array
+    {
+        return ["required"  , "integer", "exists:branches,id"]  ;
     }
 
     /**

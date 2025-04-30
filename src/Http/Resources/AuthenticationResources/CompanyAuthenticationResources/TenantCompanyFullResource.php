@@ -21,7 +21,7 @@ class TenantCompanyFullResource extends JsonResource
 
     protected function getTenantCompanyProfileResourceClass() : string
     {
-        PixelHttpResourceManager::getResourceForResourceBaseType(TenantCompanyProfileResource::class);
+        return PixelHttpResourceManager::getResourceForResourceBaseType(TenantCompanyProfileResource::class);
     }
 
     protected function getTenantProfileAttrs($request) : array

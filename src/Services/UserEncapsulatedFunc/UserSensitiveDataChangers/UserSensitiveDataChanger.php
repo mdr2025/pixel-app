@@ -40,7 +40,7 @@ class UserSensitiveDataChanger
      * @return UserSensitivePropChanger
      * @throws Exception
      */
-    protected function getChangeInstance(string |UserSensitivePropChanger $changer) :UserSensitivePropChanger
+    protected function getChangerInstance(string |UserSensitivePropChanger $changer) :UserSensitivePropChanger
     {
         if($changer instanceof UserSensitivePropChanger) // if it is an object already
         {
@@ -62,7 +62,7 @@ class UserSensitiveDataChanger
      */
     public function changePropOrFail(string |UserSensitivePropChanger $propChanger) : self
     {
-        $this->getChangeInstance( $propChanger )->changeAuthenticatablePropOrFail();
+        $this->getChangerInstance( $propChanger )->changeAuthenticatablePropOrFail();
         return $this;
     }
 
@@ -84,7 +84,7 @@ class UserSensitiveDataChanger
      */
     public function changeProp(string | UserSensitivePropChanger $propChanger) : self
     {
-        $this->getChangeInstance( $propChanger )->changeAuthenticatableProp();
+        $this->getChangerInstance( $propChanger )->changeAuthenticatableProp();
         return $this;
     }
 

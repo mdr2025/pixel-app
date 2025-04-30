@@ -6,9 +6,12 @@ namespace PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserS
 use Exception;
 use PixelApp\Models\SystemConfigurationModels\Department;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\ExpectsSensitiveRequestData;
+use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\HasValidationRules;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Traits\ExpectsSensitiveRequestDataFunc;
 
-class DepartmentChanger extends UserSensitivePropChanger implements ExpectsSensitiveRequestData
+class DepartmentChanger
+      extends UserSensitivePropChanger
+      implements ExpectsSensitiveRequestData , HasValidationRules
 {
     use ExpectsSensitiveRequestDataFunc;
     protected ?Department $department = null;
@@ -35,6 +38,11 @@ class DepartmentChanger extends UserSensitivePropChanger implements ExpectsSensi
     public function getPropRequestKeyDefaultName(): string
     {
         return 'department_id';
+    }
+
+    public function getValidationRules() : array
+    {
+        return   ["required"  , "integer", "exists:departments,id"]  ;
     }
 
     /**

@@ -15,7 +15,7 @@ abstract class EmailAuthenticatableSensitivePropChanger extends UserSensitivePro
         $this->setAuthenticatable($authenticatable);
     }
 
-    public function setAuthenticatable(?Model $authenticatable): UserSensitivePropChanger
+    public function setAuthenticatable(Model $authenticatable): UserSensitivePropChanger
     {
         if(! $authenticatable instanceof EmailAuthenticatable)
         {

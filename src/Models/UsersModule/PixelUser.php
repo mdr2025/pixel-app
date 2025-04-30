@@ -25,8 +25,10 @@ use PixelApp\Interfaces\EmailAuthenticatable;
 use PixelApp\Interfaces\HasUUID;
 use PixelApp\Interfaces\TenancyInterfaces\CanSyncData;
 use PixelApp\Models\Interfaces\BelongsToDepartment;
+use PixelApp\Models\Interfaces\MustHaveRole;
 use PixelApp\Models\SystemConfigurationModels\Department;
 use PixelApp\Models\TenancyDataSyncingEventFactories\UsersModule\TenantUserDataSyncingEventFactory;
+use PixelApp\Models\Traits\MustHaveRoleMethods;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\StatusChangeableAccount;
 use PixelApp\Traits\interfacesCommonMethods\EmailAuthenticatableMethods;
 use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeededFromChildes;
@@ -42,9 +44,10 @@ implements
     AuthorizableContract,
     EmailAuthenticatable ,
     StatusChangeableAccount,
-    CanSyncData
+    CanSyncData,
+    MustHaveRole
 {
-    use  Authenticatable, Authorizable, HasApiTokens, HasFactory, Notifiable, EmailAuthenticatableMethods, SoftDeletes;
+    use  Authenticatable, Authorizable, HasApiTokens, HasFactory, Notifiable, EmailAuthenticatableMethods, SoftDeletes , MustHaveRoleMethods;
   
     public static $snakeAttributes = false;
     protected bool $fakedUsersStatus = false;
@@ -80,7 +83,6 @@ implements
     protected $guarded = ['accepted_at', 'status', 'user_type', 'role_id' , 'default_user'];
 
     protected $casts = [
-        'role_id' => 'integer',
         'default_user' => 'boolean', 
         'accepted_at' => 'datetime'
     ];
@@ -168,10 +170,6 @@ implements
         return $this->hasOne(Signature::class, 'user_id', 'id');
     }
 
-    public function role(): BelongsTo
-    {
-        return $this->belongsTo(Role::class, "role_id", "id");
-    }
 
     public function permissions(): array
     {
@@ -226,9 +224,14 @@ implements
         $query->where('status', 'active');
     }
 
+    public function scopeDefaultUser($query)
+    {
+        $query->where("default_user" , 1);
+    }
+
     public function isDefaultUser(): bool
     {
-        return $this->role_id == 1 && $this->default_user == 1;
+        return $this->default_user == 1;
     }
  
 
@@ -255,8 +258,7 @@ implements
     {
         return !$this->isDefaultUser(); // add the conditions you need to make this user editable frm users management module
     }
-
-
+ 
     public static function fakeAcceptedUsers() : void
     {
         static::$fakedUsersStatus = true;

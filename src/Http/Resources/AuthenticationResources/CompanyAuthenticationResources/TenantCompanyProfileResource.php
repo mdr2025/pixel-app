@@ -25,18 +25,7 @@ class TenantCompanyProfileResource extends JsonResource
     {
         return PixelHttpResourceManager::getResourceForResourceBaseType(TenantCompanyResource::class);
     }
-
-    protected function getDefaultAdminResourceClass() : string
-    {
-        return PixelHttpResourceManager::getResourceForResourceBaseType(DefaultAdminResource::class);
-    }
-
-    protected function appendDefaultAdminData(array $attrs , $request) : array
-    {
-        $resourceClass = $this->getDefaultAdminResourceClass();
-        $attrs["defaultAdmin"] = (new $resourceClass( $this->resource->defaultAdmin ))->toArray($request);
-        return $attrs;
-    }
+ 
     protected function getTenantMainAttrs($request) : array
     {
         $resourceClass = $this->getTenantCompanyResourceClass();
@@ -50,8 +39,7 @@ class TenantCompanyProfileResource extends JsonResource
      */
     public function toArray($request)
     {
-        $tenantAttrs = $this->getTenantMainAttrs($request);
-        $tenantAttrs = $this->appendDefaultAdminData($tenantAttrs , $request);
+        $tenantAttrs = $this->getTenantMainAttrs($request); 
         return $this->appendPackageData($tenantAttrs , $request);
     }
 }

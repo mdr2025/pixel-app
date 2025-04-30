@@ -8,10 +8,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\UserManagementRequests\UserUpdatingRequest;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Services\UserEncapsulatedFunc\CustomUpdatingService;
-use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitiveDataChanger;
-use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\DepartmentChanger;
-use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\UserRoleChanger;
+use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\AdminAssignablePropsManagers\AdminAssignablePropsManager;
+use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitiveDataChanger; 
 use PixelApp\Services\UsersManagement\Traits\EditableUserCheckingMethods;
 
 class UpdatingUserByAdminService extends CustomUpdatingService
@@ -28,6 +28,17 @@ class UpdatingUserByAdminService extends CustomUpdatingService
         return PixelHttpRequestManager::getRequestForRequestBaseType(UserUpdatingRequest::class);
     }
 
+    protected function getUserModelClass() : string
+    {
+        return PixelModelManager::getUserModelClass();
+    }
+  
+    protected function getUserUpdatingPropChangers() : array
+    {
+        $userModelClass = $this->getUserModelClass();
+        return AdminAssignablePropsManager::Singleton()->getSensitivePropChangersForClass($userModelClass); 
+    }  
+
     protected function initUserSensitiveDataChanger() : UserSensitiveDataChanger
     {
         return new UserSensitiveDataChanger($this->model , $this->data);
@@ -42,14 +53,8 @@ class UpdatingUserByAdminService extends CustomUpdatingService
     protected function changerFun( ): JsonResponse
     {
         $this->initUserSensitiveDataChanger()
-             ->changeProps([
-                                UserRoleChanger::class   , DepartmentChanger::class 
-                                
-                                /**
-                                 * @todo later
-                                 **/
-                                //,  BranchChanger::class
-                           ])->saveChanges();
+             ->changeProps( $this->getUserUpdatingPropChangers() )
+             ->saveChanges();
 
         /** if no exception is thrown = every thing is ok and function get successful */
         return Response::success([], ["User Updated Successfully!"], 201);

@@ -1,20 +1,13 @@
 <?php
 
 namespace PixelApp\Models\CompanyModule;
-
-use PixelApp\Models\PixelBaseModel ;
-use PixelApp\Interfaces\HasUUID; 
-use CRUDServices\CRUDComponents\CRUDRelationshipComponents\OwnedRelationshipComponent;
-use CRUDServices\Interfaces\MustUploadModelFiles;
-use CRUDServices\Interfaces\OwnsRelationships;
-use Exception;
+ 
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
 use Spatie\QueryBuilder\AllowedFilter;  
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+use Illuminate\Database\Eloquent\Relations\HasMany; 
 use PixelApp\Interfaces\OnlyAdminPanelQueryable;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Country;
@@ -33,18 +26,20 @@ use Stancl\Tenancy\Events\TenantCreated;
 use Stancl\Tenancy\Events\TenantDeleted;
 use Stancl\Tenancy\Events\TenantSaved;
 use Stancl\Tenancy\Events\TenantUpdated;
-use Stancl\Tenancy\Events\UpdatingTenant; 
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Stancl\Tenancy\Events\UpdatingTenant;  
+use PixelApp\Interfaces\EmailAuthenticatable;
+use PixelApp\Models\CompanyModule\PixelCompany\PixelCompany;
 use PixelApp\Models\Interfaces\TrustedAttributesHandlerModel;
 use PixelApp\Models\Interfaces\TrustedRelationAttributesHandlerModel;
 use PixelApp\Models\Traits\TrustedAttributesHandlerModelMethods;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\StatusChangeableAccount;
 
-class TenantCompany extends PixelBaseModel
-                    implements Tenant , HasUUID , TenantWithDatabase , OwnsRelationships , MustUploadModelFiles ,  OnlyAdminPanelQueryable , StatusChangeableAccount , TrustedAttributesHandlerModel , TrustedRelationAttributesHandlerModel
+class TenantCompany extends PixelCompany
+                    implements Tenant  , TenantWithDatabase  ,  OnlyAdminPanelQueryable , StatusChangeableAccount , TrustedAttributesHandlerModel , TrustedRelationAttributesHandlerModel
 {
+
     //laravel traits
-    use HasFactory  , SoftDeletes;
+    use HasFactory  ;
 
     //stancl package traits
     use CentralConnection,
@@ -69,8 +64,7 @@ class TenantCompany extends PixelBaseModel
         'domain',
         'sector',
         'country_id',
-        'logo',
-        'mobile',
+        'logo', 
         'address',
         'employees_no',
         'branches_no',
@@ -78,6 +72,7 @@ class TenantCompany extends PixelBaseModel
         'parent_id',
         'type'
     ];
+
     public static function getTableName() : string
     {
         return "tenant_companies";
@@ -265,25 +260,7 @@ class TenantCompany extends PixelBaseModel
                 });
         });
     }
-
-    public function country()
-    {
-        return $this->belongsTo(Country::class)->select('id', 'code', 'name');
-    }
-
-    public function getOwnedRelationships(): array
-    {
-        return [
-                    OwnedRelationshipComponent::create("defaultAdmin" , "company_id")
-               ];
-    }
-
-    public function getModelFileInfoArray(): array
-    {
-        return [
-                    [ "RequestKeyName" => "logo"]
-               ];
-    }
+ 
     public function getDocumentsStorageFolderName(): string
     {
         return "companies/" . $this->hashed_id;
@@ -295,6 +272,10 @@ class TenantCompany extends PixelBaseModel
         return $this->hasOne($defaultAdminClass , "company_id" , "id");
     }
 
+    public function getDefaultAdmin()  : EmailAuthenticatable
+    {
+        return $this->defaultAdmin;
+    }
     
     public function parent()  : BelongsTo
     {

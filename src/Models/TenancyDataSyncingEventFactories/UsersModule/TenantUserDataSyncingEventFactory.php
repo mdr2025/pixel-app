@@ -129,6 +129,7 @@ class TenantUserDataSyncingEventFactory extends TenancyDataSyncingEventFactory
             'name',
             'password',
             'mobile',
+            'updated_at'
         ];
     }
 }

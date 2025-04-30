@@ -8,6 +8,7 @@ use Exception;
 class DefaultUserPopChanger extends UserSensitivePropChanger
 {
     protected bool $defaultUser = false;
+
     public function getPropName() : string
     {
         return 'default_user';
@@ -17,7 +18,7 @@ class DefaultUserPopChanger extends UserSensitivePropChanger
         $this->defaultUser  = true;
         return $this;
     }
-    public function convertToNormalUser()  :self
+    public function convertToNonDefaultUser()  :self
     {
         $this->defaultUser = false;
         return $this;

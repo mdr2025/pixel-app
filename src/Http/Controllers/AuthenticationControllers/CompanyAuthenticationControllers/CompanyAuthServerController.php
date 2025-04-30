@@ -14,7 +14,8 @@ use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\CompanyRe
 use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\CompanyCheckingStatusService;
 use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\DefaultAdminServices\EmailVerificationServices\DefaultAdminEmailVerificationService;
 use PixelApp\Services\PixelServiceManager;
-use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\DefaultAdminInfoUpdatingService;
+use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\DefaultAdminServices\DefaultAdminInfoSyncingPort;
+use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\DefaultAdminServices\DefaultAdminInfoUpdatingService;
 
 class CompanyAuthServerController extends Controller
 {
@@ -42,7 +43,8 @@ class CompanyAuthServerController extends Controller
     public function syncDefaultAdminData() : JsonResponse
     {
         //temp func ... must developing a service later
-        return response()->json( request()->all() );
+        $service = PixelServiceManager::getServiceForServiceBaseType(DefaultAdminInfoSyncingPort::class);
+        return (new $service)->sync(); 
     }
 
     public function verifyDefaultAdminEmail(): JsonResponse

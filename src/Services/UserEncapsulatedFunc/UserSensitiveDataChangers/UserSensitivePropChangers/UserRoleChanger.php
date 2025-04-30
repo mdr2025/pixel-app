@@ -3,11 +3,17 @@
 namespace PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers;
 
 use Exception;
+use Illuminate\Database\Eloquent\Model;
+use PixelApp\Interfaces\EmailAuthenticatable;
 use PixelApp\Models\SystemConfigurationModels\RoleModel;
+use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\ExpectsSensitiveRequestData;
+use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\HasValidationRules;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Traits\ExpectsSensitiveRequestDataFunc;
 
-class UserRoleChanger extends UserSensitivePropChanger implements ExpectsSensitiveRequestData
+class UserRoleChanger
+      extends UserSensitivePropChanger
+      implements ExpectsSensitiveRequestData , HasValidationRules
 {
     use ExpectsSensitiveRequestDataFunc;
     protected ?RoleModel $activeNewRole = null;
@@ -21,6 +27,39 @@ class UserRoleChanger extends UserSensitivePropChanger implements ExpectsSensiti
     public function getPropRequestKeyDefaultName(): string
     {
         return "role_id";
+    }
+
+    public function getValidationRules() : array
+    {
+        return   ["required"  , "integer", "exists:roles,id"] ;
+                
+    }
+
+    public function getSuperAdminRoleData() : array
+    {
+        return [ $this->getPropName() => 1 ];
+    }
+
+    public function assignAsSuperAdmin(Model $authenticatable)  
+    {
+        $this->setAuthenticatable($authenticatable)
+             ->setData($this->getSuperAdminRoleData())
+             ->changeAuthenticatableProp();
+    }
+ 
+    /**
+     * @param Model|null $authenticatable
+     * @return $this
+     * @throws Exception
+     */
+    public function setAuthenticatable(Model $authenticatable): self
+    { 
+        if(! $authenticatable instanceof PixelUser)
+        {
+            throw new Exception("The user model wanted to change his role must be a child type of PixelApp\Models\UsersModule\PixelUser !");
+        }
+
+        return parent::setAuthenticatable($authenticatable);
     }
 
     protected function checkRoleChanging() : bool

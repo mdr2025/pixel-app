@@ -36,9 +36,7 @@ class CompanyDefaultAdmin
         'mobile',
         'company_id'
     ];
-
-   
-
+ 
     public function getConnectionName()
     {
         return config("database.defaultCentralConnection");

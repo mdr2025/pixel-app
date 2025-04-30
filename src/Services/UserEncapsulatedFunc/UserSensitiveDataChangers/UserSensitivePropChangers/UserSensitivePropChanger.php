@@ -19,12 +19,8 @@ abstract class UserSensitivePropChanger
      * @return $this
      * @throws Exception
      */
-    public function setAuthenticatable( ?Model $authenticatable): self
-    {
-        if(! $authenticatable instanceof Model )
-        {
-            dd("Authenticatable must be a Model child type");
-        }
+    public function setAuthenticatable(Model $authenticatable): self
+    { 
         $this->authenticatable = $authenticatable;
         return $this;
     }
