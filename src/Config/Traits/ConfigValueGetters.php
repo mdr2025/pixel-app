@@ -62,13 +62,13 @@ trait ConfigValueGetters
         return  static::getPixelAppPackageConfigItem("pixel-app-package-route-registrars" , []);
     }
 
-    public static function getPixelAppConfigKeyName() : string
+    public static function getPixelAppTypeConfigKeyName() : string
     {
         return "pixel-app-type";
     }
     public static function getPixelAppType() : string
     {
-        return static::getPixelAppPackageConfigItem( static::getPixelAppConfigKeyName() , PixelAppTypeEnum::DEFAULT_PIXEL_APP_TYPE );
+        return static::getPixelAppPackageConfigItem( static::getPixelAppTypeConfigKeyName() , PixelAppTypeEnum::DEFAULT_PIXEL_APP_TYPE );
     }
 
     public static function isItTenantApp() : bool
@@ -99,5 +99,47 @@ trait ConfigValueGetters
     public static function getTenantCompanyModelClass() : ?string
     {
         return static::getPixelAppPackageConfigItem("tenant-company-model-class" , null);
+    }
+
+    public static function getDropDownListRouteRegistrars() : array
+    {
+        return static::getPixelAppPackageRouteRegistrars()["dropdown-list"] ?? [];
+    }
+
+    
+    public static function isUserSignatureFuncDefined() : bool
+    {
+        return (bool) static::getDropDownListRouteRegistrars()["user-signature"] ?? null;
+    }
+    
+    public static function isCountriesFuncDefined() : bool
+    {
+        return (bool) static::getDropDownListRouteRegistrars()["countries"] ?? null;
+    }
+
+    public static function isCitiesFuncDefined() : bool
+    {
+        return (bool) static::getDropDownListRouteRegistrars()["cities"] ?? null;
+    }
+
+    
+    public static function isAreasFuncDefined() : bool
+    {
+        return (bool) static::getDropDownListRouteRegistrars()["areas"] ?? null;
+    }
+    
+    public static function isDepartmensFuncDefined() : bool
+    {
+        return (bool) static::getDropDownListRouteRegistrars()["departmens"] ?? null;
+    }
+
+    public static function isBranchesFuncDefined() : bool
+    {
+        return (bool) static::getDropDownListRouteRegistrars()["branches"] ?? null;
+    }
+
+    public static function isCurrenciesFuncDefined() : bool
+    {
+        return (bool) static::getDropDownListRouteRegistrars()["currencies"] ?? null;
     }
 }

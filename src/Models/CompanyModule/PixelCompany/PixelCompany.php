@@ -6,14 +6,17 @@ use PixelApp\Models\PixelBaseModel ;
 use PixelApp\Interfaces\HasUUID; 
 use CRUDServices\CRUDComponents\CRUDRelationshipComponents\OwnedRelationshipComponent;
 use CRUDServices\Interfaces\MustUploadModelFiles;
-use CRUDServices\Interfaces\OwnsRelationships; 
+use CRUDServices\Interfaces\OwnsRelationships;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Country; 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use PixelApp\Interfaces\EmailAuthenticatable;
+use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToCountry;
 use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeedToAccessParentRelationships;
 
-abstract class PixelCompany extends PixelBaseModel
-                    implements  HasUUID , OwnsRelationships , MustUploadModelFiles , NeedToAccessParentRelationships
+abstract class PixelCompany 
+        extends PixelBaseModel
+        implements  HasUUID , OwnsRelationships , MustUploadModelFiles , NeedToAccessParentRelationships , BelongsToCountry
 {
     
     //laravel traits
@@ -40,6 +43,7 @@ abstract class PixelCompany extends PixelBaseModel
         'country_id'=>'integer',
     ];
 
+     
     public function getConnectionName()
     {
         return config("database.defaultCentralConnection");
@@ -50,7 +54,7 @@ abstract class PixelCompany extends PixelBaseModel
         return $this->getFileFullPathAttrValue('logo');
     }
       
-    public function country()
+    public function country() : BelongsTo
     {
         return $this->belongsTo(Country::class)->select('id', 'code', 'name');
     }

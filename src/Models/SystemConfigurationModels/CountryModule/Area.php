@@ -6,12 +6,14 @@ use PixelApp\Models\PixelBaseModel ;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use PixelApp\Database\Factories\SystemConfigurationFactories\AreaFactory;
+use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToCity;
+use PixelApp\Models\Traits\OptionalRelationstraits\BelongsToCityMethods;
 use PixelApp\Traits\HasTranslations;
 
-class Area extends PixelBaseModel
+class Area extends PixelBaseModel implements BelongsToCity
 {
 
-    use SoftDeletes, HasTranslations, HasFactory;
+    use SoftDeletes, HasTranslations, HasFactory , BelongsToCityMethods;
 
     public $translatable = ['name'];
     const ROUTE_PARAMETER_NAME = "area";
@@ -29,14 +31,19 @@ class Area extends PixelBaseModel
         'updated_at',
         'deleted_at'
     ];
+
+    public function __construct()
+    {
+        parent::__construct();    
+        
+        $this->appendCityIdCast();
+    }
+
     public function scopeActive($query)
     {
         $query->where('status', 1);
     }
-    public function city()
-    {
-        return $this->belongsTo(City::class);
-    }
+
     protected static function newFactory()
     {
         return AreaFactory::new();

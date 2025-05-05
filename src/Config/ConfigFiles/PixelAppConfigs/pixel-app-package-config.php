@@ -13,12 +13,11 @@ use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\Dropd
 use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\BranchesRouteRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\CitiesRouteRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\CountriesRouteRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\CurrenciesRouteRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\DepartmentRouteRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\PackagesRouteRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\RolesAndPermissionsRouteRegistrar;
-use PixelApp\Routes\RouteRegistrarTypes\UserAccountRoutesRegistrars\CompanyBranchesAPIRoutesRegistrar;
-use PixelApp\Routes\RouteRegistrarTypes\UserAccountRoutesRegistrars\CompanyProfileAPIRoutesRegistrar;
-use PixelApp\Routes\RouteRegistrarTypes\UserAccountRoutesRegistrars\CompanySettingsAPIRoutesRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\UserAccountRoutesRegistrars\CompanyBranchesAPIRoutesRegistrar; 
 use PixelApp\Routes\RouteRegistrarTypes\UserAccountRoutesRegistrars\UserProfileAPIRoutesRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\UserAccountRoutesRegistrars\UserSignatureAPIRoutesRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\UsersManagementRoutesRegistrars\SignUpUsersAPIRoutesRegistrar;
@@ -28,20 +27,25 @@ use PixelApp\ServiceProviders\RelatedPackagesServiceProviders\TenancyServiceProv
 return [ 
     "pixel-app-type" =>  PixelAppTypeEnum::DEFAULT_PIXEL_APP_TYPE,
     "pixel-app-package-route-registrars" => [
+        "dropdown-list" => [
+            "areas" => AreasRouteRegistrar::class,
+            "currencies" => CurrenciesRouteRegistrar::class,
+            "branches" => BranchesRouteRegistrar::class,
+            "cities" => CitiesRouteRegistrar::class,
+            "countries" => CountriesRouteRegistrar::class,
+            "departmens" => DepartmentRouteRegistrar::class,
+            //"user-signature" => UserSignatureAPIRoutesRegistrar::class
+        ],
+
         CompanyAuthenticationAPIRoutesRegistrar::class,
         UserAuthenticationAPIRoutesRegistrar::class,
-        AreasRouteRegistrar::class,
-        BranchesRouteRegistrar::class,
-        CitiesRouteRegistrar::class,
-        CountriesRouteRegistrar::class,
-        DepartmentRouteRegistrar::class,
+        
         //PackagesRouteRegistrar::class,
         RolesAndPermissionsRouteRegistrar::class,
         CompanyBranchesAPIRoutesRegistrar::class,
         CompanyProfileAPIRoutesRegistrar::class,
         CompanySettingsAPIRoutesRegistrar::class,
         UserProfileAPIRoutesRegistrar::class,
-        UserSignatureAPIRoutesRegistrar::class,
         SignUpUsersAPIRoutesRegistrar::class,
         UsersAPIRoutesRegistrar::class
     ], 

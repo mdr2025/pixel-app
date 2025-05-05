@@ -7,18 +7,24 @@ use PixelApp\Models\SystemAdminPanel\Company\CountryPackage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use PixelApp\Database\Factories\SystemConfigurationFactories\CountryFactory;
+use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\HasManyCities;
+use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\HasManyThroughCity;
 use PixelApp\Models\Interfaces\TrustedAttributesHandlerModel;
+use PixelApp\Models\Traits\OptionalRelationstraits\HasManyCitiesMethods;
+use PixelApp\Models\Traits\OptionalRelationstraits\HasManyThroughCityMethods;
 use PixelApp\Models\Traits\TrustedAttributesHandlerModelMethods;
 use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeededFromChildes;
 
-class Country extends PixelBaseModel implements NeededFromChildes , TrustedAttributesHandlerModel
+class Country 
+      extends PixelBaseModel
+      implements NeededFromChildes , TrustedAttributesHandlerModel , HasManyCities , HasManyThroughCity
 {
 
     //laravel traits
     use SoftDeletes, HasFactory;
 
     //pixel custom traits
-    use TrustedAttributesHandlerModelMethods;
+    use TrustedAttributesHandlerModelMethods , HasManyCitiesMethods , HasManyThroughCityMethods;
 
     protected $fillable = [
         'name', 'code'
@@ -34,16 +40,7 @@ class Country extends PixelBaseModel implements NeededFromChildes , TrustedAttri
     {
         $query->where('status', 1);
     }
-    public function cities()
-    {
-        return $this->hasMany(City::class);
-    }
-
-    public function areas()
-    {
-        return $this->hasManyThrough(Area::class, City::class);
-    }
-
+    
     protected static function newFactory()
     {
         return CountryFactory::new();

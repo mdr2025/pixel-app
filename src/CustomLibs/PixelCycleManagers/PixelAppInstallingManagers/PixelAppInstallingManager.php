@@ -56,7 +56,7 @@ class PixelAppInstallingManager
     
     protected static function getConfigKeysBasedOnAppType() : array
     {
-        return  [PixelConfigManager::getPixelAppConfigKeyName() => static::$appType];
+        return  [PixelConfigManager::getPixelAppTypeConfigKeyName() => static::$appType];
     }
     
     protected static function installPackageConfigFiles() : void

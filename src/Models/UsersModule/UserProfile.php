@@ -6,14 +6,18 @@ use CRUDServices\Interfaces\MustUploadModelFiles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use PixelApp\Database\Factories\UserModule\UserProfileFactory;
+use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToCountry;
 use PixelApp\Models\PixelBaseModel;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Country;
+use PixelApp\Models\Traits\OptionalRelationstraits\BelongsToCountryMethods;
 use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeedToAccessParentRelationships;
 
-class UserProfile extends PixelBaseModel implements MustUploadModelFiles , NeedToAccessParentRelationships
+class UserProfile 
+      extends PixelBaseModel
+      implements MustUploadModelFiles , NeedToAccessParentRelationships , BelongsToCountry
 {
-    use HasFactory;
+    use HasFactory ;
 
     protected $table = "user_profile";
     protected $primaryKey = "user_id";

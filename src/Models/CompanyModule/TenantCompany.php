@@ -29,13 +29,15 @@ use Stancl\Tenancy\Events\TenantUpdated;
 use Stancl\Tenancy\Events\UpdatingTenant;  
 use PixelApp\Interfaces\EmailAuthenticatable;
 use PixelApp\Models\CompanyModule\PixelCompany\PixelCompany;
+use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToCountry;
 use PixelApp\Models\Interfaces\TrustedAttributesHandlerModel;
 use PixelApp\Models\Interfaces\TrustedRelationAttributesHandlerModel;
+use PixelApp\Models\Traits\OptionalRelationstraits\BelongsToCountryMethods;
 use PixelApp\Models\Traits\TrustedAttributesHandlerModelMethods;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\StatusChangeableAccount;
 
 class TenantCompany extends PixelCompany
-                    implements Tenant  , TenantWithDatabase  ,  OnlyAdminPanelQueryable , StatusChangeableAccount , TrustedAttributesHandlerModel , TrustedRelationAttributesHandlerModel
+                    implements Tenant  , TenantWithDatabase  ,  OnlyAdminPanelQueryable , StatusChangeableAccount , TrustedAttributesHandlerModel , TrustedRelationAttributesHandlerModel 
 {
 
     //laravel traits
@@ -49,7 +51,7 @@ class TenantCompany extends PixelCompany
         TenantRun;
 
     //pixel custom traits
-    use TrustedAttributesHandlerModelMethods;
+    use TrustedAttributesHandlerModelMethods ;
 
 
     protected $table = "tenant_companies";
@@ -115,8 +117,8 @@ class TenantCompany extends PixelCompany
     protected $casts = [
         'employees_no'=>'integer',
         'branches_no'=>'integer',
-        'country_id'=>'integer',
     ];
+
 
     public function getConnectionName()
     {

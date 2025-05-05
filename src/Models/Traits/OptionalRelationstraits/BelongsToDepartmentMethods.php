@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Models\Traits;
+namespace PixelApp\Models\Traits\OptionalRelationstraits;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use PixelApp\Models\PixelModelManager;
@@ -17,7 +17,8 @@ trait BelongsToDepartmentMethods
  
     public function department(): BelongsTo
     {
-        return $this->belongsTo(Department::class)->select('id', 'name');
+        $departmentClass = $this->getDepartmentModelClass();
+        return $this->belongsTo($departmentClass)->select('id', 'name' , 'parent_id' , 'status');
     }
 
     public function getDepartmentPropChanger() : UserSensitivePropChanger

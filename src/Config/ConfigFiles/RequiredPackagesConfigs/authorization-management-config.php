@@ -3,6 +3,9 @@
 use PixelApp\Models\CompanyModule\TenantCompany;
 use PixelApp\Models\SystemConfigurationModels\Branch;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Area;
+use PixelApp\Models\SystemConfigurationModels\CountryModule\City;
+use PixelApp\Models\SystemConfigurationModels\CountryModule\Country;
+use PixelApp\Models\SystemConfigurationModels\Currency;
 use PixelApp\Models\SystemConfigurationModels\Department;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Models\UsersModule\UserProfile;
@@ -27,6 +30,9 @@ return [
         Department::class => DropDownListPolicy::class,
         Branch::class => DropDownListPolicy::class,
         Area::class => DropDownListPolicy::class,
+        Country::class => DropDownListPolicy::class,
+        City::class => DropDownListPolicy::class,
+        Currency::class => DropDownListPolicy::class,
        
         /** Authentication Policies */
         TenantCompany::class                  => CompanyModulePolicy::class,
