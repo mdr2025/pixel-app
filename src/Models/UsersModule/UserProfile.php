@@ -10,7 +10,6 @@ use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToCountry;
 use PixelApp\Models\PixelBaseModel;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Country;
-use PixelApp\Models\Traits\OptionalRelationstraits\BelongsToCountryMethods;
 use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeedToAccessParentRelationships;
 
 class UserProfile 

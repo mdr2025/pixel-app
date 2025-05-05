@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Models\Traits\OptionalRelationstraits;
+namespace PixelApp\Models\Traits\OptionalRelationsTraits;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use PixelApp\Models\PixelModelManager;

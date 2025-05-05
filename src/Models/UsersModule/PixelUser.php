@@ -28,7 +28,7 @@ use PixelApp\Models\Interfaces\BelongsToDepartment;
 use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\MustHaveRole;
 use PixelApp\Models\SystemConfigurationModels\Department;
 use PixelApp\Models\TenancyDataSyncingEventFactories\UsersModule\TenantUserDataSyncingEventFactory;
-use PixelApp\Models\Traits\OptionalRelationstraits\MustHaveRoleMethods;
+use PixelApp\Models\Traits\OptionalRelationsTraits\MustHaveRoleMethods;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\StatusChangeableAccount;
 use PixelApp\Traits\interfacesCommonMethods\EmailAuthenticatableMethods;
 use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeededFromChildes;

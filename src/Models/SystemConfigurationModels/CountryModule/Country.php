@@ -10,8 +10,8 @@ use PixelApp\Database\Factories\SystemConfigurationFactories\CountryFactory;
 use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\HasManyCities;
 use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\HasManyThroughCity;
 use PixelApp\Models\Interfaces\TrustedAttributesHandlerModel;
-use PixelApp\Models\Traits\OptionalRelationstraits\HasManyCitiesMethods;
-use PixelApp\Models\Traits\OptionalRelationstraits\HasManyThroughCityMethods;
+use PixelApp\Models\Traits\OptionalRelationsTraits\HasManyCitiesMethods;
+use PixelApp\Models\Traits\OptionalRelationsTraits\HasManyThroughCityMethods;
 use PixelApp\Models\Traits\TrustedAttributesHandlerModelMethods;
 use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeededFromChildes;
 

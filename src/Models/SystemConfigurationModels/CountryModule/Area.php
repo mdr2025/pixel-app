@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use PixelApp\Database\Factories\SystemConfigurationFactories\AreaFactory;
 use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToCity;
-use PixelApp\Models\Traits\OptionalRelationstraits\BelongsToCityMethods;
+use PixelApp\Models\Traits\OptionalRelationsTraits\BelongsToCityMethods;
 use PixelApp\Traits\HasTranslations;
 
 class Area extends PixelBaseModel implements BelongsToCity

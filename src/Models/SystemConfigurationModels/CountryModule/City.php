@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use PixelApp\Database\Factories\SystemConfigurationFactories\CityFactory;
 use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToCountry;
 use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\HasManyAreas;
-use PixelApp\Models\Traits\OptionalRelationstraits\BelongsToCountryMethods;
-use PixelApp\Models\Traits\OptionalRelationstraits\HasManyAreasMethods;
+use PixelApp\Models\Traits\OptionalRelationsTraits\BelongsToCountryMethods;
+use PixelApp\Models\Traits\OptionalRelationsTraits\HasManyAreasMethods;
 use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeededFromChildes;
 
 class City extends PixelBaseModel implements NeededFromChildes , BelongsToCountry , HasManyAreas

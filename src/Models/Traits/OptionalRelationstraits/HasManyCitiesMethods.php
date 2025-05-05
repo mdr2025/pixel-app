@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Models\Traits\OptionalRelationstraits;
+namespace PixelApp\Models\Traits\OptionalRelationsTraits;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\City;
