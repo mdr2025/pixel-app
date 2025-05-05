@@ -4,12 +4,24 @@ namespace PixelApp\Database\Seeders\SystemConfigSeeders\DropdownListSeeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use PixelApp\Config\PixelConfigManager;
+
+class CountriesSeeder extends Seeder 
+{
 
 
-class CountriesSeeder extends Seeder {
+	protected function doesAppNeedSeeding() : bool
+	{
+		return PixelConfigManager::isCountriesFuncDefined();
+	}
 
 	public function run()
 	{
+		if(!$this->doesAppNeedSeeding())
+		{
+			return ;
+		}
+
 		DB::table('countries')->delete();
 
 		$countries = array(

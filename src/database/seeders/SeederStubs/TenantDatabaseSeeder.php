@@ -3,11 +3,9 @@
 namespace Database\Seeders;
  
 use Illuminate\Database\Seeder;
-use PixelApp\Database\Seeders\GeneralSeeders\AllLocationDataDatabaseSeeder;
-use PixelApp\Database\Seeders\SystemConfigSeeders\DropdownListSeeders\DepartmentsTableSeeder;
+use PixelApp\Database\Seeders\GeneralSeeders\BaseDropDownListModulesSeeder;
 use PixelApp\Database\Seeders\SystemConfigSeeders\RolesAndPermissionsSeeders\PermissionsSeeder;
 use PixelApp\Database\Seeders\SystemConfigSeeders\RolesAndPermissionsSeeders\RolesSeeder;
-use PixelApp\Database\Seeders\SystemConfigSeeders\DropdownListSeeders\BranchesSeeder;
 
 class TenantDatabaseSeeder extends Seeder
 {
@@ -19,11 +17,9 @@ class TenantDatabaseSeeder extends Seeder
     public function run()
     {
          $this->call([
-            AllLocationDataDatabaseSeeder::class,
+            BaseDropDownListModulesSeeder::class,
             PermissionsSeeder::class,
             RolesSeeder::class,
-            DepartmentsTableSeeder::class,
-            // BranchesSeeder::class,
 //            SignUpUserSeeder::class,
 //            AcceptedUserSeeder::class,
 //            

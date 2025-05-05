@@ -17,7 +17,7 @@ class AllLocationDataDatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            CountriesSeeder::class,
+           CountriesSeeder::class,
            CitiesSeeder::class,
            AreasSeeder::class
         ]);

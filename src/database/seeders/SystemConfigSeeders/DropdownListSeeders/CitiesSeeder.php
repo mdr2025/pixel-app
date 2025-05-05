@@ -5,6 +5,7 @@ namespace PixelApp\Database\Seeders\SystemConfigSeeders\DropdownListSeeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use PixelApp\Config\PixelConfigManager;
 
 class CitiesSeeder extends Seeder
 {
@@ -13,15 +14,19 @@ class CitiesSeeder extends Seeder
     {
         return realpath(__DIR__ . "/../../Data/cities.json");
     }
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
+    
+	protected function doesAppNeedSeeding() : bool
+	{
+		return PixelConfigManager::isCountriesFuncDefined() && PixelConfigManager::isCitiesFuncDefined();
+	}
 
-
+	public function run()
+	{
+		if(!$this->doesAppNeedSeeding())
+		{
+			return ;
+		}
+        
         try{ 
             
             $json = File::get($this->getCitiesJsonFilePath());

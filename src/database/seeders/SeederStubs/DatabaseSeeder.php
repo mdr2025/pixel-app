@@ -3,7 +3,7 @@
 namespace Database\Seeders;
  
 use Illuminate\Database\Seeder;
-use PixelApp\Database\Seeders\GeneralSeeders\AllLocationDataDatabaseSeeder;
+use PixelApp\Database\Seeders\GeneralSeeders\BaseDropDownListModulesSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
          $this->call([
-            AllLocationDataDatabaseSeeder::class,
+            BaseDropDownListModulesSeeder::class,
         ]);
     }
 }
