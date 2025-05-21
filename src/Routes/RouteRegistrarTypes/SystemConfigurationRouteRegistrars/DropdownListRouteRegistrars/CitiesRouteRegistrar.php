@@ -13,7 +13,7 @@ use PixelApp\Routes\PixelRouteManager;
 class CitiesRouteRegistrar extends PixelRouteRegistrar 
 {
 
-    public function registerRoutes(?callable $callbackOnRouteRegistrar = null) : void
+    public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
         if( PixelRouteManager::isItMonolithTenancyApp()  )
         {
@@ -27,6 +27,12 @@ class CitiesRouteRegistrar extends PixelRouteRegistrar
         {
             $this->defineNormalAppRoutes(); 
         } 
+    }
+
+    
+    public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
+    {
+        $arrayToAppend["dropdown-list"]["cities"] = static::class;
     }
 
     protected function defineCitiesListingRoute() : void

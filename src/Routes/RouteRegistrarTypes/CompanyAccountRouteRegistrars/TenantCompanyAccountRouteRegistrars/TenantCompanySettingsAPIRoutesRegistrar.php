@@ -5,12 +5,11 @@ namespace PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\Tena
 use Illuminate\Support\Facades\Route;
 use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
-use PixelApp\Http\Controllers\UserAccountControllers\UserCompanySettingController;
 use PixelApp\Routes\PixelRouteManager;
 
 class TenantCompanySettingsAPIRoutesRegistrar extends PixelRouteRegistrar 
 { 
-    public function registerRoutes(?callable $callbackOnRouteRegistrar = null) : void
+    public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
         if(  PixelRouteManager::isItTenantApp())
         {

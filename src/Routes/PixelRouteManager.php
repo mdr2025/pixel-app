@@ -2,17 +2,17 @@
 
 namespace PixelApp\Routes;
  
-use Illuminate\Support\Facades\Route; 
+use PixelApp\Config\ConfigEnums\PixelAppSystemRequirementsCard;
 use PixelApp\Config\PixelConfigManager; 
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager; 
 
 class PixelRouteManager
 {
 
-    protected static function getPixelAppPackageRouteRegistrars() : array
+    public static function getDefinedRouteRegistrars() : array
     {
         return array_filter(
-                        PixelConfigManager::getPixelAppPackageRouteRegistrars() ,
+                        PixelConfigManager::getDefinedRouteRegistrars() ,
                         function($class)
                         {
                             return !is_null($class);
@@ -20,98 +20,18 @@ class PixelRouteManager
                     );
     }
 
-    protected static function initPixelRouteRegistrar(string $pixelRouteRegisstrarClass) : PixelRouteRegistrar
+    public static function getPackageAllRouteRegistrars() : array
     {
-        if(is_subclass_of($pixelRouteRegisstrarClass , PixelRouteRegistrar::class))
-        {
-            return new $pixelRouteRegisstrarClass();
-        }
-
-        //just for development enviroment on catching an error with RouteRegistrar classes
-        dd($pixelRouteRegisstrarClass . "Is not a PixelRouteRegistrar typed class "); 
+        /**
+         * @todo to fill later
+         */
+        return [];
     }
 
-    public static function loadPixelAppPackageRoutes(?callable $callbackOnRouteRegistrar = null)
-    { 
-        foreach(static::getPixelAppPackageRouteRegistrars() as $routeRegistrarClass)
-        {
-            static::initPixelRouteRegistrar($routeRegistrarClass)->registerRoutes($callbackOnRouteRegistrar);
-        }
-    }
-  
-    protected static function loadApiFileRoutes( ?callable $callbackOnRouteRegistrar = null , ?string $domain = null ) : void
+
+    public static function isItTenancySupporterApp() : bool
     {
-        $routeRegistrar = Route::prefix('api')->middleware('api') ;
-
-        if($domain)
-        {
-            $routeRegistrar->domain($domain);
-        }
-        
-        if(is_callable($callbackOnRouteRegistrar))
-        {
-            call_user_func($callbackOnRouteRegistrar , $routeRegistrar);
-        }
-         
-        $routeRegistrar->group(base_path('routes/api.php'));
-    }
-
-    public static function loadAPIRoutes(?callable $callbackOnRouteRegistrar = null)
-    {
-        if(static::isItTenancySupportyerApp())
-        {
-            foreach (static::getCentralDomains() as $domain) 
-            {
-                static::loadApiFileRoutes($callbackOnRouteRegistrar , $domain);
-            } 
-            return;
-        }  
-
-        static::loadApiFileRoutes($callbackOnRouteRegistrar);
-    }
-
-    protected static function loadWebFileRoutes( ?callable $callbackOnRouteRegistrar = null , ?string $domain = null ) : void
-    {
-        $routeRegistrar = Route::middleware('web') ;
-
-        if($domain)
-        {
-            $routeRegistrar->domain($domain);
-        }
-        
-        if(is_callable($callbackOnRouteRegistrar))
-        {
-            call_user_func($callbackOnRouteRegistrar , $routeRegistrar);
-        }
-         
-        $routeRegistrar->group(base_path('routes/web.php'));
-    }
-
-    public static function loadWebRoutes(?callable $callbackOnRouteRegistrar = null)
-    {
-        if(static::isItTenancySupportyerApp())
-        {
-            foreach (static::getCentralDomains() as $domain) 
-            {
-                static::loadWebFileRoutes($callbackOnRouteRegistrar , $domain);
-            } 
-            return;
-        }  
-        
-        static::loadWebFileRoutes($callbackOnRouteRegistrar);
-    } 
- 
-    public static function loadTenantRoutes()
-    {
-        if (static::DoesItNeedTenantRoutes())
-        {
-            Route::prefix()->group(base_path('routes/tenant.php'));
-        }
-    }
-
-    public static function isItTenancySupportyerApp() : bool
-    {
-        return PixelTenancyManager::isItTenancySupportyerApp();
+        return PixelTenancyManager::isItTenancySupporterApp();
     }
 
     public static function isItMonolithTenancyApp() : bool
@@ -142,15 +62,35 @@ class PixelRouteManager
     {
         return PixelTenancyManager::getTenantDefaultMiddlewares();
     }
-  
-    protected static function initPixelAppRouteStubsManager() : PixelRouteStubsManager
+
+    public static function loadAPIRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
-        return PixelRouteStubsManager::Singleton();
+        PixelRouteBooter::loadAPIRoutes($callbackOnRouteRegistrar);
     }
- 
-    public static function installPackageRoutesFiles() : void
+    
+    public static function loadWebRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
-        static::initPixelAppRouteStubsManager()->replacePixelAppRouteStubs();
+        PixelRouteBooter::loadWebRoutes($callbackOnRouteRegistrar);
+    }
+    
+    public static function loadPixelAppPackageRoutes(?callable $callbackOnRouteRegistrar = null) : void
+    {
+        PixelRouteBooter::loadPixelAppPackageRoutes($callbackOnRouteRegistrar);
+    }
+    
+    public static function loadTenantRoutes() : void
+    {
+        PixelRouteBooter::loadTenantRoutes();
+    }
+
+    protected static function initPixelRoutesInstaller() : PixelRoutesInstaller
+    {
+        return PixelRoutesInstaller::Singlton();
+    }
+
+    public static function installPackageRoutes(PixelAppSystemRequirementsCard $requirementCard) : void
+    {
+        static::initPixelRoutesInstaller()->installPackageRoutes($requirementCard);
     }
 }
 // separated admin panel = app without tenancy + company auth server  => needs routes without central domains because it is on a single domain

@@ -4,12 +4,13 @@ namespace PixelApp\Routes;
 
 
 use Illuminate\Routing\RouteRegistrar;
+use PixelApp\Config\ConfigEnums\PixelAppSystemRequirementsCard;
 
 abstract class PixelRouteRegistrar
 { 
 
-    abstract public function registerRoutes(?callable $callbackOnRouteRegistrar = null) : void;
-
+    abstract public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void;
+    abstract public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void;
     /**
      * because it is applied on the client side where the requests come from
      * and the server fails down on applying the middleware on the two sides (server + client)
@@ -18,6 +19,11 @@ abstract class PixelRouteRegistrar
     protected function exceptServerRouteMiddlewares(RouteRegistrar $routeRegistrar) : void
     {
         $routeRegistrar->withoutMiddleware( 'throttle:api' );
+    }
+
+    public function isFuncAvailableToDefine(PixelAppSystemRequirementsCard $requirementsCard) : bool
+    {
+        return true;
     }
 
     protected function getGlobalMiddlewares() : array

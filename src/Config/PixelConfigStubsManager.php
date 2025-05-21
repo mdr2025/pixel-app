@@ -64,7 +64,7 @@ class PixelConfigStubsManager extends PixelAppStubsManager
     {
         $this->replaceLaravelConfigFiles();
 
-        if(PixelTenancyManager::isItTenancySupportyerApp())
+        if(PixelTenancyManager::isItTenancySupporterApp())
         {
             $this->replaceTenancyConfigFile();
         }

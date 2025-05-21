@@ -1,0 +1,10 @@
+<?php
+
+namespace PixelApp\Database\Migrations\MigrationFileStubIdentifierFactories\CompanyMigrationStubFactories;
+
+use PixelApp\Database\Migrations\MigrationFileStubIdentifierFactories\MigrationFileStubIdentifierFactory;
+
+abstract class CompanyMigrationStubIdentifierFactory extends MigrationFileStubIdentifierFactory
+{
+
+}

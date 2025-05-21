@@ -12,7 +12,7 @@ use PixelApp\Routes\PixelRouteManager;
 class DepartmentRouteRegistrar extends PixelRouteRegistrar 
 {
 
-    public function registerRoutes(?callable $callbackOnRouteRegistrar = null) : void
+    public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
         if( PixelRouteManager::isItMonolithTenancyApp()  )
         {
@@ -26,6 +26,11 @@ class DepartmentRouteRegistrar extends PixelRouteRegistrar
         {
             $this->defineNormalAppRoutes(); 
         } 
+    }
+ 
+    public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
+    {
+        $arrayToAppend["dropdown-list"]["departmens"] = static::class;
     }
     
     protected function defineDepartmentsListingRoute() : void

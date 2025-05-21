@@ -11,7 +11,7 @@ use PixelApp\Routes\PixelRouteManager;
 class UserProfileAPIRoutesRegistrar extends PixelRouteRegistrar 
 {
 
-    public function registerRoutes(?callable $callbackOnRouteRegistrar = null) : void
+    public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
         if( PixelRouteManager::isItMonolithTenancyApp()  )
         {
@@ -26,7 +26,12 @@ class UserProfileAPIRoutesRegistrar extends PixelRouteRegistrar
             $this->defineNormalAppRoutes(); 
         } 
     }
- 
+
+    public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
+    {
+        $arrayToAppend["user-profile"] = static::class;
+    }
+
     protected function defineChangePasswordRoute() : void
     {
         Route::put('change-password', [UserProfileController::class, 'changePassword']);

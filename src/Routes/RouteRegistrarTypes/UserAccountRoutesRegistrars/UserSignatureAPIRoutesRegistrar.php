@@ -11,7 +11,7 @@ use PixelApp\Routes\PixelRouteManager;
 class UserSignatureAPIRoutesRegistrar extends PixelRouteRegistrar 
 {
 
-    public function registerRoutes(?callable $callbackOnRouteRegistrar = null) : void
+    public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
         if( PixelRouteManager::isItMonolithTenancyApp()  )
         {
@@ -26,7 +26,11 @@ class UserSignatureAPIRoutesRegistrar extends PixelRouteRegistrar
             $this->defineNormalAppRoutes(); 
         } 
     }
-  
+    public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
+    {
+        $arrayToAppend["user-signature"] = static::class;
+    }
+
     protected function defineSignatureUpdatingRoute() : void
     { 
         Route::post('signature-edit',[SignatureController::class ,'update']);

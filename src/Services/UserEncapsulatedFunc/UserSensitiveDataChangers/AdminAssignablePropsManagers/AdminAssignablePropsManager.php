@@ -3,9 +3,9 @@
 namespace PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\AdminAssignablePropsManagers;
 
 use Illuminate\Database\Eloquent\Model;
-use PixelApp\Models\Interfaces\BelongsToBranch;
-use PixelApp\Models\Interfaces\BelongsToDepartment;
-use PixelApp\Models\Interfaces\MustHaveRole;
+use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToBranch;
+use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToDepartment;
+use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\MustHaveRole;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\HasAdminAssignableProps;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\UserSensitivePropChanger;
 

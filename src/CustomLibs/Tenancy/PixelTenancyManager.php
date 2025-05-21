@@ -20,9 +20,14 @@ class PixelTenancyManager
     /**
      * this method is useful when we want to check extra conditions regardless of config value
      */
-    public static function isItTenancySupportyerApp() : bool
+    public static function isItTenancySupporterApp() : bool
     {
         return !PixelConfigManager::isItNormalApp();
+    }
+
+    public static function isItNormalApp() : bool
+    {
+        return PixelConfigManager::isItNormalApp();
     }
 
     public static function DoesItNeedTenantRoutes() :bool
@@ -48,7 +53,7 @@ class PixelTenancyManager
     public static function handleTenancySyncingData(Model $model) : void
     {
         if(
-            static::isItTenancySupportyerApp() 
+            static::isItTenancySupporterApp() 
             &&
             $model instanceof CanSyncData 
            )
@@ -99,7 +104,7 @@ class PixelTenancyManager
     
     public static function RegisterPixelTenancyOnNeed(Application $app) : void
     {
-        if(static::isItTenancySupportyerApp())
+        if(static::isItTenancySupporterApp())
         {
             $app->register( static::getPixelTenancyServiceProviderClass() );
         }

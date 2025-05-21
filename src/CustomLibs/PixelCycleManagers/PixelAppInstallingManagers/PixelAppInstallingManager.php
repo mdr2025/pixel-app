@@ -2,6 +2,7 @@
 namespace PixelApp\CustomLibs\PixelCycleManagers\PixelAppInstallingManagers;
 
 use Illuminate\Support\Facades\Artisan;
+use PixelApp\Config\ConfigEnums\PixelAppSystemRequirementsCard;
 use PixelApp\Config\ConfigEnums\PixelAppTypeEnum;
 use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\PixelAppConfigFileIdentifier;
 use PixelApp\Config\ConfigValueManager;
@@ -9,6 +10,7 @@ use PixelApp\Config\PixelConfigManager;
 use PixelApp\Helpers\PixelGlobalHelpers;
 use PixelApp\Http\Middleware\PixelMiddlewareManager;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+use PixelApp\Database\PixelDatabaseManager;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Routes\PixelRouteManager;
 use PixelApp\ServiceProviders\LaravelServiceProviderStubsManager;
@@ -16,22 +18,39 @@ use PixelApp\ServiceProviders\RelatedPackagesServiceProviders\TenancyServiceProv
 
 class PixelAppInstallingManager
 {
+    protected static PixelAppSystemRequirementsCard $requirementCard;
     protected static string $appType ;
 
-    public static function install(string $appType)
+    public static function install(PixelAppSystemRequirementsCard $requirementCard)
     {
-        static::forAppType($appType);
-        static::installPackageConfigFiles(); 
-        static::installPackageRoutesFiles();
+        static::usePixelAppSystemRequirementsCard($requirementCard);
+
+        //configuring pixel app package config file before replacing it into config project path
+        static::configureSystemType();
+        static::definePixelAppFunctinallities();
+
+        //replacing config files and merging their data to be readable by config() helper function
+        static::installPackageConfigFiles();
+
+        //replacing the other stubs
         static::installLaravelServiceProviders();
         static::installPackageMiddlewareStubs();
         static::installPackageModels();
+        static::installAppDatabaseFiles();
+
+        //handling pixel-dompdf package needed font files
         static::handleDefaultFonts();
     }
     
-    public static function getDefaultAppType() : string
+    protected static function usePixelAppSystemRequirementsCard(PixelAppSystemRequirementsCard $requirementCard) : void
     {
-        return PixelAppTypeEnum::DEFAULT_PIXEL_APP_TYPE;
+        static::$requirementCard = $requirementCard;
+    }
+ 
+    protected static function changePixelAppConfigValue(string $key , mixed $value) : void
+    {
+        $changes = [$key => $value];
+        PixelConfigManager::setPixelPackageConfigFileKeys($changes);
     }
 
     public static function getValidAppTypes() : array
@@ -44,33 +63,30 @@ class PixelAppInstallingManager
         ];
     }
 
-    protected static function forAppType(string $appType) : void
+    protected static function configureSystemType() : void
     {
-        if(! in_array($appType , static::getValidAppTypes()))
+        $systemType = static::$requirementCard->getSystemType();
+
+        if(! in_array($systemType , static::getValidAppTypes()))
         {
             dd("The selected app type is not valid !");
         }
 
-        static::$appType = $appType;
+        static::changePixelAppConfigValue(
+                                            PixelConfigManager::getPixelAppTypeConfigKeyName() ,
+                                            $systemType
+                                         );
     }
     
-    protected static function getConfigKeysBasedOnAppType() : array
-    {
-        return  [PixelConfigManager::getPixelAppTypeConfigKeyName() => static::$appType];
-    }
     
     protected static function installPackageConfigFiles() : void
     {
-        PixelConfigManager::setPixelPackageConfigFileKeys(
-                                static::getConfigKeysBasedOnAppType()
-                            );
-
         PixelConfigManager::installPackageConfigFiles();
     }
 
-    protected static function installPackageRoutesFiles() : void
+    protected static function definePixelAppFunctinallities() : void
     { 
-        PixelRouteManager::installPackageRoutesFiles();
+        PixelRouteManager::installPackageRoutes(static::$requirementCard);
     }
  
     protected static function initLaravelServiceProviderStubsManager() : LaravelServiceProviderStubsManager
@@ -91,6 +107,11 @@ class PixelAppInstallingManager
     protected static function installPackageModels() : void
     {
         PixelModelManager::installPackageModels();
+    }
+
+    protected static function installAppDatabaseFiles() : void
+    {
+        PixelDatabaseManager::installAppDatabaseFiles();
     }
 
     protected static function handleDefaultFonts() : void

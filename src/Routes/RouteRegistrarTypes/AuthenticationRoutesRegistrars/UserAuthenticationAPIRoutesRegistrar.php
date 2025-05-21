@@ -11,7 +11,7 @@ use PixelApp\Routes\PixelRouteManager;
 class UserAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar 
 {
 
-    public function registerRoutes(?callable $callbackOnRouteRegistrar = null) : void
+    public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
         if( PixelRouteManager::isItMonolithTenancyApp()  )
         {
@@ -25,6 +25,11 @@ class UserAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
         {
             $this->defineNormalAppRoutes(); 
         } 
+    }
+
+    public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
+    {
+        $arrayToAppend["user-auth"] = static::class;
     }
 
     protected function defineUserMeRoute() : void

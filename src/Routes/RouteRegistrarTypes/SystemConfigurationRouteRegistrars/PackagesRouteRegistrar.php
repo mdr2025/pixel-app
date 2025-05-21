@@ -13,7 +13,7 @@ use PixelApp\Routes\PixelRouteManager;
 class PackagesRouteRegistrar extends PixelRouteRegistrar 
 {
 
-    public function registerRoutes(?callable $callbackOnRouteRegistrar = null) : void
+    public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
         if( PixelRouteManager::isItMonolithTenancyApp()  )
         {
@@ -27,6 +27,11 @@ class PackagesRouteRegistrar extends PixelRouteRegistrar
         {
             $this->defineAdminPanelAppRoutes(); 
         } 
+    }
+
+    public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
+    {
+        $arrayToAppend["packages"] = static::class;
     }
 
     protected function definePackagesListingServerRoute() : void

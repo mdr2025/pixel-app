@@ -247,7 +247,7 @@ implements
 
     public function canSyncData(): bool
     {
-        return PixelTenancyManager::isItTenancySupportyerApp() 
+        return PixelTenancyManager::isItTenancySupporterApp() 
                &&
                tenant()
                &&

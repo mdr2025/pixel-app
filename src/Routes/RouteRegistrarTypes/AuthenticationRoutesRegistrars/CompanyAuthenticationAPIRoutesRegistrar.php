@@ -5,13 +5,14 @@ namespace PixelApp\Routes\RouteRegistrarTypes\AuthenticationRoutesRegistrars;
 use Illuminate\Support\Facades\Route;
 use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
+use PixelApp\Config\ConfigEnums\PixelAppSystemRequirementsCard;
 use PixelApp\Http\Controllers\AuthenticationControllers\CompanyAuthenticationControllers\CompanyAuthClientController;
 use PixelApp\Http\Controllers\AuthenticationControllers\CompanyAuthenticationControllers\CompanyAuthServerController;
 use PixelApp\Routes\PixelRouteManager;
 
 class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar 
 { 
-    public function registerRoutes(?callable $callbackOnRouteRegistrar = null) : void
+    public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
         if( PixelRouteManager::isItMonolithTenancyApp()  )
         {
@@ -26,6 +27,17 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
             $this->defineAdminPanelAppRoutes(); 
         } 
     } 
+
+    public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
+    {
+        $arrayToAppend["company-auth"] = static::class;
+    }
+
+    public function isFuncAvailableToDefine(PixelAppSystemRequirementsCard $requirementsCard) : bool
+    {
+        $requirementsCard->getSystemType() == 
+        return true;
+    }
 
     protected function defineCheckCrNoServerRoute() : void
     {

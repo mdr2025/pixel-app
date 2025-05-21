@@ -13,7 +13,7 @@ use PixelApp\Routes\PixelRouteManager;
 class BranchesRouteRegistrar extends PixelRouteRegistrar 
 {
 
-    public function registerRoutes(?callable $callbackOnRouteRegistrar = null) : void
+    public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
         if(  PixelRouteManager::isItTenantApp() || PixelRouteManager::isItMonolithTenancyApp()  )
         {
@@ -24,6 +24,13 @@ class BranchesRouteRegistrar extends PixelRouteRegistrar
             $this->defineNormalAppRoutes();
         }
     }
+
+    
+    public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
+    {
+        $arrayToAppend["dropdown-list"]["branches"] = static::class;
+    }
+
     protected function defineImportableFormatDownloadingRoute() : void
     {
         Route::get('system-configs/download-file-format/branches', [BranchesController::class, 'importableFormalDownload']);

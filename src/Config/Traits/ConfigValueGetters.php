@@ -57,7 +57,7 @@ trait ConfigValueGetters
     {
         return static::getPixelAppPackageConfigItem("pixel-tenancy-service-provider-class" , "")  ;
     }
-    public static function getPixelAppPackageRouteRegistrars() : array
+    public static function getDefinedRouteRegistrars() : array
     {
         return  static::getPixelAppPackageConfigItem("pixel-app-package-route-registrars" , []);
     }
@@ -103,13 +103,13 @@ trait ConfigValueGetters
 
     public static function getDropDownListRouteRegistrars() : array
     {
-        return static::getPixelAppPackageRouteRegistrars()["dropdown-list"] ?? [];
+        return static::getDefinedRouteRegistrars()["dropdown-list"] ?? [];
     }
 
     
     public static function isUserSignatureFuncDefined() : bool
     {
-        return (bool) static::getDropDownListRouteRegistrars()["user-signature"] ?? null;
+        return (bool) static::getDefinedRouteRegistrars()["user-signature"] ?? null;
     }
     
     public static function isCountriesFuncDefined() : bool

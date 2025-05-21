@@ -1,29 +1,48 @@
 <?php
 
 namespace PixelApp\Http\Requests;
- 
+
+use ValidatorLib\CustomFormRequest\BaseFormRequest;
+
 class PixelHttpRequestManager
 { 
     protected static array $requestAlternatives = [];
 
     public static function setRequestAlternative(string $baseRequestClass , string $alternaticveRequestClass) : void
     {
-        if(
-            $baseRequestClass !== $alternaticveRequestClass 
-            &&
-            !is_subclass_of($alternaticveRequestClass , $baseRequestClass)
-        )
+        static::$requestAlternatives[$baseRequestClass] = $alternaticveRequestClass;
+    }
+
+    protected static function getValidAlternativeRequestClass(string $baseRequestClass) : string
+    {    
+        $alternativeRequestClass = static::$requestAlternatives[$baseRequestClass];
+
+        if( is_subclass_of($alternativeRequestClass , $baseRequestClass) )
         {
-            dd("The alternative $alternaticveRequestClass Request class must be a child type class of $baseRequestClass !" );    
+            return $alternativeRequestClass;
+        }
+        
+        dd("The alternative Request Form class $alternativeRequestClass must be a child type class of $baseRequestClass !" );    
+    }
+
+    protected static function getValidBaseRequestClass(string $baseRequestClass) : string
+    {
+        if( is_subclass_of($baseRequestClass , BaseFormRequest::class))
+        {
+            return $baseRequestClass;
         }
 
-        static::$requestAlternatives[$baseRequestClass] = $alternaticveRequestClass;
-        
+        dd($baseRequestClass . " base request class must be a child type of ValidatorLib " . BaseFormRequest::class);
     }
 
     public static function getRequestForRequestBaseType(string $baseRequestClass ) : string
     {
-        return static::$requestAlternatives[$baseRequestClass] ?? $baseRequestClass;
+        if( !array_key_exists($baseRequestClass , static::$requestAlternatives) )
+        {
+            return static::getValidBaseRequestClass($baseRequestClass);
+        }
+        
+        return static::getValidAlternativeRequestClass($baseRequestClass );
     }
 
 }

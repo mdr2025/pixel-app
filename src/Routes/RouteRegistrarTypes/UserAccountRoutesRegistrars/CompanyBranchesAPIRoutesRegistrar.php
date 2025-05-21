@@ -12,7 +12,7 @@ use PixelApp\Routes\PixelRouteManager;
 class CompanyBranchesAPIRoutesRegistrar extends PixelRouteRegistrar 
 {
 
-    public function registerRoutes(?callable $callbackOnRouteRegistrar = null) : void
+    public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
         if( PixelRouteManager::isItMonolithTenancyApp()  )
         {
@@ -26,6 +26,11 @@ class CompanyBranchesAPIRoutesRegistrar extends PixelRouteRegistrar
         {
             $this->defineAdminPanelRoutes(); 
         } 
+    }
+
+    public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
+    {
+        $arrayToAppend["user-account-company-branches"] = static::class;
     }
 
     protected function defineCompanyBranchesListingServerRoute() : void

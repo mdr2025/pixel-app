@@ -4,6 +4,7 @@ namespace PixelApp\Console\Commands\PixelAppInitCommands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use PixelApp\Config\ConfigEnums\PixelAppSystemRequirementsCard;
 use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\PixelAppConfigFileIdentifier;
 use PixelApp\Config\ConfigValueManager;
 use PixelApp\Config\PixelConfigManager;
@@ -20,6 +21,7 @@ use Throwable;
 
 class PreparePixelApp extends Command
 {
+    protected PixelAppSystemRequirementsCard $requirementCard;
     /**
      * The name and signature of the console command.
      *
@@ -43,6 +45,11 @@ class PreparePixelApp extends Command
     {
         parent::__construct();
     }
+
+    protected function initPixelAppSystemRequirementsCard() : void
+    {
+        $this->requirementCard = PixelAppSystemRequirementsCard::Singleton();
+    }
   /**
      * Execute the console command.
      *
@@ -50,6 +57,9 @@ class PreparePixelApp extends Command
      */
     public function handle()
     {
+        $this->initPixelAppSystemRequirementsCard();
+        $this->askUserToDescribeSystemProps();
+
         try{
             $this->installApp();
 
@@ -57,6 +67,17 @@ class PreparePixelApp extends Command
         {
             $this->uninstallApp();
         }
+    }
+
+    protected function askUserToDescribeSystemProps() : void
+    {
+        $this->configureSystemType();
+        $this->configureDepartments();
+        $this->configureBranches();
+        $this->configureCities();
+        $this->configureAreas();
+        $this->configureCurrencies();
+        $this->configureUserSignature();
     }
 
     protected function askForAppType() : string
@@ -70,16 +91,63 @@ class PreparePixelApp extends Command
         return $selectedAppType ?? $defaultAppType;
     }
 
+    protected function configureSystemType(): void
+    {
+        $systemType = $this->askForAppType();
+        $this->requirementCard->setSystemType($systemType);
+    }
+
+    protected function configureDepartments(): void
+    {
+        if ($this->confirm('Is Departments functionality required ?', false)) {
+            $this->requirementCard->requireDepartmentsFunc();
+        }
+    }
+
+    protected function configureBranches(): void
+    {
+        if ($this->confirm('Is Branches functionality Required?', false)) {
+            $this->requirementCard->requireBranchesFunc();
+        }
+    }
+
+    protected function configureCities(): void
+    {
+        if ($this->confirm('Is Cities functionality Required?', false)) {
+            $this->requirementCard->requireCitiesFunc();
+        }
+    }
+
+    protected function configureAreas(): void
+    {
+        if ($this->confirm('Is Areas functionality Required ?', false)) {
+            $this->requirementCard->requireAreasFunc();
+        }
+    }
+
+    protected function configureCurrencies(): void
+    {
+        if ($this->confirm('Is Currencies functionality Required?', false)) {
+            $this->requirementCard->requireCurrenciesFunc();
+        }
+    }
+
+    protected function configureUserSignature(): void
+    {
+        if ($this->confirm('Is User Signature functionality Required?', false)) {
+            $this->requirementCard->requireUserSignatureFunc();
+        }
+    }
+
     protected function installApp() : void
     {
-        $appType = $this->askForAppType();
-        PixelAppInstallingManager::install($appType);
+        PixelAppInstallingManager::install($this->requirementCard);
         $this->info("pixel app package has been installed successfully !");
     }
     
     protected function uninstallApp() : void
     {
-        PixelAppUninstallingManager::uninstall();
+        PixelAppUninstallingManager::uninstall($this->requirementCard);
     }
     // protected function appendServiceProviderToPixelConfigDefaultProviders() : void
     // {

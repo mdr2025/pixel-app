@@ -2,27 +2,48 @@
 
 namespace PixelApp\Models\Traits;
 
+use PixelApp\Models\PixelBaseModel;
+
 trait AlternativeModelMethods
 {
     protected static array $modelAlternatives = [];
 
     public static function setModelAlternative(string $baseModelClass , string $alternaticveModelClass) : void
     {
-        if(
-            $baseModelClass !== $alternaticveModelClass 
-            &&
-            !is_subclass_of($alternaticveModelClass , $baseModelClass)
-        )
-        {       
-            dd("The alternative $alternaticveModelClass Model class must be a child type class of $baseModelClass !" );
+        static::$modelAlternatives[$baseModelClass] = $alternaticveModelClass;
+    }
+
+
+    protected static function getValidAlternativeModelClass(string $baseModelClass) : string
+    {    
+        $alternativeModelClass = static::$modelAlternatives[$baseModelClass];
+
+        if( is_subclass_of($alternativeModelClass , $baseModelClass) )
+        {
+            return $alternativeModelClass;
+        }
+        
+        dd("The alternative model class $alternativeModelClass must be a child type class of $baseModelClass !" );    
+    }
+
+    protected static function getValidBaseModelClass(string $baseModelClass) : string
+    {
+        if( is_subclass_of($baseModelClass , PixelBaseModel::class))
+        {
+            return $baseModelClass;
         }
 
-        static::$modelAlternatives[$baseModelClass] = $alternaticveModelClass;
+        dd($baseModelClass . " base model class must be a child type of  " . PixelBaseModel::class);
     }
 
     public static function getModelForModelBaseType(string $baseModelClass ) : string
     {
-        return static::$modelAlternatives[$baseModelClass] ?? $baseModelClass;
+        if( !array_key_exists($baseModelClass , static::$modelAlternatives) )
+        {
+            return static::getValidBaseModelClass($baseModelClass);
+        }
+        
+        return static::getValidAlternativeModelClass($baseModelClass );
     }
-
+ 
 }

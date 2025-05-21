@@ -42,11 +42,12 @@
             "PixelApp\\": "src/"
         },
         "exclude-from-classmap": [
-            "src/ServiceProviders/LaravelProviderStubs/",
-            "src/Http/Middleware/PixelMiddlewareStubs/",
+            "src/ServiceProviders/LaravelProviderStubs",
+            "src/Http/Middleware/PixelMiddlewareStubs",
             "src/Config/ConfigFiles",
             "src/Routes/RouteFileStubs",
-            "src/Models/LaravelModelStubs"
+            "src/Models/LaravelModelStubs",
+            "src/Database/Migrations/MigrationStubs"
         ]
     },
     "extra": {

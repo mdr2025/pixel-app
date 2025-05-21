@@ -14,7 +14,7 @@ use PixelApp\Routes\PixelRouteManager;
 class RolesAndPermissionsRouteRegistrar extends PixelRouteRegistrar 
 {
 
-    public function registerRoutes(?callable $callbackOnRouteRegistrar = null) : void
+    public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
         if( PixelRouteManager::isItMonolithTenancyApp()  )
         {
@@ -30,6 +30,11 @@ class RolesAndPermissionsRouteRegistrar extends PixelRouteRegistrar
         } 
     }
   
+    public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
+    {
+        $arrayToAppend["roles-permissions"] = static::class;
+    }
+
     protected function defineSwitchingRoleRoute() : void
     {
         Route::put('roles/{role}/status', [RolesController::class, 'switchRole']);

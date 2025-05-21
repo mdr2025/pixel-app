@@ -11,7 +11,7 @@ use PixelApp\Routes\PixelRouteManager;
 class UsersAPIRoutesRegistrar extends PixelRouteRegistrar 
 {
 
-    public function registerRoutes(?callable $callbackOnRouteRegistrar = null) : void
+    public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
         if( PixelRouteManager::isItMonolithTenancyApp()  )
         {
@@ -27,7 +27,11 @@ class UsersAPIRoutesRegistrar extends PixelRouteRegistrar
         } 
     }
     
-    
+    public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
+    {
+        $arrayToAppend["users-list-management"] = static::class;
+    }
+
     protected function definEmployeesListingUsersRoute()   : void
     {
         Route::get('list/employees', [UserController::class, 'list']); 
