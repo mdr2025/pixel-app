@@ -5,6 +5,7 @@ namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\CitiesServ
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\StoringServices\MultiRowStoringService;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\SystemConfigurationRequests\Cities\StoringCityRequest;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\City;
 
 class CitiesStoringService extends MultiRowStoringService
@@ -22,7 +23,7 @@ class CitiesStoringService extends MultiRowStoringService
 
     protected function getModelClass(): string
     {
-        return City::class;
+        return PixelModelManager::getModelForModelBaseType( City::class );
     }
 
     protected function getRequestClass(): string

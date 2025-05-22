@@ -53,9 +53,17 @@ class UserProfile
         return $this->belongsTo( static::getUserModelClass(), "user_id", "id");
     }
 
+    protected function getCountryModelClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(Country::class);
+    }
+
     public function getParentRelationshipsDetails(): array
     {
-        return ["user" =>  static::getUserModelClass()  , "country" => Country::class ];
+        return [
+                    "user" =>  static::getUserModelClass()  ,
+                    "country" => $this->getCountryModelClass() 
+               ];
     }
 
     public function getModelFileInfoArray(): array
@@ -66,7 +74,8 @@ class UserProfile
     }
     public function country(): BelongsTo
     {
-        return $this->belongsTo(Country::class, "country_id", "id")->select("id", "name" , "code");
+        return $this->belongsTo($this->getCountryModelClass() , "country_id", "id")
+                    ->select("id", "name" , "code");
     }
 
 //    public function city(): BelongsTo

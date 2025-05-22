@@ -6,6 +6,7 @@ namespace PixelApp\Database\Factories\UserModule;
 use CustomFileSystem\CustomFileUploader;
 use PixelApp\Database\Factories\PixelBaseFactory as Factory;
 use Illuminate\Support\Collection;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Country ; 
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Models\UsersModule\UserProfile;
@@ -50,9 +51,16 @@ class UserProfileFactory extends Factory
 
     protected array $countryIDS = [];
     protected int $countriesCount ;
+
+    protected function getCountryModelClass()  :string
+    {
+        return PixelModelManager::getModelForModelBaseType(Country::class);
+    }
+
     protected function setCountryIDS()
     {
-        $this->countryIDS = Country::pluck("id")->toArray();
+        $modelClass = $this->getCountryModelClass();
+        $this->countryIDS = $modelClass::pluck("id")->toArray();
         $this->countriesCount = count($this->countryIDS);
     }
 

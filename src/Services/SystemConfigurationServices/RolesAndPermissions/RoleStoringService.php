@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\SystemConfigurationRequests\RoleRequests\RoleStoringRequest;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\RoleModel;
@@ -23,6 +24,10 @@ class RoleStoringService
     private array $data = [];
 
 
+    protected function getRequestFormClass() : string
+    {
+        return PixelHttpRequestManager::getRequestForRequestBaseType(RoleStoringRequest::class);
+    }
     /**
      * @param Request|array $request
      * @return $this
@@ -30,8 +35,14 @@ class RoleStoringService
      */
     public function initValidator(): self
     {
-        $this->validator = new JSONValidator(RoleStoringRequest::class);
+        $this->validator = new JSONValidator($this->getRequestFormClass());
         return $this;
+    }
+
+    
+    protected function getRoleModeClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(RoleModel::class);
     }
 
     /**
@@ -41,7 +52,8 @@ class RoleStoringService
      */
     private function createRole(): self
     { 
-        $role = RoleModel::create(["name" => $this->data["name"] ]);
+        $modelClass = $this->getRoleModeClass();
+        $role = $modelClass::create(["name" => $this->data["name"] ]);
 
         if (! $this->role = $role ) 
         {

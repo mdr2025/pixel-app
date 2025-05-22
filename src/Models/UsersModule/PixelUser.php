@@ -24,11 +24,10 @@ use PixelApp\Events\TenancyEvents\DataSyncingEvents\TenancyDataSyncingEvent;
 use PixelApp\Interfaces\EmailAuthenticatable;
 use PixelApp\Interfaces\HasUUID;
 use PixelApp\Interfaces\TenancyInterfaces\CanSyncData;
-use PixelApp\Models\Interfaces\BelongsToDepartment;
 use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\MustHaveRole;
-use PixelApp\Models\SystemConfigurationModels\Department;
 use PixelApp\Models\TenancyDataSyncingEventFactories\UsersModule\TenantUserDataSyncingEventFactory;
 use PixelApp\Models\Traits\OptionalRelationsTraits\MustHaveRoleMethods;
+use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\HasAdminAssignableProps;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\StatusChangeableAccount;
 use PixelApp\Traits\interfacesCommonMethods\EmailAuthenticatableMethods;
 use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeededFromChildes;
@@ -45,7 +44,8 @@ implements
     EmailAuthenticatable ,
     StatusChangeableAccount,
     CanSyncData,
-    MustHaveRole
+    MustHaveRole,
+    HasAdminAssignableProps
 {
     use  Authenticatable, Authorizable, HasApiTokens, HasFactory, Notifiable, EmailAuthenticatableMethods, SoftDeletes , MustHaveRoleMethods;
   

@@ -4,6 +4,7 @@ namespace PixelApp\Database\Seeders\SystemConfigSeeders\DropdownListSeeders;
  
 use Illuminate\Database\Seeder;
 use PixelApp\Config\PixelConfigManager;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Department;
 
 class DepartmentsTableSeeder extends Seeder
@@ -13,6 +14,22 @@ class DepartmentsTableSeeder extends Seeder
 		return PixelConfigManager::isDepartmensFuncDefined();
 	}
 
+	protected function getDepartmentModelClass() : string
+	{
+		return PixelModelManager::getModelForModelBaseType(Department::class);
+	}
+
+	protected function createNewDepartment(array $data) : Department
+	{
+		$modelClass = $this->getDepartmentModelClass();
+		return $modelClass::create($data);
+	}
+	protected function getDefaultDepartments() : array
+	{
+		$modelClass = $this->getDepartmentModelClass();
+		return $modelClass::getDefaultDepartments();
+	}
+
 	public function run()
 	{
 		if(!$this->doesAppNeedSeeding())
@@ -20,9 +37,9 @@ class DepartmentsTableSeeder extends Seeder
 			return ;
 		}
 
-        foreach ( Department::getDefaultDepartments() as $department )
+        foreach ( $this->getDefaultDepartments() as $department )
         {
-            Department::create([ "name" => $department , "status" => 1 ]);
+            $this->createNewDepartment([ "name" => $department , "status" => 1 ]);
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace PixelApp\Database\Factories\SystemConfigurationFactories;
  
 use PixelApp\Database\Factories\PixelBaseFactory as Factory;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\City;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Country;
 
@@ -15,6 +16,11 @@ class CityFactory extends Factory
      */
     protected $model = City::class;
 
+    protected function getCountrFactory() 
+    {
+        $modelClass = PixelModelManager::getModelForModelBaseType(Country::class);
+        return $modelClass::factory();
+    }
     /**
      * Define the model's default state.
      *
@@ -24,7 +30,7 @@ class CityFactory extends Factory
     {
         return [
             'name' => $this->faker->state,
-            'country_id' => Country::factory()
+            'country_id' => $this->getCountrFactory()
         ];
     }
 }

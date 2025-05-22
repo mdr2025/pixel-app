@@ -2,12 +2,9 @@
 
 namespace PixelApp\Http\Controllers\SystemConfigurationControllers\DropdownLists;
 
-use Illuminate\Http\Request;
+
 use PixelApp\Http\Controllers\PixelBaseController as Controller;
-use Spatie\QueryBuilder\QueryBuilder;
-use Illuminate\Support\Facades\Response;
-use PixelApp\Http\Resources\PixelHttpResourceManager;
-use PixelApp\Http\Resources\SystemConfigurationResources\DropdownLists\Cities\CityResource;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\City;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\CitiesServices\CitiesDeletingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\CitiesServices\CitiesStoringService;
@@ -51,16 +48,23 @@ class CitiesController extends Controller
         return (new $service())->create();
     }
 
+    
+    protected function findOrFailById(int $id) : City
+    {
+        $modelClass = PixelModelManager::getModelForModelBaseType(City::class);
+        return $modelClass::findOrFail($id);
+    }
+
     public function update( $id)
     {
-        $city = City::findOrFail($id);
+        $city = $this->findOrFailById($id);
         $service = PixelServiceManager::getServiceForServiceBaseType(CitiesUpdatingService::class);
         return (new $service($city))->update();
     }
 
     public function destroy($id)
     {
-        $city = City::findOrFail($id);
+        $city = $this->findOrFailById($id);
         $service = PixelServiceManager::getServiceForServiceBaseType(CitiesDeletingService::class);
         return (new $service($city))->delete();
     }

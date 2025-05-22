@@ -5,18 +5,27 @@ namespace PixelApp\Database\Seeders\SystemConfigSeeders\RolesAndPermissionsSeede
 use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Log;
+use PixelApp\Models\PixelModelManager;
 use Spatie\Permission\Models\Role;
 use Throwable;
 
 class RolesSeeder extends Seeder
 {
     protected array $defaultPermissions = [];
+
+    
+    protected function getRoleModeClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(RoleModel::class);
+    }
+
     protected function createRoleOb(string $role )  : ?Role
     {
         try {
 
             /*  @var Role $roleOb  */
-            $roleOb = RoleModel::create(['guard_name'=>'api','name' => $role , "default" => 1 ,  'editable' => 1 , 'deletable' => 0, 'status' => 1]);
+            $modelClass = $this->getRoleModeClass();
+            $roleOb = $modelClass::create(['guard_name'=>'api','name' => $role , "default" => 1 ,  'editable' => 1 , 'deletable' => 0, 'status' => 1]);
 
         }catch (Throwable $exception)
         {

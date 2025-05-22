@@ -6,6 +6,7 @@ use Illuminate\Validation\Rule;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\AdminAssignablePropsManagers\AdminAssignablePropsManager;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\HasValidationRules;
+use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\UserSensitivePropChanger;
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 
 class SignupAccountApprovingRequest extends BaseFormRequest
@@ -76,6 +77,9 @@ class SignupAccountApprovingRequest extends BaseFormRequest
         $propChangers = $this->getUserModelPropChangers();
         $propsRules = [];
 
+        /**
+         * @var  UserSensitivePropChanger $propChanger
+         */
         foreach($propChangers as $propChanger)
         {
             if($propChanger instanceof HasValidationRules)
@@ -97,9 +101,9 @@ class SignupAccountApprovingRequest extends BaseFormRequest
         $rules  = ['status' => ["required", "string" , Rule::in(["active"])] ];
         return array_merge($rules , $this->getModelAssignablePropsRules());
         
-            "role_id" => [  $this->getRoleIdRequirmentStatus() , "integer", "exists:roles,id"],
-            "department_id" => [ $this->getDepartmentIdRequirmentStatus() , "integer", "exists:departments,id"],
-            "branch_id" => [$this->getBranchIdRequirmentStatus()  , "integer", "exists:departments,id"]
+            // "role_id" => [  $this->getRoleIdRequirmentStatus() , "integer", "exists:roles,id"],
+            // "department_id" => [ $this->getDepartmentIdRequirmentStatus() , "integer", "exists:departments,id"],
+            // "branch_id" => [$this->getBranchIdRequirmentStatus()  , "integer", "exists:departments,id"]
         
     }
 }

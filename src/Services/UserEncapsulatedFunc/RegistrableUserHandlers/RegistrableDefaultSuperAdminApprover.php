@@ -5,8 +5,8 @@ namespace PixelApp\Services\UserEncapsulatedFunc\RegistrableUserHandlers;
 use PixelApp\Interfaces\EmailAuthenticatable;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
-use PixelApp\Models\Interfaces\BelongsToBranch;
-use PixelApp\Models\Interfaces\BelongsToDepartment;
+use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToBranch;
+use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToDepartment;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Branch;
 use PixelApp\Models\SystemConfigurationModels\Department;
@@ -104,14 +104,22 @@ class RegistrableDefaultSuperAdminApprover
         (new StatusChanger())->approve($this->user)->changeAuthenticatablePropOrFail();
         return $this;
     }
+
+    
+    protected function getRoleModeClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(RoleModel::class);
+    }
+
     /**
      * @return $this
      * @throws Exception
      */
     protected function setDefaultRole() : self
     {
+        $modelClass = $this->getRoleModeClass();
         (new UserRoleChanger())->setAuthenticatable($this->user)
-                               ->setNewActiveRole( RoleModel::findHighestRole() )
+                               ->setNewActiveRole( $modelClass::findHighestRole() )
                                ->changeAuthenticatablePropOrFail();
         return $this;
     }
@@ -129,7 +137,7 @@ class RegistrableDefaultSuperAdminApprover
     {
         if($this->user instanceof BelongsToDepartment)
         { 
-            $departmentClass = $this->getDepartmentModelClass(Department::class);
+            $departmentClass = $this->getDepartmentModelClass();
             (new DepartmentChanger())->setAuthenticatable( $this->user )
                                      ->setDepartment( $departmentClass::findTeamManagementDepartment() )
                                      ->changeAuthenticatablePropOrFail();

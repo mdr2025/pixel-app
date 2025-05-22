@@ -3,8 +3,6 @@
 namespace PixelApp\Http\Resources\AuthenticationResources\CompanyAuthenticationResources;
  
 use Illuminate\Http\Resources\Json\JsonResource;
-use PixelApp\Http\Requests\PixelHttpRequestManager;
-use PixelApp\Http\Resources\AuthenticationResources\CompanyAuthenticationResources\ModelsResources\DefaultAdminResource;
 use PixelApp\Http\Resources\AuthenticationResources\CompanyAuthenticationResources\ModelsResources\TenantCompanyResource;
 use PixelApp\Http\Resources\PixelHttpResourceManager;
 

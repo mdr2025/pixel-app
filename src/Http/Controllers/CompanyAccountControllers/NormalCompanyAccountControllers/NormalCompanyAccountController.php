@@ -5,8 +5,6 @@ namespace PixelApp\Http\Controllers\CompanyAccountControllers\NormalCompanyAccou
 use PixelApp\Http\Controllers\PixelBaseController as Controller;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use PixelApp\Http\Resources\AuthenticationResources\CompanyAuthenticationResources\TenantCompanyProfileResource;
 use PixelApp\Services\CompanyAccountServices\NormalCompanyAccountServices\CompanyProfileGettingService\NormalCompanyProfileGettingService;
 use PixelApp\Services\CompanyAccountServices\NormalCompanyAccountServices\CompanyProfileUpdatingService\NormalCompanyProfileUpdatingService;
 use PixelApp\Services\CompanyAccountServices\NormalCompanyAccountServices\CompanyUpdateAdmin\NormalCompanyDefaultAdminChangingService;
@@ -24,7 +22,7 @@ class NormalCompanyAccountController extends Controller
     /**
      * @throws Exception
      */
-    public function updateCompanyProfile(Request $request): JsonResponse
+    public function updateCompanyProfile(): JsonResponse
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(NormalCompanyProfileUpdatingService::class);
         return (new $service())->update(); 

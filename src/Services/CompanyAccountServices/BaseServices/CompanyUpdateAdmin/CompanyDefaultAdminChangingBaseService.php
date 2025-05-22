@@ -6,7 +6,8 @@ namespace PixelApp\Services\CompanyAccountServices\BaseServices\CompanyUpdateAdm
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use JsonException; 
-use PixelApp\Http\Requests\CompanyAccountRequests\CompanyDefaultAdminUpdatingRequest; 
+use PixelApp\Http\Requests\CompanyAccountRequests\CompanyDefaultAdminUpdatingRequest;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\Traits\GeneralValidationMethods;
@@ -32,7 +33,7 @@ abstract class CompanyDefaultAdminChangingBaseService
 
     protected function getRequestFormClass() : string
     {
-        return CompanyDefaultAdminUpdatingRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType( CompanyDefaultAdminUpdatingRequest::class );
     }
   
     protected function getCurrentDefaultUserAdmin(): PixelUser

@@ -5,6 +5,7 @@ namespace PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserS
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use PixelApp\Interfaces\EmailAuthenticatable;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\ExpectsSensitiveRequestData;
@@ -117,12 +118,20 @@ class UserRoleChanger
         return $this;
     }
 
+    
+    protected function getRoleModeClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(RoleModel::class);
+    }
+
     /**
      * @throws Exception
      */
     protected function fetchNewActiveRoleOrFail() : RoleModel
     {
-        $activeNewRole = RoleModel::activeRole()->where("id", $this->newRoleIdValue )->select("id")->first();
+        $modelClass = $this->getRoleModeClass();
+
+        $activeNewRole = $modelClass::activeRole()->where("id", $this->newRoleIdValue )->select("id")->first();
         if(! $activeNewRole)
         {
             throw new Exception("The Given Role Is Not Exists In Our Database , Or is Not Active");

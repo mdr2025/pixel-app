@@ -3,8 +3,6 @@
 namespace  PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\StatusChangeableStatusChangers\StatusChangerTypes;
 
 use Exception;
-use PixelApp\Http\Requests\PixelHttpRequestManager;
-use PixelApp\Http\Requests\UserManagementRequests\UserStatusUpdatingRequest; 
 use PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\StatusChangeableStatusChangers\AccountStatusChanger;
 
 

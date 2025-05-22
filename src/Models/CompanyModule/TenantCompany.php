@@ -281,16 +281,22 @@ class TenantCompany extends PixelCompany
     
     public function parent()  : BelongsTo
     {
-        return $this->belongsTo(TenantCompany::class ,'parent_id','id');
+        return $this->belongsTo(static::class ,'parent_id','id');
     }
+
     public function childern()  : HasMany
     {
-        return $this->hasMany(TenantCompany::class,'parent_id','id');
+        return $this->hasMany(static::class ,'parent_id','id');
     }
     
+   protected function getCompanyContactModelClass() : string
+   {
+      return PixelModelManager::getModelForModelBaseType(CompanyContact::class);
+   }
+
    public function contacts()
    {
-       return $this->hasMany(CompanyContact::class);
+       return $this->hasMany( $this->getCompanyContactModelClass() );
    }
  
    protected function getDefaultAdminModelClass() : string

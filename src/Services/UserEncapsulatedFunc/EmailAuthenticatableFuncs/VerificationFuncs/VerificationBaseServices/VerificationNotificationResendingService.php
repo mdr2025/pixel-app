@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Requests\AuthenticationRequests\UserAuthenticationRequests\VerificationNotificationSenderRequest;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Services\Traits\GeneralValidationMethods;
 use PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\VerificationFuncs\VerificationNotificationSenders\EmailAuthenticatableVerificationNotificationSender;
 
@@ -24,7 +25,7 @@ abstract class VerificationNotificationResendingService
 
     protected function getRequestFormClass(): string
     {
-        return VerificationNotificationSenderRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(VerificationNotificationSenderRequest::class);
     }
 
     /**

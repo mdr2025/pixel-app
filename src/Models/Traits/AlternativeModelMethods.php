@@ -13,7 +13,6 @@ trait AlternativeModelMethods
         static::$modelAlternatives[$baseModelClass] = $alternaticveModelClass;
     }
 
-
     protected static function getValidAlternativeModelClass(string $baseModelClass) : string
     {    
         $alternativeModelClass = static::$modelAlternatives[$baseModelClass];

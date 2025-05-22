@@ -5,6 +5,7 @@ namespace PixelApp\Models\CompanyModule;
 use PixelApp\Models\PixelBaseModel ;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use PixelApp\Interfaces\OnlyAdminPanelQueryable;
+use PixelApp\Models\PixelModelManager;
 
 class CompanyContact extends PixelBaseModel implements OnlyAdminPanelQueryable
 {
@@ -25,8 +26,14 @@ class CompanyContact extends PixelBaseModel implements OnlyAdminPanelQueryable
     {
         return config("database.defaultCentralConnection");
     }
+
+    protected function getTenantCompanyClass() : string
+    {
+        return PixelModelManager::getTenantCompanyModelClass();
+    }
+
     public function company()
     {
-        return $this->belongsTo(TenantCompany::class);
+        return $this->belongsTo($this->getTenantCompanyClass());
     }
 }

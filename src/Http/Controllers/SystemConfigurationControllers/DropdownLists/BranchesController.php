@@ -6,11 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use PixelApp\Http\Controllers\PixelBaseController as Controller;
-use Spatie\QueryBuilder\QueryBuilder;
-use PixelApp\Http\Resources\SingleResource;
-use Illuminate\Support\Facades\Response;
-use PixelApp\Http\Resources\PixelHttpResourceManager;
-use PixelApp\Http\Resources\SystemConfigurationResources\DropdownLists\Branches\BranchResource;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Branch;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchDeletingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchStoringService;
@@ -111,24 +107,29 @@ class BranchesController extends Controller
         return (new $service())->create();
     }
 
+    protected function findOrFailById(int $id) : Branch
+    {
+        $modelClass = PixelModelManager::getModelForModelBaseType(Branch::class);
+        return $modelClass::findOrFail($id);
+    }
     /**
-     * @param Branch $branch
+     * @param int $branch
      * @return JsonResponse
      */
     public function update($branch): JsonResponse
     {
-        $branch = Branch::findOrFail($branch);
+        $branch = $this->findOrFailById($branch);
         $service = PixelServiceManager::getServiceForServiceBaseType(BranchUpdatingService::class);
         return (new $service($branch))->update();
     }
 
     /**
-     * @param Branch $branch
+     * @param int $branch
      * @return JsonResponse
      */
     public function destroy( $branch): JsonResponse
     {
-        $branch = Branch::findOrFail($branch);
+        $branch = $this->findOrFailById($branch);
         $service = PixelServiceManager::getServiceForServiceBaseType(BranchDeletingService::class);
         return (new $service($branch))->delete();
     }

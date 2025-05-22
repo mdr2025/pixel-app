@@ -12,6 +12,7 @@ use PixelApp\Models\SystemConfigurationModels\CountryModule\Country;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use PixelApp\Interfaces\EmailAuthenticatable;
 use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToCountry;
+use PixelApp\Models\PixelModelManager;
 use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeedToAccessParentRelationships;
 
 abstract class PixelCompany 
@@ -54,14 +55,20 @@ abstract class PixelCompany
         return $this->getFileFullPathAttrValue('logo');
     }
       
+    protected function getCountryModelClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(country::class);
+    }
+
     public function country() : BelongsTo
     {
-        return $this->belongsTo(Country::class)->select('id', 'code', 'name');
+        $modelClass = $this->getCountryModelClass();
+        return $this->belongsTo($modelClass)->select('id', 'code', 'name');
     }
 
     public function getParentRelationshipsDetails(): array
     {
-        return [ "country" => Country::class ];
+        return [ "country" => $this->getCountryModelClass() ];
     }
 
     public function getOwnedRelationships(): array

@@ -3,17 +3,9 @@
 namespace PixelApp\Http\Controllers\UsersManagementControllers;
 
 use PixelApp\Http\Controllers\PixelBaseController as Controller;
-use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
-use PixelApp\Filters\MultiFilters;
-use PixelApp\Http\Resources\PixelHttpResourceManager;
-use PixelApp\Http\Resources\UserManagementResources\UsersListResource;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Services\UsersManagement\EmailChangerService\EmailChangerService;
-use PixelApp\Services\UsersManagement\Statistics\UsersList\UsersListStatisticsBuilder;
 use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\UserAccountStatusChanger;
 use PixelApp\Services\UsersManagement\UpdatingUserByAdminService\UpdatingUserByAdminService;
 use PixelApp\Services\PixelServiceManager;
@@ -22,8 +14,6 @@ use PixelApp\Services\UsersManagement\IndexingServices\UserTypeIndexingService;
 use PixelApp\Services\UsersManagement\ListingServices\DefaultUsersListingService;
 use PixelApp\Services\UsersManagement\ListingServices\UserTypeListingingService;
 use PixelApp\Services\UsersManagement\ShowServices\UserTypeShowService;
-use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class UserController extends Controller
 {

@@ -3,6 +3,7 @@
 namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\ExpImpServices\ImportingFunc;
  
 use ExpImpManagement\ImportersManagement\ImportableFileFormatFactories\CSVImportableFileFormatFactory\CSVImportableFileFormatFactory;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\SystemConfigurationRequests\Departments\DepartmentImportingRequest;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Department;
@@ -22,7 +23,7 @@ class DepartmentsImporter extends DropDownListCSVImporter
 
     public function getDataValidationRequestFormClassForSelfConstructing() : string
     {
-        return DepartmentImportingRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(DepartmentImportingRequest::class);
     }
 
     public function getImportableTemplateFactoryForSelfConstructing() : CSVImportableFileFormatFactory

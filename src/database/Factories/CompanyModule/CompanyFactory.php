@@ -6,11 +6,13 @@ use PixelApp\Database\Factories\PixelBaseFactory as Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use PixelApp\Models\CompanyModule\TenantCompany;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Country;
 
 class CompanyFactory extends Factory
 {
     protected $model = TenantCompany::class;
+
     protected int $companyId = 0;
     protected array $companySectors = [
         'Software & Technology',
@@ -50,6 +52,18 @@ class CompanyFactory extends Factory
         '21 - 50',
         ' > 50'
     ];
+
+    protected function getAltModelOrBase(string $model) : string
+    {
+        return PixelModelManager::getTenantCompanyModelClass();
+    }
+
+    protected function getFirstCountryId() : int
+    {
+        $countryModelClass = PixelModelManager::getModelForModelBaseType(Country::class);
+        return $countryModelClass::first()->id;
+    }
+
     protected function generateCompanyId() : int
     {
         return $this->companyId++;
@@ -71,7 +85,7 @@ class CompanyFactory extends Factory
             'name' => $this->faker->company,
             'domain' => $this->faker->domainName,
             'sector' => $this->faker->randomElement($this->companySectors),
-            'country_id' => Country::first()->id,
+            'country_id' => $this->getFirstCountryId(),
             'status' => $this->faker->randomElement('pending'),
             'branches_no' => $this->faker->numberBetween(1, 10),
             'employees_no' => $this->faker->randomElement($this->employeesNumber),

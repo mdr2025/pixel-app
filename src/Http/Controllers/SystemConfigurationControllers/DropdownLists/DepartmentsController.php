@@ -2,15 +2,10 @@
 
 namespace PixelApp\Http\Controllers\SystemConfigurationControllers\DropdownLists;
 
-use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
-use Exception;
-use Illuminate\Http\Request;
+
 use Illuminate\Http\JsonResponse;
 use PixelApp\Http\Controllers\PixelBaseController as Controller;
-use Spatie\QueryBuilder\QueryBuilder;
-use PixelApp\Http\Resources\SingleResource;
-use Illuminate\Support\Facades\Response;
-use PixelApp\Http\Resources\PixelHttpResourceManager;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Department;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentDeletingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\DepartmentStoringService;
@@ -78,15 +73,21 @@ class DepartmentsController extends Controller
         return (new $service())->create();
     }
 
+    protected function findOrFailById(int $id) : Department
+    {
+        $modelClass = PixelModelManager::getModelForModelBaseType(Department::class);
+        return $modelClass::findOrFail($id);
+    }
+
     /**
      * @param int $department
      * @return JsonResponse
      * @throws JsonException
      */
-    public function update($department): JsonResponse
+    public function update(int $department): JsonResponse
     {
          //need policy here
-        $department = Department::findOrFail($department);
+        $department = $this->findOrFailById($department);
         $service = PixelServiceManager::getServiceForServiceBaseType(DepartmentUpdatingService::class);
         return (new $service($department))->update();
     }
@@ -96,10 +97,10 @@ class DepartmentsController extends Controller
      * @return JsonResponse
      * @throws JsonException
      */
-    public function destroy( $department): JsonResponse
+    public function destroy(int $department): JsonResponse
     {
         //need policy here
-        $department = Department::findOrFail($department);
+        $department = $this->findOrFailById($department);
         $service = PixelServiceManager::getServiceForServiceBaseType(DepartmentDeletingService::class);
         return (new $service($department))->delete();
     }

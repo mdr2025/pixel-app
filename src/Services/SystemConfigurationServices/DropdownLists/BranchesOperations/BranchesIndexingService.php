@@ -3,8 +3,6 @@
 namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations;
 
 use Illuminate\Support\Facades\Response;
-use PixelApp\Http\Resources\PixelHttpResourceManager;
-use PixelApp\Http\Resources\SystemConfigurationResources\DropdownLists\Areas\AreasResource;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Branch;
 use PixelApp\Services\CoreServices\ModelIndexingService;

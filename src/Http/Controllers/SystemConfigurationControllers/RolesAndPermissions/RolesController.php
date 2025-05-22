@@ -11,6 +11,7 @@ use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\SystemConfigurationResources\RolesAndPermissions\PermissionsResource;
 use PixelApp\Http\Resources\SystemConfigurationResources\RolesAndPermissions\RoleShowResource;
 use PixelApp\Http\Resources\SystemConfigurationResources\RolesAndPermissions\RolesListResource;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleDeletingService;
 use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleStoringService;
@@ -31,15 +32,17 @@ class RolesController extends Controller
     public function index()
     { 
         BasePolicy::check('read', Role::class);
-        $data = RoleModel::orderBy('disabled', 'asc')->orderBy('default', 'desc')->get();
+        $modelClass = $this->getRoleModeClass();
+        $data = $modelClass::orderBy('disabled', 'asc')->orderBy('default', 'desc')->get();
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(RolesListResource::class);
         return $resourceClass::collection($data); 
     }
 
     public function listAllRoles()
     {
-         BasePolicy::check('read', Role::class);
-        $data = RoleModel::all();
+        BasePolicy::check('read', Role::class);
+        $modelClass = $this->getRoleModeClass();
+        $data = $modelClass::all();
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(RolesListResource::class);
         return $resourceClass::collection($data); 
     }
@@ -47,15 +50,28 @@ class RolesController extends Controller
     public function listDefaultRoles()
     {
         BasePolicy::check('read', Role::class);
-        $data = RoleModel::defaultRole()->get();
+        $modelClass = $this->getRoleModeClass();
+        $data = $modelClass::defaultRole()->get();
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(RolesListResource::class);
         return $resourceClass::collection($data); 
     }
 
-    function show($id)
+    
+    protected function getRoleModeClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(RoleModel::class);
+    }
+
+    protected function findOrFailById(int $id) : RoleModel
+    {
+        $modelClass = $this->getRoleModeClass();
+        return $modelClass::findOrFail($id);
+    }
+
+    public function show($id)
     {
         BasePolicy::check('read', Role::class); 
-        $role = RoleModel::findOrFail($id);
+        $role = $this->findOrFailById($id);
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(RoleShowResource::class);
         return new $resourceClass($role);
     }
@@ -70,7 +86,8 @@ class RolesController extends Controller
     public function update($id, Request $request): JsonResponse
     {
         BasePolicy::check('edit', Role::class); 
-        $role = RoleModel::nonDefaultRole()->find($id);
+        $modelClass = $this->getRoleModeClass();
+        $role = $modelClass::nonDefaultRole()->firstOrFail($id);
         $service = PixelServiceManager::getServiceForServiceBaseType(RoleInfoUpdatingService::class);
         return (new $service($role))->change($request);
     }
@@ -85,7 +102,7 @@ class RolesController extends Controller
     public function switchRole(Request $request, $id): JsonResponse
     {
         BasePolicy::check('edit', Role::class); 
-        $role = RoleModel::findOrFail($id);
+        $role = $this->findOrFailById($id);
         $service = PixelServiceManager::getServiceForServiceBaseType(RoleDisablingSwitcher::class);
         return (new $service($role))->change($request);
     }
@@ -93,7 +110,7 @@ class RolesController extends Controller
     public function destroy($id): JsonResponse
     {
         BasePolicy::check('delete', Role::class); 
-        $role = RoleModel::findOrFail($id);
+        $role = $this->findOrFailById($id);
         $service = PixelServiceManager::getServiceForServiceBaseType(RoleDeletingService::class);
         return (new $service($role))->delete(true);
     }

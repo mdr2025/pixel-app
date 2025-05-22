@@ -6,6 +6,7 @@ use PixelApp\Models\UsersModule\PixelUser as User;
 use PixelApp\Database\Factories\PixelBaseFactory as Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Department;
 use PixelApp\Models\SystemConfigurationModels\RoleModel;
 
@@ -18,6 +19,12 @@ abstract class UserFactory extends Factory
     protected int $RolesCount = 1;
     protected array $DepartmentIDS = [];
     protected int $DepartmentsCount = 1;
+
+    protected function getAltModelOrBase(string $model) : string
+    {
+        return PixelModelManager::getUserModelClass();
+    }
+
     /**
      * Define the model's default state.
      *
@@ -59,7 +66,8 @@ abstract class UserFactory extends Factory
  
     protected function setRoleIDS()
     {
-        $this->RoleIDS = RoleModel::pluck("id")->toArray();
+        $modelClass = PixelModelManager::getModelForModelBaseType(RoleModel::class);
+        $this->RoleIDS = $modelClass::pluck("id")->toArray();
         $this->RolesCount = count($this->RoleIDS);
     }
 
@@ -75,7 +83,8 @@ abstract class UserFactory extends Factory
 
     protected function setDepartmentIDS()  : Factory
     {
-        $this->DepartmentIDS = Department::pluck("id")->toArray();
+        $modelClass = PixelModelManager::getModelForModelBaseType(Department::class);
+        $this->DepartmentIDS = $modelClass::pluck("id")->toArray();
         $this->DepartmentsCount = count($this->DepartmentIDS);
         return $this;
     }

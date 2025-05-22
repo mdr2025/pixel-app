@@ -3,7 +3,6 @@
 namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations;
 
 use PixelApp\Http\Resources\PixelHttpResourceManager;
-use PixelApp\Http\Resources\SystemConfigurationResources\DropdownLists\Areas\AreasListResource;
 use PixelApp\Http\Resources\SystemConfigurationResources\DropdownLists\Branches\BranchResource;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Branch; 

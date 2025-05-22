@@ -3,6 +3,7 @@
 namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\ExpImpServices\ImportingFunc;
  
 use ExpImpManagement\ImportersManagement\ImportableFileFormatFactories\CSVImportableFileFormatFactory\CSVImportableFileFormatFactory;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\SystemConfigurationRequests\Branches\BranchImportingRequest;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Branch;
@@ -22,7 +23,7 @@ class BranchesImporter extends DropDownListCSVImporter
 
     public function getDataValidationRequestFormClassForSelfConstructing() : string
     {
-        return BranchImportingRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(BranchImportingRequest::class);
     }
 
     public function getImportableTemplateFactoryForSelfConstructing() : CSVImportableFileFormatFactory

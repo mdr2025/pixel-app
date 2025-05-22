@@ -5,6 +5,7 @@ namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\Department
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\StoringServices\MultiRowStoringService;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\SystemConfigurationRequests\Departments\StoringDepartmentRequest;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Department;
 
 class DepartmentStoringService extends MultiRowStoringService
@@ -22,7 +23,7 @@ class DepartmentStoringService extends MultiRowStoringService
 
     protected function getModelClass(): string
     {
-        return Department::class;
+        return PixelModelManager::getModelForModelBaseType( Department::class );
     }
 
     protected function getRequestClass(): string

@@ -3,6 +3,7 @@
 namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\CurrenciesOperations;
 
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\UpdatingServices\UpdatingService;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\SystemConfigurationRequests\Currencies\UpdatingCurrencyRequest;
 
 class CurrencyUpdatingService extends UpdatingService
@@ -20,7 +21,7 @@ class CurrencyUpdatingService extends UpdatingService
 
     protected function getRequestClass(): string
     {
-        return UpdatingCurrencyRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(UpdatingCurrencyRequest::class);
     }
 
 

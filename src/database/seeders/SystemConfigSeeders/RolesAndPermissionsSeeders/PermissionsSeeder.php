@@ -5,16 +5,24 @@ namespace PixelApp\Database\Seeders\SystemConfigSeeders\RolesAndPermissionsSeede
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use Spatie\Permission\Models\Permission;
 
 class PermissionsSeeder extends Seeder
 {
 
+    protected function getRoleModeClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(RoleModel::class);
+    }
+
     protected function getHighestRoleConfigKey() : string
     {
-        return RoleModel::getHighestRoleName();
+        $modelClass= $this->getRoleModeClass();
+        return $modelClass::getHighestRoleName();
     }
+    
     protected function getAllPermissionStrings()  :array
     {
         return  config('acl.permissions.' . $this->getHighestRoleConfigKey());

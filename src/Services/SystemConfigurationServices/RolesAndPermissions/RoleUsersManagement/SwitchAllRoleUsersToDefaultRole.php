@@ -19,17 +19,26 @@ class SwitchAllRoleUsersToDefaultRole extends RoleUsersManager
         $this->setDefaultRoleName();
     }
 
+    
+    protected function getRoleModeClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(RoleModel::class);
+    }
+    
     protected function setDefaultRoleName() : void
     {
-        $this->DefaultRoleName = RoleModel::getLowestRoleName();
+        $modelClass = $this->getRoleModeClass();
+        $this->DefaultRoleName = $modelClass::getLowestRoleName();
     }
+
     /**
      * @return $this
      * @throws Exception
      */
     protected function setDefaultRole(): self
     {
-        $defaultRole = RoleModel::where("name",  $this->DefaultRoleName)->select("id")->first();
+        $modelClass = $this->getRoleModeClass();
+        $defaultRole = $modelClass::where("name",  $this->DefaultRoleName)->select("id")->first();
         if (!$this->DefaultRoleModel = $defaultRole)
         {
             throw new Exception("There Is No Default Role Can Be Used To Switching " . $this->role->name . "'s  Related Users");

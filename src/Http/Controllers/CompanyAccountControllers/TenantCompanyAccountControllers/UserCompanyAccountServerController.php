@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use PixelApp\Http\Resources\AuthenticationResources\CompanyAuthenticationResources\TenantCompanyProfileResource;
+use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Services\CompanyAccountServices\TenantCompanyAccountServices\CompanyProfileGettingService\CompanyProfileGettingServerService;
 use PixelApp\Services\CompanyAccountServices\TenantCompanyAccountServices\CompanyProfileUpdatingService\CompanyProfileUpdatingServerService;
 use PixelApp\Services\PixelServiceManager;
@@ -34,8 +35,10 @@ class UserCompanyAccountServerController extends Controller
     
     protected function checkResponse(JsonResponse $response, Request $request): JsonResponse
     {
-        if ($response->getStatusCode() == 200) {
-            $CompanyProfileDataResource = new TenantCompanyProfileResource(tenant());
+        if ($response->getStatusCode() == 200) 
+        {
+            $CompanyProfileDataResourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(TenantCompanyProfileResource::class);
+            $CompanyProfileDataResource = new $CompanyProfileDataResourceClass(tenant());
             $data = $response->getData(true);
             $response->setData([...$data, "data" => $CompanyProfileDataResource->toArray($request)]);
         }

@@ -4,6 +4,7 @@ namespace PixelApp\Database\Seeders\SystemConfigSeeders\DropdownListSeeders;
  
 use Illuminate\Database\Seeder;
 use PixelApp\Config\PixelConfigManager;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Currency;
 
 class CurrenciesSeeder extends Seeder
@@ -12,6 +13,11 @@ class CurrenciesSeeder extends Seeder
 	{
 		return PixelConfigManager::isCurrenciesFuncDefined();
 	}
+
+    protected function getCurrencyModelClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(Currency::class);
+    }
 
 	public function run()
 	{
@@ -1095,6 +1101,6 @@ class CurrenciesSeeder extends Seeder
             ]
         ];
 
-        Currency::insert($data);
+        $this->getCurrencyModelClass()::insert($data);
     }
 }

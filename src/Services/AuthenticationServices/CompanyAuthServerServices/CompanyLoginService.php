@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Http\Requests\AuthenticationRequests\CompanyAuthenticationRequests\CompanyLoginRequest;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Resources\AuthenticationResources\CompanyAuthenticationResources\ModelsResources\TenantCompanyResource;
 use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Models\CompanyModule\TenantCompany;
@@ -20,7 +21,7 @@ class CompanyLoginService
 
     protected function getRequestFormClass(): string
     {
-        return CompanyLoginRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(CompanyLoginRequest::class);
     }
 
     protected function getLoginResponse(): JsonResponse

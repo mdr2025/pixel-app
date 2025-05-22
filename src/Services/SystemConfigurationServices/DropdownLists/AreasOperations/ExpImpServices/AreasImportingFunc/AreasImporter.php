@@ -4,6 +4,7 @@ namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOpera
 
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\ImportingFunc\DropDownListCSVImporter;
 use ExpImpManagement\ImportersManagement\ImportableFileFormatFactories\CSVImportableFileFormatFactory\CSVImportableFileFormatFactory;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\SystemConfigurationRequests\Areas\AreasImportingRequest;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Area;
@@ -22,7 +23,7 @@ class AreasImporter extends DropDownListCSVImporter
 
     public function getDataValidationRequestFormClassForSelfConstructing() : string
     {
-        return AreasImportingRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(AreasImportingRequest::class);
     }
 
     public function getImportableTemplateFactoryForSelfConstructing() : CSVImportableFileFormatFactory

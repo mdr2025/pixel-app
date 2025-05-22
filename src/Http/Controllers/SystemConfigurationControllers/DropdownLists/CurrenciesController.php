@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Controllers\PixelBaseController;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Currency;
 use PixelApp\Services\PixelServiceManager;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\CurrenciesOperations\CurrencyUpdatingService;
@@ -30,9 +31,15 @@ class CurrenciesController extends PixelBaseController
         // $this->middleware('permission:export_sc-dropdown-lists')->only(['exportCurrencies']);
     }
 
+    protected function getCurrencyModelClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(Currency::class);
+    }
+
     public function index(Request $request)
     {
-        $data = QueryBuilder::for(Currency::class)
+        $modelClass = $this->getCurrencyModelClass();
+        $data = QueryBuilder::for( $modelClass )
                             ->allowedFilters($this->filterable)
                             ->datesFiltering()->customOrdering()
                             ->paginate($request->pageSize ?? 10);
@@ -42,20 +49,29 @@ class CurrenciesController extends PixelBaseController
 
     function list()
     {
-        $data = QueryBuilder::for(Currency::class)
+        $modelClass = $this->getCurrencyModelClass();
+        
+        $data = QueryBuilder::for($modelClass)
                             ->allowedFilters(['name', 'symbol'])
                             ->active()
                             ->customOrdering('created_at', 'desc')
                             ->get(['id', 'name', 'symbol']);
         
-                            $total = Currency::active()->count();
+        $total = $modelClass::active()->count();
 
         return Response::successList($total ,$data);
     }
 
-    public function update(Request $request, Currency $currency): JsonResponse
+    protected function findOrFailById(int $id) : Currency
     {
-        return (new CurrencyUpdatingService($currency))->update($request);
+        $modelClass = PixelModelManager::getModelForModelBaseType(Currency::class);
+        return $modelClass::findOrFail($id);
+    }
+
+    public function update( int $id): JsonResponse
+    {
+        $currency = $this->findOrFailById($id);
+        return (new CurrencyUpdatingService($currency))->update();
     }
 
     public function importableFormalDownload() 
@@ -89,9 +105,10 @@ class CurrenciesController extends PixelBaseController
         //     ->name('Currencies')->build();
     }
 
-    public function setMainCurrency(Request $request, Currency $currency): JsonResponse
+    public function setMainCurrency(Request $request, int $id): JsonResponse
     {
         $request->merge(['is_main' => 1]);
-        return (new CurrencyUpdatingService($currency))->update($request);
+        $currency = $this->findOrFailById($id);
+        return (new CurrencyUpdatingService($currency))->update();
     }
 }

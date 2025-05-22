@@ -3,15 +3,9 @@
 namespace PixelApp\Http\Controllers\SystemConfigurationControllers\DropdownLists;
 
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use PixelApp\Http\Controllers\PixelBaseController as Controller;
-use Spatie\QueryBuilder\QueryBuilder;
-use PixelApp\Http\Resources\SingleResource;
-use Illuminate\Support\Facades\Response;
-use PixelApp\Http\Resources\PixelHttpResourceManager;
-use PixelApp\Http\Resources\SystemConfigurationResources\DropdownLists\Areas\AreasListResource;
-use PixelApp\Http\Resources\SystemConfigurationResources\DropdownLists\Areas\AreasResource;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Area;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\AreaDeletingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\AreaStoringService;
@@ -64,24 +58,30 @@ class AreasController extends Controller
         return (new $service())->create();
     }
 
+    protected function findOrFailById(int $id) : Area
+    {
+        $modelClass = PixelModelManager::getModelForModelBaseType(Area::class);
+        return $modelClass::findOrFail($id);
+    }
+
     /**
-     * @param Area $area
+     * @param int $area
      * @return JsonResponse
      */
-    public function update( $area): JsonResponse
+    public function update(int $area): JsonResponse
     {
-        $area = Area::findOrFail($area);
+        $area = $this->findOrFailById($area);
         $service = PixelServiceManager::getServiceForServiceBaseType(AreaUpdatingService::class);
         return (new $service($area))->update();
     }
 
     /**
-     * @param Area $area
+     * @param int $area
      * @return JsonResponse
      */
-    public function destroy($area): JsonResponse
+    public function destroy(int $area): JsonResponse
     {
-        $area = Area::findOrFail($area);
+        $area = $this->findOrFailById($area);
         $service = PixelServiceManager::getServiceForServiceBaseType(AreaDeletingService::class);
         return (new $service($area))->delete();
     }

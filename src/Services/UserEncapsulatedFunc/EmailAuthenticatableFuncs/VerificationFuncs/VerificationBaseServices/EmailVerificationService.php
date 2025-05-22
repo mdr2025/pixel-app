@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Requests\AuthenticationRequests\UserAuthenticationRequests\VerificationTokenRequest;
+use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Services\Traits\GeneralValidationMethods;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\EmailAuthenticatableSensitivePropChangers\VerificationPropsChanger;
 use PixelApp\Notifications\UserNotifications\EmailNotifications\EmailVerificationNotifications\EmailVerificationCompletedNotification;
@@ -21,7 +22,7 @@ abstract class EmailVerificationService
     abstract protected function getAuthenticatableClass() : string;
     protected function getRequestFormClass() : string
     {
-        return VerificationTokenRequest::class;
+        return PixelHttpRequestManager::getRequestForRequestBaseType(VerificationTokenRequest::class);
     }
     protected function notifyAuthenticatable(): void
     {
