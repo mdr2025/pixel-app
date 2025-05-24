@@ -83,6 +83,10 @@ class PasswordResettingService
 
         return $this;
     }
+    protected function getPasswordResetModelClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(PasswordReset::class);
+    }
 
     /**
      * @return $this
@@ -90,7 +94,10 @@ class PasswordResettingService
      */
     protected function setPasswordResetModel(): self
     {
-        $resetPasswordModel = PasswordReset::withResetPasswordToken($this->data["token"])->latest()->first();
+        $modelClass = $this->getPasswordResetModelClass();
+
+        $resetPasswordModel = $modelClass::withResetPasswordToken($this->data["token"])->latest()->first();
+        
         if (!$resetPasswordModel)
         {
             throw new Exception("Invalid Reset Password Token !");

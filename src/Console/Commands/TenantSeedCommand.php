@@ -26,16 +26,7 @@ class TenantSeedCommand extends SeedCommand
 
     protected $name = 'tenant-company:seed';
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct(ConnectionResolverInterface $resolver)
-    {
-        parent::__construct($resolver);
-    }
-
+ 
     /**
      * Execute the console command.
      *

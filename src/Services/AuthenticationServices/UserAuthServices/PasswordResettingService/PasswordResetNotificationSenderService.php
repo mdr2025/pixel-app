@@ -67,6 +67,11 @@ class PasswordResetNotificationSenderService
         return $this;
     }
 
+    protected function getPasswordResetModelClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(PasswordReset::class);
+    }
+
     /**
      * @return $this
      * @throws JsonException
@@ -75,7 +80,9 @@ class PasswordResetNotificationSenderService
     {
         $this->data["token"] = $this::$passwordResettingLinkGenerator->getGeneratedToken();
 
-        if (!PasswordReset::create($this->data))
+        $modelClass = $this->getPasswordResetModelClass();
+
+        if (!$modelClass::create($this->data))
         {
             throw new JsonException("Failed To Create Reset Password Token For The Given User");
         }
@@ -103,7 +110,9 @@ class PasswordResetNotificationSenderService
 
     protected function deleteOldPasswordResetModels() : self
     {
-        PasswordReset::where("email" , $this->user->email)->delete();
+        $modelClass = $this->getPasswordResetModelClass();
+        
+        $modelClass::where("email" , $this->user->email)->delete();
         return $this;
     }
 

@@ -43,9 +43,7 @@ class RefreshTheProject extends Command
         Artisan::call("db:seed");
         $this->info(Artisan::output());
         Artisan::call("passport:install");
-        $this->info(Artisan::output());
-        Artisan::call("jwt:secret");
-        $this->info(Artisan::output());
+        $this->info(Artisan::output()); 
         Artisan::call("storage:link");
         $this->info(Artisan::output());
         Artisan::call("optimize:clear");

@@ -2,13 +2,10 @@
 
 namespace  PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\StatusChangeableStatusChangers\StatusChangerTypes\SignUpAccountStatusChangerServices;
  
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse; 
 use PixelApp\Http\Requests\PixelHttpRequestManager;
-use PixelApp\Http\Requests\UserManagementRequests\SignupAccountApprovingRequest; 
-use PixelApp\Interfaces\EmailAuthenticatable;
-use PixelApp\Models\UsersModule\PixelUser; 
+use PixelApp\Http\Requests\UserManagementRequests\SignupAccountApprovingRequest;  
 
 abstract class SignUpAccountApprovingService extends SignUpAccountStatusChanger
 {

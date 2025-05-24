@@ -1,8 +1,7 @@
 <?php
 
 namespace PixelApp\Database\Factories\UserModule;
-
-use PixelApp\Models\UsersModule\PixelUser as User;
+ 
 
 class SignUpUserFactory extends UserFactory
 {

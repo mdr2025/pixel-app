@@ -5,11 +5,16 @@ namespace PixelApp\Database\Seeders\UserModuleSeeders;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use PixelApp\Models\UsersModule\PixelUser;
+use PixelApp\Models\PixelModelManager; 
 
 class SignUpUserSeeder extends Seeder
 {
 
+
+    protected function getUSerModelClass() : string
+    {
+        return PixelModelManager::getUSerModelClass();
+    }
 
     /**
      * Run the database seeds.
@@ -26,7 +31,7 @@ class SignUpUserSeeder extends Seeder
         for ($i = 60000; $i < 60100;$i++){
             $firstName ='usman '.$i;
             $lastName ='ahmed '.$i;
-            PixelUser::create([
+            $this->getUSerModelClass()::create([
                 'first_name' => $firstName,
                 'last_name' => $lastName,
                 'name' => $firstName . " " . $lastName,

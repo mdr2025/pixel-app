@@ -25,6 +25,7 @@ use PixelApp\Interfaces\EmailAuthenticatable;
 use PixelApp\Interfaces\HasUUID;
 use PixelApp\Interfaces\TenancyInterfaces\CanSyncData;
 use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\MustHaveRole;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\TenancyDataSyncingEventFactories\UsersModule\TenantUserDataSyncingEventFactory;
 use PixelApp\Models\Traits\OptionalRelationsTraits\MustHaveRoleMethods;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\HasAdminAssignableProps;
@@ -160,14 +161,25 @@ implements
         $this->name = "{$this->first_name} {$this->last_name}";
     }
     //Relationships part - start
+    
+    protected function getUserProfileModelClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(UserProfile::class);
+    }
+
     public function profile(): HasOne
     {
-        return $this->hasOne(UserProfile::class, "user_id", "id");
+        return $this->hasOne($this->getUserProfileModelClass(), "user_id", "id");
+    }
+
+    protected function getSignatureModelClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(Signature::class);
     }
 
     public function signature()
     {
-        return $this->hasOne(Signature::class, 'user_id', 'id');
+        return $this->hasOne($this->getSignatureModelClass() , 'user_id', 'id');
     }
 
 
@@ -182,9 +194,14 @@ implements
         return in_array($permissionToCheck, $userPermissions);
     }
 
+    protected function getUSerAttachmentModelClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(UserAttachment::class);
+    }
+
     public function attachments(): HasMany
     {
-        return $this->hasMany(UserAttachment::class, 'user_id');
+        return $this->hasMany($this->getUSerAttachmentModelClass(), 'user_id');
     }
     public function getOwnedRelationships(): array
     {

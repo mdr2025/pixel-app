@@ -5,10 +5,17 @@ namespace PixelApp\Database\Seeders\UserModuleSeeders;
  
 use Illuminate\Database\Seeder;
 use PixelApp\Database\Factories\UserModule\AcceptedUserFactory;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\UsersModule\UserProfile;
 
 class AcceptedUserSeeder extends Seeder
 {
+
+    protected function getUserProfileModelClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(UserProfile::class);
+    }
+
     /**
      * Run the database seeds.
      *
@@ -19,7 +26,7 @@ class AcceptedUserSeeder extends Seeder
         $factory = new AcceptedUserFactory();
         $factory->count(200)
                 ->withRoleState()->withDepartmentState()
-                ->has( UserProfile::factory()->count(1) )
+                ->has( $this->getUserProfileModelClass()::factory()->count(1) )
                 ->create();
     }
 }

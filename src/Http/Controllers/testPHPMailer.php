@@ -2,14 +2,17 @@
 namespace PixelApp\Http\Controllers;
  
 use PHPMailer\PHPMailer;
-use PixelApp\Models\UsersModule\UsersEmailSetting as UsersModuleUsersEmailSetting;
+use PixelApp\Models\PixelModelManager;
+use PixelApp\Models\UsersModule\UsersEmailSetting ;
 
 class testPHPMailer extends PixelBaseController
 {
     public function index()
     {
         try {
-            $email = UsersModuleUsersEmailSetting::where('username','usmanahmedfathy@gmail.com')->get()->first();
+            $modelClass = PixelModelManager::getModelForModelBaseType(UsersEmailSetting::class);
+            
+            $email = $modelClass::where('username','usmanahmedfathy@gmail.com')->get()->first();
             $text             = 'Hello Mail';
             $mail             = new PHPMailer\PHPMailer(true); // create a n
             $mail->SMTPDebug  = 2; // debugging: 1 = errors and messages, 2 = messages only

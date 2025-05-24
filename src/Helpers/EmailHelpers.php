@@ -1,10 +1,10 @@
 <?php
 
 namespace PixelApp\Helpers;
- 
-use App\Services\SystemSettings\UsersModule\MailService;
+  
 use PixelApp\Models\CompanyModule\TenantCompany;
 use PixelApp\Models\PixelModelManager;
+use PixelApp\Services\MailService;
 
 class EmailHelpers
 {

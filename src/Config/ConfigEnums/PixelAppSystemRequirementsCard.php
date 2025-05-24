@@ -2,6 +2,7 @@
 
 namespace PixelApp\Config\ConfigEnums;
 
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppInstallingManagers\PixelAppInstallingManager;
 
 class PixelAppSystemRequirementsCard
 {
@@ -28,9 +29,14 @@ class PixelAppSystemRequirementsCard
         return static::$instance;
     }
 
+    protected function getDefaultAppType() : string
+    {
+        return PixelAppInstallingManager::getDefaultAppType();
+    }
+
     protected function setDefaultSystemType(): void
     {
-        $this->setSystemType(PixelAppTypeEnum::DEFAULT_PIXEL_APP_TYPE);
+        $this->setSystemType( $this->getDefaultAppType() );
     }
 
     public function setSystemType(string $systemType): self

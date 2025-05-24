@@ -53,6 +53,11 @@ class PixelAppInstallingManager
         PixelConfigManager::setPixelPackageConfigFileKeys($changes);
     }
 
+    public static function getDefaultAppType() : string
+    {
+        return PixelAppTypeEnum::DEFAULT_PIXEL_APP_TYPE;
+    }
+
     public static function getValidAppTypes() : array
     {
         return [

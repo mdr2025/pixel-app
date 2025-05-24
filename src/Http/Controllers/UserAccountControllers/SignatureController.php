@@ -6,6 +6,7 @@ use PixelApp\Http\Controllers\PixelBaseController as Controller;
 use PixelApp\Http\Resources\SingleResource; 
 use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Resources\PixelHttpResourceManager;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\UsersModule\Signature;
 use PixelApp\Services\UserCompanyAccountServices\Signature\SignatureDeletingService;
 use PixelApp\Services\UserCompanyAccountServices\Signature\SignatureStoringService;
@@ -15,17 +16,26 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class SignatureController extends Controller
 {
+
+    protected function getSignatureModelClass()  :string
+    {
+        return PixelModelManager::getModelForModelBaseType(Signature::class);
+    }
+
     public function index()
     {
+        $modelClass = $this->getSignatureModelClass();
 
-        $data = QueryBuilder::for(Signature::class)->get();
+        $data = QueryBuilder::for($modelClass)->get();
 
         return Response::success(['list' => $data]);
     }
 
     public function list()
     {
-        $data = QueryBuilder::for(Signature::class)->get();
+        $modelClass = $this->getSignatureModelClass();
+
+        $data = QueryBuilder::for($modelClass)->get();
         //
         return Response::json([
             'data' => $data,
@@ -43,14 +53,19 @@ class SignatureController extends Controller
 
     public function show()
     {
-        $data = Signature::where('user_id',auth()->user()->id)->firstOrFail();
+        $modelClass = $this->getSignatureModelClass();
+
+        $data = $modelClass::where('user_id',auth()->user()->id)->firstOrFail();
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(SingleResource::class);
         return new $resourceClass($data);
     }
  
     public function update()
     {
-        $signature = Signature::where('user_id',auth()->user()->id)->firstOrFail();
+        $modelClass = $this->getSignatureModelClass();
+
+        $signature = $modelClass::where('user_id',auth()->user()->id)->firstOrFail();
+
         $service = PixelServiceManager::getServiceForServiceBaseType(SignatureUpdatingService::class);
         return (new $service($signature))->update();
     }
@@ -58,7 +73,10 @@ class SignatureController extends Controller
 
     public function destroy( $signature)
     {
-        $signature = Signature::findOrFail($signature);
+        $modelClass = $this->getSignatureModelClass();
+
+        $signature = $modelClass::findOrFail($signature);
+        
         $service = PixelServiceManager::getServiceForServiceBaseType(SignatureDeletingService::class);
         return (new $service($signature))->delete();
     }

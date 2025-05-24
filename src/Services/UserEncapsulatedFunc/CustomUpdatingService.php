@@ -6,10 +6,8 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
-use PixelApp\Interfaces\EmailAuthenticatable;
-use PixelApp\Models\UsersModule\PixelUser;
-use PixelApp\Services\Traits\GeneralValidationMethods;
-use PixelApp\Services\UsersManagement\Interfaces\AdminChangerInterface;
+use PixelApp\Interfaces\EmailAuthenticatable; 
+use PixelApp\Services\Traits\GeneralValidationMethods; 
 
 abstract class CustomUpdatingService
 {

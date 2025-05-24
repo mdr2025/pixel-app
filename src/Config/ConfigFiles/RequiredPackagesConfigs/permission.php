@@ -1,5 +1,7 @@
 <?php
 
+use PixelApp\Models\SystemConfigurationModels\RoleModel;
+
 return [
 
     'models' => [
@@ -24,7 +26,7 @@ return [
          * `Spatie\Permission\Contracts\Role` contract.
          */
 
-        'role' => Spatie\Permission\Models\Role::class,
+        'role' => RoleModel::class,
 
     ],
 
