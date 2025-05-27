@@ -8,14 +8,9 @@ use PixelApp\Models\PixelModelManager;
 
 trait HasManyCitiesMethods
 {
-    protected function getCityModelClass() : string
-    {
-        return PixelModelManager::getModelForModelBaseType(City::class);
-    }
- 
     public function cities() : HasMany
     {
-        $cityClass = $this->getCityModelClass();
+        $cityClass = PixelModelManager::getModelForModelBaseType(City::class);
         return $this->hasMany($cityClass);
     }
 }

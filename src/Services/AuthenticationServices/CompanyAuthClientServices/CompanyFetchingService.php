@@ -31,16 +31,10 @@ class CompanyFetchingService extends AdminPanelConnectingClientService
     {
         return new FecthTenantCompanyRouteIdentifierFactory($this->companyDomain);
     }
-
-    public function getResponse(): JsonResponse
-    {
-        $routeIdentifier = $this->makeAdminPanelRouteIdentifier(); 
-        return $this->connectOnAdminPanel()->requestOnRoute($routeIdentifier);
-    }
-    
+  
     public function getResponseArray(JsonResponse $response) : array
     {
-        return $response->getData(true)["data"];
+        return parent::getResponseArray($response)["data"];
     }
 
     protected function getResponseRelationsData(array $attributes) : array
@@ -96,7 +90,6 @@ class CompanyFetchingService extends AdminPanelConnectingClientService
             $tenant = $this->initNewTenant($attributes);
             $this->setTenantRelations($tenant , $attributes);
             
-            dd($tenant);
             return $tenant;
         }
         return null;

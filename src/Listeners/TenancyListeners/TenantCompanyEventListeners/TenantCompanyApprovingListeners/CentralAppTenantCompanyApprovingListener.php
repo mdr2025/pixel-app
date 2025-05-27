@@ -2,16 +2,14 @@
 
 namespace PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners;
 
-use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApproved;
-use PixelApp\Jobs\TenantCompanyJobs\TenantCompanyApprovingNotifierJob;
-use PixelApp\Jobs\TenantCompanyJobs\TenantDatabaseCreatingCustomJob;
-use PixelApp\Jobs\TenantCompanyJobs\TenantDatabaseMigratingCustomJob;
-use PixelApp\Jobs\TenantCompanyJobs\TenantDatabaseSeedingCustomJob;
-use PixelApp\Jobs\TenantCompanyJobs\TenantPassportClientsSeederJob;
-use PixelApp\Jobs\TenantCompanyJobs\TenantSuperAdminSeederJob; 
+use PixelApp\Jobs\TenantCompanyJobs\TenantConfiguringProcessJobs\TenantCompanyApprovingNotifierJob;
+use PixelApp\Jobs\TenantCompanyJobs\TenantApprovingProcessJobs\TenantDatabaseCreatingCustomJob;
+use PixelApp\Jobs\TenantCompanyJobs\TenantConfiguringProcessJobs\TenantDatabaseMigratingCustomJob;
+use PixelApp\Jobs\TenantCompanyJobs\TenantConfiguringProcessJobs\TenantDatabaseSeedingCustomJob;
+use PixelApp\Jobs\TenantCompanyJobs\TenantConfiguringProcessJobs\TenantPassportClientsSeederJob;
+use PixelApp\Jobs\TenantCompanyJobs\TenantConfiguringProcessJobs\TenantSuperAdminSeederJob; 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApprovingEvents\ApprovedByAdminPanel;
 use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApprovingEvents\ApprovedByCentralApp;
 use PixelApp\Models\CompanyModule\TenantCompany;
 use Stancl\JobPipeline\JobPipeline;

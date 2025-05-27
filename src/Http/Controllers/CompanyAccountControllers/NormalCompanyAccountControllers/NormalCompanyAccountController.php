@@ -28,7 +28,7 @@ class NormalCompanyAccountController extends Controller
         return (new $service())->update(); 
     }
       
-    public function changeDefaultAdmin()
+    public function changeDefaultAdmin(): JsonResponse
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(NormalCompanyDefaultAdminChangingService::class);
         return (new $service())->update();

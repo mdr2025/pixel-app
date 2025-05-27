@@ -43,6 +43,7 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
     {
         Route::get('check-cr-no/{cr}', [CompanyAuthServerController::class , 'checkCrNo']);
     }
+    
     protected function defineCheckCrNoClientRoute() : void
     {
         Route::get('check-cr-no/{cr}', [CompanyAuthClientController::class , 'checkCrNo']);

@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Jobs\TenantCompanyJobs;
+namespace PixelApp\Jobs\TenantCompanyJobs\TenantConfiguringProcessJobs;
 
 
 use Exception;
@@ -8,20 +8,21 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Str;
 use Laravel\Passport\Client;
 use Laravel\Passport\PersonalAccessClient;
-use Stancl\Tenancy\Contracts\TenantWithDatabase;
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+use PixelApp\Jobs\TenantCompanyJobs\TenantApprovingFailingProcessJobs\ClientSideFailingProcessJobs\TenantConfiguringCancelingJob;
+use PixelApp\Jobs\TenantCompanyJobs\TenantApprovingFailingProcessJobs\ServerSideFailingProcessJobs\TenantApprovingCancelingJob;
+use PixelApp\Models\CompanyModule\TenantCompany;
 use Throwable;
 
 class TenantPassportClientsSeederJob
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /** @var TenantWithDatabase */
-    protected TenantWithDatabase $tenant;
+    protected TenantCompany $tenant;
 
-    public function __construct(TenantWithDatabase $tenant )
+    public function __construct(TenantCompany $tenant )
     {
         $this->tenant = $tenant;
     }
@@ -34,11 +35,22 @@ class TenantPassportClientsSeederJob
      * When failed ... this method will be called by JobPipeLine object
      * Tenant database will be deleted if the user can't be seeded
      */
-    public function failed(Throwable $exception) : void
+    public function failed(\Throwable $exception) : void
     {
-        TenantDeletingDatabaseCustomJob::dispatch($this->tenant);
-        TenantApprovingCancelingJob::dispatch($this->tenant);
-        throw new Exception($exception->getMessage());
+        if(PixelTenancyManager::isItMonolithTenancyApp())
+        {
+
+            TenantApprovingCancelingJob::dispatch($this->tenant , $exception);
+
+        }elseif(PixelTenancyManager::isItTenantApp())
+        {
+            TenantConfiguringCancelingJob::dispatch($this->tenant , $exception);
+        }
+
+
+        // TenantDeletingDatabaseCustomJob::dispatch($this->tenant);
+        // TenantApprovingCancelingJob::dispatch($this->tenant);
+        // throw new Exception($exception->getMessage());
     }
 
     /**

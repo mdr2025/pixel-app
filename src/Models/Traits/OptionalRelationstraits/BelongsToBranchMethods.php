@@ -10,15 +10,12 @@ use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensiti
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\UserSensitivePropChanger;
 
 trait BelongsToBranchMethods
-{
-    protected function getBranchModelClass() : string
-    {
-        return PixelModelManager::getModelForModelBaseType(Branch::class);
-    }
-
+{ 
     public function branch() : BelongsTo
     {
-        return $this->belongsTo( $this->getBranchModelClass() );
+        return $this->belongsTo( 
+                                PixelModelManager::getModelForModelBaseType(Branch::class)
+                               );
     }
  
     

@@ -1,21 +1,21 @@
 <?php
 
-namespace PixelApp\Jobs;
+namespace PixelApp\Jobs\CompanyAccountSettingsJobs;
 
-use Database\Seeders\CompanyResetSeeder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use PixelApp\Database\PixelDatabaseManager;
 
-class ResetCompanyDataJob implements ShouldQueue
+abstract class CompanyDataResettingBaseJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    abstract protected function seedDatabase();
+    
     /**
      * Create a new job instance.
      *
@@ -37,11 +37,10 @@ class ResetCompanyDataJob implements ShouldQueue
         // try {
             //trucate tables
             $this->trucateTables($this->getTables());
-            //seed the current tenant
-            Artisan::call('tenants:seed', [
-                '--tenants' => [tenant()->getTenantKey()],
-                '--class'   => CompanyResetSeeder::class
-            ]); 
+
+            //seeding database
+            $this->seedDatabase();
+
                 // DB::commit(); 
         // } catch (\Throwable $e) 
         // {

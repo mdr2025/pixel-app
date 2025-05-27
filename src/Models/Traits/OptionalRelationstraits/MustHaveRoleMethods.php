@@ -10,14 +10,10 @@ use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensiti
 
 trait MustHaveRoleMethods
 {
-    protected function getRoleModelClass() : string
-    {
-        return PixelModelManager::getModelForModelBaseType(RoleModel::class);
-    }
- 
     public function role(): BelongsTo
     {
-        return $this->belongsTo($this->getRoleModelClass(), "role_id", "id");
+        $roleModelClass = PixelModelManager::getModelForModelBaseType(RoleModel::class);
+        return $this->belongsTo($roleModelClass , "role_id", "id");
     }
 
     public function getRolePropChanger() : UserSensitivePropChanger

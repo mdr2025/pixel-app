@@ -8,14 +8,9 @@ use PixelApp\Models\SystemConfigurationModels\CountryModule\Area;
 
 trait BelongsToAreaMethods
 {
-    protected function getAreaModelClass() : string
-    {
-        return PixelModelManager::getModelForModelBaseType(Area::class);
-    }
- 
     public function area(): BelongsTo
     {
-        $areaClass = $this->getAreaModelClass();
+        $areaClass = PixelModelManager::getModelForModelBaseType(Area::class);
         return $this->belongsTo($areaClass , 'area_id')->select('id', 'name' , 'city_id' , 'status');
     }
 

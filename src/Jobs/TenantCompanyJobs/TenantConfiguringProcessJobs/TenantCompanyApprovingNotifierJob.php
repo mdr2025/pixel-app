@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Jobs\TenantCompanyJobs;
+namespace PixelApp\Jobs\TenantCompanyJobs\TenantConfiguringProcessJobs;
  
 use PixelApp\Notifications\Company\CompanyApprovingNotification;
 use Exception;
@@ -11,18 +11,17 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use PixelApp\Models\CompanyModule\CompanyDefaultAdmin;
 use PixelApp\Models\CompanyModule\TenantCompany  ;
-use Stancl\Tenancy\Contracts\TenantWithDatabase;
 
 /**
- * @property TenantWithDatabase | TenantCompany $tenant
+ * @property  TenantCompany $tenant
  */
 class TenantCompanyApprovingNotifierJob
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected TenantWithDatabase | TenantCompany $tenant;
+    protected TenantCompany $tenant;
 
-    public function __construct(TenantWithDatabase $tenant)
+    public function __construct(TenantCompany $tenant)
     {
         $this->tenant = $tenant;
     }
@@ -31,6 +30,7 @@ class TenantCompanyApprovingNotifierJob
     {
         return new CompanyApprovingNotification($this->tenant);
     }
+
     protected function getTenantDefaultAdmin() : ?CompanyDefaultAdmin
     {
         return $this->tenant->defaultAdmin;
@@ -46,6 +46,7 @@ class TenantCompanyApprovingNotifierJob
         {
             throw new Exception("Failed to send company approving notification ... No default admin is found ! ");
         }
+
         $defaultAdmin->notify( $this->getNotification() );
     }
 

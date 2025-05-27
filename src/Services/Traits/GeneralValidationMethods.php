@@ -17,6 +17,7 @@ trait GeneralValidationMethods
          */
         return "";
     }
+    
     protected function setRequestData() : self
     {
         $this->initValidator();

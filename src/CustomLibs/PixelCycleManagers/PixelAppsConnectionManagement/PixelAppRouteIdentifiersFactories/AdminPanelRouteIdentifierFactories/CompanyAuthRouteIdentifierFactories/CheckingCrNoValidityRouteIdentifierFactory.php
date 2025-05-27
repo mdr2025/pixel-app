@@ -24,8 +24,7 @@ class CheckingCrNoValidityRouteIdentifierFactory extends PixelAppRouteIdentifier
         return "api/check-cr-no/{cr}";
     }
     public function createRouteIdentifier()  :PixelAppRouteIdentifier
-    {
-        dd($this->getUri());
+    { 
         return (new PixelAppGetRouteIdentifier($this->getUri() , [] , $this->getUriParameters()));
     }
 }

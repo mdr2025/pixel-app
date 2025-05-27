@@ -2,18 +2,17 @@
 
 namespace PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners;
 
-use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApproved;
-use PixelApp\Jobs\TenantCompanyJobs\TenantCompanyApprovingNotifierJob;
-use PixelApp\Jobs\TenantCompanyJobs\TenantDatabaseCreatingCustomJob;
-use PixelApp\Jobs\TenantCompanyJobs\TenantDatabaseMigratingCustomJob;
-use PixelApp\Jobs\TenantCompanyJobs\TenantDatabaseSeedingCustomJob;
-use PixelApp\Jobs\TenantCompanyJobs\TenantPassportClientsSeederJob;
-use PixelApp\Jobs\TenantCompanyJobs\TenantSuperAdminSeederJob; 
+use PixelApp\Jobs\TenantCompanyJobs\TenantConfiguringProcessJobs\TenantCompanyApprovingNotifierJob;
+use PixelApp\Jobs\TenantCompanyJobs\TenantConfiguringProcessJobs\TenantDatabaseMigratingCustomJob;
+use PixelApp\Jobs\TenantCompanyJobs\TenantConfiguringProcessJobs\TenantDatabaseSeedingCustomJob;
+use PixelApp\Jobs\TenantCompanyJobs\TenantConfiguringProcessJobs\TenantPassportClientsSeederJob;
+use PixelApp\Jobs\TenantCompanyJobs\TenantConfiguringProcessJobs\TenantSuperAdminSeederJob; 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApprovingEvents\ApprovedByAdminPanel;
 use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApprovingEvents\RequestTenantAppToConfigureApprovedTenant;
 use PixelApp\Models\CompanyModule\TenantCompany;
+use PixelApp\Services\AuthenticationServices\CompanyAuthClientServices\CompanyFetchingService;
+use PixelApp\Services\PixelServiceManager;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Throwable;
@@ -21,7 +20,9 @@ use Throwable;
 class TenantConfiguringRequestListener implements ShouldQueue
 {
     use  Queueable;
+
     protected TenantWithDatabase | TenantCompany $tenantCompany;
+
     /**
      * Create the event listener.
      *
@@ -62,11 +63,22 @@ class TenantConfiguringRequestListener implements ShouldQueue
         $this->getExcutableJobPipeline()->handle();
         return $this;
     }
+
+    protected function initCompanyFetchingService() : CompanyFetchingService
+    {
+        $serviceClass = PixelServiceManager::getServiceForServiceBaseType(CompanyFetchingService::class);
+        return new $serviceClass;
+    }
+
+    protected function fetchTenantByDomain(string $companyDomain) : ?TenantCompany
+    {
+        return $this->initCompanyFetchingService()->fetchTenantCompany($companyDomain);
+    } 
+
     protected function setTenant(RequestTenantAppToConfigureApprovedTenant $event): self
     {
-        /** @var TenantWithDatabase $tenant  */
-        $tenant = $event->tenant;
-        $this->tenantCompany = $tenant;
+        $companyDomain = $event->getCompanyDomain();
+        $this->tenantCompany = $this->fetchTenantByDomain($companyDomain);
         return $this;
     }
 

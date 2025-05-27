@@ -13,13 +13,19 @@ use PixelApp\CustomLibs\Tenancy\PixelTenancyManager ;
 use PixelApp\Events\TenancyEvents\DataSyncingEvents\FromCentralSideEvents\TenantDBDataSyncingEvent;
 use PixelApp\Events\TenancyEvents\DataSyncingEvents\FromTenantSideEvents\MonolithAppEvents\CentralDBDataSyncingEvent;
 use PixelApp\Events\TenancyEvents\DataSyncingEvents\FromTenantSideEvents\SeparatedTenantAppEvents\AdminPanelDBDataSyncingEvent;
-use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApproved;
+use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApprovingEvents\ApprovedByAdminPanel;
+use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApprovingEvents\ApprovedByCentralApp;
+use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApprovingEvents\RequestTenantAppToConfigureApprovedTenant;
+use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApprovingEvents\TenantConfiguringCancelingEvent;
 use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyRegistered;
 use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantDefaultAdminNewEmailHavingEvent;
 use PixelApp\Listeners\TenancyListeners\DataSyncingListeners\FromCentralSideListeners\TenantDBDataSyncingListener;
 use PixelApp\Listeners\TenancyListeners\DataSyncingListeners\FromTenantSideListeners\MonolithAppListeners\CentralDBDataSyncingListener;
 use PixelApp\Listeners\TenancyListeners\DataSyncingListeners\FromTenantSideListeners\SeparatedTenantAppListeners\AdminPanelDBDataSyncingListener;
-use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\TenantCompanyApprovingListener;
+use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\AdminPanelTenantCompanyApprovingListener;
+use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\CentralAppTenantCompanyApprovingListener;
+use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\TenantConfiguringCancelingEventListener;
+use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\TenantConfiguringRequestListener;
 use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\TenantDefaultAdminEmailVerificationSenderListener;
 use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\TenantRegisteringListener;
 use Stancl\JobPipeline\JobPipeline;
@@ -63,8 +69,17 @@ class TenancyServiceProvider extends ServiceProvider
             ],
             Events\UpdatingTenant::class => [],
             Events\TenantUpdated::class => [],
-            TenantCompanyApproved::class => [
-                TenantCompanyApprovingListener::class,
+            ApprovedByAdminPanel::class => [
+                AdminPanelTenantCompanyApprovingListener::class,
+            ],
+            ApprovedByCentralApp::class => [
+                CentralAppTenantCompanyApprovingListener::class
+            ],
+            RequestTenantAppToConfigureApprovedTenant::class => [
+                TenantConfiguringRequestListener::class
+            ],
+            TenantConfiguringCancelingEvent::class => [
+                TenantConfiguringCancelingEventListener::class
             ],
             Events\DeletingTenant::class => [],
             Events\TenantDeleted::class => [],

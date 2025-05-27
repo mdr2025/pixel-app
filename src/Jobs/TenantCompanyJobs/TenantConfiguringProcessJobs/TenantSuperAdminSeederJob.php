@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Jobs\TenantCompanyJobs;
+namespace PixelApp\Jobs\TenantCompanyJobs\TenantConfiguringProcessJobs;
  
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -8,23 +8,24 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+use PixelApp\Jobs\TenantCompanyJobs\TenantApprovingFailingProcessJobs\ClientSideFailingProcessJobs\TenantConfiguringCancelingJob;
+use PixelApp\Jobs\TenantCompanyJobs\TenantApprovingFailingProcessJobs\ServerSideFailingProcessJobs\TenantApprovingCancelingJob;
 use PixelApp\Models\CompanyModule\CompanyDefaultAdmin;
+use PixelApp\Models\CompanyModule\TenantCompany;
 use PixelApp\Services\UserEncapsulatedFunc\RegistrableUserHandlers\RegistrableDefaultSuperAdminApprover;
-use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Throwable;
 
-/**
- * @property TenantWithDatabase $tenant
- */
+
 class TenantSuperAdminSeederJob
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected TenantWithDatabase $tenant;
+    protected TenantCompany $tenant;
     protected ?Model $admin = null;
 
 
-    public function __construct(TenantWithDatabase $tenant)
+    public function __construct(TenantCompany $tenant)
     {
         $this->tenant = $tenant;
     }
@@ -36,11 +37,23 @@ class TenantSuperAdminSeederJob
      * When failed ... this method will be called by JobPipeLine object
      * Tenant database will be deleted if the user can't be seeded
      */
-    public function failed(Throwable $exception) : void
+    public function failed(\Throwable $exception) : void
     {
-        TenantDeletingDatabaseCustomJob::dispatch($this->tenant);
-        TenantApprovingCancelingJob::dispatch($this->tenant);
-        throw new Exception($exception->getMessage());
+
+        if(PixelTenancyManager::isItMonolithTenancyApp())
+        {
+
+            TenantApprovingCancelingJob::dispatch($this->tenant , $exception);
+
+        }elseif(PixelTenancyManager::isItTenantApp())
+        {
+            TenantConfiguringCancelingJob::dispatch($this->tenant , $exception);
+        }
+       
+       
+        // TenantDeletingDatabaseCustomJob::dispatch($this->tenant);
+        // TenantApprovingCancelingJob::dispatch($this->tenant);
+        // throw new Exception($exception->getMessage());
     }
 
     /**

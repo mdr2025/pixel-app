@@ -8,14 +8,9 @@ use PixelApp\Models\PixelModelManager;
 
 trait HasManyAreasMethods
 {
-    protected function getAreaModelClass() : string
-    {
-        return PixelModelManager::getModelForModelBaseType(Area::class);
-    }
- 
     public function areas() : HasMany
     {
-        $areaClass = $this->getAreaModelClass();
+        $areaClass = PixelModelManager::getModelForModelBaseType(Area::class);
         return $this->hasMany($areaClass);
     }
 }

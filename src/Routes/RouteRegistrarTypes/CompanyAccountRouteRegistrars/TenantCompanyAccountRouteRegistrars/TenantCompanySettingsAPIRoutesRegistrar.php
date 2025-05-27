@@ -5,25 +5,22 @@ namespace PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\Tena
 use Illuminate\Support\Facades\Route;
 use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
+use PixelApp\Http\Controllers\CompanyAccountControllers\CompanySettingsControllers\TenantCompanySettingsControllers\TenantCompanyDataResettingController;
 use PixelApp\Routes\PixelRouteManager;
 
 class TenantCompanySettingsAPIRoutesRegistrar extends PixelRouteRegistrar 
 { 
     public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
-        if(  PixelRouteManager::isItTenantApp())
+        if(  PixelRouteManager::isItTenantApp() || PixelRouteManager::isItMonolithTenancyApp() )
         {
             $this->defineTenantAppRoutes(); 
-        
-        } elseif(PixelRouteManager::isItMonolithTenancyApp()  )
-        {
-            
         }
     }
     
     protected function defineCompanyResettingRoute() : void
     { 
-        Route::post('reset-data', [UserCompanySettingController::class, 'resetData']);
+        Route::post('reset-data', [TenantCompanyDataResettingController::class, 'resetData']);
     }
  
     protected function defineCompanyResettingRoutes(RouteRegistrar $routeRegistrar ) : void
@@ -43,16 +40,6 @@ class TenantCompanySettingsAPIRoutesRegistrar extends PixelRouteRegistrar
     {
         return Route::prefix('api/company');
     }
- 
-    
-    protected function defineNormalAppRoutes() : void
-    {
-       $routeRegistrar = $this->initMainApiRouteRegistrar();
-
-       $this->attachGlobalMiddlewares($routeRegistrar);
-
-       $this->defineCompanyResettingRoutes($routeRegistrar);
-    }
 
     protected function defineTenantAppRoutes() : void
     {
@@ -62,7 +49,5 @@ class TenantCompanySettingsAPIRoutesRegistrar extends PixelRouteRegistrar
 
        $this->defineCompanyResettingRoutes($routeRegistrar);
     }
- 
-    
      
 }

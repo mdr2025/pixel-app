@@ -44,6 +44,11 @@ class PixelRouteManager
         return static::isItTenantApp() || static::isItMonolithTenancyApp();
     }
     
+    public static function isItNormalApp() : bool
+    {
+        return PixelTenancyManager::isItNormalApp();
+    }
+
     public static function isItAdminPanelApp() : bool
     {
         return PixelTenancyManager::isItAdminPanelApp();

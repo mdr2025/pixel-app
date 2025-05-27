@@ -8,14 +8,9 @@ use PixelApp\Models\SystemConfigurationModels\CountryModule\Country;
 
 trait BelongsToCountryMethods
 {
-    protected function getCountryModelClass() : string
-    {
-        return PixelModelManager::getModelForModelBaseType(Country::class);
-    }
- 
     public function country(): BelongsTo
     {
-        $countryClass = $this->getCountryModelClass();
+        $countryClass = PixelModelManager::getModelForModelBaseType(Country::class);
         return $this->belongsTo($countryClass , 'country_id');
     }
 

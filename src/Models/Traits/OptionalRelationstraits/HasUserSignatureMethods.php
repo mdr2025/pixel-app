@@ -8,14 +8,9 @@ use PixelApp\Models\UsersModule\Signature;
 
 trait HasUserSignatureMethods
 {
-    protected function getSinatureModelClass() : string
+    public function signature() : HasOne
     {
-        return PixelModelManager::getModelForModelBaseType(Signature::class);
-    }
- 
-    public function cities() : HasOne
-    {
-        $signatureClass = $this->getSinatureModelClass();
+        $signatureClass = PixelModelManager::getModelForModelBaseType(Signature::class);
         return $this->hasOne($signatureClass);
     }
 }

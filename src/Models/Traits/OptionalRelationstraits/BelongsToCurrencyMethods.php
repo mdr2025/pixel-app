@@ -8,14 +8,9 @@ use PixelApp\Models\SystemConfigurationModels\Currency;
 
 trait BelongsTocurrencyMethods
 {
-    protected function getCurrencyModelClass() : string
-    {
-        return PixelModelManager::getModelForModelBaseType(Currency::class);
-    }
- 
     public function currency(): BelongsTo
     {
-        $currencyClass = $this->getCurrencyModelClass();
+        $currencyClass = PixelModelManager::getModelForModelBaseType(Currency::class);
         return $this->belongsTo($currencyClass , 'currency_id');
     }
 

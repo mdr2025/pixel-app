@@ -10,14 +10,9 @@ use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensiti
 
 trait BelongsToDepartmentMethods
 {
-    protected function getDepartmentModelClass() : string
-    {
-        return PixelModelManager::getModelForModelBaseType(Department::class);
-    }
- 
     public function department(): BelongsTo
     {
-        $departmentClass = $this->getDepartmentModelClass();
+        $departmentClass = PixelModelManager::getModelForModelBaseType(Department::class);
         return $this->belongsTo($departmentClass)->select('id', 'name' , 'parent_id' , 'status');
     }
 

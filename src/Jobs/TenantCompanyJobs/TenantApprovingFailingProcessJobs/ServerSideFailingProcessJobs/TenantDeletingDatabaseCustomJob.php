@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Jobs\TenantCompanyJobs;
+namespace PixelApp\Jobs\TenantCompanyJobs\TenantApprovingFailingProcessJobs\ServerSideFailingProcessJobs;
 
 use PixelApp\Models\WorkSector\CompanyModule\TenantCompany;
 use Stancl\Tenancy\Exceptions\DatabaseManagerNotRegisteredException;

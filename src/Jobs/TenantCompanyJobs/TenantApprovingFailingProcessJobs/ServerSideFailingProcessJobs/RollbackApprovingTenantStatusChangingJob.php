@@ -1,25 +1,24 @@
 <?php
 
-namespace PixelApp\Jobs\TenantCompanyJobs;
+namespace PixelApp\Jobs\TenantCompanyJobs\TenantApprovingFailingProcessJobs\ServerSideFailingProcessJobs;
 
-use PixelApp\Models\WorkSector\CompanyModule\TenantCompany;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use PixelApp\Models\CompanyModule\TenantCompany as CompanyModuleTenantCompany;
-use Stancl\Tenancy\Contracts\TenantWithDatabase; 
+use PixelApp\Models\CompanyModule\TenantCompany;
 
 /**
  * @property TenantCompany $tenant
  */
-class TenantApprovingCancelingJob  implements ShouldQueue
+class RollbackApprovingTenantStatusChangingJob  implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    protected CompanyModuleTenantCompany | TenantWithDatabase $tenant;
+    protected TenantCompany $tenant;
 
-    public function __construct(TenantWithDatabase $tenant)
+    public function __construct(TenantCompany $tenant)
     {
         $this->tenant = $tenant;
     }

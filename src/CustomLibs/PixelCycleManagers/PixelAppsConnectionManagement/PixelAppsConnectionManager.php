@@ -41,7 +41,7 @@ class PixelAppsConnectionManager
     {
         if(!array_key_exists($pixelAppClientName , $this->pixelAppClients) )
         {
-            throw new Exception("No PixelAppCliuent registered with name $pixelAppClientName !");
+            throw new Exception("No PixelAppClient registered with name $pixelAppClientName !");
         } 
 
         $pixelAppClientClass = $this->pixelAppClients[$pixelAppClientName];

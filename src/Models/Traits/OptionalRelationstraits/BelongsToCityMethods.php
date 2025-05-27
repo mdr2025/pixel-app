@@ -8,14 +8,9 @@ use PixelApp\Models\SystemConfigurationModels\CountryModule\City;
 
 trait BelongsToCityMethods
 {
-    protected function getCityModelClass() : string
-    {
-        return PixelModelManager::getModelForModelBaseType(City::class);
-    }
- 
     public function city(): BelongsTo
     {
-        $cityClass = $this->getCityModelClass();
+        $cityClass = PixelModelManager::getModelForModelBaseType(City::class);
         return $this->belongsTo($cityClass , 'city_id');
     }
 

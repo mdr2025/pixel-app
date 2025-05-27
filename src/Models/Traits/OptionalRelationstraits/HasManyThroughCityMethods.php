@@ -9,20 +9,10 @@ use PixelApp\Models\PixelModelManager;
 
 trait HasManyThroughCityMethods
 {
-    protected function getCityModelClass() : string
-    {
-        return PixelModelManager::getModelForModelBaseType(City::class);
-    }
-
-    protected function getAreaModelClass() : string
-    {
-        return PixelModelManager::getModelForModelBaseType(Area::class);
-    }
-
     public function areas() : HasManyThrough
     {
-        $areaClass = $this->getAreaModelClass();
-        $cityClass = $this->getCityModelClass();
+        $areaClass = PixelModelManager::getModelForModelBaseType(Area::class);
+        $cityClass = PixelModelManager::getModelForModelBaseType(City::class);
 
         return $this->hasManyThrough($areaClass, $cityClass);
     }

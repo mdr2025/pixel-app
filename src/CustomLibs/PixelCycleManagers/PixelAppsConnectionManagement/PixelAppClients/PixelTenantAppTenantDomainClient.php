@@ -5,16 +5,22 @@ namespace PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\P
 use Exception;
 use PixelApp\Models\CompanyModule\TenantCompany;
 
-class PixelTenantAppClient extends PixelAppClient
+//to call tenant app on tenant part (on a tenant sub-domain)
+class PixelTenantAppTenantDomainClient extends PixelTenantAppCentralDomainClient
 {
     protected ?TenantCompany $tenantCompany = null;
+
+    public static function getClientName() : string
+    {
+        return "tenant-app-tenant-domain";
+    }
 
     public function getTenantCompany() : ?TenantCompany
     {
         return $this->tenantCompany;
     }
 
-    public function setTenantCompanu(TenantCompany $tenantCompany) : self
+    public function setTenantCompany(TenantCompany $tenantCompany) : self
     {
         $this->tenantCompany = $tenantCompany;
         return $this;
@@ -30,20 +36,11 @@ class PixelTenantAppClient extends PixelAppClient
         $domain = $this->getTenantCompanyDomain();
         return $domain . "." . parent::getAppRootApi();
     }
-
-    public function getAppRootApiConfigKeyName() : string
-    {
-        return "tenant-app-root-api";
-    }
-
+ 
     protected function getNonSetTenantCompanyException() : Exception
     { 
         throw new Exception("Tenant Company is not set ... failed to compose the tenant client url !");
     }
-
-    protected function getRootApiConfigValueNonSettingException() : Exception
-    {
-        return new Exception("No tenant app root api value is set in config file !");
-    }
+ 
 
 }

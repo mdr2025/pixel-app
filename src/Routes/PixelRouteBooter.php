@@ -16,7 +16,7 @@ class PixelRouteBooter
         }
 
         //just for development enviroment on catching an error with RouteRegistrar classes
-        dd($pixelRouteRegisstrarClass . "Is not a PixelRouteRegistrar typed class "); 
+        dd($pixelRouteRegisstrarClass . " Is not a PixelRouteRegistrar typed class "); 
     }
     
     protected static function loadRouteRegistrar(mixed $routeRegistrarClass, ?callable $callbackOnRouteRegistrar = null ) : bool

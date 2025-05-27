@@ -2,16 +2,11 @@
 
 namespace PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners;
 
-use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApproved;
-use PixelApp\Jobs\TenantCompanyJobs\TenantCompanyApprovingNotifierJob;
-use PixelApp\Jobs\TenantCompanyJobs\TenantDatabaseCreatingCustomJob;
-use PixelApp\Jobs\TenantCompanyJobs\TenantDatabaseMigratingCustomJob;
-use PixelApp\Jobs\TenantCompanyJobs\TenantDatabaseSeedingCustomJob;
-use PixelApp\Jobs\TenantCompanyJobs\TenantPassportClientsSeederJob;
-use PixelApp\Jobs\TenantCompanyJobs\TenantSuperAdminSeederJob; 
+use PixelApp\Jobs\TenantCompanyJobs\TenantApprovingProcessJobs\TenantDatabaseCreatingCustomJob;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApprovingEvents\ApprovedByAdminPanel;
+use PixelApp\Jobs\TenantCompanyJobs\TenantApprovingProcessJobs\TenantResourcesConfiguringClientServiceJob;
 use PixelApp\Models\CompanyModule\TenantCompany;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
@@ -43,12 +38,8 @@ class AdminPanelTenantCompanyApprovingListener implements ShouldQueue
          */
         $job =  JobPipeline::make([
                                         TenantDatabaseCreatingCustomJob::class,
-                                        TenantDatabaseMigratingCustomJob::class,
-                                        TenantDatabaseSeedingCustomJob::class,
-                                        TenantSuperAdminSeederJob::class,
-                                        TenantPassportClientsSeederJob::class,
-                                        TenantCompanyApprovingNotifierJob::class
-                                    ]);
+                                        TenantResourcesConfiguringClientServiceJob::class
+                                   ]);
         $job->passable = [$this->tenantCompany];
         return $job;
     }
@@ -62,6 +53,7 @@ class AdminPanelTenantCompanyApprovingListener implements ShouldQueue
         $this->getExcutableJobPipeline()->handle();
         return $this;
     }
+    
     protected function setTenant(ApprovedByAdminPanel $event): self
     {
         /** @var TenantWithDatabase $tenant  */

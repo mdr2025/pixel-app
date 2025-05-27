@@ -1,29 +1,24 @@
 <?php
 
-namespace PixelApp\Http\Controllers\CompanyAccountControllers\CompanySettingsControllers;
+namespace PixelApp\Services\CompanyAccountServices\BaseServices\CompanyDataResettingService;
 
-use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
-use PixelApp\Http\Controllers\PixelBaseController as Controller;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Response;
+use Illuminate\Http\Response;
 use PixelApp\Http\Requests\CompanyAccountRequests\ResetCompanyDataRequest;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
-use PixelApp\Jobs\ResetCompanyDataJob;
 use PixelApp\Services\Traits\GeneralValidationMethods;
 use Throwable;
 
-class CompanySettingController extends Controller
-{ 
+abstract class CompanyDataResettingBaseService
+{
+
     use GeneralValidationMethods;
+
+    abstract protected function dispatchDataResettingJob() : void;
 
     protected function getRequestFormClass() : string
     {
         return PixelHttpRequestManager::getRequestForRequestBaseType(ResetCompanyDataRequest::class);
-    }
-
-    protected function validateDataResetingRequest() : void
-    {
-        $this->initValidator()->validateRequest();
     }
 
     public function resetData() : JsonResponse
@@ -31,23 +26,24 @@ class CompanySettingController extends Controller
         try
         {
             //if no exception is thrown the execution will continue
-            $this->validateDataResetingRequest();
+            $this->initValidator()->validateRequest()->setRequestData();
 
-            $confirmName = request()->input('action');
+            $confirmName = $this->data["action"];
             
             if ($confirmName !== "DELETE") 
             {
                 return Response::error(["You Have The Word Typed (DELETE) Wrongly, Please Type it Correctly."]);
             }
-            ResetCompanyDataJob::dispatch();
 
-            
+            $this->dispatchDataResettingJob();
+ 
             return Response::success([], ["Reset Data Process Will Be Finished Within Few Minutes, PixelAppreciate Your Patience."]);
+        
         }catch(Throwable $e)
         {
             return Response::error([$e->getMessage()]);
         }
     }
   
-  
+
 }

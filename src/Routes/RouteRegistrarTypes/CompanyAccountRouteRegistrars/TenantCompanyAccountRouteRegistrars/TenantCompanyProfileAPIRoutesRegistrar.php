@@ -5,8 +5,8 @@ namespace PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\Tena
 use Illuminate\Support\Facades\Route;
 use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
-use PixelApp\Http\Controllers\UserAccountControllers\UserCompanyAccountClientController;
-use PixelApp\Http\Controllers\UserAccountControllers\UserCompanyAccountServerController;
+use PixelApp\Http\Controllers\CompanyAccountControllers\TenantCompanyAccountControllers\UserCompanyAccountClientController;
+use PixelApp\Http\Controllers\CompanyAccountControllers\TenantCompanyAccountControllers\UserCompanyAccountServerController;
 use PixelApp\Routes\PixelRouteManager;
 
 class TenantCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar 
@@ -51,7 +51,7 @@ class TenantCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
 
     protected function defineUpdateAdminInfoRoute() : void
     {    
-        Route::put('profile/update-admin', [UserCompanySettingController::class, 'changeDefaultAdmin']);
+        Route::put('profile/update-admin', [UserCompanyAccountClientController::class, 'changeDefaultAdmin']);
     }
 
     protected function defineCompanyProfileClientRoutes(RouteRegistrar $routeRegistrar ) : void
@@ -60,6 +60,7 @@ class TenantCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
         {
             $this->defineCompanyProfileClientRoute(); 
             $this->defineUpdateCompanyProfileClientRoute(); 
+            $this->defineUpdateAdminInfoRoute();
         });
     }
 
