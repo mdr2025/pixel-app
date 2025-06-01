@@ -13,6 +13,7 @@ use PixelApp\Models\UsersModule\PasswordReset;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\Traits\GeneralValidationMethods;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\PasswordChanger;
+use PixelApp\Services\UserEncapsulatedFunc\UserTokensHandlers\UserTokensRevoker;
 
 class PasswordResettingService
 {
@@ -51,7 +52,17 @@ class PasswordResettingService
         PixelTenancyManager::handleTenancySyncingData($user);
         //event(new TenantModelDataSyncNeedEvent($this->user)); 
     }
-    
+
+    protected function initUserAccessTokensRevoker()  :UserTokensRevoker
+    {
+        return new UserTokensRevoker();
+    }
+
+    protected function revokeUserOldAccessTokens(PixelUSer $user) : void
+    {
+        $this->initUserAccessTokensRevoker()->AddUserAccessTokensToRevoke( $user )->revoke();
+    }
+
     protected function getUserModelClass() : string
     {
         return PixelModelManager::getUserModelClass();
@@ -66,6 +77,7 @@ class PasswordResettingService
     {
         return $this->getUserModelClass()::where("email", $this->passwordReset->email)->first();
     }
+
     /**
      * @return $this
      * @throws Exception
@@ -78,6 +90,9 @@ class PasswordResettingService
         {
             throw new Exception("Failed To Reset Password");
         }
+
+        //to protecting his account from using access tokens related to the old password
+        $this->revokeUserOldAccessTokens($user);
 
         $this->handleTenancySyncingData($user);
 

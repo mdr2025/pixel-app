@@ -47,7 +47,9 @@
             "src/Config/ConfigFiles",
             "src/Routes/RouteFileStubs",
             "src/Models/LaravelModelStubs",
-            "src/Database/Migrations/MigrationStubs"
+            "src/Database/Migrations/MigrationStubs",
+            "src/Database/Seeders/SeederStubs",
+            "src/Console/ConsoleStubs"
         ]
     },
     "extra": {

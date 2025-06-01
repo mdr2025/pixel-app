@@ -18,6 +18,7 @@ return new class() extends Migration
         $schema->create('oauth_refresh_tokens', function (Blueprint $table) {
             $table->string('id', 100)->primary();
             $table->string('access_token_id', 100)->unique();
+            $table->foreign('access_token_id')->references('id')->on('oauth_access_tokens')->onDelete('cascade')->onUpdate('cascade');
             $table->boolean('revoked')->default(0);
             $table->dateTime('expires_at')->nullable();
         });

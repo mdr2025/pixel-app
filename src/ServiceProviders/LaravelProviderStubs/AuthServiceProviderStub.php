@@ -2,17 +2,14 @@
 
 namespace App\Providers;
 
-use PixelApp\Models\UsersModule\RefreshToken;
 use AuthorizationManagement\IndependentGateManagement\IndependentGateManagers\IndependentGateManager;
 use AuthorizationManagement\PolicyManagement\PolicyManagers\PolicyManager;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Laravel\Passport\Passport;
-
+use PixelApp\CustomLibs\PixelCycleManagers\PixelPassportManager\PixelPassportManager;
 
 class AuthServiceProvider extends ServiceProvider
 {
-
-
+ 
     public function register()
     {
         $this->completePassportRegistrations();
@@ -43,42 +40,12 @@ class AuthServiceProvider extends ServiceProvider
 
     protected function completePassportRegistrations() : void
     {
-        Passport::ignoreMigrations();
+        PixelPassportManager::registerPassportObjects();
     }
 
-
-    private function limitPassportRefreshTokenExpirationDate(): self
-    {
-        $days = config("passport.refresh_token_expiration_days_count");
-        $date = now()->addDays($days);
-        Passport::refreshTokensExpireIn($date);
-        return $this;
-    }
-    private function limitPassportPersonalAccessTokenExpirationDate(): self
-    {
-        $days = config("passport.personal_access_token_expiration_days_count");
-        $date = now()->addDays($days);
-        Passport::personalAccessTokensExpireIn($date);
-        return $this;
-    }
-    private function limitPassportAccessTokenExpirationDate(): self
-    {
-        $days = config("passport.access_token_expiration_days_count");
-        $date = now()->addDays($days);
-        Passport::tokensExpireIn($date);
-        return $this;
-    }
     private function completePassportBooting(): void
     {
-        Passport::useRefreshTokenModel(RefreshToken::class);
-
-        $this->limitPassportAccessTokenExpirationDate()
-            ->limitPassportPersonalAccessTokenExpirationDate()
-            ->limitPassportRefreshTokenExpirationDate();
-
-        Passport::hashClientSecrets();
-
-        Passport::loadKeysFrom(storage_path());
+        PixelPassportManager::bootPassport();
     }
 
 }

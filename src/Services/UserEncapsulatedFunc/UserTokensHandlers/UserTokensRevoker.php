@@ -15,17 +15,43 @@ class UserTokensRevoker
         $this->accessTokenIDS[] = $tokens->id;
         return $this;
     }
+
+    public function addTokensToRevoke(array $tokens) : self
+    {
+        foreach($tokens as $token)
+        {
+            $this->addToRevoke($token);
+        }
+
+        return $this;
+    }
+
+    
+    protected function revokeUserAllTokensExceptRecent(PixelUser $user , int $allowedLimit): self
+    {
+        $availableTokenIds = $user->tokens()->orderBy('created_at' , 'desc')->limit($allowedLimit)->pluck("id");
+        $revokableTokens = $user->tokens()->whereNotIn("id" , $availableTokenIds)->get();
+        return $this->addTokensToRevoke($revokableTokens);
+    }
+
     /**
      * @param PixelUser $user
      * @return $this
      */
     public function AddUserAccessTokensToRevoke(PixelUser $user): self
     {
-        foreach ($user->tokens as $token)
+        $userAllTokens = $user->tokens ;
+        return $this->addTokensToRevoke($userAllTokens);
+    }
+
+    public function addToRevokeForNewLogin(PixelUser $user , bool $allowingMultipleDevice = true , int $allowedDevicesNumbers = 5) : self
+    {
+        if(!$allowingMultipleDevice)
         {
-            $this->addToRevoke($token);
+            return $this->AddUserAccessTokensToRevoke($user);
         }
-        return $this;
+
+        return $this->revokeUserAllTokensExceptRecent($user , $allowedDevicesNumbers);
     }
 
     protected function revokeRelatedRefreshTokens() : void
@@ -37,6 +63,7 @@ class UserTokensRevoker
     {
         app(Passport::tokenModel())->whereIn("id" , $this->accessTokenIDS)->update(["revoked" => 1]);
     }
+
     public function revoke()  :void
     {
         $this->revokeAccessTokens();

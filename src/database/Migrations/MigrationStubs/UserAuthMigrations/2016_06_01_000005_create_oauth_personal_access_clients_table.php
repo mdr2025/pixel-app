@@ -17,7 +17,7 @@ return new class() extends Migration
 
         $schema->create('oauth_personal_access_clients', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('client_id');
+            $table->foreignId('client_id')->constrained("oauth_clients")->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

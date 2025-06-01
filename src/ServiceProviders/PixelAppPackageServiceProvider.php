@@ -14,6 +14,8 @@ use PixelApp\Config\ConfigValueManager;
 use PixelApp\Config\PixelConfigManager;
 use PixelApp\Console\Commands\CreateInterfaceCommand;
 use PixelApp\Console\Commands\CreateTrait;
+use PixelApp\Console\Commands\PassportConfiguringCommands\PixelAppClientCustomCommand;
+use PixelApp\Console\Commands\PassportConfiguringCommands\PixelPassportConfiguringCommand;
 use PixelApp\Console\Commands\PixelAppInitCommands\DefaultFontsHandling;
 use PixelApp\Console\Commands\PixelAppInitCommands\PreparePixelApp;
 use PixelApp\Console\Commands\TenantSeedCommand;
@@ -61,6 +63,8 @@ class PixelAppPackageServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 PreparePixelApp::class,
+                PixelPassportConfiguringCommand::class,
+                PixelAppClientCustomCommand::class,
                 DefaultFontsHandling::class,
                 CreateInterfaceCommand::class,
                 CreateTrait::class,

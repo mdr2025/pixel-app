@@ -159,6 +159,12 @@ class TenantCompany extends PixelCompany
         $query->where('status', 'active');
     }
      
+    
+    public function scopeIsNotPending($query)
+    {
+        $query->whereIn('status', [ 'active' , 'inactive']);
+    }
+
     public function getTenantLogo() : string
     {
         return $this->getFileFullPathAttrValue('logo');

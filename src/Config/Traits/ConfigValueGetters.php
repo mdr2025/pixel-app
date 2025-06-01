@@ -101,6 +101,16 @@ trait ConfigValueGetters
         return static::getPixelAppPackageConfigItem("tenant-company-model-class" , null);
     }
 
+    public static function getRevokedTokenGracePeriod() : ?string
+    {
+        return static::getPixelAppPackageConfigItem("revoked_token_grace_period" , null);
+    }
+
+    public static function getRefreshTokenGracePeriod() : ?string
+    {
+        return static::getPixelAppPackageConfigItem("refresh_token_grace_period" , null);
+    }
+
     public static function getDropDownListRouteRegistrars() : array
     {
         return static::getDefinedRouteRegistrars()["dropdown-list"] ?? [];
@@ -121,7 +131,6 @@ trait ConfigValueGetters
     {
         return (bool) static::getDropDownListRouteRegistrars()["cities"] ?? null;
     }
-
     
     public static function isAreasFuncDefined() : bool
     {

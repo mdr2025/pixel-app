@@ -7,6 +7,7 @@ use PixelApp\Config\ConfigEnums\PixelAppTypeEnum;
 use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\PixelAppConfigFileIdentifier;
 use PixelApp\Config\ConfigValueManager;
 use PixelApp\Config\PixelConfigManager;
+use PixelApp\Console\PixelConsoleManager;
 use PixelApp\Helpers\PixelGlobalHelpers;
 use PixelApp\Http\Middleware\PixelMiddlewareManager;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
@@ -37,6 +38,7 @@ class PixelAppInstallingManager
         static::installPackageMiddlewareStubs();
         static::installPackageModels();
         static::installAppDatabaseFiles();
+        static::installConsoleObjects();
 
         //handling pixel-dompdf package needed font files
         static::handleDefaultFonts();
@@ -117,6 +119,11 @@ class PixelAppInstallingManager
     protected static function installAppDatabaseFiles() : void
     {
         PixelDatabaseManager::installAppDatabaseFiles();
+    }
+
+    protected static function installConsoleObjects() : void
+    {
+        PixelConsoleManager::installConsoleObjects();
     }
 
     protected static function handleDefaultFonts() : void

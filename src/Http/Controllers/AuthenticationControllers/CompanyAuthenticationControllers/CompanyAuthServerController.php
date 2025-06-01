@@ -5,6 +5,7 @@ namespace PixelApp\Http\Controllers\AuthenticationControllers\CompanyAuthenticat
 use PixelApp\Http\Controllers\PixelBaseController as Controller;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\ApprovedTenantCompanyIDSFetchingService;
 use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\CompanyCheckingCrNoService;
 use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\CompanyCheckingSubDomainService;
 use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\CompanyFetchingService;
@@ -75,6 +76,12 @@ class CompanyAuthServerController extends Controller
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(CompanyFetchingService::class);
         return (new $service())->getTenantCompanyDomainResponse();
+    }
+ 
+    public function fetchApprovedCompanyIDS() : JsonResponse
+    {
+        $service = PixelServiceManager::getServiceForServiceBaseType(ApprovedTenantCompanyIDSFetchingService::class);
+        return (new $service())->getTenantCompanyIDS();
     }
  
     public function checkSubDomain($subdomain) : JsonResponse

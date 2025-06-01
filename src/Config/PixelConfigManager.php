@@ -114,6 +114,13 @@ class PixelConfigManager
         static::initPixelConfigStubsManager()->replacePackageConfigFiles();
     }
 
+    public static function overrideConfigFileContent(string $configFilePath , array $fileConfigs) : void
+    {
+        $configFileContent = "<?php return " . var_export($fileConfigs , true) . " ;";
+
+        File::put($configFilePath , $configFileContent);
+    }
+
     public static function setPixelPackageConfigFileKeys(array $keys) : void
     {
         $configFileIdentifier  = static::initPackageBaseConfigFileIdentifier();
@@ -121,9 +128,8 @@ class PixelConfigManager
 
         $configs = require $configFilePath;
         $configs = array_merge($configs , $keys);
-        $configFileContent = "<?php return " . var_export($configs , true) . " ;";
-
-        File::put($configFilePath , $configFileContent);
+        
+        static::overrideConfigFileContent($configFilePath , $configs);
     }
 
 }

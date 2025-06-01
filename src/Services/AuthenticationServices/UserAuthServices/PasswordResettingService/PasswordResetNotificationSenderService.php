@@ -33,21 +33,6 @@ class PasswordResetNotificationSenderService
         return PixelHttpRequestManager::getRequestForRequestBaseType(ForgetPasswordRequest::class);
     }
 
-    protected function initLogoutService() : LogoutService
-    {
-        $service =  PixelServiceManager::getServiceForServiceBaseType(LogoutService::class);
-        return new $service();
-    }
-    protected function logoutUser() : void
-    {
-        $this->initLogoutService()->logout();
-        // if(auth()->user())
-        // {
-        //     auth()->logout();
-        // }
-    }
-
-
     /**
      * @return string
      * @throws Exception
@@ -148,7 +133,7 @@ class PasswordResetNotificationSenderService
 
             DB::beginTransaction();
             /** Password resetting operations */
-            $this->setUser()->deleteOldPasswordResetModels()->sendResetLinkNotification()->logoutUser();
+            $this->setUser()->deleteOldPasswordResetModels()->sendResetLinkNotification();
             DB::commit();
             return Response::success([], ["Password Reset Link Has Been Sent Successfully"], 200);
         } catch (Exception $e)

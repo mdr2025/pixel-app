@@ -4,14 +4,19 @@ namespace PixelApp\CustomLibs\Tenancy;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use PixelApp\Config\PixelConfigManager;
 use PixelApp\ServiceProviders\RelatedPackagesServiceProviders\TenancyServiceProvider;
 use PixelApp\Http\Middleware\TenancyCustomMiddlewares\ActiveTenantCompany;
 use PixelApp\Http\Middleware\TenancyCustomMiddlewares\ApprovedTenantCompany;
 use PixelApp\Interfaces\TenancyInterfaces\CanSyncData;
 use PixelApp\Models\CompanyModule\TenantCompany;
+use PixelApp\Models\Interfaces\TrustedAttributesHandlerModel;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Routes\PixelRouteManager;
+use PixelApp\Services\AuthenticationServices\CompanyAuthClientServices\ApprovedTenantCompaniesFetchingService;
+use PixelApp\Services\PixelServiceManager;
+use Stancl\Tenancy\Features\TenantConfig;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -65,6 +70,44 @@ class PixelTenancyManager
     public static function isTenantQueryable() : bool
     {
         return static::isItMonolithTenancyApp() || static::isItAdminPanelApp();
+    }
+
+    public static function initTenantCompanyNewModel() : TenantCompany
+    {
+        $modelClass = static::getTenantCompanyModelClass();
+        return new $modelClass;
+    }
+
+    public static function getRunableTenant(int $id) : TenantCompany
+    {
+        $model = static::initTenantCompanyNewModel();
+
+        if($model instanceof TrustedAttributesHandlerModel)
+        {
+            $model->handleModelAttrs([ $id ]);
+        }else
+        {
+            $model->{$model->getKeyName()} = $id;
+        }
+
+        return $model;
+    }
+
+    
+    protected static function initApprovedTenantCompaniesFetchingService() :ApprovedTenantCompaniesFetchingService
+    {
+        $service = PixelServiceManager::getServiceForServiceBaseType(ApprovedTenantCompaniesFetchingService::class);
+        return new $service;
+    }
+
+    public static function fetchTenantsByAdminPanel() : Collection
+    {
+        return static::initApprovedTenantCompaniesFetchingService()->fetchApprovedTenantCompanies();
+    }
+
+    public static function fetchTenantsFromCentralSide() : Collection
+    {
+        return static::getTenantCompanyModelClass()::all(); // to check collection type later (lazy or cursor)
     }
 
     public static function mustHandleDomainQueryStringParam() : bool

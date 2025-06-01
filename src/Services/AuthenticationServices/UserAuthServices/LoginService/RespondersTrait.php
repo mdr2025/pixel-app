@@ -24,7 +24,7 @@ trait RespondersTrait
 
     private function revokeUserPreviousTokens(): void
     {
-        $this->initUserAccessTokensRevoker()->AddUserAccessTokensToRevoke( $this->user )->revoke();
+        $this->initUserAccessTokensRevoker()->addToRevokeForNewLogin( $this->user )->revoke();
     }
 
     private function initUserTokensGenerator()  :UserTokensGenerator

@@ -113,6 +113,11 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
         Route::post('company/register', [CompanyAuthServerController::class , 'register']) ;
     }
 
+    protected function defineApprovedCompanyIDSFetchingRoute()
+    {
+        Route::post('company/fecth-approved-company-ids', [CompanyAuthServerController::class , 'fetchApprovedCompanyIDS']) ;
+    }
+
     protected function definefetchCompanyRoute() : void
     {
         Route::post('company/fecth-company', [CompanyAuthServerController::class , 'fetchCompany']) ;
@@ -141,6 +146,7 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
            $this->defineCheckSubdomainServerRoute();
            $this->defineCheckCrNoServerRoute();
            $this->definefetchCompanyRoute();
+           $this->defineActiveCompanyIDSFetchingRoute();
            $this->defineCompanyDefaultAdminsyncingDataServerRoute();
         });
     }
