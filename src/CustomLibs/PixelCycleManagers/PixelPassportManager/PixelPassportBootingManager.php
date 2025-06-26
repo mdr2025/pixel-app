@@ -2,6 +2,8 @@
 
 namespace PixelApp\CustomLibs\PixelCycleManagers\PixelPassportManager;
 
+use Illuminate\Support\Facades\Route;
+use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Laravel\Passport\Passport;
 use PixelApp\Models\UsersModule\RefreshToken;
 
@@ -34,6 +36,7 @@ class PixelPassportBootingManager
 
         $this->setPassportKeysPath();
         
+        $this->registerClientCredentialsTokenRoute();
     }
 
     protected function setPassportKeysPath() : void
@@ -77,5 +80,21 @@ class PixelPassportBootingManager
         $date = now()->addDays($days);
         Passport::tokensExpireIn($date);
         return $this;
+    }
+
+    
+    protected function doesItSupportMachineClientCredentialsGrant() : bool
+    {
+        return PixelPassportManager::doesItSupportMachineClientCredentialsGrant();
+    }
+
+    protected function registerClientCredentialsTokenRoute() : void
+    {
+        if($this->doesItSupportMachineClientCredentialsGrant())
+        {
+            Route::post('/token', [AccessTokenController::class , 'issueToken'])
+                 ->middleware('throttle:100,1')
+                 ->name('passport.token');
+        }
     }
 }

@@ -131,4 +131,39 @@ class PixelAppInstallingManager
         Artisan::call("pixel-app:handle-default-fonts");
     }
 
+    public static function isInstallingTenancySupporterApp(PixelAppSystemRequirementsCard $requirementCard) : bool
+    {
+        return $requirementCard->getSystemType() !== PixelAppTypeEnum::NORMAL_APP_TYPE;
+        // return PixelTenancyManager::isItTenancySupporterApp();
+    }
+
+    public static function isInstallingMonolithTenancyApp(PixelAppSystemRequirementsCard $requirementCard) : bool
+    {
+        return $requirementCard->getSystemType() !== PixelAppTypeEnum::MONOLITH_TENANCY_APP_TYPE;
+        return PixelTenancyManager::isItMonolithTenancyApp();
+    }
+ 
+    // public static function DoesItNeedTenantRoutes() : bool
+    // {
+    //     return static::isItTenantApp() || static::isItMonolithTenancyApp();
+    // }
+    
+    public static function isInstallingNormalApp(PixelAppSystemRequirementsCard $requirementCard) : bool
+    {
+        return $requirementCard->getSystemType() !== PixelAppTypeEnum::NORMAL_APP_TYPE;
+        return PixelTenancyManager::isItNormalApp();
+    }
+
+    public static function isInstallingAdminPanelApp(PixelAppSystemRequirementsCard $requirementCard) : bool
+    {
+        return $requirementCard->getSystemType() !== PixelAppTypeEnum::ADMIN_PANEL_APP_TYPE;
+        return PixelTenancyManager::isItAdminPanelApp();
+    }
+
+    public static function isInstallingTenantApp(PixelAppSystemRequirementsCard $requirementCard) : bool
+    {
+        return $requirementCard->getSystemType() !== PixelAppTypeEnum::TENANT_APP_TYPE;
+        return PixelTenancyManager::isItTenantApp();
+    }
+
 }

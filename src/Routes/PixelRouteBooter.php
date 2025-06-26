@@ -4,6 +4,7 @@ namespace PixelApp\Routes;
 
 
 use Illuminate\Support\Facades\Route;
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 
 class PixelRouteBooter
 {
@@ -124,4 +125,34 @@ class PixelRouteBooter
         }
     }
     
+    public static function bootingForTenancySupporterApp() : bool
+    {
+        return PixelTenancyManager::isItTenancySupporterApp();
+    }
+
+    public static function bootingForMonolithTenancyApp() : bool
+    {
+        return PixelTenancyManager::isItMonolithTenancyApp();
+    }
+ 
+    public static function DoesItNeedTenantRoutes() : bool
+    {
+        return static::isItTenantApp() || static::isItMonolithTenancyApp();
+    }
+    
+    public static function bootingForNormalApp() : bool
+    {
+        return PixelTenancyManager::isItNormalApp();
+    }
+
+    public static function bootingForAdminPanelApp() : bool
+    {
+        return PixelTenancyManager::isItAdminPanelApp();
+    }
+
+    public static function bootingForTenantApp() : bool
+    {
+        return PixelTenancyManager::isItTenantApp();
+    }
+
 }

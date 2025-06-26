@@ -29,35 +29,35 @@ class PixelRouteManager
     }
 
 
-    public static function isItTenancySupporterApp() : bool
-    {
-        return PixelTenancyManager::isItTenancySupporterApp();
-    }
+    // public static function isItTenancySupporterApp() : bool
+    // {
+    //     return PixelTenancyManager::isItTenancySupporterApp();
+    // }
 
-    public static function isItMonolithTenancyApp() : bool
-    {
-        return PixelTenancyManager::isItMonolithTenancyApp();
-    }
+    // public static function isItMonolithTenancyApp() : bool
+    // {
+    //     return PixelTenancyManager::isItMonolithTenancyApp();
+    // }
  
     public static function DoesItNeedTenantRoutes() : bool
     {
         return static::isItTenantApp() || static::isItMonolithTenancyApp();
     }
     
-    public static function isItNormalApp() : bool
-    {
-        return PixelTenancyManager::isItNormalApp();
-    }
+    // public static function isItNormalApp() : bool
+    // {
+    //     return PixelTenancyManager::isItNormalApp();
+    // }
 
-    public static function isItAdminPanelApp() : bool
-    {
-        return PixelTenancyManager::isItAdminPanelApp();
-    }
+    // public static function isItAdminPanelApp() : bool
+    // {
+    //     return PixelTenancyManager::isItAdminPanelApp();
+    // }
 
-    public static function isItTenantApp() : bool
-    {
-        return PixelTenancyManager::isItTenantApp();
-    }
+    // public static function isItTenantApp() : bool
+    // {
+    //     return PixelTenancyManager::isItTenantApp();
+    // }
 
     public static function getCentralDomains(): array
     {

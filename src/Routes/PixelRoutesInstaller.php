@@ -83,8 +83,7 @@ class PixelRoutesInstaller
         $availableRouteRegistrars = $this->getAvailableRouteRegistrars($requirementCard);
         $this->setRouteRegistrarsIntoPixelConfig($availableRouteRegistrars);
     }
-
-    
+ 
     protected function initPixelAppRouteStubsManager() : PixelRouteStubsManager
     {
         return PixelRouteStubsManager::Singleton();

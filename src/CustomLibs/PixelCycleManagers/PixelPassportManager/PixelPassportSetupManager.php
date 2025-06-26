@@ -41,7 +41,7 @@ class PixelPassportSetupManager
 
     protected function seedPassportClients() : self
     {
-        Artisan::call('pixel-passport:create-client ', [ '--name' => config('app.name').' Personal Access Client']);
+        Artisan::call('pixel-passport:create-clients');
         $this->getOutoutCommand()?->info(Artisan::output());
         
         return $this;

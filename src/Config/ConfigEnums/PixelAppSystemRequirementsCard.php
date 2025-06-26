@@ -7,7 +7,7 @@ use PixelApp\CustomLibs\PixelCycleManagers\PixelAppInstallingManagers\PixelAppIn
 class PixelAppSystemRequirementsCard
 {
     protected static ?PixelAppSystemRequirementsCard $instance = null;
-    protected string $systemType;
+    protected ?string $systemType = null;
     protected bool $departmentsFuncRequired = false;
     protected bool $branchesFuncRequired = false;
     protected bool $citiesFuncRequired = false;
@@ -17,7 +17,7 @@ class PixelAppSystemRequirementsCard
 
     private function __construct()
     {
-        $this->setDefaultSystemType();
+        // $this->setDefaultSystemType();
     }
 
     public static function Singleton(): PixelAppSystemRequirementsCard
@@ -45,7 +45,7 @@ class PixelAppSystemRequirementsCard
         return $this;
     }
 
-    public function getSystemType(): string
+    public function getSystemType(): ?string
     {
         return $this->systemType;
     }

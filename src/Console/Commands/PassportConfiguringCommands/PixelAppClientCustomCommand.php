@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelPassportManager\PixelPassportManager;
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 
 class PixelAppClientCustomCommand extends Command
 {
@@ -14,14 +15,14 @@ class PixelAppClientCustomCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'pixel-passport:create-client {--name= : The name of the client}';
+    protected $signature = 'pixel-passport:create-clients {--name= : The name of the client}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a client + personal access client for issuing access tokens';
+    protected $description = 'Creates a client + personal access client for issuing access tokens & creates a client credentials client (for machine connection) on admin panel , tenant apps';
 
     /**
      * Execute the console command.
@@ -32,6 +33,7 @@ class PixelAppClientCustomCommand extends Command
     public function handle(ClientRepository $clients)
     {
         $this->createPersonalClient($clients);
+        $this->createClientCredentialsClient($clients);
     }
 
     /**
@@ -56,16 +58,59 @@ class PixelAppClientCustomCommand extends Command
 
     protected function writePersonalClientToConfig(Client $client) : void
     {
-        $clientConfigValue = $this->composePersonalClientConfigs($client);
+        $clientConfigValue = $this->composeClientConfigsArray($client);
         PixelPassportManager::writeToConfig("personal_access_client" , $clientConfigValue);
     }
+     
+    protected function doesItSupportMachineClientCredentialsGrant() : bool
+    {
+        return PixelPassportManager::doesItSupportMachineClientCredentialsGrant();
+    }
 
-    protected function composePersonalClientConfigs(Client $client) : array
+    /**
+     * Create a client credentials grant client.
+     *
+     * @param  \Laravel\Passport\ClientRepository  $clients
+     * @return void
+     */
+    protected function createClientCredentialsClient(ClientRepository $clients)
+    {
+        if(! $this->doesItSupportMachineClientCredentialsGrant())
+        {
+            return ;
+        }
+
+        $name = $this->option('name') ?: config('app.name').' ClientCredentials Grant Client';
+
+        $client = $clients->create(
+            null, $name, ''
+        );
+
+        $this->writeMachineCredentialsClientToConfig($client);
+
+        $configKeyName = $this->getMachineCredentialsClientConfigKey();
+
+        $this->info(
+            'New client Credentials created successfully ! , You shold use its info during connecting the system from another system context , I is saved in passport config file under key = ' . $configKeyName
+        );
+    }
+
+    protected function getMachineCredentialsClientConfigKey() : string
+    {
+        return "machine_client_credentials_client";
+    }
+
+    protected function writeMachineCredentialsClientToConfig(Client $client) : void
+    {
+        $clientConfigValue = $this->composeClientConfigsArray($client);
+        PixelPassportManager::writeToConfig($this->getMachineCredentialsClientConfigKey() , $clientConfigValue);
+    }
+
+    protected function composeClientConfigsArray(Client $client) : array
     {
         return [
             "id" => $client->id,
             "secret" => $client->plainSecret
         ];
     }
-
 }
