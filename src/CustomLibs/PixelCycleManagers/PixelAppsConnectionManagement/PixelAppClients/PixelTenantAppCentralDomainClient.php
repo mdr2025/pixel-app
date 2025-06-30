@@ -13,7 +13,7 @@ class PixelTenantAppCentralDomainClient extends PixelAppClient
         return "tenant-app-central-domain";
     }
 
-    public function getAppRootApiConfigKeyName() : string
+    public function getServerAppRootApiConfigKeyName() : string
     {
         return "tenant-app-root-api";
     }

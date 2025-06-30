@@ -3,6 +3,7 @@
 namespace PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppClients;
 
 use Exception;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppRouteIdentifiersFactories\GlobalRouteIdentifierFactories\ServerAppAccessTokenFecthingRouteIdentifierFactory;
 
 class PixelAdminPanelAppClient extends PixelAppClient
 {
@@ -11,7 +12,7 @@ class PixelAdminPanelAppClient extends PixelAppClient
         return "admin-panel";
     }
 
-    public function getAppRootApiConfigKeyName() : string
+    public function getServerAppRootApiConfigKeyName() : string
     {
         return "admin-panel-app-root-api";
     }

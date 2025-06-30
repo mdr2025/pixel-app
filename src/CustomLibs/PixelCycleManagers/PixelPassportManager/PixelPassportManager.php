@@ -57,7 +57,7 @@ class PixelPassportManager
         return config($configFileIdentifier->getConfigKeyName());
     }
     
-    protected static function getUpdatedPassportContentArray(PassportConfigFileIdentifier $passprtConfigFileIdentifier , string $key , mixed $value) : array
+    protected static function getPassportUpdatedConfigFileContentArray(PassportConfigFileIdentifier $passprtConfigFileIdentifier , string $key , mixed $value) : array
     {
         $config = static::getPassportConfigFileContent($passprtConfigFileIdentifier);
         if(static::checkValue($value))
@@ -67,6 +67,22 @@ class PixelPassportManager
         }
 
         return $config;
+    }
+
+    public static function getPassportConfigKeyValue($passportConfigKeyName) : array
+    {
+        $passprtConfigFileIdentifier = static::initPassportConfigFileIdentifier();
+        return static::getPassportConfigFileContent($passprtConfigFileIdentifier)[$passportConfigKeyName] ?? [];
+    }
+
+    public static function getClientIdKeyName() : string
+    {
+        return "id";
+    }
+
+    public static function getClientSecretKeyName() : string
+    {
+        return "secret";
     }
 
     protected static function isConfigFileReplaced(string $filePath) : bool
@@ -93,7 +109,7 @@ class PixelPassportManager
         $passprtConfigFileIdentifier = static::initPassportConfigFileIdentifier();
         
         $passportFilePath = static::getPassportConfigFilePath($passprtConfigFileIdentifier);
-        $passportConfigFileContent = static::getUpdatedPassportContentArray($passprtConfigFileIdentifier , $key , $value);
+        $passportConfigFileContent = static::getPassportUpdatedConfigFileContentArray($passprtConfigFileIdentifier , $key , $value);
         
         PixelConfigManager::overrideConfigFileContent($passportFilePath , $passportConfigFileContent);
     }
@@ -107,7 +123,7 @@ class PixelPassportManager
     {
         return PixelTenancyManager::isItTenantApp() && PixelTenancyManager::isItAdminPanelApp();
     }
-    
+
     public static function doesHaveOnlyTenantTokens()
     {
         return PixelTenancyManager::isItTenantApp();

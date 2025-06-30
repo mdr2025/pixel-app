@@ -13,8 +13,8 @@ class BranchStatusChangingRouteIdentifierFactory extends PixelAppRouteIdentifier
     public function __construct($tenantBranchId)
     {
         $this->tenantBranchId = $tenantBranchId;
-
     }
+    
     protected function getData() : array
     {
         return request()->all();

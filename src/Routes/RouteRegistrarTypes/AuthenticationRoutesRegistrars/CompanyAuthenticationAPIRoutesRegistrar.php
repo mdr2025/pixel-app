@@ -164,6 +164,11 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
            $this->defineCompanyClientLoginRoute();
            $this->defineCompanyClientRegisteringRoute();
            $this->defineCompanyClientForgetIdRoute(); 
+
+           /**
+            * @todo
+            * these routes maybe are not required for tenant app ... it is requried for central app or admin panel .... make sure later
+            */           
            $this->defineCompanyClientCheckStatusRoute();
            $this->defineCheckSubdomainClientRoute();
            $this->defineCheckCrNoClientRoute();

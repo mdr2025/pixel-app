@@ -92,7 +92,7 @@ class PixelPassportBootingManager
     {
         if($this->doesItSupportMachineClientCredentialsGrant())
         {
-            Route::post('/token', [AccessTokenController::class , 'issueToken'])
+            Route::post('oauth/token', [AccessTokenController::class , 'issueToken'])
                  ->middleware('throttle:100,1')
                  ->name('passport.token');
         }
