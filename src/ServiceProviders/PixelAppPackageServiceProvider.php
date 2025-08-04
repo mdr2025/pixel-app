@@ -118,11 +118,11 @@ class PixelAppPackageServiceProvider extends ServiceProvider
      */
     protected function scheduledObjectsHandling()
     {
-        $this->app->booted(function ()
-        {
-            $schedule = $this->app->make(Schedule::class);
-            $schedule->job(UserRevokedAccessTokensDeleterJob::class)->daily()->at('00:00');
-        });
+        // $this->app->booted(function ()
+        // {
+        //     $schedule = $this->app->make(Schedule::class);
+        //     $schedule->job(UserRevokedAccessTokensDeleterJob::class)->daily()->at('00:00');
+        // });
         
     }
 }
