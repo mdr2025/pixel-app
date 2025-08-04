@@ -5,24 +5,24 @@ namespace PixelApp\Routes\RouteRegistrarTypes\AuthenticationRoutesRegistrars;
 use Illuminate\Support\Facades\Route;
 use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
-use PixelApp\Config\ConfigEnums\PixelAppSystemRequirementsCard;
 use PixelApp\Http\Controllers\AuthenticationControllers\CompanyAuthenticationControllers\CompanyAuthClientController;
 use PixelApp\Http\Controllers\AuthenticationControllers\CompanyAuthenticationControllers\CompanyAuthServerController;
+use PixelApp\Routes\PixelRouteBootingManager;
 use PixelApp\Routes\PixelRouteManager;
 
 class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar 
 { 
     public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
-        if( PixelRouteManager::isItMonolithTenancyApp()  )
+        if( PixelRouteBootingManager::isBootingForMonolithTenancyApp()  )
         {
             $this->defineMonolithTenancyAppRoutes(); 
 
-        }elseif( PixelRouteManager::isItTenantApp()  )
+        }elseif( PixelRouteBootingManager::isBootingForTenantApp()  )
         {
             $this->defineTenantAppRoutes();
 
-        }elseif(PixelRouteManager::isItAdminPanelApp())
+        }elseif(PixelRouteBootingManager::isBootingForAdminPanelApp())
         {
             $this->defineAdminPanelAppRoutes(); 
         } 
@@ -33,10 +33,10 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
         $arrayToAppend["company-auth"] = static::class;
     }
 
-    public function isFuncAvailableToDefine(PixelAppSystemRequirementsCard $requirementsCard) : bool
+    public function isFuncAvailableToDefine() : bool
     {
-        $requirementsCard->getSystemType() == 
-        return true;
+        return $this->initPixelRoutesInstallingManager()
+                    ->isInstallingForTenancySupporterApp();
     }
 
     protected function defineCheckCrNoServerRoute() : void
@@ -53,10 +53,12 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
     {
         Route::get('check-subdomain/{domain}', [CompanyAuthServerController::class , 'checkSubDomain'] );
     }
+
     protected function defineCheckSubdomainClientRoute() : void
     {
         Route::get('check-subdomain/{domain}', [CompanyAuthClientController::class , 'checkSubDomain'] );
     }
+
     protected function defineCompanyClientCheckStatusRoute() : void
     {
         Route::post('company/check/status', [CompanyAuthClientController::class , 'checkStatus']);
@@ -67,14 +69,20 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
         Route::post('company/check/status', [CompanyAuthServerController::class , 'checkStatus']);
     }
   
+    /**
+     * @todo
+     * check why it doesn't defnied too
+     */
     protected function defineCompanyDefaultAdminUpdatingServerRoute() : void
     {
-        Route::post('company/update-default-admin-info', [CompanyAuthServerController::class , 'updateDefaultAdminInfo']);
+        $route = Route::post('company/update-default-admin-info', [CompanyAuthServerController::class , 'updateDefaultAdminInfo']);
+        $this->attchClientGrantMiddleware($route);
     }
   
     protected function defineCompanyDefaultAdminsyncingDataServerRoute() : void
     {
-        Route::post('company/sync-default-admin-data', [CompanyAuthServerController::class , 'syncDefaultAdminData']);
+        $route = Route::post('company/sync-default-admin-data', [CompanyAuthServerController::class , 'syncDefaultAdminData']);
+        $this->attchClientGrantMiddleware($route);
     }
 
     protected function defineCompanyServerEmailVerificationRoute() : void
@@ -113,17 +121,27 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
         Route::post('company/register', [CompanyAuthServerController::class , 'register']) ;
     }
 
-    protected function defineApprovedCompanyIDSFetchingRoute()
+    protected function defineApprovedCompanyIDSFetchingRoute( bool $remoteServer = true) : void
     {
-        Route::post('company/fecth-approved-company-ids', [CompanyAuthServerController::class , 'fetchApprovedCompanyIDS']) ;
+        $route = Route::post('company/fecth-approved-company-ids', [CompanyAuthServerController::class , 'fetchApprovedCompanyIDS']) ;
+    
+        if($remoteServer)
+        {
+            $this->attchClientGrantMiddleware($route);
+        }
     }
 
-    protected function definefetchCompanyRoute() : void
+    protected function definefetchCompanyRoute(bool $remoteServer = true) : void
     {
-        Route::post('company/fecth-company', [CompanyAuthServerController::class , 'fetchCompany']) ;
+        $route = Route::post('company/fecth-company', [CompanyAuthServerController::class , 'fetchCompany']) ;
+        
+        if($remoteServer)
+        {
+            $this->attchClientGrantMiddleware($route);
+        }
     }
 
-    protected function defineCompanyServerRoutes(?string $domain = null) : void
+    protected function defineCompanyServerRoutes(?string $domain = null , bool $remoteServer = true) : void
     {
         $routeRegistrar = $this->initCompanyRouteRegistrar();
 
@@ -136,7 +154,7 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
             $routeRegistrar->domain($domain);
         }
         
-        $routeRegistrar->group(function()
+        $routeRegistrar->group(function() use ($remoteServer)
         {
            $this->defineCompanyServerLoginRoute();
            $this->defineCompanyServerRegisteringRoute();
@@ -146,8 +164,8 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
            $this->defineCheckSubdomainServerRoute();
            $this->defineCheckCrNoServerRoute();
            $this->definefetchCompanyRoute();
-           $this->defineActiveCompanyIDSFetchingRoute();
-           $this->defineCompanyDefaultAdminsyncingDataServerRoute();
+           $this->defineApprovedCompanyIDSFetchingRoute($remoteServer);
+           $this->defineCompanyDefaultAdminsyncingDataServerRoute($remoteServer);
         });
     }
 
@@ -169,9 +187,9 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
             * @todo
             * these routes maybe are not required for tenant app ... it is requried for central app or admin panel .... make sure later
             */           
-           $this->defineCompanyClientCheckStatusRoute();
-           $this->defineCheckSubdomainClientRoute();
-           $this->defineCheckCrNoClientRoute();
+        //    $this->defineCompanyClientCheckStatusRoute();
+        //    $this->defineCheckSubdomainClientRoute();
+        //    $this->defineCheckCrNoClientRoute();
         });
     } 
  
@@ -197,7 +215,7 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
     {
         foreach(PixelRouteManager::getCentralDomains() as $domain)
         {
-            $this->defineCompanyServerRoutes($domain);
+            $this->defineCompanyServerRoutes($domain , false);
         }
     }
     

@@ -7,7 +7,7 @@ namespace PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars
 use Illuminate\Support\Facades\Route;
 use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
-use Illuminate\Support\Arr;
+use PixelApp\Routes\PixelRouteBootingManager;
 use PixelApp\Routes\PixelRouteManager;
 
 class PackagesRouteRegistrar extends PixelRouteRegistrar 
@@ -15,18 +15,18 @@ class PackagesRouteRegistrar extends PixelRouteRegistrar
 
     public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
-        if( PixelRouteManager::isItMonolithTenancyApp()  )
-        {
-            $this->defineMonolithTenancyAppRoutes(); 
+        // if( PixelRouteBootingManager::isBootingForMonolithTenancyApp()  )
+        // {
+        //     $this->defineMonolithTenancyAppRoutes(); 
 
-        }elseif( PixelRouteManager::isItTenantApp()  )
-        {
-            $this->defineTenantAppRoutes();
+        // }elseif( PixelRouteBootingManager::isBootingForTenantApp()  )
+        // {
+        //     $this->defineTenantAppRoutes();
 
-        }else
-        {
-            $this->defineAdminPanelAppRoutes(); 
-        } 
+        // }else
+        // {
+        //     $this->defineAdminPanelAppRoutes(); 
+        // } 
     }
 
     public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void

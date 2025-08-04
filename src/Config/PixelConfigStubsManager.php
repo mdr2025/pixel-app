@@ -2,7 +2,8 @@
 
 namespace PixelApp\Config;
  
-use PixelApp\Config\ConfigFileIdentifiers\ConfigFileIdentifier; 
+use PixelApp\Config\ConfigFileIdentifiers\ConfigFileIdentifier;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppInstallingManagers\PixelAppInstallingManager;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\PixelAppStubsManager;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\StubIdentifiers\StubIdentifier;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
@@ -20,6 +21,12 @@ class PixelConfigStubsManager extends PixelAppStubsManager
         return PixelConfigManager::getPixelAppLaravelConfigFileIdentifierClasses();
     }
    
+    protected static function remergeJustReplacedConfigFile(ConfigFileIdentifier $configFileIdentifier)
+    {
+        $fileProjectRelevantPath = $configFileIdentifier->getFileProjectRelevantPath();
+        PixelConfigManager::remergeJustReplacedConfigFile($fileProjectRelevantPath);
+    }
+
     protected function  initStubIdentifier(string $stubPath , string $newPath) : StubIdentifier
     {
         return StubIdentifier::create($stubPath , $newPath);
@@ -36,10 +43,8 @@ class PixelConfigStubsManager extends PixelAppStubsManager
         return $identifierClass::Singleton();
     }
 
-    protected function replaceConfigFile(string $configFileIdentifierClass) : void
+    protected function replaceConfigFile(ConfigFileIdentifier $configFileIdentifier) : void
     {
-        $configFileIdentifier = $this->initConfigFileIdentifier($configFileIdentifierClass);
-
         $filePackagePath = $configFileIdentifier->getFilePath();
         $fileProjectConfigPath = $this->composeConfigFileProjectConfigPath($configFileIdentifier);
 
@@ -49,22 +54,34 @@ class PixelConfigStubsManager extends PixelAppStubsManager
 
     protected function replaceTenancyConfigFile() : void
     {
-        $this->replaceConfigFile( $this->getTenancyConfigFileIdentifierClass() );
+        $identifierClass = $this->getTenancyConfigFileIdentifierClass() ;
+        $configFileIdentifier = $this->initConfigFileIdentifier($identifierClass);
+
+        $this->replaceConfigFile($configFileIdentifier);
+        $this->remergeJustReplacedConfigFile($configFileIdentifier);
     }
 
     protected function replaceLaravelConfigFiles()
     {
         foreach($this->getPixelAppLaravelConfigFileIdentifierClasses() as $identifierClass)
         {
-            $this->replaceConfigFile($identifierClass);
+            $configFileIdentifier = $this->initConfigFileIdentifier($identifierClass);
+
+            $this->replaceConfigFile($configFileIdentifier);
+            $this->remergeJustReplacedConfigFile($configFileIdentifier);
         }
+    }
+
+    protected function initPixelAppInstallingManager() : PixelAppInstallingManager
+    {
+        return PixelAppInstallingManager::Singleton();
     }
 
     public function replacePackageConfigFiles() : void
     {
         $this->replaceLaravelConfigFiles();
 
-        if(PixelTenancyManager::isItTenancySupporterApp())
+        if($this->initPixelAppInstallingManager()->isInstallingForTenancySupporterApp())
         {
             $this->replaceTenancyConfigFile();
         }

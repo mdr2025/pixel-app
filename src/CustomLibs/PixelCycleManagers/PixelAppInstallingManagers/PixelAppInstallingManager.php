@@ -1,6 +1,7 @@
 <?php
 namespace PixelApp\CustomLibs\PixelCycleManagers\PixelAppInstallingManagers;
 
+use Exception;
 use Illuminate\Support\Facades\Artisan;
 use PixelApp\Config\ConfigEnums\PixelAppSystemRequirementsCard;
 use PixelApp\Config\ConfigEnums\PixelAppTypeEnum;
@@ -19,40 +20,156 @@ use PixelApp\ServiceProviders\RelatedPackagesServiceProviders\TenancyServiceProv
 
 class PixelAppInstallingManager
 {
-    protected static PixelAppSystemRequirementsCard $requirementCard;
-    protected static string $appType ;
+    protected static ?PixelAppInstallingManager $instance = null;
+    protected ?PixelAppSystemRequirementsCard $requirementCard = null;
+    protected ?string $appType = null;
 
-    public static function install(PixelAppSystemRequirementsCard $requirementCard)
+    private function __construct()
     {
-        static::usePixelAppSystemRequirementsCard($requirementCard);
+    }
 
-        //configuring pixel app package config file before replacing it into config project path
-        static::configureSystemType();
-        static::definePixelAppFunctinallities();
+    public static function Singleton() : self
+    {
+        if(!static::$instance)
+        {
+            static::$instance = new static();
+        }
 
-        //replacing config files and merging their data to be readable by config() helper function
-        static::installPackageConfigFiles();
+        return static::$instance;
+    }
 
-        //replacing the other stubs
-        static::installLaravelServiceProviders();
-        static::installPackageMiddlewareStubs();
-        static::installPackageModels();
-        static::installAppDatabaseFiles();
-        static::installConsoleObjects();
+    public function install(PixelAppSystemRequirementsCard $requirementCard)
+    {
+
+        /**
+         * 
+         * configuring pixel app package config file before replacing it into config project path
+         *
+         * replacing config files and merging their data to be readable by config() helper function
+         */
+        $this->HandleFirstTimeConfig($requirementCard);
+        
+        //replacing the other application stubs
+        $this->installLaravelServiceProviders();
+        $this->installPackageMiddlewareStubs();
+        $this->installPackageModels();
+        $this->installAppDatabaseFiles();
+        $this->installConsoleObjects();
 
         //handling pixel-dompdf package needed font files
-        static::handleDefaultFonts();
+        $this->handleDefaultFonts();
     }
     
-    protected static function usePixelAppSystemRequirementsCard(PixelAppSystemRequirementsCard $requirementCard) : void
+    protected function HandleFirstTimeConfig(PixelAppSystemRequirementsCard $requirementCard) : void
     {
-        static::$requirementCard = $requirementCard;
+
+        $this->startInstallingProcess($requirementCard);
+
+        //configuring pixel app package config file before replacing it into config project path
+        $this->definePixelAppFunctinallities();
+
+        //replacing config files and merging their data to be readable by config() helper function
+        $this->installPackageConfigFiles();
+
+    }
+
+    protected function startInstallingProcess(PixelAppSystemRequirementsCard $requirementCard)
+    {
+        $this->usePixelAppSystemRequirementsCard($requirementCard);
+
+        $this->configureAppType();
+    }
+
+    protected function checkInstallingProcessStart() : void
+    {
+        if(!$this->requirementCard)
+        {
+            throw new Exception("No Pixel app installing process is start !");
+        }
+    }
+
+    protected function usePixelAppSystemRequirementsCard(PixelAppSystemRequirementsCard $requirementCard) : void
+    {
+        $this->requirementCard = $requirementCard;
+    }
+
+    public function getPixelAppSystemRequirementsCard() : ?PixelAppSystemRequirementsCard
+    {
+        $this->checkInstallingProcessStart();
+
+        return $this->requirementCard;
     }
  
-    protected static function changePixelAppConfigValue(string $key , mixed $value) : void
+    protected function changePixelAppConfigValue(string $key , mixed $value) : void
     {
         $changes = [$key => $value];
         PixelConfigManager::setPixelPackageConfigFileKeys($changes);
+    }
+
+    protected function setAppType(string $appType) : void
+    {
+        $this->appType = $appType;
+    }
+
+    public function getAppType() : ?string
+    {
+        $this->checkInstallingProcessStart();
+
+        return $this->appType;
+    }
+
+    /**
+     * Determines if the insatlation process is run for an admin panel app
+     */
+    public function isInstallingForAdminPanel() : bool
+    {
+        $this->checkInstallingProcessStart();
+
+        return $this->getAppType() == PixelAppTypeEnum::ADMIN_PANEL_APP_TYPE;
+    }
+
+    
+    /**
+     * Determines if the insatlation process is run for an tenant app
+     */
+    public function isInstallingForTenantApp() : bool
+    {
+        $this->checkInstallingProcessStart();
+
+        return $this->getAppType() == PixelAppTypeEnum::TENANT_APP_TYPE;
+    }
+
+    /**
+     * Determines if the insatlation process is run for a normal app
+     *
+     */
+    public function isInstallingForNormalApp() : bool
+    {
+        $this->checkInstallingProcessStart();
+
+        return $this->getAppType() == PixelAppTypeEnum::NORMAL_APP_TYPE;
+    }
+
+    
+    /**
+     * Determines if the insatlation process is run for a monolith app
+     */
+    public function isInstallingForMonolithApp() : bool
+    {
+        $this->checkInstallingProcessStart();
+
+        return $this->getAppType() == PixelAppTypeEnum::MONOLITH_TENANCY_APP_TYPE;
+    }
+
+    
+    /**
+     * Determines if the insatlation process is run for a tenancy supporter app
+     */
+    public function isInstallingForTenancySupporterApp() : bool
+    {
+        $this->checkInstallingProcessStart();
+
+        return $this->getAppType() !== PixelAppTypeEnum::NORMAL_APP_TYPE;
     }
 
     public static function getDefaultAppType() : string
@@ -70,100 +187,73 @@ class PixelAppInstallingManager
         ];
     }
 
-    protected static function configureSystemType() : void
+    protected function configureAppType() : void
     {
-        $systemType = static::$requirementCard->getSystemType();
+        $appType = $this->getPixelAppSystemRequirementsCard()->getSystemType();
 
-        if(! in_array($systemType , static::getValidAppTypes()))
+        if(! in_array($appType , $this::getValidAppTypes()))
         {
             dd("The selected app type is not valid !");
         }
 
-        static::changePixelAppConfigValue(
+        $this->setAppType($appType); 
+
+        $this->changePixelAppConfigValue(
                                             PixelConfigManager::getPixelAppTypeConfigKeyName() ,
-                                            $systemType
+                                            $appType
                                          );
     }
     
     
-    protected static function installPackageConfigFiles() : void
+    protected function installPackageConfigFiles() : void
     {
         PixelConfigManager::installPackageConfigFiles();
     }
 
-    protected static function definePixelAppFunctinallities() : void
+    protected function definePixelAppFunctinallities() : void
     { 
-        PixelRouteManager::installPackageRoutes(static::$requirementCard);
+        PixelRouteManager::installPackageRoutes();
     }
  
-    protected static function initLaravelServiceProviderStubsManager() : LaravelServiceProviderStubsManager
+    protected function initLaravelServiceProviderStubsManager() : LaravelServiceProviderStubsManager
     {
         return LaravelServiceProviderStubsManager::Singleton();
     }
 
-    protected static function installLaravelServiceProviders() : void
+    protected function installLaravelServiceProviders() : void
     {
-        static::initLaravelServiceProviderStubsManager()->installLaravelProjectServiceProviders(); 
+        $this->initLaravelServiceProviderStubsManager()->installLaravelProjectServiceProviders(); 
     }
  
-    protected static function installPackageMiddlewareStubs() : void
+    protected function installPackageMiddlewareStubs() : void
     {
         PixelMiddlewareManager::installPackageMiddlewareStubs();
     }
 
-    protected static function installPackageModels() : void
+    protected function installPackageModels() : void
     {
         PixelModelManager::installPackageModels();
     }
 
-    protected static function installAppDatabaseFiles() : void
+    protected function installAppDatabaseFiles() : void
     {
         PixelDatabaseManager::installAppDatabaseFiles();
     }
 
-    protected static function installConsoleObjects() : void
+    protected function installConsoleObjects() : void
     {
         PixelConsoleManager::installConsoleObjects();
     }
 
-    protected static function handleDefaultFonts() : void
+    protected function handleDefaultFonts() : void
     {
         Artisan::call("pixel-app:handle-default-fonts");
     }
-
-    public static function isInstallingTenancySupporterApp(PixelAppSystemRequirementsCard $requirementCard) : bool
-    {
-        return $requirementCard->getSystemType() !== PixelAppTypeEnum::NORMAL_APP_TYPE;
-        // return PixelTenancyManager::isItTenancySupporterApp();
-    }
-
-    public static function isInstallingMonolithTenancyApp(PixelAppSystemRequirementsCard $requirementCard) : bool
-    {
-        return $requirementCard->getSystemType() !== PixelAppTypeEnum::MONOLITH_TENANCY_APP_TYPE;
-        return PixelTenancyManager::isItMonolithTenancyApp();
-    }
  
-    // public static function DoesItNeedTenantRoutes() : bool
-    // {
-    //     return static::isItTenantApp() || static::isItMonolithTenancyApp();
-    // }
-    
-    public static function isInstallingNormalApp(PixelAppSystemRequirementsCard $requirementCard) : bool
+ 
+    public function DoesItNeedTenantRoutesInstalling() : bool
     {
-        return $requirementCard->getSystemType() !== PixelAppTypeEnum::NORMAL_APP_TYPE;
-        return PixelTenancyManager::isItNormalApp();
-    }
-
-    public static function isInstallingAdminPanelApp(PixelAppSystemRequirementsCard $requirementCard) : bool
-    {
-        return $requirementCard->getSystemType() !== PixelAppTypeEnum::ADMIN_PANEL_APP_TYPE;
-        return PixelTenancyManager::isItAdminPanelApp();
-    }
-
-    public static function isInstallingTenantApp(PixelAppSystemRequirementsCard $requirementCard) : bool
-    {
-        return $requirementCard->getSystemType() !== PixelAppTypeEnum::TENANT_APP_TYPE;
-        return PixelTenancyManager::isItTenantApp();
+        return static::isInstallingForMonolithApp() || static::isInstallingForTenantApp();
     }
 
 }

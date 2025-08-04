@@ -49,8 +49,6 @@ class PixelAppPackageServiceProvider extends ServiceProvider
   
         PixelTenancyManager::RegisterPixelTenancyOnNeed($this->app);
 
-        $this->extendMacroables();
-
         $this->booIOEncryptionFuncs();
         $this->scheduledObjectsHandling();
         $this->defineCommands();
@@ -112,30 +110,6 @@ class PixelAppPackageServiceProvider extends ServiceProvider
         IOEncryptionManager::bootFuncs();
     }
 
-    // protected function registerPixelAppDefaultServiceProviders() : void
-    // {
-    //     $providers = ConfigValueManager::getPixelAppDefaultProviders();
-        
-    //     foreach ($providers as $provider) 
-    //     {
-    //         if (class_exists($provider)) 
-    //         {
-    //             $this->app->register($provider);
-    //         }  
-    //     }
-    // }
-      
-    protected function extendMacroables() : void
-    { 
-        foreach(PixelConfigManager::getPixelMacroableExtenders() as $extenderClass)
-        {
-            if(is_subclass_of($extenderClass , PixelMacroableExtender::class))
-            {
-                $extender = new $extenderClass();
-                $extender->extendMacroable();
-            }
-        }
-    }
     /**
      * Define the application's command schedule.
      *

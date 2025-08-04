@@ -15,6 +15,7 @@ class PixelMiddlewareManager
     {
         static::initPixelMiddlewareStubsManager()->replacePixelAppMiddlewareStubs();
     }
+    
     public static function getProjectMiddlewarePath() : string
     {
         return static::getProjectHttpPath() . "/Middleware";

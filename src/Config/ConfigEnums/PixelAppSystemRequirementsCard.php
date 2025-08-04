@@ -22,7 +22,8 @@ class PixelAppSystemRequirementsCard
 
     public static function Singleton(): PixelAppSystemRequirementsCard
     {
-        if (!static::$instance) {
+        if (!static::$instance) 
+        {
             static::$instance = new static();
         }
 

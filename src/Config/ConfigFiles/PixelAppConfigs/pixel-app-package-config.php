@@ -1,12 +1,6 @@
 <?php
 
 use PixelApp\Config\ConfigEnums\PixelAppTypeEnum;
-use PixelApp\PixelMacroableExtenders\PixelBlueprintExtender;
-use PixelApp\PixelMacroableExtenders\PixelBuilderExtender;
-use PixelApp\PixelMacroableExtenders\PixelCarbonExtender;
-use PixelApp\PixelMacroableExtenders\PixelHasManyExtender;
-use PixelApp\PixelMacroableExtenders\PixelReponseExtender;
-use PixelApp\PixelMacroableExtenders\PixelStrExtender;
 use PixelApp\Routes\RouteRegistrarTypes\AuthenticationRoutesRegistrars\CompanyAuthenticationAPIRoutesRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\AuthenticationRoutesRegistrars\UserAuthenticationAPIRoutesRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\AreasRouteRegistrar;
@@ -48,14 +42,6 @@ return [
         UserProfileAPIRoutesRegistrar::class,
         SignUpUsersAPIRoutesRegistrar::class,
         UsersAPIRoutesRegistrar::class
-    ], 
-    "pixel-macroable-extenders" => [
-        PixelBlueprintExtender::class,
-        PixelBuilderExtender::class,
-        PixelCarbonExtender::class,
-        PixelHasManyExtender::class,
-        PixelStrExtender::class,
-        PixelReponseExtender::class
     ], 
     /**
      * it only will be used on tenancy supporter app only (not normal app)

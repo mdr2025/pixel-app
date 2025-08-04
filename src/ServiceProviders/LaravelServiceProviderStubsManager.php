@@ -3,9 +3,9 @@
 namespace PixelApp\ServiceProviders;
  
 use Illuminate\Support\Str; 
-use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\PixelAppStubsManager;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\StubIdentifiers\StubIdentifier;
+use PixelApp\Routes\PixelRouteBootingManager;
 
 class LaravelServiceProviderStubsManager extends PixelAppStubsManager
 { 
@@ -13,12 +13,14 @@ class LaravelServiceProviderStubsManager extends PixelAppStubsManager
     {
         $this->replaceRouteServiceProvider();
         $this->replaceEventServiceProvider();
+        $this->replaceAuthServiceProvider();
     }
     
     protected function getServiceProviderProjectPath(string $relevantPath) : string
     {
         return $this->getServiceProvidersProjectPath() . "/" . $relevantPath;
     }
+
     protected function getServiceProvidersProjectPath() : string
     {
         return app_path("Providers");
@@ -38,10 +40,12 @@ class LaravelServiceProviderStubsManager extends PixelAppStubsManager
     {
         return $this->getLaravelServiceProviderPixelStubPath("EventServiceProviderStub.php");
     }
+
     protected function getAuthServiceProviderStubPath() : string
     {
         return $this->getLaravelServiceProviderPixelStubPath("AuthServiceProviderStub.php");
     }
+
     protected function getRouteServiceProviderStubPath() : string
     {
         return $this->getLaravelServiceProviderPixelStubPath("RouteServiceProviderStub.php"); 
@@ -65,21 +69,12 @@ class LaravelServiceProviderStubsManager extends PixelAppStubsManager
         $this->replaceServiceProviderFile($stubPath , $projectPath);
     }
 
-    // protected static function replaceAuthServiceProvider() : void
-    // {
-    //     $stubContent = File::get(static::getAuthServiceProviderStubPath());
-    //     $passportMigrationsIgnoringPlaceholder = "--passport-migrations-ignoring--";
-        
-    //     if(PixelTenancyManager::doesItCorrectlySupportedTenancy())
-    //     {
-    //         $replace =  "Passport::ignoreMigrations();" ;
-    //     }
-        
-    //     $stubContent = Str::replace($passportMigrationsIgnoringPlaceholder , $replace ?? "" , $stubContent);
-
-    //     $finalProviderPath = static::getServiceProviderProjectPath("AuthServiceProvider.php");
-    //     File::put($finalProviderPath , $stubContent);
-    // }
+    protected function replaceAuthServiceProvider() : void
+    {
+        $stubPath = static::getAuthServiceProviderStubPath();
+        $projectPath = static::getServiceProviderProjectPath("AuthServiceProvider.php");
+        $this->replaceServiceProviderFile($stubPath , $projectPath);
+    }
 
     protected function replaceRouteServiceProvider() : void
     {
@@ -91,7 +86,7 @@ class LaravelServiceProviderStubsManager extends PixelAppStubsManager
         {
             $tenancyRoutesPlaceHolder = "--loading-tenant-routes--";
          
-            $replace =  PixelTenancyManager::DoesItNeedTenantRoutes() ?
+            $replace =  PixelRouteBootingManager::DoesItNeedTenantRoutesBooting() ?
                         "PixelRouteManager::loadTenantRoutes();" :
                         ""; // an empty string needed to remove placeholder string
     

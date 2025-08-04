@@ -3,7 +3,6 @@
 namespace PixelApp\Config;
 
 use Illuminate\Support\Facades\File;
-use PHPUnit\Framework\MockObject\Builder\Stub;
 use PixelApp\Config\ConfigFileIdentifiers\ConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\PixelAppLaravelConfigFileIdentifiers\AppConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\PixelAppLaravelConfigFileIdentifiers\AuthConfigFileIdentifier;
@@ -114,6 +113,42 @@ class PixelConfigManager
         static::initPixelConfigStubsManager()->replacePackageConfigFiles();
     }
 
+    public static function remergeConfigFile(string $fileName , array $newConfigContent) : void
+    {
+        $currentMergedConfig = static::getMergedConfigFileContent($fileName);
+
+        $merged = array_merge(
+                                  $currentMergedConfig,
+                                  $newConfigContent
+                             );
+        
+        config()->set($fileName, $merged);
+    }
+
+    
+    public static function getConfigFileProjectPath(string $fileName) : string
+    {
+        return config_path($fileName);
+    }
+
+    protected static function getJustReplacedConfigFileContent(string $fileFullName) : array
+    {
+        $path = static::getConfigFileProjectPath($fileFullName);
+
+        if(File::exists($path))
+        {
+            return static::getConfigFileContentByPath($path);
+        }
+
+        return [];
+    }
+
+    public static function remergeJustReplacedConfigFile(string $fileFullName) : void
+    {
+        $newConfigContent = static::getJustReplacedConfigFileContent($fileFullName);
+        static::remergeConfigFile($fileFullName , $newConfigContent);
+    }
+
     public static function overrideConfigFileContent(string $configFilePath , array $fileConfigs) : void
     {
         $configFileContent = "<?php return " . var_export($fileConfigs , true) . " ;";
@@ -121,10 +156,26 @@ class PixelConfigManager
         File::put($configFilePath , $configFileContent);
     }
 
+    public static function getMergedConfigFileContent(string $configFileName) : array
+    {
+        return config($configFileName , []);
+    }
+
+    public static function getConfigFileContentByPath(string $configFilePath) : array
+    {
+        $content = require $configFilePath;
+
+        return is_array($content) ? $content : [];
+    }
+
+    /**
+     * update the main config path of package 
+     * (( that is found in package config path before any file replacement into project config path )) 
+     */
     public static function setPixelPackageConfigFileKeys(array $keys) : void
     {
         $configFileIdentifier  = static::initPackageBaseConfigFileIdentifier();
-        $configFilePath= $configFileIdentifier->getFilePath();
+        $configFilePath = $configFileIdentifier->getFilePath();
 
         $configs = require $configFilePath;
         $configs = array_merge($configs , $keys);

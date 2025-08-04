@@ -146,7 +146,9 @@ class TenancyServiceProvider extends ServiceProvider
 
     protected function doesItNeedAdminPanelConnection() : bool
     {
-        return !PixelTenancyManager::isItAdminPanelApp() && PixelTenancyManager::isItTenancySupporterApp();
+        return !PixelTenancyManager::isItAdminPanelApp() 
+               &&
+               PixelTenancyManager::isItTenancySupporterApp();
     }
 
     protected function registerConnectionManagmentClasses() : void

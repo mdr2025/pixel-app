@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
 use PixelApp\Http\Controllers\CompanyAccountControllers\CompanySettingsControllers\TenantCompanySettingsControllers\TenantCompanyResourcesConfiguringController;
+use PixelApp\Routes\PixelRouteBootingManager;
 use PixelApp\Routes\PixelRouteManager;
 
 class TenantCompanyResourcesConfiguringAPIRoutesRegistrar extends PixelRouteRegistrar 
@@ -13,17 +14,23 @@ class TenantCompanyResourcesConfiguringAPIRoutesRegistrar extends PixelRouteRegi
 
     public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
-        if(  PixelRouteManager::isItTenantApp() || PixelRouteManager::isItMonolithTenancyApp() )
+        if(  PixelRouteBootingManager::isBootingForTenantApp() 
+             ||
+             PixelRouteBootingManager::isBootingForMonolithTenancyApp() )
         {
             $this->defineTenantAppCentralDomainRoutes();
 
-        }elseif(PixelRouteManager::isItAdminPanelApp())
+        }elseif(PixelRouteBootingManager::isBootingForAdminPanelApp())
         {
             $this->defineAdminPanelRoutes();
         }
     }
     
-    
+   public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
+   {
+       $arrayToAppend["tenant-company-resources-configuring"] = static::class;
+   }
+
     //from admin panel to tenant app central domain
     protected function defineTenantCompanyResourcesConfiguringRoute() : void
     { 
@@ -39,7 +46,7 @@ class TenantCompanyResourcesConfiguringAPIRoutesRegistrar extends PixelRouteRegi
     
     protected function getGlobalMiddlewares() : array
     {
-        return [ 'api' ]  ;
+        return [ 'api' , 'client' ]  ;
     }
 
     protected function initMainApiRouteRegistrar() : RouteRegistrar
@@ -49,14 +56,20 @@ class TenantCompanyResourcesConfiguringAPIRoutesRegistrar extends PixelRouteRegi
 
     protected function defineTenantAppCentralDomainRoutes() : void
     {
-       $routeRegistrar = $this->initMainApiRouteRegistrar();
+        foreach(PixelRouteManager::getCentralDomains() as $domain)
+        {
+            $routeRegistrar = $this->initMainApiRouteRegistrar();
        
-       $this->attachGlobalMiddlewares($routeRegistrar);
+            $this->attachGlobalMiddlewares($routeRegistrar);
 
-       $routeRegistrar->group(function()
-       {
-            $this->defineTenantCompanyResourcesConfiguringRoute();
-       });
+            $routeRegistrar->domain($domain);
+
+            $routeRegistrar->group(function()
+            {
+                    $this->defineTenantCompanyResourcesConfiguringRoute();
+            });
+        }
+       
     }
      
     protected function defineAdminPanelRoutes() : void

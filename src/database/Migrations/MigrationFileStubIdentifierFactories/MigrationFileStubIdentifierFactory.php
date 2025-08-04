@@ -2,8 +2,8 @@
 
 namespace PixelApp\Database\Migrations\MigrationFileStubIdentifierFactories;
 
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppInstallingManagers\PixelAppInstallingManager;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\StubIdentifiers\StubIdentifier;
-use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 
 abstract class MigrationFileStubIdentifierFactory
 {
@@ -128,32 +128,37 @@ abstract class MigrationFileStubIdentifierFactory
      */
     protected function doesItNeedCentralStubReplacement() : bool
     {
-        return $this->isItAdminPanelApp() || $this->isItMonolithApp() || $this->isItNormalApp();
+        return $this->isInstallingForAdminPanel() || $this->isInstallingForMonolithApp() || $this->isInstallingForNormalApp();
     }
 
     protected function doesItNeedTenantStubReplacement() : bool
     {
-        return $this->isItMonolithApp() || $this->isItTenantApp();
+        return $this->isInstallingForMonolithApp() || $this->isInstallingForTenantApp();
     }
 
-    protected function isItNormalApp() : bool
+    protected function initPixelAppInstallingManager() : PixelAppInstallingManager
     {
-        return PixelTenancyManager::isItNormalApp();
+        return PixelAppInstallingManager::Singleton();
     }
 
-    protected function isItAdminPanelApp() : bool
+    protected function isInstallingForNormalApp() : bool
     {
-        return PixelTenancyManager::isItAdminPanelApp();
+        return $this->initPixelAppInstallingManager()->isInstallingForNormalApp();
     }
 
-    protected function isItTenantApp() : bool
+    protected function isInstallingForAdminPanel() : bool
     {
-        return PixelTenancyManager::isItTenantApp();
+        return $this->initPixelAppInstallingManager()->isInstallingForAdminPanel();
     }
 
-    protected function isItMonolithApp() : bool
+    protected function isInstallingForTenantApp() : bool
     {
-        return PixelTenancyManager::isItMonolithTenancyApp();
+        return $this->initPixelAppInstallingManager()->isInstallingForTenantApp();
+    }
+
+    protected function isInstallingForMonolithApp() : bool
+    {
+        return $this->initPixelAppInstallingManager()->isInstallingForMonolithApp();
     }
     
 }

@@ -4,10 +4,11 @@ namespace PixelApp\Routes;
 
 use PixelApp\Config\ConfigEnums\PixelAppSystemRequirementsCard;
 use PixelApp\Config\PixelConfigManager;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppInstallingManagers\PixelAppInstallingManager;
 
-class PixelRoutesInstaller
+class PixelRoutesInstallingManager
 {
-    protected ?PixelRoutesInstaller $instance;
+    protected ?PixelRoutesInstallingManager $instance;
 
     private function __construct()
     {
@@ -24,13 +25,13 @@ class PixelRoutesInstaller
         return static::$instance;
     }
 
-    public function installPackageRoutes(PixelAppSystemRequirementsCard $requirementCard) : void
+    public function installPackageRoutes() : void
     {
         //replacing the route stubs into project routes path
         $this->replacePixelAppRouteStubs();
         
         //setting the required RouteRegistrars (the ones who has an available to define functionality)
-        $this->installRouteRegitrars($requirementCard);
+        $this->installRouteRegitrars();
     }
      
     protected function getConfigRouteRegistrarsArray(array $routeRegistrars) : array
@@ -61,7 +62,7 @@ class PixelRoutesInstaller
         return new $routeRegistrarClass;
     }
 
-    protected function getAvailableRouteRegistrars(PixelAppSystemRequirementsCard $requirementCard) : array
+    protected function getAvailableRouteRegistrars() : array
     {
         $routeRegistrars = [];
 
@@ -69,7 +70,7 @@ class PixelRoutesInstaller
         {
             $routeRegistrar = $this->initRouteRegistrar($routeRegistrarClass);
             
-            if($routeRegistrar->isFuncAvailableToDefine($requirementCard))
+            if($routeRegistrar->isFuncAvailableToDefine())
             {
                 $routeRegistrars[] = $routeRegistrar;
             }
@@ -78,9 +79,9 @@ class PixelRoutesInstaller
         return $routeRegistrars;
     }
 
-    protected function installRouteRegitrars(PixelAppSystemRequirementsCard $requirementCard) : void
+    protected function installRouteRegitrars() : void
     {
-        $availableRouteRegistrars = $this->getAvailableRouteRegistrars($requirementCard);
+        $availableRouteRegistrars = $this->getAvailableRouteRegistrars();
         $this->setRouteRegistrarsIntoPixelConfig($availableRouteRegistrars);
     }
  
@@ -92,6 +93,41 @@ class PixelRoutesInstaller
     protected function replacePixelAppRouteStubs() : void
     {
         $this->initPixelAppRouteStubsManager()->replacePixelAppRouteStubs();
+    }
+
+    protected static function initPixelAppInstallingManager()  :PixelAppInstallingManager
+    {
+        return PixelAppInstallingManager::Singleton();
+    }
+
+    public static function getPixelAppSystemRequirementsCard() : ?PixelAppSystemRequirementsCard
+    {
+        return static::initPixelAppInstallingManager()->getPixelAppSystemRequirementsCard();
+    }
+
+    public static function isInstallingForTenancySupporterApp() : bool
+    {
+        return static::initPixelAppInstallingManager()->isInstallingForTenancySupporterApp();
+    }
+
+    public static function isInstallingForNormalApp() : bool
+    {
+        return static::initPixelAppInstallingManager()->isInstallingForNormalApp();
+    }
+
+    public static function isInstallingForAdminPanel() : bool
+    {
+        return static::initPixelAppInstallingManager()->isInstallingForAdminPanel();
+    }
+
+    public static function isInstallingForTenantApp() : bool
+    {
+        return static::initPixelAppInstallingManager()->isInstallingForTenantApp();
+    }
+
+    public static function DoesItNeedTenantRoutesInstalling() : bool
+    {
+        return static::initPixelAppInstallingManager()->DoesItNeedTenantRoutesInstalling();
     }
 
 }

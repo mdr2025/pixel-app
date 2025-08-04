@@ -2,15 +2,19 @@
 
 namespace PixelApp\Routes;
 
-
+use Illuminate\Routing\Route;
 use Illuminate\Routing\RouteRegistrar;
-use PixelApp\Config\ConfigEnums\PixelAppSystemRequirementsCard;
 
 abstract class PixelRouteRegistrar
 { 
 
     abstract public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void;
     abstract public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void;
+    
+    protected function getServerRouteExcludedMiddlewares() : array
+    {
+        return [ 'throttle:api'];
+    }
     /**
      * because it is applied on the client side where the requests come from
      * and the server fails down on applying the middleware on the two sides (server + client)
@@ -18,10 +22,22 @@ abstract class PixelRouteRegistrar
      */
     protected function exceptServerRouteMiddlewares(RouteRegistrar $routeRegistrar) : void
     {
-        $routeRegistrar->withoutMiddleware( 'throttle:api' );
+        $excluded = $this->getServerRouteExcludedMiddlewares();
+
+        $routeRegistrar->withoutMiddleware( $excluded );
     }
 
-    public function isFuncAvailableToDefine(PixelAppSystemRequirementsCard $requirementsCard) : bool
+    protected function attchClientGrantMiddleware(Route $route) : void
+    {
+        $route->middleware("client");
+    }
+
+    protected function initPixelRoutesInstallingManager()  :PixelRoutesInstallingManager
+    {
+        return PixelRoutesInstallingManager::Singlton();
+    }
+
+    public function isFuncAvailableToDefine() : bool
     {
         return true;
     }
@@ -36,14 +52,36 @@ abstract class PixelRouteRegistrar
         return PixelRouteManager::getTenancyMiddlewares();
     }
 
+    protected function getServerRouteGlobalMiddlewares() : array
+    {
+        $globaMiddlewares = $this->getGlobalMiddlewares();
+        $globaMiddlewares[] = "client";   
+
+        return $globaMiddlewares;
+    }
+
+    protected function attachServerRouteMiddlewares(RouteRegistrar $routeRegistrar) : void
+    {
+        $globalMiddlewares = $this->getServerRouteGlobalMiddlewares();
+
+        $routeRegistrar->middleware( $globalMiddlewares );
+
+        $this->exceptServerRouteMiddlewares($routeRegistrar);
+    }
+
     protected function attachGlobalMiddlewares(RouteRegistrar $routeRegistrar) : void
     {
         $routeRegistrar->middleware( $this->getGlobalMiddlewares() );
     }
 
+    protected function getTenantRouteMiddlewares() : array
+    {
+        return array_merge($this->getGlobalMiddlewares() , $this->getTenancyMiddlewares());
+    }
+
     protected function attachTenantMiddlewares(RouteRegistrar $routeRegistrar) : void
     {
-        $tenantMiddlewares = array_merge($this->getGlobalMiddlewares() , $this->getTenancyMiddlewares());
+        $tenantMiddlewares = $this->getTenantRouteMiddlewares(); 
         $routeRegistrar->middleware($tenantMiddlewares);
     }
 

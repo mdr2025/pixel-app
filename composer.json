@@ -17,6 +17,7 @@
         "muhammed-aldrubi/pixel-dom-pdf": "^1.0.17",
         "muhammed-aldrubi/exp-imp-management": "^1.0.17",
         "muhammed-aldrubi/temporary-files-handlers": "^1.0.2",
+        "mdr2025/pixel-macroable-extenders" : "^1.0",
         "owen-it/laravel-auditing": "^13.5",
         "owen-oj/laravel-getid3": "1.3",
         "pixel-softwares/authorization-management": "^1.0.10",
@@ -115,7 +116,7 @@
         },
         {
             "type": "vcs",
-            "url": "git@github.com:mdr2025/pixel-app.git"
+            "url": "git@github.com:mdr2025/pixel-macroable-extenders.git"
         }
     ],
     "config": {

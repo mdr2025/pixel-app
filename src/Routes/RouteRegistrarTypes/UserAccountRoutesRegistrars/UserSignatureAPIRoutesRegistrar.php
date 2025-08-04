@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
 use PixelApp\Http\Controllers\UserAccountControllers\SignatureController;
+use PixelApp\Routes\PixelRouteBootingManager;
 use PixelApp\Routes\PixelRouteManager;
 
 class UserSignatureAPIRoutesRegistrar extends PixelRouteRegistrar 
@@ -13,11 +14,11 @@ class UserSignatureAPIRoutesRegistrar extends PixelRouteRegistrar
 
     public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
-        if( PixelRouteManager::isItMonolithTenancyApp()  )
+        if( PixelRouteBootingManager::isBootingForMonolithTenancyApp()  )
         {
             $this->defineMonolithTenancyAppRoutes(); 
 
-        }elseif( PixelRouteManager::isItTenantApp()  )
+        }elseif( PixelRouteBootingManager::isBootingForTenantApp()  )
         {
             $this->defineTenantAppRoutes();
 
@@ -26,6 +27,15 @@ class UserSignatureAPIRoutesRegistrar extends PixelRouteRegistrar
             $this->defineNormalAppRoutes(); 
         } 
     }
+
+    
+    public function isFuncAvailableToDefine() : bool
+    {
+        return $this->initPixelRoutesInstallingManager()
+                    ->getPixelAppSystemRequirementsCard()?->isUserSignatureFuncRequired() 
+                    ?? false;
+    }
+
     public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
     {
         $arrayToAppend["user-signature"] = static::class;

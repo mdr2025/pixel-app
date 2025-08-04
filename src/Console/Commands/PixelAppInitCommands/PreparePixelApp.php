@@ -35,22 +35,13 @@ class PreparePixelApp extends Command
      * @var string
      */
     protected $description = 'Preparing Pixel App based on pixel-app-package-config values to be ready to use without any extra configuration';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
+ 
     protected function initPixelAppSystemRequirementsCard() : void
     {
         $this->requirementCard = PixelAppSystemRequirementsCard::Singleton();
     }
-  /**
+   
+    /**
      * Execute the console command.
      *
      * @return int
@@ -139,9 +130,15 @@ class PreparePixelApp extends Command
         }
     }
 
+    protected function initPixelAppInstallingManager() : PixelAppInstallingManager
+    {
+        return PixelAppInstallingManager::Singleton();
+    }
+
     protected function installApp() : void
     {
-        PixelAppInstallingManager::install($this->requirementCard);
+        $this->initPixelAppInstallingManager()->install($this->requirementCard);
+
         $this->info("pixel app package has been installed successfully !");
     }
     
@@ -149,6 +146,7 @@ class PreparePixelApp extends Command
     {
         PixelAppUninstallingManager::uninstall($this->requirementCard);
     }
+
     // protected function appendServiceProviderToPixelConfigDefaultProviders() : void
     // {
     //     $pixelConfig = ConfigValueManager::getPixelAppConfigArray();

@@ -6,6 +6,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use PixelApp\Config\PixelConfigManager;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppBootingManagers\PixelAppBootingManager;
 use PixelApp\ServiceProviders\RelatedPackagesServiceProviders\TenancyServiceProvider;
 use PixelApp\Http\Middleware\TenancyCustomMiddlewares\ActiveTenantCompany;
 use PixelApp\Http\Middleware\TenancyCustomMiddlewares\ApprovedTenantCompany;
@@ -22,37 +23,29 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 class PixelTenancyManager
 {
-    /**
-     * this method is useful when we want to check extra conditions regardless of config value
-     */
     public static function isItTenancySupporterApp() : bool
     {
-        return !PixelConfigManager::isItNormalApp();
+        return PixelAppBootingManager::isBootingForTenancySupporterApp();
     }
 
     public static function isItNormalApp() : bool
     {
-        return PixelConfigManager::isItNormalApp();
-    }
-
-    public static function DoesItNeedTenantRoutes() :bool
-    {
-        return PixelRouteManager::DoesItNeedTenantRoutes();
+        return PixelAppBootingManager::isBootingForNormalApp();
     }
     
     public static function isItMonolithTenancyApp() : bool
     {
-        return PixelConfigManager::isItMonolithTenancyApp();
+        return PixelAppBootingManager::isBootingForMonolithTenancyApp();
     }
  
     public static function isItAdminPanelApp() : bool
     {
-        return PixelConfigManager::isItAdminPanelApp();
+        return PixelAppBootingManager::isBootingForAdminPanelApp();
     }
 
     public static function isItTenantApp() : bool
     {
-        return PixelConfigManager::isItTenantApp();
+        return PixelAppBootingManager::isBootingForTenantApp();
     }
 
     public static function handleTenancySyncingData(Model $model) : void

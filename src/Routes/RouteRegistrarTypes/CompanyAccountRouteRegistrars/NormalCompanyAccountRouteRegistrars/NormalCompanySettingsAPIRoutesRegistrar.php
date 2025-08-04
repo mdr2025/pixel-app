@@ -6,18 +6,26 @@ use Illuminate\Support\Facades\Route;
 use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
 use PixelApp\Http\Controllers\CompanyAccountControllers\CompanySettingsControllers\NormalCompanySettingsControllers\NormalCompanyDataResettingController;
-use PixelApp\Routes\PixelRouteManager;
+use PixelApp\Routes\PixelRouteBootingManager;
 
 class NormalCompanySettingsAPIRoutesRegistrar extends PixelRouteRegistrar 
 { 
     public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
-        if(  PixelRouteManager::isItAdminPanelApp() || PixelRouteManager::isItNormalApp() )
+        if(  
+            PixelRouteBootingManager::isBootingForAdminPanelApp()
+            ||
+            PixelRouteBootingManager::isBootingForNormalApp() )
         {
             $this->defineNormalAppRoutes(); 
         }
     }
-    
+
+   public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
+   {
+       $arrayToAppend["normal-company-settings"] = static::class;
+   }
+
     protected function defineCompanyResettingRoute() : void
     { 
         Route::post('system-reset', [NormalCompanyDataResettingController::class, 'resetData']);

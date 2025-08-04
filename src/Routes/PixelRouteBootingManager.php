@@ -4,9 +4,9 @@ namespace PixelApp\Routes;
 
 
 use Illuminate\Support\Facades\Route;
-use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppBootingManagers\PixelAppBootingManager;
 
-class PixelRouteBooter
+class PixelRouteBootingManager
 {
 
     protected static function initPixelRouteRegistrar(string $pixelRouteRegisstrarClass) : PixelRouteRegistrar
@@ -74,7 +74,7 @@ class PixelRouteBooter
 
     public static function loadAPIRoutes(?callable $callbackOnRouteRegistrar = null)
     {
-        if(PixelRouteManager::isItTenancySupporterApp())
+        if(static::isBootingForTenancySupporterApp())
         {
             foreach (PixelRouteManager::getCentralDomains() as $domain) 
             {
@@ -105,7 +105,7 @@ class PixelRouteBooter
 
     public static function loadWebRoutes(?callable $callbackOnRouteRegistrar = null)
     {
-        if(PixelRouteManager::isItTenancySupporterApp())
+        if(static::isbootingForTenancySupporterApp())
         {
             foreach (PixelRouteManager::getCentralDomains() as $domain) 
             {
@@ -119,40 +119,46 @@ class PixelRouteBooter
  
     public static function loadTenantRoutes()
     {
-        if (PixelRouteManager::DoesItNeedTenantRoutes())
+        if (static::DoesItNeedTenantRoutesBooting())
         {
             Route::prefix()->group(base_path('routes/tenant.php'));
         }
     }
     
-    public static function bootingForTenancySupporterApp() : bool
+    public static function isBootingForTenancySupporterApp() : bool
     {
-        return PixelTenancyManager::isItTenancySupporterApp();
+        return PixelAppBootingManager::isBootingForTenancySupporterApp();
     }
 
-    public static function bootingForMonolithTenancyApp() : bool
+    public static function isBootingForMonolithTenancyApp() : bool
     {
-        return PixelTenancyManager::isItMonolithTenancyApp();
+        return PixelAppBootingManager::isBootingForMonolithTenancyApp();
     }
  
-    public static function DoesItNeedTenantRoutes() : bool
+    public static function DoesItNeedTenantRoutesBooting() : bool
     {
-        return static::isItTenantApp() || static::isItMonolithTenancyApp();
+        return static::isBootingForTenantApp() || static::isBootingForMonolithTenancyApp();
     }
     
-    public static function bootingForNormalApp() : bool
+    public static function isBootingForNormalApp() : bool
     {
-        return PixelTenancyManager::isItNormalApp();
+        return PixelAppBootingManager::isBootingForNormalApp();
     }
 
-    public static function bootingForAdminPanelApp() : bool
+    public static function isBootingForAdminPanelApp() : bool
     {
-        return PixelTenancyManager::isItAdminPanelApp();
+        return PixelAppBootingManager::isBootingForAdminPanelApp();
     }
 
-    public static function bootingForTenantApp() : bool
+    public static function isBootingForTenantApp() : bool
     {
-        return PixelTenancyManager::isItTenantApp();
+        return PixelAppBootingManager::isBootingForTenantApp();
     }
 
+    // public static function isItMonolithTenancyApp() : bool
+    // {
+    //     return PixelTenancyManager::isItMonolithTenancyApp();
+    // }
+ 
+    
 }

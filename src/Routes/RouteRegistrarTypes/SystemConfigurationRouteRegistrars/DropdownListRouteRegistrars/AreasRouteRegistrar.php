@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
 use PixelApp\Http\Controllers\SystemConfigurationControllers\DropdownLists\AreasController;
+use PixelApp\Routes\PixelRouteBootingManager;
 use PixelApp\Routes\PixelRouteManager;
 
 class AreasRouteRegistrar extends PixelRouteRegistrar 
@@ -15,11 +16,11 @@ class AreasRouteRegistrar extends PixelRouteRegistrar
 
     public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
-        if( PixelRouteManager::isItMonolithTenancyApp()  )
+        if( PixelRouteBootingManager::isBootingForMonolithTenancyApp()  )
         {
             $this->defineMonolithTenancyAppRoutes(); 
 
-        }elseif( PixelRouteManager::isItTenantApp()  )
+        }elseif( PixelRouteBootingManager::isBootingForTenantApp()  )
         {
             $this->defineTenantAppRoutes();
 
@@ -29,6 +30,11 @@ class AreasRouteRegistrar extends PixelRouteRegistrar
         } 
     }
 
+    public function isFuncAvailableToDefine() : bool
+    {
+        return $this->initPixelRoutesInstallingManager()
+                    ->getPixelAppSystemRequirementsCard()?->isAreasFuncRequired() ?? false;
+    }
     
     public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
     {

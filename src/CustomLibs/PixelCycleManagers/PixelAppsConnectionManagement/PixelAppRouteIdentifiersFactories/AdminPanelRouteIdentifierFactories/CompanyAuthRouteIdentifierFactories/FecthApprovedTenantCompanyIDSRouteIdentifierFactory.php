@@ -10,7 +10,7 @@ class FecthApprovedTenantCompanyIDSRouteIdentifierFactory extends PixelAppRouteI
 { 
     protected function getUri() : string
     {
-        return "api/company/fecth-active-company-ids";
+        return "api/company/fecth-approved-company-ids";
     }
 
     public function createRouteIdentifier()  :PixelAppRouteIdentifier

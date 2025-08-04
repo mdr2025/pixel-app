@@ -9,6 +9,7 @@ use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
 use PixelApp\Http\Controllers\SystemConfigurationControllers\RolesAndPermissions\PermissionController;
 use PixelApp\Http\Controllers\SystemConfigurationControllers\RolesAndPermissions\RolesController;
+use PixelApp\Routes\PixelRouteBootingManager;
 use PixelApp\Routes\PixelRouteManager;
 
 class RolesAndPermissionsRouteRegistrar extends PixelRouteRegistrar 
@@ -16,11 +17,11 @@ class RolesAndPermissionsRouteRegistrar extends PixelRouteRegistrar
 
     public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
-        if( PixelRouteManager::isItMonolithTenancyApp()  )
+        if( PixelRouteBootingManager::isBootingForMonolithTenancyApp()  )
         {
             $this->defineMonolithTenancyAppRoutes(); 
 
-        }elseif( PixelRouteManager::isItTenantApp()  )
+        }elseif( PixelRouteBootingManager::isBootingForTenantApp()  )
         {
             $this->defineTenantAppRoutes();
 

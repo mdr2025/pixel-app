@@ -47,11 +47,6 @@ trait ConfigValueGetters
     {
         return static::getPixelAppPackageConfigs()[$key] ?? $default;
     }
-    
-    public static function getPixelMacroableExtenders() : array
-    {
-        return static::getPixelAppPackageConfigItem("pixel-macroable-extenders" , [])  ;
-    }
 
     public static function getPixelTenancyServiceProviderClass() : string
     {

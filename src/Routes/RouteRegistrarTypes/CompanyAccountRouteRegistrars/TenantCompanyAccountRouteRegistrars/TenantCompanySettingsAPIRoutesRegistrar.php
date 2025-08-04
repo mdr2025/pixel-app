@@ -6,18 +6,26 @@ use Illuminate\Support\Facades\Route;
 use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
 use PixelApp\Http\Controllers\CompanyAccountControllers\CompanySettingsControllers\TenantCompanySettingsControllers\TenantCompanyDataResettingController;
-use PixelApp\Routes\PixelRouteManager;
+use PixelApp\Routes\PixelRouteBootingManager;
 
 class TenantCompanySettingsAPIRoutesRegistrar extends PixelRouteRegistrar 
 { 
     public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
-        if(  PixelRouteManager::isItTenantApp() || PixelRouteManager::isItMonolithTenancyApp() )
+        if( 
+             PixelRouteBootingManager::isBootingForTenantApp() 
+             ||
+             PixelRouteBootingManager::isBootingForMonolithTenancyApp() )
         {
             $this->defineTenantAppRoutes(); 
         }
     }
     
+   public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
+   {
+       $arrayToAppend["tenant-company-setgtings"] = static::class;
+   }
+
     protected function defineCompanyResettingRoute() : void
     { 
         Route::post('reset-data', [TenantCompanyDataResettingController::class, 'resetData']);

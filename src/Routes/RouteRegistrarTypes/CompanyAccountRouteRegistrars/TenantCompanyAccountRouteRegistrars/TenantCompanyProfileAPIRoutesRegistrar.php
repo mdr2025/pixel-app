@@ -7,18 +7,18 @@ use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
 use PixelApp\Http\Controllers\CompanyAccountControllers\TenantCompanyAccountControllers\UserCompanyAccountClientController;
 use PixelApp\Http\Controllers\CompanyAccountControllers\TenantCompanyAccountControllers\UserCompanyAccountServerController;
-use PixelApp\Routes\PixelRouteManager;
+use PixelApp\Routes\PixelRouteBootingManager;
 
 class TenantCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar 
 {
 
     public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
-        if( PixelRouteManager::isItMonolithTenancyApp()  )
+        if( PixelRouteBootingManager::isBootingForMonolithTenancyApp()  )
         {
             $this->defineMonolithTenancyAppRoutes(); 
 
-        }elseif( PixelRouteManager::isItTenantApp()  )
+        }elseif( PixelRouteBootingManager::isBootingForTenantApp()  )
         {
             $this->defineTenantAppRoutes();
 
@@ -27,20 +27,37 @@ class TenantCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
             $this->defineAdminPanelRoutes(); 
         } 
     }
+
+   public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
+   {
+       $arrayToAppend["tenant-company-profile"] = static::class;
+   }
   
-    protected function defineUpdateCompanyProfileServerRoute() : void
+    protected function defineUpdateCompanyProfileServerRoute(bool $remoteServer = true) : void
     {
-        Route::post('profile/update', [UserCompanyAccountServerController::class, 'updateCompanyProfile']);
+        $route = Route::post('profile/update', [UserCompanyAccountServerController::class, 'updateCompanyProfile']);
+        
+        if($remoteServer)
+        {
+            $this->attchClientGrantMiddleware($route);
+        }
     }
 
     protected function defineUpdateCompanyProfileClientRoute() : void
     {
         Route::post('profile/update', [UserCompanyAccountClientController::class, 'updateCompanyProfile']);
+        
     }
 
-    protected function defineCompanyProfileServerRoute() : void
+    protected function defineCompanyProfileServerRoute(  bool $remoteServer = true) : void
     { 
-        Route::get('profile', [UserCompanyAccountServerController::class, 'companyProfile']);
+        $route = Route::get('profile', [UserCompanyAccountServerController::class, 'companyProfile']);
+        
+        if($remoteServer)
+        {
+            $this->attchClientGrantMiddleware($route);
+        }
+        
     }
  
 
@@ -64,25 +81,26 @@ class TenantCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
         });
     }
 
-    protected function defineCompanyProfileServerRoutes(RouteRegistrar $routeRegistrar ) : void
+    protected function defineCompanyProfileServerRoutes(RouteRegistrar $routeRegistrar  , bool $remoteServer = true) : void
     {
-        $routeRegistrar->group(function()
+        $routeRegistrar->group(function() use ($remoteServer)
         {
-            $this->defineCompanyProfileServerRoute(); 
-            $this->defineUpdateCompanyProfileServerRoute(); 
+            $this->defineCompanyProfileServerRoute($remoteServer); 
+            $this->defineUpdateCompanyProfileServerRoute($remoteServer); 
         });
     }
     
     protected function getGlobalMiddlewares() : array
     {
-        return [ 'api' , 
-        
-        /**
-         * @todo to check this later for auth for microservices case for admin panel auth
-         * you maybe need to remove it for admin panel and finding another solution for auth between client and server
-         */
-        'auth:api'
-        ]  ;
+        return [ 'api' ]  ;
+    }
+
+    protected function getTenantRouteMiddlewares() : array
+    {
+        $tenantMiddlewares = parent::getTenantRouteMiddlewares();
+        $tenantMiddlewares[] = 'auth:api';
+
+        return $tenantMiddlewares;
     }
 
     protected function initMainApiRouteRegistrar() : RouteRegistrar
@@ -114,7 +132,7 @@ class TenantCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
 
         $this->attachTenantMiddlewares($routeRegistrar);
         
-        $this->defineCompanyProfileServerRoutes($routeRegistrar);
+        $this->defineCompanyProfileServerRoutes($routeRegistrar , false);
     }
     
      

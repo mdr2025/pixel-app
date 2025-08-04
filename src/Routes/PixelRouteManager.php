@@ -28,41 +28,11 @@ class PixelRouteManager
         return [];
     }
 
-
-    // public static function isItTenancySupporterApp() : bool
-    // {
-    //     return PixelTenancyManager::isItTenancySupporterApp();
-    // }
-
-    // public static function isItMonolithTenancyApp() : bool
-    // {
-    //     return PixelTenancyManager::isItMonolithTenancyApp();
-    // }
- 
-    public static function DoesItNeedTenantRoutes() : bool
-    {
-        return static::isItTenantApp() || static::isItMonolithTenancyApp();
-    }
-    
-    // public static function isItNormalApp() : bool
-    // {
-    //     return PixelTenancyManager::isItNormalApp();
-    // }
-
-    // public static function isItAdminPanelApp() : bool
-    // {
-    //     return PixelTenancyManager::isItAdminPanelApp();
-    // }
-
-    // public static function isItTenantApp() : bool
-    // {
-    //     return PixelTenancyManager::isItTenantApp();
-    // }
-
     public static function getCentralDomains(): array
     {
         return PixelTenancyManager::getCentralDomains();
     }
+
     public static function getTenancyMiddlewares() : array
     {
         return PixelTenancyManager::getTenantDefaultMiddlewares();
@@ -70,32 +40,32 @@ class PixelRouteManager
 
     public static function loadAPIRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
-        PixelRouteBooter::loadAPIRoutes($callbackOnRouteRegistrar);
+        PixelRouteBootingManager::loadAPIRoutes($callbackOnRouteRegistrar);
     }
     
     public static function loadWebRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
-        PixelRouteBooter::loadWebRoutes($callbackOnRouteRegistrar);
+        PixelRouteBootingManager::loadWebRoutes($callbackOnRouteRegistrar);
     }
     
     public static function loadPixelAppPackageRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
-        PixelRouteBooter::loadPixelAppPackageRoutes($callbackOnRouteRegistrar);
+        PixelRouteBootingManager::loadPixelAppPackageRoutes($callbackOnRouteRegistrar);
     }
     
     public static function loadTenantRoutes() : void
     {
-        PixelRouteBooter::loadTenantRoutes();
+        PixelRouteBootingManager::loadTenantRoutes();
     }
 
-    protected static function initPixelRoutesInstaller() : PixelRoutesInstaller
+    protected static function initPixelRoutesInstallingManager() : PixelRoutesInstallingManager
     {
-        return PixelRoutesInstaller::Singlton();
+        return PixelRoutesInstallingManager::Singlton();
     }
 
-    public static function installPackageRoutes(PixelAppSystemRequirementsCard $requirementCard) : void
+    public static function installPackageRoutes() : void
     {
-        static::initPixelRoutesInstaller()->installPackageRoutes($requirementCard);
+        static::initPixelRoutesInstallingManager()->installPackageRoutes();
     }
 }
 // separated admin panel = app without tenancy + company auth server  => needs routes without central domains because it is on a single domain

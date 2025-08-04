@@ -8,14 +8,17 @@ use Illuminate\Support\Facades\Route;
 use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
 use PixelApp\Http\Controllers\SystemConfigurationControllers\DropdownLists\BranchesController;
-use PixelApp\Routes\PixelRouteManager;
+use PixelApp\Routes\PixelRouteBootingManager;
+ 
 
 class BranchesRouteRegistrar extends PixelRouteRegistrar 
 {
 
     public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
-        if(  PixelRouteManager::isItTenantApp() || PixelRouteManager::isItMonolithTenancyApp()  )
+        if(  PixelRouteBootingManager::isBootingForTenantApp() 
+             ||
+             PixelRouteBootingManager::isBootingForMonolithTenancyApp()  )
         {
             $this->defineTenantAppRoutes(); 
         } else
@@ -26,6 +29,13 @@ class BranchesRouteRegistrar extends PixelRouteRegistrar
     }
 
     
+    public function isFuncAvailableToDefine() : bool
+    {
+        return $this->initPixelRoutesInstallingManager()
+                    ->getPixelAppSystemRequirementsCard()?->isBranchesFuncRequired() 
+                    ?? false;
+    }
+
     public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
     {
         $arrayToAppend["dropdown-list"]["branches"] = static::class;

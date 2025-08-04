@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
 use PixelApp\Http\Controllers\CompanyAccountControllers\NormalCompanyAccountControllers\NormalCompanyAccountController;
-use PixelApp\Routes\PixelRouteManager;
+use PixelApp\Routes\PixelRouteBootingManager;
 
 class NormalCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar 
 {
@@ -14,17 +14,21 @@ class NormalCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
     public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
         if( 
-            PixelRouteManager::isItMonolithTenancyApp()  
+            PixelRouteBootingManager::isBootingForMonolithTenancyApp()  
             ||
-            PixelRouteManager::isItAdminPanelApp()
+            PixelRouteBootingManager::isBootingForAdminPanelApp()
             ||
-            PixelRouteManager::isItNormalApp()  
+            PixelRouteBootingManager::isBootingForNormalApp()  
           )
         {
             $this->defineNormalAppRoutes(); 
         }
     }
-   
+
+   public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
+   {
+       $arrayToAppend["normal-company-profile"] = static::class;
+   }
 
     protected function defineUpdateCompanyProfileRoute() : void
     {
@@ -53,14 +57,7 @@ class NormalCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
     
     protected function getGlobalMiddlewares() : array
     {
-        return [ 'api' , 
-        
-        /**
-         * @todo to check this later for auth for microservices case for admin panel auth
-         * you maybe need to remove it for admin panel and finding another solution for auth between client and server
-         */
-        'auth:api'
-        ]  ;
+        return [ 'api' ,  'auth:api']  ;
     }
 
     protected function initMainApiRouteRegistrar() : RouteRegistrar

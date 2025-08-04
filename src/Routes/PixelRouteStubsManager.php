@@ -1,15 +1,31 @@
 <?php
 
 namespace PixelApp\Routes;
- 
+
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\PixelAppStubsManager;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\StubIdentifiers\StubIdentifier; 
 class PixelRouteStubsManager extends PixelAppStubsManager
 {
 
-    public static function DoesItNeedTenantRoutes() : bool
+    public function replacePixelAppRouteStubs() : void
     {
-        return PixelRouteManager::DoesItNeedTenantRoutes();
+        static::replaceApiRouteStubFile();
+        static::replaceWebRouteStubFile();
+
+        if(static::DoesItNeedTenantRoutesInstalling())
+        {
+            static::replaceTenantRouteStubFile();
+        }
+    }
+    
+    protected static function initPixelRoutesInstallingManager() : PixelRoutesInstallingManager
+    {
+        return PixelRoutesInstallingManager::Singlton();
+    }
+
+    public static function DoesItNeedTenantRoutesInstalling() : bool
+    {
+        return static::initPixelRoutesInstallingManager()->DoesItNeedTenantRoutesInstalling();
     }
     
     protected static function getPackageRouteStubsPath() : string
@@ -54,16 +70,6 @@ class PixelRouteStubsManager extends PixelAppStubsManager
         static::replaceStub($stubPath , $projectRouteFilePath);
     }
 
-    public function replacePixelAppRouteStubs() : void
-    {
-        static::replaceApiRouteStubFile();
-        static::replaceWebRouteStubFile();
-
-        if(static::DoesItNeedTenantRoutes())
-        {
-            static::replaceTenantRouteStubFile();
-        }
-    }
 }
 // separated admin panel = app without tenancy + company auth server  => needs routes without central domains because it is on a single domain
 // separated tenant app => needs routes with central with central routes and company auth client != monolith
