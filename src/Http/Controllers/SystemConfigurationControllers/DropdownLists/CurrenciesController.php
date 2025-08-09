@@ -9,7 +9,11 @@ use PixelApp\Http\Controllers\PixelBaseController;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Currency;
 use PixelApp\Services\PixelServiceManager;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\CurrenciesOperations\CurrenciesIndexingService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\CurrenciesOperations\CurrenciesListingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\CurrenciesOperations\CurrencyUpdatingService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\CurrenciesOperations\ExpImpServices\ExportingServices\CurrenciesExportingService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\CurrenciesOperations\ExpImpServices\ImportingFunc\CurrenciesImporter;
 use Rap2hpoutre\FastExcel\SheetCollection;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -36,52 +40,44 @@ class CurrenciesController extends PixelBaseController
         return PixelModelManager::getModelForModelBaseType(Currency::class);
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        $modelClass = $this->getCurrencyModelClass();
-        $data = QueryBuilder::for( $modelClass )
-                            ->allowedFilters($this->filterable)
-                            ->datesFiltering()->customOrdering()
-                            ->paginate($request->pageSize ?? 10);
-
-        return Response::success(['list' => $data]);
+        $service = PixelServiceManager::getServiceForServiceBaseType(CurrenciesIndexingService::class);
+        return (new $service)->index();
     }
 
     function list()
     {
-        $modelClass = $this->getCurrencyModelClass();
-        
-        $data = QueryBuilder::for($modelClass)
-                            ->allowedFilters(['name', 'symbol'])
-                            ->active()
-                            ->customOrdering('created_at', 'desc')
-                            ->get(['id', 'name', 'symbol']);
-        
-        $total = $modelClass::active()->count();
-
-        return Response::successList($total ,$data);
+        $service = PixelServiceManager::getServiceForServiceBaseType(CurrenciesListingService::class);
+        return (new $service)->list();
     }
 
     protected function findOrFailById(int $id) : Currency
     {
-        $modelClass = PixelModelManager::getModelForModelBaseType(Currency::class);
+        $modelClass = $this->getCurrencyModelClass();
         return $modelClass::findOrFail($id);
     }
 
     public function update( int $id): JsonResponse
     {
         $currency = $this->findOrFailById($id);
-        return (new CurrencyUpdatingService($currency))->update();
+        
+        $upadtingService = PixelServiceManager::getServiceForServiceBaseType(CurrencyUpdatingService::class);
+    
+        return (new $upadtingService($currency))->update();
     }
 
     public function importableFormalDownload() 
     {
-        // $importer = PixelServiceManager::getServiceForServiceBaseType(CurrenciesImporter::class);
-        // return (new $importer())->downloadFormat();
+        $importer = PixelServiceManager::getServiceForServiceBaseType(CurrenciesImporter::class);
+        return (new $importer())->downloadFormat();
     }
 
-    public function importCurrencies(Request $import)
+    public function import()
     {
+        $importer = PixelServiceManager::getServiceForServiceBaseType(CurrenciesImporter::class);
+        return (new $importer())->import();
+
         // $file = $import->file;
 
         // return (new ImportBuilder())
@@ -93,8 +89,11 @@ class CurrenciesController extends PixelBaseController
         //     ->import();
     }
 
-    public function exportCurrencies(Request $request)
+    public function export()
     {
+        $service = PixelServiceManager::getServiceForServiceBaseType(CurrenciesExportingService::class);
+        return (new $service())->baseExport();
+
         // $taxes = QueryBuilder::for(Currency::class)->allowedFilters($this->filterable)->datesFiltering()->customOrdering()->cursor();
         // $list  = new SheetCollection([
         //     "Currenciess" => ExportBuilder::generator($taxes)
@@ -109,6 +108,9 @@ class CurrenciesController extends PixelBaseController
     {
         $request->merge(['is_main' => 1]);
         $currency = $this->findOrFailById($id);
-        return (new CurrencyUpdatingService($currency))->update();
+        
+        $upadtingService = PixelServiceManager::getServiceForServiceBaseType(CurrencyUpdatingService::class);
+    
+        return (new $upadtingService($currency))->update();
     }
 }

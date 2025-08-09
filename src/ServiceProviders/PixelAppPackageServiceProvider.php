@@ -4,6 +4,7 @@ namespace PixelApp\ServiceProviders;
 
 use Illuminate\Console\Scheduling\Schedule;
 use CRUDServices\ConfigManagers\ConfigManager;
+use ExpImpManagement\ExportersManagement\Exporter\Exporter;
 use Illuminate\Support\ServiceProvider;
 use PixelApp\Console\Commands\CreateCrudService;
 use PixelApp\Console\Commands\CreateStatisticCommand;
@@ -24,6 +25,7 @@ use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAp
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppsConnectionManager;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Exceptions\PixelAppExceptionHandler;
+use PixelApp\Jobs\TenantCompanyJobs\ExpImpManagementHandlingJobs\OldDataExportersDeleterAltJob;
 use PixelApp\Jobs\UsersModule\AuthJobs\UserRevokedAccessTokensDeleterJob;
 use PixelApp\PixelMacroableExtenders\PixelMacroableExtender;
 use PixelApp\ServiceProviders\Traits\ConfigFilesHandling;
@@ -39,6 +41,9 @@ class PixelAppPackageServiceProvider extends ServiceProvider
         //merging config files
         $this->mergeConfigFiles(); 
         $this->registerIOEncryptionObjects();
+
+        // $this->setOldDataExportersDeleterAltJob();
+
         // Bind the custom exception handler
         //$this->app->singleton(LaravelExceptionHandlerInterface::class, PixelAppExceptionHandler::class);
     }
@@ -125,4 +130,12 @@ class PixelAppPackageServiceProvider extends ServiceProvider
         // });
         
     }
+
+    // protected function setOldDataExportersDeleterAltJob() : void
+    // {
+        // To allow this code in pixelApp v.2
+        // Exporter::setOldDataExportersDeleterAlternativeJob(
+        //                                                       OldDataExportersDeleterAltJob::class 
+        //                                                   );
+    // }
 }

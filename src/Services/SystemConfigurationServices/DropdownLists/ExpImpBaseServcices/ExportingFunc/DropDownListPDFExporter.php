@@ -9,9 +9,13 @@ use ExpImpManagement\ExportersManagement\Interfaces\SelfConstructablePDFExporter
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\Tratis\ExporterQueryBuilderCustomization;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\Tratis\ExporterQueryAllowedFiltersSetting;
  
-abstract class DropDownListPDFExporter extends PDFExporter implements SelfConstructableExporter , SelfConstructablePDFExporter
+abstract class DropDownListPDFExporter 
+         extends PDFExporter 
+         implements SelfConstructableExporter , SelfConstructablePDFExporter
 {
-    use  ExporterSelfConstructing , ExporterQueryBuilderCustomization , ExporterQueryAllowedFiltersSetting;
+    use ExporterSelfConstructing ,
+        ExporterQueryBuilderCustomization ,
+        ExporterQueryAllowedFiltersSetting;
    
     public function getViewRelevantPathForSelfConstructing() : string
     {

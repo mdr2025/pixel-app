@@ -11,9 +11,13 @@ use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServci
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\Tratis\ExporterQueryBuilderCustomization;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\Tratis\ExporterQueryAllowedFiltersSetting;
 
-abstract class DropDownListCSVExporter extends CSVExporter implements SelfConstructableExporter , ExportsCSVImportableData
+abstract class DropDownListCSVExporter 
+         extends CSVExporter 
+         implements SelfConstructableExporter , ExportsCSVImportableData
 {
-    use  ExporterSelfConstructing , ExporterQueryBuilderCustomization , ExporterQueryAllowedFiltersSetting;
+    use  ExporterSelfConstructing ,
+         ExporterQueryBuilderCustomization ,
+         ExporterQueryAllowedFiltersSetting;
    
     abstract protected function getFormatFileName() : string;
 

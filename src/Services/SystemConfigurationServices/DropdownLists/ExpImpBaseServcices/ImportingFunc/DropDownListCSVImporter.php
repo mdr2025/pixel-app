@@ -8,7 +8,9 @@ use ExpImpManagement\ImportersManagement\ImporterTypes\CSVImporter\Traits\CSVImp
 use ExpImpManagement\ImportersManagement\Interfaces\SelfConstructableCSVImporter;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\ImportingFunc\DropDownListCSVFileFormatFactory;
 
-abstract class DropDownListCSVImporter extends CSVImporter implements SelfConstructableCSVImporter
+abstract class DropDownListCSVImporter 
+         extends CSVImporter 
+         implements SelfConstructableCSVImporter
 {
     use CSVImporterSelfConstructing;
 

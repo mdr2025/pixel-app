@@ -19,11 +19,11 @@ return new class extends Migration
             $table->string('code')->nullable()->unique();
             $table->string('symbol')->nullable();
             $table->string('symbol_native')->nullable();
-            $table->string('decimal_digits')->nullable();
-            $table->string('rounding')->nullable();
+            $table->tinyInteger('decimal_digits')->nullable();// converting type from string to tiny integer
+            $table->boolean('rounding')->nullable()->default(0); // converting type from string to boolean 
             $table->string('name_plural')->nullable();
-            $table->tinyInteger('status')->default(0);
-            $table->tinyInteger('is_main')->default(0);
+            $table->boolean('status')->default(0);
+            $table->boolean('is_main')->default(0);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
             $table->softDeletes();

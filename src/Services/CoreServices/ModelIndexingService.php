@@ -32,7 +32,10 @@ abstract class ModelIndexingService
 
     abstract protected function setAllowedFilters() : void; 
 
-    abstract protected function eagerLoadRelations() : void;
+    protected function eagerLoadRelations() : void
+    {
+        
+    }
     
     protected function initSpatieQueryBuilder() : void
     {

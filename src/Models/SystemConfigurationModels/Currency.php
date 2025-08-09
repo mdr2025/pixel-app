@@ -12,7 +12,15 @@ class Currency extends PixelBaseModel
 
     protected $table = "currencies";
     const ROUTE_PARAMETER_NAME = "currency";
+
     protected $fillable = [
+        'name',
+        'code',
+        'symbol',
+        'symbol_native',
+        'decimal_digits',
+        'rounding',
+        'name_plural',
         'is_main',
         "status"
     ];
