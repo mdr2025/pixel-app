@@ -23,6 +23,7 @@ class EmailAuthenticatableRegisteredEvent
     {
         $this->authenticatable = $authenticatable;
     }
+    
     /**
      * @return User
      */

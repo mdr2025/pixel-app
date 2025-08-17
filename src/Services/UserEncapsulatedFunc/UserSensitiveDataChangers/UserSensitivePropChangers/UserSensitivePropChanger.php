@@ -39,7 +39,9 @@ abstract class UserSensitivePropChanger
      */
     protected function checkAuthenticatable()  : bool
     {
-        return (bool) ($this->authenticatable ?? throw new Exception("Authenticatable is not set ... Failed to change its props"));
+        return (bool) ($this->authenticatable 
+        ??
+        throw new Exception("Authenticatable is not set ... Failed to change its props"));
     }
     /**
      * @return void

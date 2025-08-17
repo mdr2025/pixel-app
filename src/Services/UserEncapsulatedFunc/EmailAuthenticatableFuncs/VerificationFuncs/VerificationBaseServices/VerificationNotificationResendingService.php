@@ -93,7 +93,9 @@ abstract class VerificationNotificationResendingService
 
     protected function sendEmailVerificationNotification() : bool
     {
-        return $this::initVerificationNotificationSender( $this->EmailAuthenticatable )->sendEmailVerificationNotification() ;
+        return $this::initVerificationNotificationSender( $this->EmailAuthenticatable )
+                    ->resetVerificationToken()
+                    ->sendEmailVerificationNotification() ;
     }
 
 

@@ -61,17 +61,27 @@ class UserDeletableTokensHandlerJob  implements ShouldQueue
             {
                 $tenant->run(function()
                 {
-                    $this->purgeExpiredTokensExceedingGrace();
-                    $this->purgeRevokedTokensExceedingGrace();
+                    $this->purgExpiredTokensForCurrentContext();
+                    $this->purgRevokedTokensForCurrentContext();
                 });
             }
         }
     }
 
-    protected function purgeCentralTokensExceedingGrace() : void
+    protected function purgExpiredTokensForCurrentContext() : void
     {
         $this->purgeExpiredTokensExceedingGrace();
+    }
+
+    protected function purgRevokedTokensForCurrentContext() : void
+    {
         $this->purgeRevokedTokensExceedingGrace();
+    }
+
+    protected function purgeCentralTokensExceedingGrace() : void
+    {
+        $this->purgExpiredTokensForCurrentContext();
+        $this->purgRevokedTokensForCurrentContext();
     }
 
     protected function purgeBothSideTokensExceedingGrace() : void

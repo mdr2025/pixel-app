@@ -46,9 +46,13 @@ abstract class RoleUsersManager
 
     protected function delegateOperationToJob(): bool
     {
+        /**
+         * @todo to check dispatch return type later for larave 12
+         */
         $this->getJobClass()::dispatch($this)->beforeCommit();
         return true;
     }
+
     /**
      * @return bool
      * @throws Exception
@@ -58,6 +62,7 @@ abstract class RoleUsersManager
         if (empty($this->roleUserIDS)) {
             $this->setRoleUserIDS();
         }
+        
         //When No Related User Is There .... Nothing To Do
         if (empty($this->roleUserIDS)) {
             return true;

@@ -164,6 +164,11 @@ class PixelPassportTokensManager
             return $this->purgeOnlyExpiredTokens();
         }
 
+        /**
+         * If no database foreign key binding is there : any access token deleting will not delete its related refresh tokens automatically
+         * so we need to delete them manually after getting the expired access token ids
+         * note : in the package the foreign key is set .... but we handle the both cases in this tokens manager
+         */
         return $this->purgeExpiredTokensWithRelatedRefreshTokens();
     }
 }

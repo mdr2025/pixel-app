@@ -20,6 +20,7 @@ class EmailChanger extends EmailAuthenticatableSensitivePropChanger implements E
     {
         return $this->authenticatable->getEmailColumnName();
     }
+
     public function getPropRequestKeyDefaultName(): string
     {
         return 'email';
@@ -47,6 +48,7 @@ class EmailChanger extends EmailAuthenticatableSensitivePropChanger implements E
     {
         return $this->getVerificationPropsChanger()->getPropChangesArray();
     }
+
     /**
      * @throws Exception
      */
@@ -55,6 +57,7 @@ class EmailChanger extends EmailAuthenticatableSensitivePropChanger implements E
         $this->getVerificationPropsChanger()->requireToVerify();
         return $this;
     }
+
     protected function setUserOldEmailAttr(): self
     {
         $this->oldEmail = $this->authenticatable->{ $this->getPropName()  };
@@ -66,7 +69,11 @@ class EmailChanger extends EmailAuthenticatableSensitivePropChanger implements E
      */
     protected function DoesEmailHaveChange() : bool
     {
-        return  $this->emailHasChange =  $this->emailNewValue && $this->emailNewValue !== $this->authenticatable->{ $this->getPropName() };
+        return  $this->emailHasChange 
+        =
+        $this->emailNewValue 
+        &&
+        $this->emailNewValue !== $this->authenticatable->{ $this->getPropName() };
     }
 
     protected function setEmailNewValue() : void

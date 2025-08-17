@@ -52,7 +52,10 @@ use PixelApp\Services\UserEncapsulatedFunc\RegistrableUserHandlers\RegistrableUs
     protected function overrideDefaultAdminData(): void
     {
         $defaultAdmin = $this->data["defaultAdmin"];
-        $defaultAdmin = $this->initRegistrableUserDataFactory($defaultAdmin)->makeUser()->toArray();
+        
+        $defaultAdmin = $this->initRegistrableUserDataFactory($defaultAdmin)
+                             ->makeUser()
+                             ->toArray();
 
         /** Overriding defaultAdmin data with registrable admin processed data */
         $this->data["defaultAdmin"] = $defaultAdmin;

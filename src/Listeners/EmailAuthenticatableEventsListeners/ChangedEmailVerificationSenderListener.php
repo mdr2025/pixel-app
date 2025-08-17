@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use PixelApp\Services\AuthenticationServices\UserAuthServices\EmailVerificationServices\UserVerificationNotificationResendingService;
 use PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\VerificationFuncs\VerificationNotificationSenders\EmailAuthenticatableVerificationNotificationSender;
 
-class EmailVerificationSenderListener implements ShouldQueue
+class ChangedEmailVerificationSenderListener implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -25,7 +25,9 @@ class EmailVerificationSenderListener implements ShouldQueue
      */
     protected function initEmailAuthenticatableVerificationNotificationSender($event) : EmailAuthenticatableVerificationNotificationSender
     {
-        return UserVerificationNotificationResendingService::initVerificationNotificationSender($event->getAuthenticatable());
+        return UserVerificationNotificationResendingService::initVerificationNotificationSender(
+                                                                $event->getAuthenticatable()
+                                                            );
     }
     /**
      * @param $event
@@ -34,6 +36,7 @@ class EmailVerificationSenderListener implements ShouldQueue
      */
     public function handle($event)
     {
-        $this->initEmailAuthenticatableVerificationNotificationSender($event)->sendEmailVerificationNotification();
+        $this->initEmailAuthenticatableVerificationNotificationSender($event)
+             ->sendEmailVerificationNotification();
     }
 }

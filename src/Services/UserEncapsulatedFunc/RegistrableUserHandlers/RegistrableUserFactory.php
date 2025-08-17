@@ -34,6 +34,7 @@ class RegistrableUserFactory
          $this->data = $userData;
          return $this;
     }
+
     public function enablePasswordHashing()  :self
     {
         $this->passwordHashing = true;
@@ -68,7 +69,10 @@ class RegistrableUserFactory
     {
         if($this->passwordHashing)
         {
-            $passwordChanges = (new PasswordChanger())->setData($this->data)->getPropChangesArray();
+            $passwordChanges = (new PasswordChanger())
+                                                     ->setData($this->data)
+                                                     ->getPropChangesArray();
+
             $this->data = array_merge($this->data , $passwordChanges);
         }
         return $this;
@@ -102,16 +106,25 @@ class RegistrableUserFactory
     {
         if($this->dataValidation)
         {
-            $this->initValidator()->changeRequestData($this->userData)->validateRequest()->setRequestData();
+            $this->initValidator()
+                 ->changeRequestData($this->userData)
+                 ->validateRequest()
+                 ->setRequestData();
         }
         return $this;
     }
+
     /**
      * @throws Exception
      */
     public function makeUser() : PixelUser
     {
-        $this->validateData()->processPassword()->fillUser()->generateUserName()->showUserPassword();
+        $this->validateData()
+             ->processPassword()
+             ->fillUser()
+             ->generateUserName()
+             ->showUserPassword();
+             
         return $this->user;
     }
 }

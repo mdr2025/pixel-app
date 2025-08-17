@@ -36,6 +36,16 @@ class TokenRefreshingService
     {
         return new UserTokensGenerator(  $this->user );
     }
+    
+    protected function rollbackTransaction() : void
+    {
+        DB::rollBack();
+    }
+
+    protected function commitTransaction() : void
+    {    
+            DB::commit();
+    }
 
     /**
      * @throws Exception
@@ -65,7 +75,8 @@ class TokenRefreshingService
         return Passport::refreshToken()
                         ->where("access_token_id" , $this->oldAccessToken->id) // matching access token id with refresh token's foreign key
                         ->WhereRefreshTokenId( $this->data["refresh_token"] ) // matching the refresh token passed by request with refresh token database row
-                        ->active()->notExpired()
+                        ->active() //must be not revoked refresh token
+                        ->notExpired() //must be not expired refresh token
                         ->first();
     }
 
@@ -126,6 +137,10 @@ class TokenRefreshingService
      */
     protected function fetchOldAccessTokenInDB()  : Token | null
     {
+        /**
+         * fetching non revoked old access token 
+         * (it can be expired or not ... but non revoked because it is can't to refresh revoked accesss tokens)
+         */
         return Passport::token()->where("revoked" , 0)->where("id" , $this->getOldAccessTokenId() )->first();
     }
 
@@ -144,23 +159,40 @@ class TokenRefreshingService
         throw new Exception("The old access token is invalid ... Can Not refresh it ");
     }
 
+    protected function beginTransaction() : self
+    {
+        DB::beginTransaction();
+
+        return $this;
+    }
+
     public function refreshToken() : JsonResponse
     {
         try {
-            $this->initValidator()->validateRequest()->setRequestData();
-            DB::beginTransaction();
-            $this->checkOldAccessToken()->checkOldRefreshToken()->checkUser();
 
+            //validateing request data
+            $this->initValidator()->validateRequest()->setRequestData();
+            
+            //check some rules and conditions
+            $this->beginTransaction()
+                 ->checkOldAccessToken()
+                 ->checkOldRefreshToken()
+                 ->checkUser();
+
+                 //prepare to issue new tokens
             $this->revokeOldTokens();
+
+            //issuing new tokens
             $newTokens = $this->generateUserNewTokens();
 
-            DB::commit();
+            $this->commitTransaction();
 
             return Response::success( $newTokens );
 
         } catch (Exception $e)
         {
-            DB::rollBack();
+            $this->rollbackTransaction();
+
             return Response::error($e->getMessage());
         }
     }

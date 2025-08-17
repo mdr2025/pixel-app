@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\DefaultAdminServices\EmailVerificationServices\DefaultAdminVerificationNotificationResendingService;
 use PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\VerificationFuncs\VerificationNotificationSenders\EmailAuthenticatableVerificationNotificationSender;
 
-class TenantDefaultAdminEmailVerificationSenderListener implements ShouldQueue
+class TenantDefaultAdminChangedEmailVerificationSenderListener implements ShouldQueue
 {
 
     /**
@@ -23,7 +23,8 @@ class TenantDefaultAdminEmailVerificationSenderListener implements ShouldQueue
      */
     protected function sendDefaultAdminVerificationNotificationSender($event): void
     {
-        $this->initDefaultAdminVerificationNotificationSender($event)->sendEmailVerificationNotification();
+        $this->initDefaultAdminVerificationNotificationSender($event)
+             ->sendEmailVerificationNotification();
     }
  
     /**

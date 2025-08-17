@@ -7,6 +7,7 @@ use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
 use PixelApp\Http\Controllers\CompanyAccountControllers\NormalCompanyAccountControllers\NormalCompanyAccountController;
 use PixelApp\Routes\PixelRouteBootingManager;
+use PixelApp\Routes\PixelRouteManager;
 
 class NormalCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar 
 {
@@ -14,14 +15,16 @@ class NormalCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
     public function bootRoutes(?callable $callbackOnRouteRegistrar = null) : void
     {
         if( 
-            PixelRouteBootingManager::isBootingForMonolithTenancyApp()  
-            ||
             PixelRouteBootingManager::isBootingForAdminPanelApp()
             ||
             PixelRouteBootingManager::isBootingForNormalApp()  
           )
         {
             $this->defineNormalAppRoutes(); 
+        
+        }elseif(PixelRouteBootingManager::isBootingForMonolithTenancyApp()  )
+        {
+            $this->defineMonolithTenancyAppRoutes(); 
         }
     }
 
@@ -72,5 +75,22 @@ class NormalCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
         $this->attachGlobalMiddlewares($routeRegistrar);
 
         $this->defineCompanyAccountRoutes($routeRegistrar);
+    }
+
+    protected function defineMonolithTenancyAppRoutes() : void
+    {
+        $centralDomain = PixelRouteManager::getCentralDomains();
+
+        foreach($centralDomain as $domain)
+        {
+            
+            $routeRegistrar = $this->initMainApiRouteRegistrar();
+
+            $routeRegistrar->domain($domain);
+            
+            $this->attachGlobalMiddlewares($routeRegistrar);
+
+            $this->defineCompanyAccountRoutes($routeRegistrar);
+        }
     }
 }

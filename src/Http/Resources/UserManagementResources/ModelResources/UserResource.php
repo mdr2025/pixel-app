@@ -3,12 +3,17 @@
 namespace PixelApp\Http\Resources\UserManagementResources\ModelResources;
  
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use JsonSerializable;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppBootingManagers\PixelAppBootingManager;
 use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\SystemConfigurationResources\DropdownLists\Departments\DepartmentResource;
 use PixelApp\Http\Resources\SystemConfigurationResources\RolesAndPermissions\RoleResource;
+use PixelApp\Models\CompanyModule\CompanyAccountModels\CompanyAccount;
+use PixelApp\Models\CompanyModule\TenantCompany;
+use PixelApp\Models\PixelModelManager;
 
 /**
  * @property User $resource
@@ -49,11 +54,51 @@ class UserResource extends JsonResource
         return PixelHttpResourceManager::getResourceForResourceBaseType(RoleResource::class);
     }
 
+    protected function fetchTenantCompany() : ?TenantCompany
+    {
+        return tenant();
+    }
+
+    protected function fetchTenantCompanyLogo() : string
+    {
+        return $this->fetchTenantCompany()?->getFileFullPathAttrValue('logo') ?? "";
+    }
+
+    protected function doesItNeedTenantCompanyLogo() : bool
+    {
+        $tenant = $this->fetchTenantCompany();
+
+        return (PixelAppBootingManager::isBootingForMonolithTenancyApp() && $tenant != null)
+               ||
+               (PixelAppBootingManager::isBootingForTenantApp() && $tenant != null);
+    }
+
+    protected function fetchCompanyAccountLogo() : string
+    {
+        $companyAccountClass = PixelModelManager::getModelForModelBaseType(CompanyAccount::class);
+        return $companyAccountClass::orderBy("id" , "asc")->first(["logo"])?->logo ?? "";
+    }
+
+    protected function doesItNeedCompanyAccountLogo() : bool
+    {
+        $tenant = $this->fetchTenantCompany();
+
+        return PixelAppBootingManager::isBootingForAdminPanelApp() 
+                ||
+                PixelAppBootingManager::isBootingForNormalApp()
+                ||
+                (PixelAppBootingManager::isBootingForMonolithTenancyApp() && $tenant == null);
+    }
+
     protected function appendCompanyLogo(array $dataArrayToChange) : array
     { 
-        if($tenant = tenant())
+        if($this->doesItNeedCompanyAccountLogo())
         {
-            $dataArrayToChange['company_logo'] = $tenant->getFileFullPathAttrValue('logo') ;
+            $dataArrayToChange['company_logo'] =  $this->fetchCompanyAccountLogo();
+
+        }elseif( $this->doesItNeedTenantCompanyLogo())
+        {
+            $dataArrayToChange['company_logo'] = $this->fetchTenantCompanyLogo();
         }
 
         return $dataArrayToChange;

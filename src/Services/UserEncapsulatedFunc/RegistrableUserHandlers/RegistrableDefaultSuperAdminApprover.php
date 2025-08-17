@@ -176,9 +176,12 @@ class RegistrableDefaultSuperAdminApprover
         /**
          * operations on user
          */
-        $this->setDefaultRole()->setDefaultDepartment() 
-            ->setHeadQuarterBranch()->setAcceptedAdminStatus()
-            ->verifyAdmin()->convertToDefaultUser();
+        $this->setDefaultRole()
+             ->setDefaultDepartment() 
+             ->setHeadQuarterBranch()
+             ->setAcceptedAdminStatus()
+             ->verifyAdmin()
+             ->convertToDefaultUser();
  
         /**
          * returning the initialized and approved user

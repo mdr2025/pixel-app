@@ -5,8 +5,9 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use PixelApp\Events\EmailAuthenticatableEvents\EmailAuthenticatableRegisteredEvent;
 use PixelApp\Events\EmailAuthenticatableEvents\EmailChangingEvent;
+use PixelApp\Listeners\EmailAuthenticatableEventsListeners\ChangedEmailVerificationSenderListener;
 use PixelApp\Listeners\EmailAuthenticatableEventsListeners\EmailChangingMessageSenderListener;
-use PixelApp\Listeners\EmailAuthenticatableEventsListeners\EmailVerificationSenderListener;
+use PixelApp\Listeners\EmailAuthenticatableEventsListeners\NewEmailVerificationSenderListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -17,10 +18,10 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         EmailAuthenticatableRegisteredEvent::class => [
-            EmailVerificationSenderListener::class
+            NewEmailVerificationSenderListener::class
         ],
         EmailChangingEvent::class => [
-            EmailVerificationSenderListener::class,
+            ChangedEmailVerificationSenderListener::class,
             EmailChangingMessageSenderListener::class
         ]
     ];

@@ -45,6 +45,7 @@ class RefreshToken extends PassportRefreshToken
     {
         return $query->where('revoked', 0);
     }
+    
     public function scopeRevoked($query)
     {
         return $query->where('revoked', 1);

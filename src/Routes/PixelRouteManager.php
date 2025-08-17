@@ -4,7 +4,27 @@ namespace PixelApp\Routes;
  
 use PixelApp\Config\ConfigEnums\PixelAppSystemRequirementsCard;
 use PixelApp\Config\PixelConfigManager; 
-use PixelApp\CustomLibs\Tenancy\PixelTenancyManager; 
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+use PixelApp\Routes\RouteRegistrarTypes\AuthenticationRoutesRegistrars\CompanyAuthenticationAPIRoutesRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\AuthenticationRoutesRegistrars\UserAuthenticationAPIRoutesRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\NormalCompanyAccountRouteRegistrars\NormalCompanySettingsAPIRoutesRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\TenantCompanyAccountRouteRegistrars\NormalCompanyProfileAPIRoutesRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\TenantCompanyAccountRouteRegistrars\TenantCompanyProfileAPIRoutesRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\TenantCompanyAccountRouteRegistrars\TenantCompanyResourcesConfiguringAPIRoutesRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\TenantCompanyAccountRouteRegistrars\TenantCompanySettingsAPIRoutesRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\AreasRouteRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\BranchesRouteRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\CitiesRouteRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\CountriesRouteRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\CurrenciesRouteRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\DepartmentRouteRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\PackagesRouteRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\RolesAndPermissionsRouteRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\UserAccountRoutesRegistrars\CompanyBranchesAPIRoutesRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\UserAccountRoutesRegistrars\UserProfileAPIRoutesRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\UserAccountRoutesRegistrars\UserSignatureAPIRoutesRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\UsersManagementRoutesRegistrars\SignUpUsersAPIRoutesRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\UsersManagementRoutesRegistrars\UsersAPIRoutesRegistrar;
 
 class PixelRouteManager
 {
@@ -22,10 +42,38 @@ class PixelRouteManager
 
     public static function getPackageAllRouteRegistrars() : array
     {
-        /**
-         * @todo to fill later
-         */
-        return [];
+        return [
+
+            //auth route registrars
+            CompanyAuthenticationAPIRoutesRegistrar::class,
+            UserAuthenticationAPIRoutesRegistrar::class,
+
+            //company account route registrars
+            NormalCompanyProfileAPIRoutesRegistrar::class,
+            NormalCompanySettingsAPIRoutesRegistrar::class,
+            TenantCompanyProfileAPIRoutesRegistrar::class,
+            TenantCompanyResourcesConfiguringAPIRoutesRegistrar::class,
+            TenantCompanySettingsAPIRoutesRegistrar::class,
+
+            //system configuration route registrars
+            AreasRouteRegistrar::class,
+            BranchesRouteRegistrar::class,
+            CitiesRouteRegistrar::class,
+            CountriesRouteRegistrar::class,
+            CurrenciesRouteRegistrar::class,
+            DepartmentRouteRegistrar::class,
+            PackagesRouteRegistrar::class,
+            RolesAndPermissionsRouteRegistrar::class,
+
+            //user account route registrars
+            CompanyBranchesAPIRoutesRegistrar::class,
+            UserProfileAPIRoutesRegistrar::class,
+            UserSignatureAPIRoutesRegistrar::class,
+
+            //user management route registrars
+            SignUpUsersAPIRoutesRegistrar::class,
+            UsersAPIRoutesRegistrar::class
+        ];
     }
 
     public static function getCentralDomains(): array

@@ -26,7 +26,8 @@ use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\AdminPanelTe
 use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\CentralAppTenantCompanyApprovingListener;
 use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\TenantConfiguringCancelingEventListener;
 use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\TenantConfiguringRequestListener;
-use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\TenantDefaultAdminEmailVerificationSenderListener;
+use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\NewTenantDefaultAdminEmailVerificationSenderListener;
+use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\TenantDefaultAdminChangedEmailVerificationSenderListener;
 use PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\TenantRegisteringListener;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Events;
@@ -61,11 +62,11 @@ class TenancyServiceProvider extends ServiceProvider
             Events\TenantSaved::class => [],
             TenantCompanyRegistered::class => [
                 TenantRegisteringListener::class,
-                TenantDefaultAdminEmailVerificationSenderListener::class
+                NewTenantDefaultAdminEmailVerificationSenderListener::class
             ],
             TenantDefaultAdminNewEmailHavingEvent::class =>
             [
-                TenantDefaultAdminEmailVerificationSenderListener::class
+                TenantDefaultAdminChangedEmailVerificationSenderListener::class
             ],
             Events\UpdatingTenant::class => [],
             Events\TenantUpdated::class => [],

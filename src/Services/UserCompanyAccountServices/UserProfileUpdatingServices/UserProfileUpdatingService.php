@@ -51,7 +51,9 @@ class UserProfileUpdatingService extends UpdatingService
      */
     protected function HandlePasswordValue(array $data): void
     {
-        (new PasswordChanger())->setData($data)->setAuthenticatable($this->Model)->changeAuthenticatableProp();
+        (new PasswordChanger())->setData($data)
+                               ->setAuthenticatable($this->Model)
+                               ->changeAuthenticatableProp();
     }
 
     /**

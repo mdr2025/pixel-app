@@ -15,9 +15,16 @@ class VerificationPropsChanger extends EmailAuthenticatableSensitivePropChanger
     {
         return $this->authenticatable->getEmailVerificationDateColumnName();
     }
+
     public function getEmailVerificationTokenColumnName() : string
     {
         return $this->authenticatable->getEmailVerificationTokenColumnName();
+    }
+
+    public function doesItHaveVerificationTokenValue() : bool
+    {
+        $verificationTokenPropName = $this->getEmailVerificationTokenColumnName();
+        return $this->authenticatable->{ $verificationTokenPropName } != null;
     }
 
     /**
@@ -50,6 +57,7 @@ class VerificationPropsChanger extends EmailAuthenticatableSensitivePropChanger
         $this->setVerificationLinkGenerator($verificationLinkGenerator);
         return $this;
     }
+
     public function verify() : self
     {
         $this->verified  = true;
@@ -83,6 +91,7 @@ class VerificationPropsChanger extends EmailAuthenticatableSensitivePropChanger
     protected function getUnVerifiedAuthenticatableChangesArray() : array
     {
         $this->checkVerificationLinkGeneratorOrFail();
+
         return [
                     $this->getPropName()  => null,
                     $this->getEmailVerificationTokenColumnName() => $this->verificationLinkGenerator->getGeneratedToken() ?: null
@@ -98,6 +107,7 @@ class VerificationPropsChanger extends EmailAuthenticatableSensitivePropChanger
         {
             return $this->getVerifiedAuthenticatableChangesArray();
         }
+
         return $this->getUnVerifiedAuthenticatableChangesArray();
     }
 

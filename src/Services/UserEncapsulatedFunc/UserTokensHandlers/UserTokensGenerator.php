@@ -34,6 +34,7 @@ class UserTokensGenerator
     {
         return (new Carbon())->add(Passport::refreshTokensExpireIn());
     }
+    
     protected function generateRefreshToken() : self
     {
         $refreshToken = Passport::refreshToken();
@@ -69,6 +70,7 @@ class UserTokensGenerator
     public function generateTokens()  :array
     {
         $this->generateAccessToken()->generateRefreshToken();
+
         return [
             "access_token" =>  $this->personalAccessTokenString,
             "refresh_token" => $this->refreshTokenString

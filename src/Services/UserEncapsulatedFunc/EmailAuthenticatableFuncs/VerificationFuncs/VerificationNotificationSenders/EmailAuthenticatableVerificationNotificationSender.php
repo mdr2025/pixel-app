@@ -15,7 +15,8 @@ class EmailAuthenticatableVerificationNotificationSender
 
     protected Model | EmailAuthenticatable $EmailAuthenticatable;
     protected static ?SignatureEmailLinkGenerator $verificationLinkGenerator = null;
-
+    protected bool $requiredToResetingVerficationToken = false;
+    
     /**
      * @throws Exception
      */
@@ -36,6 +37,8 @@ class EmailAuthenticatableVerificationNotificationSender
 
     /**
      * @return SignatureEmailLinkGenerator
+     * 
+     * it is always called after constructor is called ... so the link generator object != null
      */
     public function getVerificationLinkGenerator(): SignatureEmailLinkGenerator
     {
@@ -102,15 +105,32 @@ class EmailAuthenticatableVerificationNotificationSender
      */
     protected function setAuthenticatableVerificationProps(): string|bool
     {
+        
         /**  @var VerificationPropsChanger $AuthenticatableVerificationPropsChanger  */
         $AuthenticatableVerificationPropsChanger = new VerificationPropsChanger($this->EmailAuthenticatable);
 
-        $AuthenticatableVerificationPropsChanger->requireToVerify( $this::$verificationLinkGenerator )
-                                                ->changeAuthenticatablePropOrFail();
+        if(
+            $this->requiredToResetingVerficationToken 
+            ||
+            !$AuthenticatableVerificationPropsChanger->doesItHaveVerificationTokenValue()
+          )
+        {
+            $AuthenticatableVerificationPropsChanger->requireToVerify( $this::$verificationLinkGenerator )
+                                                    ->changeAuthenticatablePropOrFail();
 
-        return $this->EmailAuthenticatable->save();
+            return $this->EmailAuthenticatable->save();
+        }
+
+        //no need to handle a new verification prop value
+        return true;
+        
     }
 
+    public function resetVerificationToken() : self
+    {
+        $this->requiredToResetingVerficationToken = true;
+        return $this;
+    }
 
     /**
      * @return bool
@@ -118,9 +138,12 @@ class EmailAuthenticatableVerificationNotificationSender
      */
     public function sendEmailVerificationNotification(): bool
     {
-        if(!$this->setAuthenticatableVerificationProps()) { return false;}
+        if($this->setAuthenticatableVerificationProps()) 
+        {
+            $this->notifyEmailAuthenticatable();
+            return true;    
+        }
 
-        $this->notifyEmailAuthenticatable();
-        return true;
+        return false;
     }
 }
