@@ -13,6 +13,7 @@ use PixelApp\Helpers\PixelGlobalHelpers;
 use PixelApp\Http\Middleware\PixelMiddlewareManager;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Database\PixelDatabaseManager;
+use PixelApp\Exceptions\ExceptionHandlingManager;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Routes\PixelRouteManager;
 use PixelApp\ServiceProviders\LaravelServiceProviderStubsManager;
@@ -55,6 +56,7 @@ class PixelAppInstallingManager
         $this->installPackageModels();
         $this->installAppDatabaseFiles();
         $this->installConsoleObjects();
+        $this->installExceptionStubs();
 
         //handling pixel-dompdf package needed font files
         $this->handleDefaultFonts();
@@ -245,6 +247,11 @@ class PixelAppInstallingManager
         PixelConsoleManager::installConsoleObjects();
     }
 
+    protected function installExceptionStubs() : void
+    {
+        ExceptionHandlingManager::installExceptionStubs();
+    }
+    
     protected function handleDefaultFonts() : void
     {
         Artisan::call("pixel-app:handle-default-fonts");

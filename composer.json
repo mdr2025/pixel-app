@@ -50,7 +50,8 @@
             "src/Models/LaravelModelStubs",
             "src/Database/Migrations/MigrationStubs",
             "src/Database/Seeders/SeederStubs",
-            "src/Console/ConsoleStubs"
+            "src/Console/ConsoleStubs",
+            "src/Exceptions/ExceptionStubs"
         ]
     },
     "extra": {
