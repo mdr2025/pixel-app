@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
-use PixelApp\Models\PixelModelManager;
+use PixelApp\Config\PixelConfigManager;
 use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleUsersManagement\RoleUsersManager;
 use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleUsersManagement\SwitchAllRoleUsersToDefaultRole;
@@ -21,8 +21,13 @@ class RoleDeletingService
     public function __construct(RoleModel $role)
     {
         $this->role = $role;
-        $this->DefaultRoles = config("acl.roles");
+        $this->DefaultRoles = $this->getDefaultRoleStringArray();
         $this->usersManager = new SwitchAllRoleUsersToDefaultRole($this->role);
+    }
+
+    protected function getDefaultRoleStringArray() : array
+    {
+        return RoleModel::getDefaultRolesOrFail();
     }
 
     /**

@@ -12,7 +12,6 @@ use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\SystemConfigurationRequests\RoleRequests\RoleStoringRequest;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\RoleModel;
-use Spatie\Permission\Models\Permission; 
 use ValidatorLib\JSONValidator;
 use ValidatorLib\Validator;
 
@@ -42,7 +41,7 @@ class RoleStoringService
     
     protected function getRoleModeClass() : string
     {
-        return PixelModelManager::getModelForModelBaseType(RoleModel::class);
+        return PixelModelManager::getRoleModelClass();
     }
 
     /**
@@ -65,7 +64,7 @@ class RoleStoringService
 
     private function PermissionsArrayHandler(array $permissions): array
     {
-        $permissionClass = PixelModelManager::getModelForModelBaseType(Permission::class);
+        $permissionClass = PixelModelManager::getPermissionModelClass();
         return $permissionClass::whereIn("name", $permissions)->orderBy("id")->pluck("id")->toArray();
     }
 

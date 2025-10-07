@@ -32,6 +32,7 @@ class RolesController extends Controller
     public function index()
     { 
         BasePolicy::check('read', Role::class);
+
         $modelClass = $this->getRoleModeClass();
         $data = $modelClass::orderBy('disabled', 'asc')->orderBy('default', 'desc')->get();
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(RolesListResource::class);
@@ -41,6 +42,7 @@ class RolesController extends Controller
     public function listAllRoles()
     {
         BasePolicy::check('read', Role::class);
+
         $modelClass = $this->getRoleModeClass();
         $data = $modelClass::all();
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(RolesListResource::class);
@@ -50,6 +52,7 @@ class RolesController extends Controller
     public function listDefaultRoles()
     {
         BasePolicy::check('read', Role::class);
+
         $modelClass = $this->getRoleModeClass();
         $data = $modelClass::defaultRole()->get();
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(RolesListResource::class);
@@ -59,7 +62,7 @@ class RolesController extends Controller
     
     protected function getRoleModeClass() : string
     {
-        return PixelModelManager::getModelForModelBaseType(RoleModel::class);
+        return PixelModelManager::getRoleModelClass();
     }
 
     protected function findOrFailById(int $id) : RoleModel
@@ -71,6 +74,7 @@ class RolesController extends Controller
     public function show($id)
     {
         BasePolicy::check('read', Role::class); 
+
         $role = $this->findOrFailById($id);
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(RoleShowResource::class);
         return new $resourceClass($role);
@@ -79,6 +83,7 @@ class RolesController extends Controller
     public function store(Request $request): JsonResponse
     {
         BasePolicy::check('create', Role::class); 
+
         $service = PixelServiceManager::getServiceForServiceBaseType(RoleStoringService::class);
         return (new $service())->create($request);
     }
@@ -86,6 +91,7 @@ class RolesController extends Controller
     public function update($id, Request $request): JsonResponse
     {
         BasePolicy::check('edit', Role::class); 
+
         $modelClass = $this->getRoleModeClass();
         $role = $modelClass::nonDefaultRole()->firstOrFail($id);
         $service = PixelServiceManager::getServiceForServiceBaseType(RoleInfoUpdatingService::class);
@@ -102,6 +108,7 @@ class RolesController extends Controller
     public function switchRole(Request $request, $id): JsonResponse
     {
         BasePolicy::check('edit', Role::class); 
+
         $role = $this->findOrFailById($id);
         $service = PixelServiceManager::getServiceForServiceBaseType(RoleDisablingSwitcher::class);
         return (new $service($role))->change($request);
@@ -110,6 +117,7 @@ class RolesController extends Controller
     public function destroy($id): JsonResponse
     {
         BasePolicy::check('delete', Role::class); 
+
         $role = $this->findOrFailById($id);
         $service = PixelServiceManager::getServiceForServiceBaseType(RoleDeletingService::class);
         return (new $service($role))->delete(true);
@@ -119,7 +127,8 @@ class RolesController extends Controller
     {
         BasePolicy::check('read', Permission::class); 
 
-        $permissions = Permission::get('name');
+        $permissionModelClass = PixelModelManager::getPermissionModelClass();
+        $permissions = $permissionModelClass::get('name');
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(PermissionsResource::class);
         return $resourceClass::collection($permissions); 
     }

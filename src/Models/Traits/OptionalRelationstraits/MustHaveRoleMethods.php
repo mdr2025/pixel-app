@@ -12,7 +12,7 @@ trait MustHaveRoleMethods
 {
     public function role(): BelongsTo
     {
-        $roleModelClass = PixelModelManager::getModelForModelBaseType(RoleModel::class);
+        $roleModelClass = PixelModelManager::getRoleModelClass();
         return $this->belongsTo($roleModelClass , "role_id", "id");
     }
 

@@ -107,7 +107,7 @@ abstract class PixelAppClient
     {
         $key = $this::getServerAppClientCredentialsPassportKeyName();
         $clientIdKeyName = PixelPassportManager::getClientIdKeyName();
-        return PixelPassportManager::getPassportConfigKeyValue($key)[$clientIdKeyName] 
+        return PixelPassportManager::getPassportConfigKeyValue($key , [])[$clientIdKeyName] 
         ??
         throw new Exception( $this->getAccessTokenFailingExceptionMessage() . " , No Client id config value is set !" );
     }
@@ -116,7 +116,7 @@ abstract class PixelAppClient
     {
         $key = $this::getServerAppClientCredentialsPassportKeyName();
         $clientSecretKeyName = PixelPassportManager::getClientSecretKeyName();
-        return PixelPassportManager::getPassportConfigKeyValue($key)[$clientSecretKeyName] 
+        return PixelPassportManager::getPassportConfigKeyValue($key , [])[$clientSecretKeyName] 
         ??
         throw new Exception( $this->getAccessTokenFailingExceptionMessage() . " , No Client secret config value is set !" );
     }

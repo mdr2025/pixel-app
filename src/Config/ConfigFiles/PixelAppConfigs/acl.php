@@ -1,12 +1,7 @@
-<?php
-
-use PixelApp\Models\SystemConfigurationModels\RoleModel;
-
-$acl = [];
-$highestRoleName = RoleModel::getHighestRoleName();
-$lowestRoleName = RoleModel::getLowestRoleName();
-
-$highestRolePermisions = [
+ <?php
+return [
+    'permissions' => [
+        "Super_Admin" => [
                                 ///////// system configurations /////////////
                                 "read_sc-dropdown-lists",
                                 "create_sc-dropdown-lists",
@@ -38,14 +33,19 @@ $highestRolePermisions = [
                                 // "add-branch_company-account",
                                 // "read-branch_company-account",
                                 // "edit-branch_company-account"
-                            ];
 
+        ],
+        "Default_User" =>  [
+            "read_dashboard",
+            "read_tasks",
+            "read_profile",
+        ],
+    ],
+    "default_roles" => [
+        "Super Admin",
+        "Default User",
+    ],
+    "highestRole" => "Super Admin",
+    "lowestRole" => "Default User"
+];
 
-$lowestRolePermisions = ["read_profile"];
-
-$acl["permissions"][$highestRoleName] = $highestRolePermisions;
-$acl["permissions"][$lowestRoleName] = $lowestRolePermisions;
-$acl["roles"] = [$highestRoleName , $lowestRoleName];
-$acl["default_roles"] = [$highestRoleName ];
-
-return $acl;

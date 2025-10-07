@@ -2,18 +2,20 @@
 
 namespace PixelApp\Console\Commands;
 
-use PixelApp\Models\CivilDefensePanel\CompanyModule\TenantCompany;
+use Exception;
+use PixelApp\Models\CompanyModule\TenantCompany;
 use Illuminate\Console\Command;
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Database\Console\Seeds\SeedCommand;
 use Illuminate\Support\Facades\DB;
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use Stancl\Tenancy\Commands\Seed;
 use Stancl\Tenancy\Concerns\HasATenantsOption;
 use Stancl\Tenancy\Events\DatabaseSeeded;
 use Stancl\Tenancy\Events\SeedingDatabase;
 use Symfony\Component\Console\Input\InputArgument;
 
-class TenantSeedCommand extends SeedCommand
+class TenantSeedCommand extends Seed
 {
     use HasATenantsOption;
 
@@ -22,9 +24,9 @@ class TenantSeedCommand extends SeedCommand
      *
      * @var string
      */
-    protected $description = 'Seed tenant database(s).';
+    protected $description = 'Seed an appoved tenant database.';
 
-    protected $name = 'tenant-company:seed';
+    protected $name = 'tenant-company:seed {companyDomain : The company domain will be used for fetching  }';
 
  
     /**
@@ -36,21 +38,35 @@ class TenantSeedCommand extends SeedCommand
 
     public function handle()
     {
-        foreach (config('tenancy.seeder_parameters') as $parameter => $value) {
-            if (! $this->input->hasParameterOption($parameter)) {
-                $this->input->setOption(ltrim($parameter, '-'), $value);
-            }
+
+        $this->setTenantsParameterValue();
+
+        parent::handle(); 
+    }
+
+    protected function fetchTenantKey() : ?TenantCompany
+    {
+        $companyDomain = $this->getCompanyDomainParameterValue();
+        $tenant = PixelTenancyManager::fetchApprovedTenantForDomain($companyDomain);
+
+        if(!$tenant)
+        {
+            throw new Exception("Can't seed non approved tenant database !");
         }
+        
+        return $tenant->getTenantKey();
+    }
 
-        if (! $this->confirmToProceed()) {
-            return;
-        }
+    protected function getCompanyDomainParameterValue() : string
+    {
+        return $this->argument('companyDomain') 
+        ??
+        throw new Exception("companyDomain parameter has not been set ... please try again with writing the comapnyDomain you want to seed its database !") ;
+    }
 
-        $companyId = tenant()->getTenantKey();
-        $tenant = TenantCompany::find($companyId);
-        event(new SeedingDatabase($tenant));
-        // parent::handle();
-        // event(new DatabaseSeeded($tenant));
-
+    protected function setTenantsParameterValue() : void
+    {
+        $tenantKey = $this->fetchTenantKey();
+        $this->input->setOption('--tenants' , [$tenantKey]);
     }
 }

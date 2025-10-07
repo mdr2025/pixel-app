@@ -9,10 +9,9 @@ use PixelApp\Jobs\TenantCompanyJobs\TenantConfiguringProcessJobs\TenantPassportC
 use PixelApp\Jobs\TenantCompanyJobs\TenantConfiguringProcessJobs\TenantSuperAdminSeederJob; 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApprovingEvents\RequestTenantAppToConfigureApprovedTenant;
 use PixelApp\Models\CompanyModule\TenantCompany;
-use PixelApp\Services\AuthenticationServices\CompanyAuthClientServices\CompanyFetchingService;
-use PixelApp\Services\PixelServiceManager;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Throwable;
@@ -64,15 +63,9 @@ class TenantConfiguringRequestListener implements ShouldQueue
         return $this;
     }
 
-    protected function initCompanyFetchingService() : CompanyFetchingService
-    {
-        $serviceClass = PixelServiceManager::getServiceForServiceBaseType(CompanyFetchingService::class);
-        return new $serviceClass;
-    }
-
     protected function fetchTenantByDomain(string $companyDomain) : ?TenantCompany
     {
-        return $this->initCompanyFetchingService()->fetchTenantCompany($companyDomain);
+        return PixelTenancyManager::fetchApprovedTenantForDomain($companyDomain);
     } 
 
     protected function setTenant(RequestTenantAppToConfigureApprovedTenant $event): self

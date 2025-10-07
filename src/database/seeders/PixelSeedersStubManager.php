@@ -12,7 +12,6 @@ use PixelApp\Database\Migrations\MigrationFileStubIdentifierFactories\MigrationF
 class PixelSeedersStubManager extends PixelAppStubsManager
 {
 
-    
     public function replaceSeederStubs() : void
     {
         $this->replaceCompanyResetSeederStub();

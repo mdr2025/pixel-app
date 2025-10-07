@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
-use PixelApp\CustomLibs\Tenancy\PixelTenancy;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Models\CompanyModule\TenantCompany;
 
@@ -82,14 +81,14 @@ class PixelPassportSetupManager
         return PixelPassportManager::doesHaveOnlyCentralTokens();    
     }
 
-    protected function fetchTenantsByAdminPanel() : Collection
+    protected function fetchApprovedTenantsByAdminPanel() : Collection
     {
-        return PixelTenancyManager::fetchTenantsByAdminPanel();
+        return PixelTenancyManager::fetchApprovedTenantsByAdminPanel();
     }
 
-    protected function fetchTenantsFromCentralSide() : Collection
+    protected function fetchApprovedTenantsFromCentralSide() : Collection
     {
-        return PixelTenancyManager::fetchTenantsFromCentralSide();
+        return PixelTenancyManager::fetchApprovedTenantsFromCentralSide();
     }
 
     protected function getForeignKeyDependentDeletingStatus() : bool
@@ -160,7 +159,7 @@ class PixelPassportSetupManager
     {
         $this->truncateCentralTables();
 
-        $tenants = $this->fetchTenantsFromCentralSide();
+        $tenants = $this->fetchApprovedTenantsFromCentralSide();
         $this->truncateTenantTables($tenants);
     }
     
@@ -174,7 +173,7 @@ class PixelPassportSetupManager
         }elseif($this->doesHaveOnlyTenantTokens())
         {
 
-            $tenants = $this->fetchTenantsByAdminPanel();
+            $tenants = $this->fetchApprovedTenantsByAdminPanel();
             $this->truncateTenantTables($tenants);
 
         }elseif($this->doesHaveTokensInBothSide())

@@ -55,16 +55,28 @@ class PixelConfigManager
     /**
      * For normal app : doesn't return TenanctConfigFileIdentifier 
      */
-    public static function getPixelAppRequiredPackagesConfigFileIdentifierClasses() : array
+    public static function getPixelRequiredPackagesMergableConfigFileIdentifierClasses() : array
     {
         return [
-            AuthorizationManagementConfigFileIdentifier::class,
-            ExcelConfigFileIdentifier::class,
-            PassportConfigFileIdentifier::class,
-            PermissionConfigFileIdentifier::class,
-            QueryBuilderConfigFileIdentifier::class
+                    AuthorizationManagementConfigFileIdentifier::class,
+                    ExcelConfigFileIdentifier::class,
+                    PermissionConfigFileIdentifier::class,
+                    QueryBuilderConfigFileIdentifier::class
+                ];
+    }
+
+    public static function getPixelRequiredPackagesPublishableConfigFileIdentifierClasses() : array
+    {
+        return static::getPixelRequiredPackagesMergableConfigFileIdentifierClasses();
+    }
+
+    public static function getPixelRequiredPackagesReplacableConfigFileIdentifierClasses() : array
+    {
+        return [
+            PassportConfigFileIdentifier::class
         ];
     }
+
     public static function getTenancyConfigFileIdentifierClass() : string
     {
         return TenancyConfigFileIdentifier::class;
@@ -81,12 +93,20 @@ class PixelConfigManager
             QueueConfigFileIdentifier::class
         ];
     }
+
+    public static function getReplacableFileConfigIdentifierClasses()  : array
+    {
+        return array_merge(
+                    static::getPixelAppLaravelConfigFileIdentifierClasses(),
+                    static::getPixelRequiredPackagesReplacableConfigFileIdentifierClasses()
+               );
+    }
  
     public static function getMergableConfigFileIdentifiers() : array
     {
         return array_merge(
             static::getPackageBaseConfigFileIdentifierClasses(),
-            static::getPixelAppRequiredPackagesConfigFileIdentifierClasses()
+            static::getPixelRequiredPackagesMergableConfigFileIdentifierClasses()
         );
     }
     
@@ -94,7 +114,7 @@ class PixelConfigManager
     {
         return array_merge(
             static::getPackageBaseConfigFileIdentifierClasses(),
-            static::getPixelAppRequiredPackagesConfigFileIdentifierClasses()
+            static::getPixelRequiredPackagesPublishableConfigFileIdentifierClasses()
         );
     }
    
@@ -110,7 +130,7 @@ class PixelConfigManager
 
     public static function installPackageConfigFiles() : void
     {
-        static::initPixelConfigStubsManager()->replacePackageConfigFiles();
+        static::initPixelConfigStubsManager()->installPackageConfigFiles();
     }
 
     public static function remergeConfigFile(string $fileName , array $newConfigContent) : void

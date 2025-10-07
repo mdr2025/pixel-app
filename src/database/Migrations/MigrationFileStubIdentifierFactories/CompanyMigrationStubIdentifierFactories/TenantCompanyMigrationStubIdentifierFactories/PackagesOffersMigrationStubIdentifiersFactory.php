@@ -12,7 +12,7 @@ class PackagesOffersMigrationStubIdentifiersFactory extends CompanyMigrationStub
      */
     protected function doesItNeedCentralStubReplacement() : bool
     {
-        return $this->isItAdminPanelApp() || $this->isItMonolithApp() ;
+        return $this->isInstallingForAdminPanel() || $this->isInstallingForMonolithApp() ;
     }
 
     protected function getFilePackageMigrationRelevantPath() : string

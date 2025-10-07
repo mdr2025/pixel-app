@@ -2,17 +2,18 @@
  
 namespace PixelApp\Http\Resources\SystemConfigurationResources\RolesAndPermissions;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use PixelApp\Http\Resources\PixelHttpResourceManager;
+use PixelApp\Models\PixelModelManager;
 
 class AclResoursce extends JsonResource
 {
-    protected function getAllPermissions() 
+    protected function getAllPermissions() : Collection
     {
-        /**
-         * @todo later
-         */
+        return PixelModelManager::getPermissionModelClass()::query()->get("name");
     }
+
     protected function getPermissionsResourceClass() : string
     {
         return PixelHttpResourceManager::getResourceForResourceBaseType(PermissionsResource::class);

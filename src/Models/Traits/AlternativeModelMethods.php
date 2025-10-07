@@ -3,6 +3,8 @@
 namespace PixelApp\Models\Traits;
 
 use PixelApp\Models\PixelBaseModel;
+use PixelApp\Models\SystemConfigurationModels\RoleModel;
+use Spatie\Permission\Models\Permission;
 
 trait AlternativeModelMethods
 {
@@ -45,4 +47,13 @@ trait AlternativeModelMethods
         return static::getValidAlternativeModelClass($baseModelClass );
     }
  
+    public static function getPermissionModelClass() : string
+    {
+        return config("permission.models.permission" , Permission::class);
+    }
+
+    public static function getRoleModelClass() : string
+    {
+        return config("permission.models.role" , RoleModel::class);
+    }
 }

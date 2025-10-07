@@ -18,6 +18,10 @@ abstract class PixelBaseConfigFileIdentifier
         return [ "pixel-base-configs" ];
     }
     
+    public function getConfigKeyName() : string
+    {
+        return $this->getPackageConfigsFolderName() . "." . $this->getFileName();
+    }
      
     public function getPackageConfigsFolderName() : string
     {

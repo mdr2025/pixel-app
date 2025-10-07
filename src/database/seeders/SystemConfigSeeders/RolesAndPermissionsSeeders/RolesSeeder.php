@@ -2,10 +2,11 @@
 
 namespace PixelApp\Database\Seeders\SystemConfigSeeders\RolesAndPermissionsSeeders;
 
-use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Log;
+use PixelApp\Config\PixelConfigManager;
 use PixelApp\Models\PixelModelManager;
+use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use Spatie\Permission\Models\Role;
 use Throwable;
 
@@ -16,7 +17,7 @@ class RolesSeeder extends Seeder
     
     protected function getRoleModeClass() : string
     {
-        return PixelModelManager::getModelForModelBaseType(RoleModel::class);
+        return PixelModelManager::getRoleModelClass();
     }
 
     protected function createRoleOb(string $role )  : ?Role
@@ -33,18 +34,22 @@ class RolesSeeder extends Seeder
         }
         return $roleOb;
     }
+
     protected function getDefaultRoleDefaultPermissions(string $role) : array
     {
         return $this->defaultPermissions[ $role ];
     }
+  
     protected function getDefaultRoleStringArray() : array
     {
-        return config('acl.default_roles');
+        return RoleModel::getDefaultRolesOrFail();
     }
+
     protected function setDefaultPermissionsStringArray() : void
     {
-        $this->defaultPermissions =  config('acl.permissions');
+        $this->defaultPermissions =  PixelConfigManager::getPixelAppPackagePermissions();
     }
+    
     /**
      * Run the database seeds.
      *

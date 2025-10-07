@@ -5,6 +5,9 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\PixelAppACLConfigFileIdentifier;
+use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\PixelBaseConfigFileIdentifier;
+use PixelApp\Config\PixelConfigManager;
 use PixelApp\Http\Requests\SystemConfigurationRequests\RoleRequests\RoleUpdatingRequest;
 use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use ValidatorLib\JSONValidator;
@@ -27,7 +30,12 @@ abstract class UpdatingBaseClass
     public function __construct(RoleModel $role)
     {
         $this->role = $role;
-        $this->DefaultRoles = config("acl.roles");
+        $this->DefaultRoles = $this->getDefaultRoleStringArray();
+    }
+ 
+    protected function getDefaultRoleStringArray() : array
+    {
+        return RoleModel::getDefaultRolesOrFail();
     }
 
     /**
@@ -41,6 +49,7 @@ abstract class UpdatingBaseClass
         $this->validator = new JSONValidator($this->getRequestFormClass(), $request);
         return $this;
     }
+
     protected function IsDefaultRole(): bool
     {
         return in_array($this->role->name, $this->DefaultRoles);
@@ -77,10 +86,12 @@ abstract class UpdatingBaseClass
         try {
             $this->initValidator($data)->setRequestData();
             $this->validateData();
+
             if ($this->role->user()->count() != 0 && isset($this->data["disabled"]) &&$this->data["disabled"] == 1) {
                 throw new Exception("Role can not be deactivated as it has assigned users ");
             }
             return $this->changerFun();
+
         } catch (Exception $e) {
             return $this->getErrorResponse([$e->getMessage()]);
         }

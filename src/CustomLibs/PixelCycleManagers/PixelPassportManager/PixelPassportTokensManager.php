@@ -29,12 +29,12 @@ class PixelPassportTokensManager
 
     public function getRefreshTokenGracePeriod() : string
     {
-        return PixelConfigManager::getRefreshTokenGracePeriod() ?? static::DEFAULT_REFRESH_TOKEN_GRACE_PERIOD;
+        return PixelPassportManager::getRefreshTokenGracePeriod() ?? static::DEFAULT_REFRESH_TOKEN_GRACE_PERIOD;
     }
 
     public function getRevokedTokenGracePeriod() : string
     {
-        return PixelConfigManager::getRevokedTokenGracePeriod() ?? static::DEFAULT_REVOKED_TOKEN_GRACE_PERIOD;
+        return PixelPassportManager::getRevokedTokenGracePeriod() ?? static::DEFAULT_REVOKED_TOKEN_GRACE_PERIOD;
     }
 
     /**

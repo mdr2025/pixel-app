@@ -62,7 +62,7 @@ class CompanyFetchingService
             $data = (new $resource($tenant))->toArray(request());
             return Response::success($data);
         }
-        return Response::error("FAiled to found a tenant company has this domain");
+        return Response::error("Failed to found a tenant company has this domain");
     }
 
     public function fetchTenantCompany(string $companyDomain) : ?TenantCompany

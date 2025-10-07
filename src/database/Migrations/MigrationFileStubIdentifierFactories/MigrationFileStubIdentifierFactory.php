@@ -111,7 +111,7 @@ abstract class MigrationFileStubIdentifierFactory
                 $this->getFilePackageMigrationRelevantPath() ;
 
         return $this->processRealPath($path);
-    }   
+    }
 
     public function getFileExtension() : string
     {

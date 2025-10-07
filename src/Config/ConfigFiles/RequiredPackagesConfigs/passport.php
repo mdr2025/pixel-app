@@ -68,4 +68,29 @@ return [
     "expired_access_token_keeping_days_count" => 15,
     "personal_access_token_expiration_days_count" => 15,
     "refresh_token_expiration_days_count" => 15,
+        
+    /*
+    |--------------------------------------------------------------------------
+    | Refresh Token Grace Period
+    |--------------------------------------------------------------------------
+    |
+    | This value defines how long *after* an access token expires, its associated
+    | refresh token is still allowed to be used. After this grace period, the
+    | refresh token should be deleted or ignored.
+    |
+    */
+    'refresh_token_grace_period' => env('PASSPORT_REFRESH_GRACE_PERIOD', '10 days'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Revoked Token Grace Period
+    |--------------------------------------------------------------------------
+    |
+    | This value defines how long revoked access tokens can stay in the database
+    | before being permanently deleted. Useful for audit or temporary revocation.
+    |
+    */
+    'revoked_token_grace_period' => env('PASSPORT_REVOKED_GRACE_PERIOD', '10 days')
+
+
 ];

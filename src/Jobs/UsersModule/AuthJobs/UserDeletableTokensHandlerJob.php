@@ -43,14 +43,14 @@ class UserDeletableTokensHandlerJob  implements ShouldQueue
         return PixelPassportManager::doesHaveOnlyCentralTokens();    
     }
 
-    protected function fetchTenantsByAdminPanel() : Collection
+    protected function fetchApprovedTenantsByAdminPanel() : Collection
     {
-        return PixelTenancyManager::fetchTenantsByAdminPanel();
+        return PixelTenancyManager::fetchApprovedTenantsByAdminPanel();
     }
 
-    protected function fetchTenantsFromCentralSide() : Collection
+    protected function fetchApprovedTenantsFromCentralSide() : Collection
     {
-        return PixelTenancyManager::fetchTenantsFromCentralSide();
+        return PixelTenancyManager::fetchApprovedTenantsFromCentralSide();
     }
  
     protected function purgeTenantsTokensExceedingGrace(Collection $tenants) : void
@@ -88,7 +88,7 @@ class UserDeletableTokensHandlerJob  implements ShouldQueue
     {
         $this->purgeCentralTokensExceedingGrace();
 
-        $tenants = $this->fetchTenantsFromCentralSide();
+        $tenants = $this->fetchApprovedTenantsFromCentralSide();
         $this->purgeTenantsTokensExceedingGrace($tenants);   
     }
 
@@ -105,7 +105,7 @@ class UserDeletableTokensHandlerJob  implements ShouldQueue
         
         }elseif($this->doesHaveOnlyTenantTokens())
         {
-            $tenants = $this->fetchTenantsByAdminPanel();
+            $tenants = $this->fetchApprovedTenantsByAdminPanel();
             $this->purgeTenantsTokensExceedingGrace($tenants);
         
         }elseif($this->doesHaveTokensInBothSide())

@@ -23,7 +23,10 @@ class OldDataExportersDeleterAltJob extends OldDataExportersDeleterJob
             ||
             PixelAppBootingManager::isBootingForNormalApp())
         {
-            $this->processDeleting();
+            /**
+             * @todo using it after upgrading package to laravel 12 to be compatible with ExpImpManagement package
+             */
+            //$this->processDeleting();
             return ;
         }
 
@@ -39,31 +42,34 @@ class OldDataExportersDeleterAltJob extends OldDataExportersDeleterJob
         {
             $tenant->run(function()
             {
-                $this->processDeleting();
+                /**
+                 * @todo using it after upgrading package to laravel 12 to be compatible with ExpImpManagement package
+                 */
+                //$this->processDeleting();
             });
         }
     }
 
-    protected function fetchTenantsFromCentralSide() : Collection
+    protected function fetchApprovedTenantsFromCentralSide() : Collection
     {
-        return PixelTenancyManager::fetchTenantsFromCentralSide();
+        return PixelTenancyManager::fetchApprovedTenantsFromCentralSide();
     }
 
-    protected function fetchTenantsByAdminPanel()  : Collection
+    protected function fetchApprovedTenantsByAdminPanel()  : Collection
     {
-        return PixelTenancyManager::fetchTenantsByAdminPanel();
+        return PixelTenancyManager::fetchApprovedTenantsByAdminPanel();
     }
 
     protected function fetchTenants() 
     {
         if(PixelAppBootingManager::isBootingForTenantApp())
         {
-            return $this->fetchTenantsByAdminPanel();
+            return $this->fetchApprovedTenantsByAdminPanel();
         }
 
         if(PixelAppBootingManager::isBootingForMonolithTenancyApp())
         {
-            return $this->fetchTenantsFromCentralSide();
+            return $this->fetchApprovedTenantsFromCentralSide();
         }
 
         return collect([]);

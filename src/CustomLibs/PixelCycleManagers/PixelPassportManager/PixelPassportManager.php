@@ -56,7 +56,7 @@ class PixelPassportManager
     {
         return config($configFileIdentifier->getConfigKeyName());
     }
-    
+
     protected static function getPassportUpdatedConfigFileContentArray(PassportConfigFileIdentifier $passprtConfigFileIdentifier , string $key , mixed $value) : array
     {
         $config = static::getPassportConfigFileContent($passprtConfigFileIdentifier);
@@ -69,11 +69,27 @@ class PixelPassportManager
         return $config;
     }
 
-    public static function getPassportConfigKeyValue($passportConfigKeyName) : array
+    public static function getPassportConfigKeyValue(string $passportConfigKeyName , $default = null) : mixed
     {
         $passprtConfigFileIdentifier = static::initPassportConfigFileIdentifier();
-        return static::getPassportConfigFileContent($passprtConfigFileIdentifier)[$passportConfigKeyName] ?? [];
+        return static::getPassportConfigFileContent($passprtConfigFileIdentifier)[$passportConfigKeyName] ?? $default;
     }
+
+    public static function getRefreshTokenGracePeriod() : ?string
+    {
+        $value = static::getPassportConfigKeyValue("refresh_token_grace_period");
+        
+        return is_string($value) ? $value : null;
+    }
+
+    public static function getRevokedTokenGracePeriod()  : ?string
+    {
+        $value = static::getPassportConfigKeyValue("revoked_token_grace_period");
+
+        return is_string($value) ? $value : null;
+    }
+
+
 
     public static function getClientIdKeyName() : string
     {
@@ -91,6 +107,9 @@ class PixelPassportManager
     }
 
 
+    /**
+     * return passport config file path (the current merged passport config file ... eather if it is in the package or in project path)
+     */
     public static function getPassportConfigFilePath(PassportConfigFileIdentifier $passprtConfigFileIdentifier) : string
     {
         $projectRelevantPath = $passprtConfigFileIdentifier->getFileProjectRelevantPath();
@@ -131,7 +150,9 @@ class PixelPassportManager
 
     public static function doesHaveOnlyCentralTokens() : bool
     {
-        return PixelTenancyManager::isItNormalApp() || PixelTenancyManager::isItAdminPanelApp();    
+        return PixelTenancyManager::isItNormalApp() 
+               ||
+               PixelTenancyManager::isItAdminPanelApp();    
     }
 
 }

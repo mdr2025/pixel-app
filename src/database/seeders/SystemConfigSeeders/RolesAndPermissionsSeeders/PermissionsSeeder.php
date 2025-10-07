@@ -1,20 +1,20 @@
 <?php
 
 namespace PixelApp\Database\Seeders\SystemConfigSeeders\RolesAndPermissionsSeeders;
- 
+
+use Exception;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB; 
+use PixelApp\Config\PixelConfigManager;
+use PixelApp\Database\PixelDatabaseManager;
 use PixelApp\Models\PixelModelManager;
-use PixelApp\Models\SystemConfigurationModels\RoleModel;
-use Spatie\Permission\Models\Permission;
 
 class PermissionsSeeder extends Seeder
 {
 
     protected function getRoleModeClass() : string
     {
-        return PixelModelManager::getModelForModelBaseType(RoleModel::class);
+        return PixelModelManager::getRoleModelClass();
     }
 
     protected function getHighestRoleConfigKey() : string
@@ -23,10 +23,19 @@ class PermissionsSeeder extends Seeder
         return $modelClass::getHighestRoleName();
     }
     
+   
+    protected function setDefaultPermissionsStringArray() : array
+    {
+        return  PixelConfigManager::getPixelAppPackagePermissions();
+    }
+    
     protected function getAllPermissionStrings()  :array
     {
-        return  config('acl.permissions.' . $this->getHighestRoleConfigKey());
+        return  $this->setDefaultPermissionsStringArray()[ $this->getHighestRoleConfigKey() ] 
+        ??
+        throw new Exception("There is no permission to seed in acl config file ");
     }
+
     protected function getPermissionsInsertableDataArray() : array
     {
 
@@ -39,6 +48,7 @@ class PermissionsSeeder extends Seeder
         }
         return $data;
     }
+
     /**
      * Run the database seeds.
      *
@@ -48,7 +58,15 @@ class PermissionsSeeder extends Seeder
     {
         if(! empty( $data = $this->getPermissionsInsertableDataArray() ))
         {
-            DB::table("permissions")->insert($data);
+            $tableName = $this->getTableName();
+
+            DB::table( $tableName )->insert($data);
         }
     }
+
+    protected function getTableName()  :string
+    {
+        return PixelDatabaseManager::getPermissionsTableName();
+    }
+
 }

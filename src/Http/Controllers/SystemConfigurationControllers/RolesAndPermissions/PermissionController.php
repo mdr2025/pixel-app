@@ -8,6 +8,7 @@ use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PixelApp\Models\PixelModelManager;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
@@ -37,8 +38,9 @@ class PermissionController extends Controller
         }
         try {
             DB::beginTransaction();
-            $permissions = Permission::insert($data);
-            $permissionIds = Permission::latest()->pluck('id')->take(count($data));
+            $permissionModelClass = PixelModelManager::getPermissionModelClass();
+            $permissions = $permissionModelClass::insert($data);
+            $permissionIds = $permissionModelClass::latest()->pluck('id')->take(count($data));
             foreach ($permissionIds as $id) {
                 DB::table('role_has_permissions')->insert([
                     "role_id" => 1,

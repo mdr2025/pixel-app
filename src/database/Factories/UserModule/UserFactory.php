@@ -66,7 +66,7 @@ abstract class UserFactory extends Factory
  
     protected function setRoleIDS()
     {
-        $modelClass = PixelModelManager::getModelForModelBaseType(RoleModel::class);
+        $modelClass = PixelModelManager::getRoleModelClass();
         $this->RoleIDS = $modelClass::pluck("id")->toArray();
         $this->RolesCount = count($this->RoleIDS);
     }

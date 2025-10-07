@@ -16,9 +16,9 @@ class PixelConfigStubsManager extends PixelAppStubsManager
         return PixelConfigManager::getTenancyConfigFileIdentifierClass(); 
     }
  
-    public function getPixelAppLaravelConfigFileIdentifierClasses() : array
+    public function getReplacableFileConfigIdentifierClasses() : array
     {
-        return PixelConfigManager::getPixelAppLaravelConfigFileIdentifierClasses();
+        return PixelConfigManager::getReplacableFileConfigIdentifierClasses();
     }
    
     protected static function remergeJustReplacedConfigFile(ConfigFileIdentifier $configFileIdentifier)
@@ -63,7 +63,7 @@ class PixelConfigStubsManager extends PixelAppStubsManager
 
     protected function replaceLaravelConfigFiles()
     {
-        foreach($this->getPixelAppLaravelConfigFileIdentifierClasses() as $identifierClass)
+        foreach($this->getReplacableFileConfigIdentifierClasses() as $identifierClass)
         {
             $configFileIdentifier = $this->initConfigFileIdentifier($identifierClass);
 
@@ -77,7 +77,7 @@ class PixelConfigStubsManager extends PixelAppStubsManager
         return PixelAppInstallingManager::Singleton();
     }
 
-    public function replacePackageConfigFiles() : void
+    public function installPackageConfigFiles() : void
     {
         $this->replaceLaravelConfigFiles();
 

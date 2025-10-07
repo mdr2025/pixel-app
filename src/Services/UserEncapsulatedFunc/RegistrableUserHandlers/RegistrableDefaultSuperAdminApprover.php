@@ -108,7 +108,7 @@ class RegistrableDefaultSuperAdminApprover
     
     protected function getRoleModeClass() : string
     {
-        return PixelModelManager::getModelForModelBaseType(RoleModel::class);
+        return PixelModelManager::getRoleModelClass();
     }
 
     /**

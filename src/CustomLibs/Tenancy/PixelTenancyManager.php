@@ -2,6 +2,9 @@
 
 namespace PixelApp\CustomLibs\Tenancy;
 
+
+use PixelApp\Services\AuthenticationServices\CompanyAuthClientServices\CompanyFetchingService as CompanyFetchingClientService;
+use PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\CompanyFetchingService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -93,14 +96,68 @@ class PixelTenancyManager
         return new $service;
     }
 
-    public static function fetchTenantsByAdminPanel() : Collection
+    public static function fetchTenantByAdminPanel() : ?TenantCompany
     {
         return static::initApprovedTenantCompaniesFetchingService()->fetchApprovedTenantCompanies();
     }
 
-    public static function fetchTenantsFromCentralSide() : Collection
+    /**
+     * getting only approved tenant companies
+     */
+    public static function fetchApprovedTenantsByAdminPanel() : Collection
     {
-        return static::getTenantCompanyModelClass()::all(); // to check collection type later (lazy or cursor)
+        return static::initApprovedTenantCompaniesFetchingService()->fetchApprovedTenantCompanies();
+    }
+
+    
+    /**
+     * getting only approved tenant companies
+     */
+    public static function fetchApprovedTenantsFromCentralSide() : Collection
+    {
+        return static::getTenantCompanyModelClass()::isNotPending()->get(); // to check collection type later (lazy or cursor)
+    }
+
+    /**
+     * gets any tenant company eather if it is approved or not
+     */
+    public static function fetchTenantForClientSide(string $domain) : ?TenantCompany
+    {
+        return (new CompanyFetchingClientService($domain))->fetchTenantCompany();
+    }
+
+    /**
+     * gets any tenant company eather if it is approved or not
+     */
+    public static function fetchTenantForServerSide(string $domain) : ?TenantCompany
+    {
+        return (new CompanyFetchingService())->fetchTenantCompany($domain);
+    }
+
+    public static function fetchApprovedTenantForDomain(string $domain) : ?TenantCompany
+    {
+        $tenant = static::fetchTenantForDomain($domain);
+        
+        if($tenant?->isApproved() ?? false)
+        {
+            return $tenant;
+        }
+
+        return  null;
+    }
+
+    public static function fetchTenantForDomain(string $domain) : ?TenantCompany
+    {
+        if(
+            static::isItAdminPanelApp() 
+            ||
+            static::isItMonolithTenancyApp()
+          )
+        {
+            return static::fetchTenantForServerSide($domain);
+        }
+
+        return static::fetchTenantForClientSide($domain);
     }
 
     public static function mustHandleDomainQueryStringParam() : bool

@@ -21,7 +21,10 @@ class SwitchBackAllRolePreviousUsers extends RoleUsersManager
     public function updateUsersRole(): bool
     {
         $updatedData = ["role_id" => $this->role->id, "previous_role_id" => null];
-        if ($this->getUserModelClass()::whereIn("id", $this->roleUserIDS)->update($updatedData)) {
+        $updatingResult = $this->getUserModelClass()::whereIn("id", $this->roleUserIDS)->update($updatedData);
+        
+        if ($updatingResult)
+        {
             return true;
         }
         throw new Exception("Failed To Switch Related Previous Users To The Role " . $this->role->name);

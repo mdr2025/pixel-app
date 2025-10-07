@@ -22,7 +22,7 @@ class SwitchAllRoleUsersToDefaultRole extends RoleUsersManager
     
     protected function getRoleModeClass() : string
     {
-        return PixelModelManager::getModelForModelBaseType(RoleModel::class);
+        return PixelModelManager::getRoleModelClass();
     }
     
     protected function setDefaultRoleName() : void

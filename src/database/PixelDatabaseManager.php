@@ -39,4 +39,14 @@ class PixelDatabaseManager
     {
         MySqlDatabaseManager::truncateDBTable($tableName , $stopingForeignKeyChecks);
     }
+
+    public static function getPermissionsTableName()  :string
+    {
+        return config("permission.table_names.permissions");
+    }
+
+    public static function getRolesTableName()  :string
+    {
+        return config("permission.table_names.roles");
+    }
 }
