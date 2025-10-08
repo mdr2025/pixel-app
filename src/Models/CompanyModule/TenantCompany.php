@@ -63,7 +63,9 @@ class TenantCompany extends PixelCompany
 
     public $fillable = [
         'name',
+        'name_shortcut',
         'domain',
+        'mobile',
         'sector',
         'country_id',
         'logo', 

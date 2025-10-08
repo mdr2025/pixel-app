@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('password');
             $table->string('mobile', 20);
+            $table->foreignId("country_id")->constrained("countries")->cascadeOnUpdate();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('verification_token')->nullable();
             $table->foreignId("company_id")->constrained("tenant_companies")->cascadeOnUpdate()->cascadeOnDelete();

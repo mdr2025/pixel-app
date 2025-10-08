@@ -133,14 +133,14 @@ class PixelPassportManager
         PixelConfigManager::overrideConfigFileContent($passportFilePath , $passportConfigFileContent);
     }
 
-    public static function doesHaveTokensInBothSide()
-    {
-        return PixelTenancyManager::isItMonolithTenancyApp();
-    }
-
     public static function doesItSupportMachineClientCredentialsGrant() : bool
     {
         return PixelTenancyManager::isItTenantApp() && PixelTenancyManager::isItAdminPanelApp();
+    }
+
+    public static function doesHaveTokensInBothSide()
+    {
+        return PixelTenancyManager::isItMonolithTenancyApp();
     }
 
     public static function doesHaveOnlyTenantTokens()

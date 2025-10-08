@@ -5,13 +5,11 @@ namespace PixelApp\Database\Factories\CompanyModule;
 use PixelApp\Database\Factories\PixelBaseFactory as Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use PixelApp\Models\CompanyModule\TenantCompany;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Country;
 
-class CompanyFactory extends Factory
-{
-    protected $model = TenantCompany::class;
+class TenantCompanyFactory extends Factory
+{ 
 
     protected int $companyId = 0;
     protected array $companySectors = [
@@ -52,6 +50,12 @@ class CompanyFactory extends Factory
         '21 - 50',
         ' > 50'
     ];
+
+    public function modelName()
+    {
+        $this->model = PixelModelManager::getTenantCompanyModelClass();
+        return parent::modelName();
+    }
 
     protected function getAltModelOrBase(string $model) : string
     {

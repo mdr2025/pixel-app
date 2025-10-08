@@ -2,8 +2,7 @@
 
 namespace PixelApp\Services;
 
-use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
-
+ 
 class PixelServiceManager
 { 
     protected static array $serviceAlternatives = [];

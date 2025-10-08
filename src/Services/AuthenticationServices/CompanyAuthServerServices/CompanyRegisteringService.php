@@ -45,14 +45,26 @@ use PixelApp\Services\UserEncapsulatedFunc\RegistrableUserHandlers\RegistrableUs
         return new RegistrableUserFactory($userData);
     }
   
+    protected function injectCompanyMobile() : void
+    {
+        $this->data["mobile"] = $this->data["defaultAdmin"]["mobile"];
+    }
+
+    protected function injectAdminCountryId() : void
+    {
+        $this->data["defaultAdmin"]["country_id"] = $this->data["country_id"];
+    }
+
     /**
      * @return void
      * @throws Exception
      */
     protected function overrideDefaultAdminData(): void
     {
+        $this->injectAdminCountryId();
+
         $defaultAdmin = $this->data["defaultAdmin"];
-        
+
         $defaultAdmin = $this->initRegistrableUserDataFactory($defaultAdmin)
                              ->makeUser()
                              ->toArray();
@@ -69,6 +81,7 @@ use PixelApp\Services\UserEncapsulatedFunc\RegistrableUserHandlers\RegistrableUs
     {
         $this->anyAdditionActions();
         $this->overrideDefaultAdminData();
+        $this->injectCompanyMobile();
     }
 
     protected function fireRegisteredEvent() : void

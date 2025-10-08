@@ -3,20 +3,10 @@
 namespace PixelApp\Console\Commands\PixelAppInitCommands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 use PixelApp\Config\ConfigEnums\PixelAppSystemRequirementsCard;
-use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\PixelAppConfigFileIdentifier;
-use PixelApp\Config\ConfigValueManager;
-use PixelApp\Config\PixelConfigManager;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppInstallingManagers\PixelAppInstallingManager;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppInstallingManagers\PixelAppUninstallingManager;
-use PixelApp\Helpers\PixelGlobalHelpers;
-use PixelApp\Http\Middleware\PixelMiddlewareManager;
-use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
-use PixelApp\Routes\PixelRouteManager;
-use PixelApp\ServiceProviders\LaravelServiceProviderManager;
-use PixelApp\ServiceProviders\RelatedPackagesServiceProviders\TenancyServiceProvider;
-use Symfony\Component\Process\Process;
+
 use Throwable;
 
 class PreparePixelApp extends Command
@@ -146,42 +136,5 @@ class PreparePixelApp extends Command
     {
         PixelAppUninstallingManager::uninstall($this->requirementCard);
     }
-
-    // protected function appendServiceProviderToPixelConfigDefaultProviders() : void
-    // {
-    //     $pixelConfig = ConfigValueManager::getPixelAppConfigArray();
-    //     $pixelDefaultProvidersKey = ConfigValueManager::getPixelAppDefaultProvidersKeyName();
-    //     $tenancyProviderClass = TenancyServiceProvider::class;
-
-    //     if(isset($pixelConfig[$pixelDefaultProvidersKey]))
-    //     {
-    //         $pixelConfig[$pixelDefaultProvidersKey][] = $tenancyProviderClass;
-
-    //     }else{
-    //         $pixelConfig[$pixelDefaultProvidersKey] = [ $tenancyProviderClass ];
-    //     }
-        
-    //     File::put(config_path( ConfigValueManager::getPixelConfigProjectRelevantPath() ) , $pixelConfig);
-    // }
-
-
-    // protected function requireStanclTenancyPackage() : void
-    // {
-    //     $process = new Process(['composer', 'require', 'stancl/tenancy:^3.6']);
-    //     $process->setTimeout(null);
-    //     $process->run();
-
-    //     if (!$process->isSuccessful()) 
-    //     {
-    //         $this->info('------------------------------------------------\n');
-    //         $this->error('Failed to install the package. Error: ' . $process->getErrorOutput() . "\n");
-    //         $this->info('------------------------------------------------\n');
-    //         return;
-    //     }
-
-    //     $this->info('------------------------------------------------\n');
-    //     $this->info('stancl/tenancy:^3.6 Package installed successfully\n.');
-    //     $this->info('------------------------------------------------\n');
-    // }
-
+  
 }

@@ -6,7 +6,7 @@ use PixelApp\Config\ConfigFileIdentifiers\ConfigFileIdentifier;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppInstallingManagers\PixelAppInstallingManager;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\PixelAppStubsManager;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\StubIdentifiers\StubIdentifier;
-use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+
 
 class PixelConfigStubsManager extends PixelAppStubsManager
 { 

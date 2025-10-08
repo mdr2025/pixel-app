@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelPassportManager\PixelPassportManager;
-use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 
 class PixelAppClientCustomCommand extends Command
 {

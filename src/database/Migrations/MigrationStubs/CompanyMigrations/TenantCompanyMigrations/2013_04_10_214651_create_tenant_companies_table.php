@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string("hashed_id");
             $table->string('company_id')->nullable();
             $table->string('name')->index();
+            $table->string('name_shortcut')->index();
+            $table->string('mobile' , 20)->index();
             $table->string('domain')->nullable()->unique();
             $table->string('sector');
             $table->string('address')->nullable();

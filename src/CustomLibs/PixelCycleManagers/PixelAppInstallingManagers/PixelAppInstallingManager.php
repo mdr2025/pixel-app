@@ -11,7 +11,6 @@ use PixelApp\Config\PixelConfigManager;
 use PixelApp\Console\PixelConsoleManager;
 use PixelApp\Helpers\PixelGlobalHelpers;
 use PixelApp\Http\Middleware\PixelMiddlewareManager;
-use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Database\PixelDatabaseManager;
 use PixelApp\Exceptions\ExceptionHandlingManager;
 use PixelApp\Models\PixelModelManager;

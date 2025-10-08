@@ -34,6 +34,7 @@ class CompanyDefaultAdmin
         'last_name',
         'password',
         'mobile',
+        'country_id', // change it later to nationality afeter changing it in front and auth structure
         'company_id'
     ];
  

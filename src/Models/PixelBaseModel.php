@@ -41,7 +41,8 @@ class PixelBaseModel extends Model implements StatisticsProviderModel
             $model->setParentToRunTimeCache();
         });
     }
-       /**
+     
+    /**
      * Only queryable in admin panel or monolith app (in central app aprt)
      */
     protected function newBaseQueryBuilder()

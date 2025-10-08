@@ -38,6 +38,7 @@ class DefaultAdminInfoSyncingPortRequest extends BaseFormRequest
                 'name'          => ["required" , "string"],
                 "email"         => ["required", "email"],
                 "mobile"        => ["required",  PhoneNumber::create() ],
+                "country_id"    => ["required" , "integer" , "exists:countries,id"],
                 "password"      => ["required", "string"],
                 'verification_token' => ["nullable" , "string"],
                 'email_verified_at' => ["nullable" , "date"],

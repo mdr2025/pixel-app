@@ -109,6 +109,7 @@ class DefaultAdminDataSyncingEventFactory extends TenancyDataSyncingEventFactory
             'name',
             'password',
             'mobile',
+            'country_id'
         ];
     }
  
