@@ -124,6 +124,7 @@ class TenantUserDataSyncingEventFactory extends TenancyDataSyncingEventFactory
             $this->user->getEmailColumnName(),
             $this->user->getEmailVerificationDateColumnName(),
             $this->user->getEmailVerificationTokenColumnName(),
+            "country_id",
             'first_name',
             'last_name',
             'name',
