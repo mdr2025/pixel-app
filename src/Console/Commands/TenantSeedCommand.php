@@ -14,10 +14,10 @@ use Stancl\Tenancy\Concerns\HasATenantsOption;
 use Stancl\Tenancy\Events\DatabaseSeeded;
 use Stancl\Tenancy\Events\SeedingDatabase;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class TenantSeedCommand extends Seed
-{
-    use HasATenantsOption;
+{ 
 
     /**
      * The console command description.
@@ -43,7 +43,7 @@ class TenantSeedCommand extends Seed
 
         parent::handle(); 
     }
-
+ 
     protected function fetchTenantKey() : ?TenantCompany
     {
         $companyDomain = $this->getCompanyDomainParameterValue();
