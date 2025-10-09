@@ -31,7 +31,7 @@ class PackagesRouteRegistrar extends PixelRouteRegistrar
 
     public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
     {
-        $arrayToAppend["packages"] = static::class;
+        $arrayToAppend["pixel-app-package-route-registrars"]["packages"] = static::class;
     }
 
     protected function definePackagesListingServerRoute() : void

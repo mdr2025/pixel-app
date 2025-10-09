@@ -38,10 +38,13 @@ class PixelRoutesInstallingManager
     {
         $routeRegistrarsConfigData = [];
 
-        array_walk($routeRegistrars , function(&$routeRegistrar) use ($routeRegistrarsConfigData)
+        foreach($routeRegistrars as $routeRegistrar)
         {
+            /**
+             * @var PixelRouteRegistrar $routeRegistrar
+             */
             $routeRegistrar->appendRouteRegistrarConfigKey($routeRegistrarsConfigData);
-        });
+        } 
 
         return $routeRegistrarsConfigData;
     }
@@ -49,6 +52,7 @@ class PixelRoutesInstallingManager
     protected function setRouteRegistrarsIntoPixelConfig(array $routeRegistrars) : void
     {
         $configRouteRegistrarsArray = $this->getConfigRouteRegistrarsArray($routeRegistrars);
+        dd($configRouteRegistrarsArray);
         PixelConfigManager::setPixelPackageConfigFileKeys($configRouteRegistrarsArray);
     }
 
@@ -82,6 +86,7 @@ class PixelRoutesInstallingManager
     protected function installRouteRegitrars() : void
     {
         $availableRouteRegistrars = $this->getAvailableRouteRegistrars();
+        
         $this->setRouteRegistrarsIntoPixelConfig($availableRouteRegistrars);
     }
  

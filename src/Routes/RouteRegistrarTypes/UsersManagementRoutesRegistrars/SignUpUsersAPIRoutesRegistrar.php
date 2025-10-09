@@ -30,7 +30,7 @@ class SignUpUsersAPIRoutesRegistrar extends PixelRouteRegistrar
     
     public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
     {
-        $arrayToAppend["signup-users-management"] = static::class;
+        $arrayToAppend["pixel-app-package-route-registrars"]["signup-users-management"] = static::class;
     }
 
     protected function defineExportRoute() : void

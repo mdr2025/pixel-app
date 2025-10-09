@@ -23,7 +23,7 @@ class TenantCompanySettingsAPIRoutesRegistrar extends PixelRouteRegistrar
     
    public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
    {
-       $arrayToAppend["tenant-company-setgtings"] = static::class;
+       $arrayToAppend["pixel-app-package-route-registrars"]["tenant-company-setgtings"] = static::class;
    }
 
     protected function defineCompanyResettingRoute() : void

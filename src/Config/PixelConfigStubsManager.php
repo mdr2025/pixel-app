@@ -61,7 +61,7 @@ class PixelConfigStubsManager extends PixelAppStubsManager
         $this->remergeJustReplacedConfigFile($configFileIdentifier);
     }
 
-    protected function replaceLaravelConfigFiles()
+    protected function replaceProjectConfigFiles()
     {
         foreach($this->getReplacableFileConfigIdentifierClasses() as $identifierClass)
         {
@@ -79,7 +79,7 @@ class PixelConfigStubsManager extends PixelAppStubsManager
 
     public function installPackageConfigFiles() : void
     {
-        $this->replaceLaravelConfigFiles();
+        $this->replaceProjectConfigFiles();
 
         if($this->initPixelAppInstallingManager()->isInstallingForTenancySupporterApp())
         {

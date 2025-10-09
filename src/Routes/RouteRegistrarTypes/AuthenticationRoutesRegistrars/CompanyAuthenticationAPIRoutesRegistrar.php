@@ -30,7 +30,7 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
 
     public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
     {
-        $arrayToAppend["company-auth"] = static::class;
+        $arrayToAppend["pixel-app-package-route-registrars"]["company-auth"] = static::class;
     }
 
     public function isFuncAvailableToDefine() : bool

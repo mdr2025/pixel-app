@@ -28,7 +28,7 @@ class TenantCompanyResourcesConfiguringAPIRoutesRegistrar extends PixelRouteRegi
     
    public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
    {
-       $arrayToAppend["tenant-company-resources-configuring"] = static::class;
+       $arrayToAppend["pixel-app-package-route-registrars"]["tenant-company-resources-configuring"] = static::class;
    }
 
     //from admin panel to tenant app central domain

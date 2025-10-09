@@ -40,7 +40,7 @@ class CurrenciesRouteRegistrar extends PixelRouteRegistrar
 
     public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
     {
-        $arrayToAppend["dropdown-list"]["currencies"] = static::class;
+        $arrayToAppend["pixel-app-package-route-registrars"]["dropdown-list"]["currencies"] = static::class;
     }
     
     protected function defineSetMainCurrencyRoute() : void

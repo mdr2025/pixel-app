@@ -38,7 +38,7 @@ class BranchesRouteRegistrar extends PixelRouteRegistrar
 
     public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
     {
-        $arrayToAppend["dropdown-list"]["branches"] = static::class;
+        $arrayToAppend["pixel-app-package-route-registrars"]["dropdown-list"]["branches"] = static::class;
     }
 
     protected function defineImportableFormatDownloadingRoute() : void

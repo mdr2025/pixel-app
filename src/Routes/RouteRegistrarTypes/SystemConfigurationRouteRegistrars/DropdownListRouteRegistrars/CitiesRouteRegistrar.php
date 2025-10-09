@@ -40,7 +40,7 @@ class CitiesRouteRegistrar extends PixelRouteRegistrar
     
     public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
     {
-        $arrayToAppend["dropdown-list"]["cities"] = static::class;
+        $arrayToAppend["pixel-app-package-route-registrars"]["dropdown-list"]["cities"] = static::class;
     }
 
     protected function defineCitiesListingRoute() : void

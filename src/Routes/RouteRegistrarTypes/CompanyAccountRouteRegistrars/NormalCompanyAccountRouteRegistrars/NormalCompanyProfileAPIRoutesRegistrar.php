@@ -30,7 +30,7 @@ class NormalCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
 
    public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
    {
-       $arrayToAppend["normal-company-profile"] = static::class;
+       $arrayToAppend["pixel-app-package-route-registrars"]["normal-company-profile"] = static::class;
    }
 
     protected function defineUpdateCompanyProfileRoute() : void

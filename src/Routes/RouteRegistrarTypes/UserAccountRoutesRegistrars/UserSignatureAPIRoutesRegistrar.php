@@ -38,7 +38,7 @@ class UserSignatureAPIRoutesRegistrar extends PixelRouteRegistrar
 
     public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
     {
-        $arrayToAppend["user-signature"] = static::class;
+        $arrayToAppend["pixel-app-package-route-registrars"]["user-signature"] = static::class;
     }
 
     protected function defineSignatureUpdatingRoute() : void

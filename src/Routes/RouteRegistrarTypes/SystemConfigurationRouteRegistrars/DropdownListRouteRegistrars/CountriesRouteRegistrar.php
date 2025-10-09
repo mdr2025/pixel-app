@@ -32,7 +32,7 @@ class CountriesRouteRegistrar extends PixelRouteRegistrar
     
     public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
     {
-        $arrayToAppend["dropdown-list"]["countries"] = static::class;
+        $arrayToAppend["pixel-app-package-route-registrars"]["dropdown-list"]["countries"] = static::class;
     }
 
     protected function defineCountriesListingRoute() : void

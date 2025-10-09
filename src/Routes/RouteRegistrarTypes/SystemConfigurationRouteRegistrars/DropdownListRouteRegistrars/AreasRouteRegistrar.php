@@ -38,7 +38,7 @@ class AreasRouteRegistrar extends PixelRouteRegistrar
     
     public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
     {
-        $arrayToAppend["dropdown-list"]["areas"] = static::class;
+        $arrayToAppend["pixel-app-package-route-registrars"]["dropdown-list"]["areas"] = static::class;
     }
 
     protected function defineImportableFormatDownloadingRoute() : void

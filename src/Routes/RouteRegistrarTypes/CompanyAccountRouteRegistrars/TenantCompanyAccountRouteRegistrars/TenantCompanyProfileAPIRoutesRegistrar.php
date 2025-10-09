@@ -30,7 +30,7 @@ class TenantCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
 
    public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
    {
-       $arrayToAppend["tenant-company-profile"] = static::class;
+       $arrayToAppend["pixel-app-package-route-registrars"]["tenant-company-profile"] = static::class;
    }
   
     protected function defineUpdateCompanyProfileServerRoute(bool $remoteServer = true) : void

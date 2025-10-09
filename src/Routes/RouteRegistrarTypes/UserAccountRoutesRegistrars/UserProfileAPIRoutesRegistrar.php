@@ -30,7 +30,7 @@ class UserProfileAPIRoutesRegistrar extends PixelRouteRegistrar
 
     public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
     {
-        $arrayToAppend["user-profile"] = static::class;
+        $arrayToAppend["pixel-app-package-route-registrars"]["user-profile"] = static::class;
     }
 
     protected function defineChangePasswordRoute() : void

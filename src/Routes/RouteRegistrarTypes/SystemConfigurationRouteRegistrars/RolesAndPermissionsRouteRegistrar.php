@@ -33,7 +33,7 @@ class RolesAndPermissionsRouteRegistrar extends PixelRouteRegistrar
   
     public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
     {
-        $arrayToAppend["roles-permissions"] = static::class;
+        $arrayToAppend["pixel-app-package-route-registrars"]["roles-permissions"] = static::class;
     }
 
     protected function defineSwitchingRoleRoute() : void

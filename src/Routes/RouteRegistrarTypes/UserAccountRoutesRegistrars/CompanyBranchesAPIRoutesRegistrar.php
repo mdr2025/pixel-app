@@ -31,7 +31,7 @@ class CompanyBranchesAPIRoutesRegistrar extends PixelRouteRegistrar
 
     public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
     {
-        // $arrayToAppend["user-account-company-branches"] = static::class;
+        // $arrayToAppend["pixel-app-package-route-registrars"]["user-account-company-branches"] = static::class;
     }
 
     // protected function defineCompanyBranchesListingServerRoute() : void

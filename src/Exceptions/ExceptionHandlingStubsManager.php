@@ -7,19 +7,7 @@ use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\StubIdentifiers\
 
 class ExceptionHandlingStubsManager extends PixelAppStubsManager
 {
-
-    public static ?ExceptionHandlingStubsManager $instance = null;
-
-    public static function Singleton() : static
-    {
-        if(!static::$instance)
-        {
-            static::$instance = new static();
-        }
-
-        return static::$instance;
-    }
-
+ 
     public function installExceptionStubs() : void
     {
         $this->replaceExceptionHandlerStub();
@@ -36,20 +24,32 @@ class ExceptionHandlingStubsManager extends PixelAppStubsManager
         return realpath($path);
     }
 
-    protected function getExceptionProjectPath() : string
+    protected function getExceptionProjectFilePath(string $fileName) : string
     {
-        return app_path("Exceptions");
+        return app_path("Exceptions" . DIRECTORY_SEPARATOR . $fileName);
+    }
+
+    protected function getExceptionHandlerFileName()  :string
+    {
+        return "Handler.php";
     }
 
     protected function getExceptionHandlerStubPath() : string
     {
-        return $this->proceccRealPath( __DIR__ . DIRECTORY_SEPARATOR . "ExceptionStubs/Handler.php" );
+        $fileName = $this->getExceptionHandlerFileName();
+        return $this->proceccRealPath( __DIR__ . DIRECTORY_SEPARATOR . "ExceptionStubs" . DIRECTORY_SEPARATOR  . $fileName );
+    }
+
+    protected function getExceptionHandlerProjectPath() : string
+    {
+        $fileName = $this->getExceptionHandlerFileName();
+        return $this->getExceptionProjectFilePath($fileName);
     }
 
     protected function initExceptionHandlerStubIdentifier() : StubIdentifier
     {
         $stubPath = $this->getExceptionHandlerStubPath();
-        $replacingPath = $this->getExceptionProjectPath();
+        $replacingPath = $this->getExceptionHandlerProjectPath();
 
         return StubIdentifier::create($stubPath , $replacingPath);
     }

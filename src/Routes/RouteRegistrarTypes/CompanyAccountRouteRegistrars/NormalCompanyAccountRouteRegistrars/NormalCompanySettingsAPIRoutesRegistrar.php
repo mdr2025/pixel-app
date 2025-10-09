@@ -23,7 +23,7 @@ class NormalCompanySettingsAPIRoutesRegistrar extends PixelRouteRegistrar
 
    public function appendRouteRegistrarConfigKey(array &$arrayToAppend) : void
    {
-       $arrayToAppend["normal-company-settings"] = static::class;
+       $arrayToAppend["pixel-app-package-route-registrars"]["normal-company-settings"] = static::class;
    }
 
     protected function defineCompanyResettingRoute() : void
