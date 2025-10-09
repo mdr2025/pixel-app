@@ -8,7 +8,7 @@ use PixelApp\CustomLibs\PixelCycleManagers\PixelAppInstallingManagers\PixelAppIn
 
 class PixelRoutesInstallingManager
 {
-    protected ?PixelRoutesInstallingManager $instance;
+    protected static ?PixelRoutesInstallingManager $instance = null;
 
     private function __construct()
     {

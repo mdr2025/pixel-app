@@ -8,7 +8,7 @@ use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Routes\RouteRegistrarTypes\AuthenticationRoutesRegistrars\CompanyAuthenticationAPIRoutesRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\AuthenticationRoutesRegistrars\UserAuthenticationAPIRoutesRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\NormalCompanyAccountRouteRegistrars\NormalCompanySettingsAPIRoutesRegistrar;
-use PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\TenantCompanyAccountRouteRegistrars\NormalCompanyProfileAPIRoutesRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\NormalCompanyAccountRouteRegistrars\NormalCompanyProfileAPIRoutesRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\TenantCompanyAccountRouteRegistrars\TenantCompanyProfileAPIRoutesRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\TenantCompanyAccountRouteRegistrars\TenantCompanyResourcesConfiguringAPIRoutesRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\TenantCompanyAccountRouteRegistrars\TenantCompanySettingsAPIRoutesRegistrar;
@@ -25,6 +25,7 @@ use PixelApp\Routes\RouteRegistrarTypes\UserAccountRoutesRegistrars\UserProfileA
 use PixelApp\Routes\RouteRegistrarTypes\UserAccountRoutesRegistrars\UserSignatureAPIRoutesRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\UsersManagementRoutesRegistrars\SignUpUsersAPIRoutesRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\UsersManagementRoutesRegistrars\UsersAPIRoutesRegistrar;
+use Throwable;
 
 class PixelRouteManager
 {
@@ -113,7 +114,14 @@ class PixelRouteManager
 
     public static function installPackageRoutes() : void
     {
+        try
+        {
+
         static::initPixelRoutesInstallingManager()->installPackageRoutes();
+        }catch(Throwable $e)
+        {
+            dd($e->getMessage());
+        }
     }
 }
 // separated admin panel = app without tenancy + company auth server  => needs routes without central domains because it is on a single domain
