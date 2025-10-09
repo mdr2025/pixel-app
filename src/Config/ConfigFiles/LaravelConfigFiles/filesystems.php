@@ -1,5 +1,7 @@
 <?php
 
+use CustomFileSystem\CustomFileHandler;
+
 return [
 
     /*
@@ -32,7 +34,7 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app'),
+            'root' => CustomFileHandler::getFileStoragePath('app')
         ],
         'front_separated' => [
             /**
@@ -48,7 +50,7 @@ return [
              * 3 - There is n differences between public and front_separated 's roots ... they will be used in the backend
              */
             'driver' => 'local',
-            'root' => storage_path('disks/public'),
+            'root' => CustomFileHandler::getFileStoragePath('app'),
             'url' =>  rtrim(env('BACKEND_APP_URL') , "/") . '/public/storage',
             'visibility' => 'public',
 //            'driver' => 'local',
@@ -68,7 +70,7 @@ return [
              * 3 - There is n differences between public and front_separated 's roots ... they will be used in the backend
              */
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            'root' => CustomFileHandler::getFileStoragePath('app'),
             'url' =>  rtrim(env('BACKEND_URL') , "/") .  '/storage' ,
             'visibility' => 'public',
         ], 

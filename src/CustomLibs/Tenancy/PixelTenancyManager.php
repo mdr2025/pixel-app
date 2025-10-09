@@ -169,6 +169,7 @@ class PixelTenancyManager
     {
         return PixelConfigManager::getCentralDomains();
     }
+
     public static function getTenantDefaultMiddlewares() : array
     {
         return [

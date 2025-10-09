@@ -76,7 +76,7 @@ abstract class CompanyDataResettingBaseJob implements ShouldQueue
     private function getTables(): array
     {
         $dbTables = DB::getDoctrineSchemaManager()->listTableNames() ?? [];
-        $excludedTables = config('excluded-tenants-seeding-tables', []);
+        $excludedTables = config('system-resetting-excluded-seeding-tables', []);
         //
         return array_diff($dbTables, $excludedTables);
     }
