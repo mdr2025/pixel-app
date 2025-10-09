@@ -52,7 +52,6 @@ class PixelRoutesInstallingManager
     protected function setRouteRegistrarsIntoPixelConfig(array $routeRegistrars) : void
     {
         $configRouteRegistrarsArray = $this->getConfigRouteRegistrarsArray($routeRegistrars);
-        dd($configRouteRegistrarsArray);
         PixelConfigManager::setPixelPackageConfigFileKeys($configRouteRegistrarsArray);
     }
 

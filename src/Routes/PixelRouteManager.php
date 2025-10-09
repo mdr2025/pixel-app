@@ -114,14 +114,7 @@ class PixelRouteManager
 
     public static function installPackageRoutes() : void
     {
-        try
-        {
-
-        static::initPixelRoutesInstallingManager()->installPackageRoutes();
-        }catch(Throwable $e)
-        {
-            dd($e->getMessage());
-        }
+        static::initPixelRoutesInstallingManager()->installPackageRoutes();   
     }
 }
 // separated admin panel = app without tenancy + company auth server  => needs routes without central domains because it is on a single domain
