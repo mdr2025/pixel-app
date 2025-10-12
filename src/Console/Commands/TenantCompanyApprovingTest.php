@@ -2,9 +2,11 @@
 
 namespace PixelApp\Console\Commands;
 
-use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApproved;
-use PixelApp\Models\CivilDefensePanel\CompanyModule\TenantCompany;
+use PixelApp\Models\CompanyModule\TenantCompany;
 use Illuminate\Console\Command;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppBootingManagers\PixelAppBootingManager;
+use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApprovingEvents\ApprovedByAdminPanel;
+use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApprovingEvents\ApprovedByCentralApp;
 
 class TenantCompanyApprovingTest extends Command
 {
@@ -40,13 +42,22 @@ class TenantCompanyApprovingTest extends Command
     
     protected function approveCompany() : bool
     {
+
+        if(!$this->canApproveTenantCompany())
+        {
+            return false;
+        }
+
+        
         $company = $this->getCompany(); 
 
         $approved = $company?->approveCompany()->save() ?? false;
+
         if($approved)
         {
-            event( new TenantCompanyApproved($company) );
+            $this->fireApprovingEvent($company);
         }
+
         return $approved;
     }
 
@@ -63,5 +74,35 @@ class TenantCompanyApprovingTest extends Command
 //    ->first();
 //        dd($row->toArray());
         return (int) $this->approveCompany();
+    }
+
+    protected function canApproveTenantCompany() : bool
+    {
+        return $this->isBootingForAdminPanelApp()
+               ||
+               PixelAppBootingManager::isBootingForMonolithTenancyApp();
+    }
+
+    protected function isBootingForAdminPanelApp()
+    {
+        return PixelAppBootingManager::isBootingForAdminPanelApp();
+    }
+
+    protected function isBootingForMonolithTenancyApp()
+    {
+        return PixelAppBootingManager::isBootingForMonolithTenancyApp();
+    }
+
+    protected function fireApprovingEvent(TenantCompany $company) : void
+    {
+        if($this->isBootingForAdminPanelApp())
+        {
+            event(new ApprovedByAdminPanel($company));
+        }
+
+        if($this->isBootingForMonolithTenancyApp())
+        {
+            event(new ApprovedByCentralApp($company));
+        }
     }
 }
