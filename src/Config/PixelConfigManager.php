@@ -97,6 +97,7 @@ class PixelConfigManager
     public static function getReplacableFileConfigIdentifierClasses()  : array
     {
         return array_merge(
+                    static::getPackageBaseConfigFileIdentifierClasses(),
                     static::getPixelAppLaravelConfigFileIdentifierClasses(),
                     static::getPixelRequiredPackagesReplacableConfigFileIdentifierClasses()
                );
@@ -104,18 +105,12 @@ class PixelConfigManager
  
     public static function getMergableConfigFileIdentifiers() : array
     {
-        return array_merge(
-            static::getPackageBaseConfigFileIdentifierClasses(),
-            static::getPixelRequiredPackagesMergableConfigFileIdentifierClasses()
-        );
+        return static::getPixelRequiredPackagesMergableConfigFileIdentifierClasses();
     }
     
     public static function getPublishableConfigFileIdentifiers() : array
     {
-        return array_merge(
-            static::getPackageBaseConfigFileIdentifierClasses(),
-            static::getPixelRequiredPackagesPublishableConfigFileIdentifierClasses()
-        );
+        return static::getPixelRequiredPackagesMergableConfigFileIdentifierClasses();
     }
    
     protected static function initConfigFileIdentifier(string $identifierClass) : ConfigFileIdentifier

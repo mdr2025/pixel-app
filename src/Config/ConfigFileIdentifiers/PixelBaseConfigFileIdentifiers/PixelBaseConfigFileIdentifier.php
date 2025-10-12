@@ -6,18 +6,13 @@ use PixelApp\Config\ConfigFileIdentifiers\Traits\MergingOnNeedConditions;
 use PixelApp\Config\ConfigFileIdentifiers\ConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\Interfaces\MergableConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\Interfaces\PublishableConfigFileIdentifier;
+use PixelApp\Config\ConfigFileIdentifiers\Interfaces\ReplacableConfigFileIdentifier;
 
 abstract class PixelBaseConfigFileIdentifier 
          extends ConfigFileIdentifier
-         implements MergableConfigFileIdentifier , PublishableConfigFileIdentifier
+         implements ReplacableConfigFileIdentifier
 {
-    use MergingOnNeedConditions;
-
-    public function getConfigPublishGroupingKeyNames() : array
-    {
-        return [ "pixel-base-configs" ];
-    }
-     
+  
     public function getPackageConfigsFolderName() : string
     {
         return "PixelAppConfigs";
