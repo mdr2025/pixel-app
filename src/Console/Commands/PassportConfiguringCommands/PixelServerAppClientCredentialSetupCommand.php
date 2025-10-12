@@ -39,6 +39,8 @@ class PixelServerAppClientCredentialSetupCommand extends Command
         $configArray = $this->composeCredentialConfigArray();
     
         PixelPassportManager::writeToConfig($configKey , $configArray);
+        
+        $this->info("Server application client credentials have been set successfully !");
     }
 
     protected function composeCredentialConfigArray() : array

@@ -51,7 +51,7 @@ abstract class PixelAppClient
 
     protected function setAppRootApi() : void
     {
-        $this->appRootApi = $this->getAppRootApi();
+        $this->appRootApi = $this->getAppRootApi(); 
     }
  
     // protected function composeRouteUrl(PixelAppRouteIdentifier $routeIdentifier)  :string
@@ -87,7 +87,7 @@ abstract class PixelAppClient
     {
         if($response->failed())
         {
-            throw new Exception(  $this->getAccessTokenFailingExceptionMessage() . " , " ,  $response->status() . " error code return " );
+            throw new Exception(  $this->getAccessTokenFailingExceptionMessage() . " , " .  $response->status() . " error code return " );
         }
 
         $jsonResponseData = $this->toJsonResponse($response)->getData();
@@ -123,6 +123,7 @@ abstract class PixelAppClient
 
     protected function initServerAppAccessTokenFecthingRouteIdentifierFactory() : ServerAppAccessTokenFecthingRouteIdentifierFactory
     {
+        dd($this->getServerAppClientId() );
         return new ServerAppAccessTokenFecthingRouteIdentifierFactory(
                     $this->getServerAppClientId() ,
                     $this->getServerAppClientSecret()

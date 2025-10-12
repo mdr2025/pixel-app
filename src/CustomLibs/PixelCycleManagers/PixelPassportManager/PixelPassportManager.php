@@ -135,7 +135,7 @@ class PixelPassportManager
 
     public static function doesItSupportMachineClientCredentialsGrant() : bool
     {
-        return PixelTenancyManager::isItTenantApp() && PixelTenancyManager::isItAdminPanelApp();
+        return PixelTenancyManager::isItTenantApp() || PixelTenancyManager::isItAdminPanelApp();
     }
 
     public static function doesHaveTokensInBothSide()
