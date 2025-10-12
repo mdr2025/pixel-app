@@ -9,6 +9,7 @@ use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use Spatie\Permission\Models\Role;
 use Throwable;
+use Illuminate\Support\Str;
 
 class RolesSeeder extends Seeder
 {
@@ -37,6 +38,7 @@ class RolesSeeder extends Seeder
 
     protected function getDefaultRoleDefaultPermissions(string $role) : array
     {
+        $role = Str::replace(" " , "_" , $role );
         return $this->defaultPermissions[ $role ];
     }
   

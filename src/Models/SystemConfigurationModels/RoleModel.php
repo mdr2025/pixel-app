@@ -44,7 +44,7 @@ class RoleModel extends Role
     
     public static function getHighestRoleName() : string
     {
-        return config( static::getLowestRoleConfigKeyName(), "Super Admin");
+        return config( static::getHighestRoleConfigKeyName(), "Super Admin");
     }
 
     public static function findHighestRole() : ?RoleModel

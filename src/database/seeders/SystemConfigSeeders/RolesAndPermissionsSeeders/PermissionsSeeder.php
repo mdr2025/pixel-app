@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use PixelApp\Config\PixelConfigManager;
 use PixelApp\Database\PixelDatabaseManager;
 use PixelApp\Models\PixelModelManager;
+use Illuminate\Support\Str;
 
 class PermissionsSeeder extends Seeder
 {
@@ -20,7 +21,7 @@ class PermissionsSeeder extends Seeder
     protected function getHighestRoleConfigKey() : string
     {
         $modelClass= $this->getRoleModeClass();
-        return $modelClass::getHighestRoleName();
+        return Str::replace(" " , "_" , $modelClass::getHighestRoleName());
     }
     
    

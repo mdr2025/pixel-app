@@ -22,6 +22,8 @@ class CitiesSeeder extends Seeder
 
 	public function run()
 	{
+        return; //temporary until solving cities data problem
+        
 		if(!$this->doesAppNeedSeeding())
 		{
 			return ;

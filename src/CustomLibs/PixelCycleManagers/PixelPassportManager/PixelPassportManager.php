@@ -47,7 +47,7 @@ class PixelPassportManager
         return PassportConfigFileIdentifier::Singleton();
     }
 
-    protected function checkValue(mixed $value) : bool
+    protected static function checkValue(mixed $value) : bool
     {
         return true; // for handling value if needed
     }

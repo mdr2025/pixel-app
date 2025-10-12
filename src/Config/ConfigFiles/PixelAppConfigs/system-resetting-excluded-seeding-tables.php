@@ -1,5 +1,6 @@
 <?php
 return [
+    'company_account',
     'users',
     'user_profile',
     'user_attachments',

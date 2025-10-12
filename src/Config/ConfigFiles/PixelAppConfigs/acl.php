@@ -2,6 +2,8 @@
 return [
     'permissions' => [
         "Super_Admin" => [
+                                "read_dashboard",
+                                "read_tasks",
                                 ///////// system configurations /////////////
                                 "read_sc-dropdown-lists",
                                 "create_sc-dropdown-lists",
@@ -36,15 +38,15 @@ return [
 
         ],
         "Default_User" =>  [
-            "read_dashboard",
-            "read_tasks",
-            "read_profile",
-        ],
+                                "read_dashboard",
+                                "read_tasks",
+                                "read_profile",
+                           ],
     ],
     "default_roles" => [
-        "Super Admin",
-        "Default User",
-    ],
+                            "Super Admin",
+                            "Default User",
+                       ],
     "highestRole" => "Super Admin",
     "lowestRole" => "Default User"
 ];
