@@ -21,7 +21,7 @@ class ServerAppAccessTokenFecthingRouteIdentifierFactory extends PixelAppRouteId
 
     protected function getUri() : string
     {
-        return "oauth/token";
+        return "api/oauth/token";
     }
 
     protected function getData() : array

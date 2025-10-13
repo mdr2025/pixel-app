@@ -90,7 +90,7 @@ abstract class PixelAppClient
             throw new Exception(  $this->getAccessTokenFailingExceptionMessage() . " , " .  $response->status() . " error code return " );
         }
 
-        $jsonResponseData = $this->toJsonResponse($response)->getData();
+        $jsonResponseData = $this->toJsonResponse($response)->getData(true);
         
         if($accessToken = $jsonResponseData["access_token"] ?? null)
         {
