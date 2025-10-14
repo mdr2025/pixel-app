@@ -39,9 +39,14 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
                     ->isInstallingForTenancySupporterApp();
     }
 
-    protected function defineCheckCrNoServerRoute() : void
+    protected function defineCheckCrNoServerRoute(bool $remoteServer = true) : void
     {
-        Route::get('check-cr-no/{cr}', [CompanyAuthServerController::class , 'checkCrNo']);
+        $route = Route::get('check-cr-no/{cr}', [CompanyAuthServerController::class , 'checkCrNo']);
+
+        if($remoteServer)
+        {
+            $this->attchClientGrantMiddleware($route);
+        }
     }
     
     protected function defineCheckCrNoClientRoute() : void
@@ -49,9 +54,14 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
         Route::get('check-cr-no/{cr}', [CompanyAuthClientController::class , 'checkCrNo']);
     }
 
-    protected function defineCheckSubdomainServerRoute() : void
+    protected function defineCheckSubdomainServerRoute(bool $remoteServer = true) : void
     {
-        Route::get('check-subdomain/{domain}', [CompanyAuthServerController::class , 'checkSubDomain'] );
+        $route = Route::get('check-subdomain/{domain}', [CompanyAuthServerController::class , 'checkSubDomain'] );
+
+        if($remoteServer)
+        {
+            $this->attchClientGrantMiddleware($route);
+        }
     }
 
     protected function defineCheckSubdomainClientRoute() : void
@@ -64,9 +74,14 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
         Route::post('company/check/status', [CompanyAuthClientController::class , 'checkStatus']);
     }
 
-    protected function defineCompanyServerCheckStatusRoute() : void
+    protected function defineCompanyServerCheckStatusRoute(bool $remoteServer = true) : void
     {
-        Route::post('company/check/status', [CompanyAuthServerController::class , 'checkStatus']);
+        $route = Route::post('company/check/status', [CompanyAuthServerController::class , 'checkStatus']);
+
+        if($remoteServer)
+        {
+            $this->attchClientGrantMiddleware($route);
+        }
     }
   
     /**
@@ -85,9 +100,14 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
         $this->attchClientGrantMiddleware($route);
     }
 
-    protected function defineCompanyServerEmailVerificationRoute() : void
+    protected function defineCompanyServerEmailVerificationRoute(bool $remoteServer = true) : void
     {
-        Route::post('company/verify-email', [CompanyAuthServerController::class , 'verifyDefaultAdminEmail']);
+        $route = Route::post('company/verify-email', [CompanyAuthServerController::class , 'verifyDefaultAdminEmail']);
+
+        if($remoteServer)
+        {
+            $this->attchClientGrantMiddleware($route);
+        }
     }
   
     
@@ -96,9 +116,14 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
         Route::post('company/forget-id', [CompanyAuthClientController::class , 'forgetId']);
     }
 
-    protected function defineCompanyServerForgetIdRoute() : void
+    protected function defineCompanyServerForgetIdRoute(bool $remoteServer = true) : void
     {
-        Route::post('company/forget-id', [CompanyAuthServerController::class , 'forgetId']);
+        $route = Route::post('company/forget-id', [CompanyAuthServerController::class , 'forgetId']);
+
+        if($remoteServer)
+        {
+            $this->attchClientGrantMiddleware($route);
+        }
     }
  
     protected function defineCompanyClientLoginRoute() : void
@@ -106,9 +131,14 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
         Route::post('company/login', [CompanyAuthClientController::class , 'login']);
     }
 
-    protected function defineCompanyServerLoginRoute() : void
+    protected function defineCompanyServerLoginRoute(bool $remoteServer = true) : void
     {
-        Route::post('company/login', [CompanyAuthServerController::class , 'login']);
+        $route = Route::post('company/login', [CompanyAuthServerController::class , 'login']);
+
+        if($remoteServer)
+        {
+            $this->attchClientGrantMiddleware($route);
+        }
     }
 
     protected function defineCompanyClientRegisteringRoute() : void
@@ -116,9 +146,14 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
         Route::post('company/register', [CompanyAuthClientController::class , 'register']) ;
     }
 
-    protected function defineCompanyServerRegisteringRoute() : void
+    protected function defineCompanyServerRegisteringRoute(bool $remoteServer = true) : void
     {
-        Route::post('company/register', [CompanyAuthServerController::class , 'register']) ;
+        $route = Route::post('company/register', [CompanyAuthServerController::class , 'register']) ;
+        
+        if($remoteServer)
+        {
+            $this->attchClientGrantMiddleware($route);
+        }
     }
 
     protected function defineApprovedCompanyIDSFetchingRoute( bool $remoteServer = true) : void
@@ -156,14 +191,14 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
         
         $routeRegistrar->group(function() use ($remoteServer)
         {
-           $this->defineCompanyServerLoginRoute();
-           $this->defineCompanyServerRegisteringRoute();
-           $this->defineCompanyServerForgetIdRoute();
-           $this->defineCompanyServerEmailVerificationRoute();
-           $this->defineCompanyServerCheckStatusRoute();
-           $this->defineCheckSubdomainServerRoute();
-           $this->defineCheckCrNoServerRoute();
-           $this->definefetchCompanyRoute();
+           $this->defineCompanyServerLoginRoute($remoteServer);
+           $this->defineCompanyServerRegisteringRoute($remoteServer);
+           $this->defineCompanyServerForgetIdRoute($remoteServer);
+           $this->defineCompanyServerEmailVerificationRoute($remoteServer);
+           $this->defineCompanyServerCheckStatusRoute($remoteServer);
+           $this->defineCheckSubdomainServerRoute($remoteServer);
+           $this->defineCheckCrNoServerRoute($remoteServer);
+           $this->definefetchCompanyRoute($remoteServer);
            $this->defineApprovedCompanyIDSFetchingRoute($remoteServer);
            $this->defineCompanyDefaultAdminsyncingDataServerRoute($remoteServer);
         });
