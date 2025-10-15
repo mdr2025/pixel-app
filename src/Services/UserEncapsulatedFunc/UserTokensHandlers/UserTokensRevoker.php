@@ -1,7 +1,8 @@
 <?php
 
 namespace PixelApp\Services\UserEncapsulatedFunc\UserTokensHandlers;
- 
+
+use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Laravel\Passport\Token;
 use PixelApp\Models\UsersModule\PixelUser;
@@ -16,7 +17,7 @@ class UserTokensRevoker
         return $this;
     }
 
-    public function addTokensToRevoke(array $tokens) : self
+    public function addTokensToRevoke(array | Collection  $tokens) : self
     {
         foreach($tokens as $token)
         {

@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use PixelApp\Config\PixelConfigManager;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppRouteIdentifiers\Interfaces\DataSendingRouteIdentifier;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppRouteIdentifiers\PixelAppDeleteRouteIdentifier;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppRouteIdentifiers\PixelAppGetRouteIdentifier;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppRouteIdentifiers\PixelAppPostRouteIdentifier;
@@ -123,7 +124,6 @@ abstract class PixelAppClient
 
     protected function initServerAppAccessTokenFecthingRouteIdentifierFactory() : ServerAppAccessTokenFecthingRouteIdentifierFactory
     {
-        dd($this->getServerAppClientId() );
         return new ServerAppAccessTokenFecthingRouteIdentifierFactory(
                     $this->getServerAppClientId() ,
                     $this->getServerAppClientSecret()
@@ -187,11 +187,26 @@ abstract class PixelAppClient
         return $pendingRequest->delete($routeIdentifier->getUri() , $routeIdentifier->getData());
     }
 
+    protected function getConvenientForm(PendingRequest $pendingRequest , PixelAppRouteIdentifier $routeIdentifier) : PendingRequest
+    {
+        if(
+            $routeIdentifier instanceof DataSendingRouteIdentifier 
+            &&
+            $routeIdentifier->shouldBeSentAsMultipart()
+        )
+        {
+            return $pendingRequest->asMultipart();
+        }
+
+        return $pendingRequest->asForm();
+    }
+
     protected function putRequest(PixelAppPutRouteIdentifier $routeIdentifier, bool $withAccessToken = true) : Response
     { 
         $pendingRequest = $this->initPendingRequest($withAccessToken);
-        
-        return $pendingRequest->asForm()->put($routeIdentifier->getUri() , $routeIdentifier->getData());
+        $pendingRequest = $this->getConvenientForm($pendingRequest , $routeIdentifier);
+
+        return $pendingRequest->put($routeIdentifier->getUri() , $routeIdentifier->getData());
     }
 
     protected function getRequest(PixelAppGetRouteIdentifier $routeIdentifier, bool $withAccessToken = true) : Response
@@ -205,7 +220,9 @@ abstract class PixelAppClient
     {
         $pendingRequest = $this->initPendingRequest($withAccessToken);
 
-        return $pendingRequest->asForm()->post($routeIdentifier->getUri() , $routeIdentifier->getData());
+                $pendingRequest = $this->getConvenientForm($pendingRequest , $routeIdentifier);
+
+        return $pendingRequest->post($routeIdentifier->getUri() , $routeIdentifier->getData());
     }
 
     public function requestOnRoute(PixelAppRouteIdentifier $routeIdentifier, bool $withAccessToken = true) : JsonResponse

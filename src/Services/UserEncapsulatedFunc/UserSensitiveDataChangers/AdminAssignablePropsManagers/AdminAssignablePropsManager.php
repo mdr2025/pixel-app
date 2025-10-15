@@ -11,7 +11,7 @@ use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensiti
 
 class AdminAssignablePropsManager
 { 
-    protected ?self $instance  = null;
+    protected static ?self $instance  = null;
     protected static array $tempCustomPropChangers = [];
     protected  array $propChangers = [];
 

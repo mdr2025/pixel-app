@@ -5,15 +5,14 @@ namespace  PixelApp\Services\UsersManagement\IndexingServices;
 use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
-use PixelApp\Filters\MultiFilters; 
+use Illuminate\Support\Facades\Response; 
 use PixelApp\Models\PixelModelManager; 
 use PixelApp\Services\CoreServices\ModelIndexingService;
 use PixelApp\Services\PixelServiceManager;
 use PixelApp\Services\UsersManagement\SpatieAllowedFilters\SignUpUsersAllowedFilters;
 use PixelApp\Services\UsersManagement\SpatieAllowedFilters\SignUpUsersIndexingAllowedFilters;
 use PixelApp\Services\UsersManagement\Statistics\SignupList\SignupUserStatisticsBuilder;
-use Spatie\QueryBuilder\AllowedFilter;
+ 
 
 class SignUpUsersIndexingService extends ModelIndexingService
 {
@@ -37,6 +36,7 @@ class SignUpUsersIndexingService extends ModelIndexingService
     {
         $this->query->with(['profile', 'profile.country', 'department']);
     }
+
     protected function setCustomScopes() : void
     {
         $this->query->activeSignup()->datesFiltering()->customOrdering();

@@ -2,7 +2,10 @@
 
 namespace PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppRouteIdentifiers;
 
-class PixelAppPostRouteIdentifier extends PixelAppRouteIdentifier
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppRouteIdentifiers\Interfaces\DataSendingRouteIdentifier;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppRouteIdentifiers\Traits\DataSendingRouteIdentifierMethods;
+
+class PixelAppPostRouteIdentifier extends PixelAppRouteIdentifier implements DataSendingRouteIdentifier
 {
-   
+   use DataSendingRouteIdentifierMethods;
 }

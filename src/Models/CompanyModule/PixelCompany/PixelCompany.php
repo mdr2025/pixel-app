@@ -8,8 +8,7 @@ use CRUDServices\CRUDComponents\CRUDRelationshipComponents\OwnedRelationshipComp
 use CRUDServices\Interfaces\MustUploadModelFiles;
 use CRUDServices\Interfaces\OwnsRelationships;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use PixelApp\Models\SystemConfigurationModels\CountryModule\Country; 
-use Illuminate\Database\Eloquent\SoftDeletes;
+use PixelApp\Models\SystemConfigurationModels\CountryModule\Country;
 use PixelApp\Interfaces\EmailAuthenticatable;
 use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToCountry;
 use PixelApp\Models\PixelModelManager;
@@ -19,9 +18,6 @@ abstract class PixelCompany
         extends PixelBaseModel
         implements  HasUUID , OwnsRelationships , MustUploadModelFiles , NeedToAccessParentRelationships , BelongsToCountry
 {
-    
-    //laravel traits
-    use SoftDeletes;
     
     abstract public function getDefaultAdmin()  : EmailAuthenticatable;   
 

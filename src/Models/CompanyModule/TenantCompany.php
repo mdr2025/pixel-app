@@ -5,6 +5,7 @@ namespace PixelApp\Models\CompanyModule;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
 use Spatie\QueryBuilder\AllowedFilter;  
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany; 
@@ -41,7 +42,7 @@ class TenantCompany extends PixelCompany
 {
 
     //laravel traits
-    use HasFactory  ;
+    use HasFactory  , SoftDeletes;
 
     //stancl package traits
     use CentralConnection,

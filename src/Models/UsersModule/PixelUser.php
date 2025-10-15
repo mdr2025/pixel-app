@@ -78,6 +78,7 @@ implements
         'full_name',
         'password',
         'mobile',
+        "country_id",
         'employee_id',
     ];
 
@@ -290,7 +291,7 @@ implements
     {
         return static::$fakedUsersStatus ? 
                AcceptedUserFactory::new() :
-               SignUpUserFactory::new();;
+               SignUpUserFactory::new();
     }
 
 }
