@@ -23,6 +23,6 @@ class CompanyDefaultAdminUpdatingRouteIdentifierFactory extends PixelAppRouteIde
 
     public function createRouteIdentifier()  :PixelAppRouteIdentifier
     {
-        return (new PixelAppPostRouteIdentifier($this->getUri() , $this->getData() ));
+        return (new PixelAppPostRouteIdentifier($this->getUri() , $this->getData() ))->sendAsMultipart();
     }
 }

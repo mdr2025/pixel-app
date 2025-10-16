@@ -43,6 +43,6 @@ class DefaultAdminDataSyncingRouteIdentifierFactory extends PixelAppRouteIdentif
 
     public function createRouteIdentifier()  :PixelAppRouteIdentifier
     {
-        return (new PixelAppPostRouteIdentifier($this->getUri() , $this->getPayload() ));
+        return (new PixelAppPostRouteIdentifier($this->getUri() , $this->getPayload() ))->sendAsMultipart();
     }
 }

@@ -50,14 +50,14 @@ class LoginService
      * @return $this
      * @throws JsonException
      */
-    // private function checkVerificationStatus(): self
-    // {
-    //     if (!$this->user->isVerified())
-    //     {
-    //         throw new JsonException("Login Failed , Your Email Is Not Verified Yet !");
-    //     }
-    //     return $this;
-    // }
+    private function checkVerificationStatus(): self
+    {
+        if (!$this->user->isVerified())
+        {
+            throw new JsonException("Login Failed , Your Email Is Not Verified Yet !");
+        }
+        return $this;
+    }
 
     /**
      * @return $this
@@ -129,7 +129,7 @@ class LoginService
             $this->initValidator()->validateRequest()->setRequestData();
 
             $this->setValidUser( $extraLoginConditions)
-                // ->checkVerificationStatus()
+                ->checkVerificationStatus()
                 ->checkApprovementStatus()
                  ->checkAccountStatus();
 

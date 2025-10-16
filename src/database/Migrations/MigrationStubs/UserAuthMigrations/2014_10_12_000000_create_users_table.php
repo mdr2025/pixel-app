@@ -34,7 +34,7 @@ return new class extends Migration
             $table->boolean('default_user')->default(0);
             $table->foreignId("role_id")->nullable()->constrained("roles")->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId("previous_role_id")->nullable()->constrained("roles")->cascadeOnUpdate()->nullOnDelete();
-            // $table->foreignId('branch_id')->nullable()->constrained('branches')->nullOnDelete()->cascadeOnUpdate();
+            $table->foreignId('branch_id')->nullable()->constrained('branches')->nullOnDelete()->cascadeOnUpdate();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();
