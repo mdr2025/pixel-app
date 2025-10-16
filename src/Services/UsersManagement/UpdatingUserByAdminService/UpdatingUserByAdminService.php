@@ -17,11 +17,6 @@ use PixelApp\Services\UsersManagement\Traits\EditableUserCheckingMethods;
 class UpdatingUserByAdminService extends CustomUpdatingService
 {
     use EditableUserCheckingMethods; 
-    
-    protected function checkPreConditions() : void
-    {
-        $this->checkDefaultAdmin($this->model);
-    }
 
     protected function getRequestFormClass(): string
     {

@@ -6,8 +6,16 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use PixelApp\Models\UsersModule\PixelUser;
 
+/**
+ * @property Model $model
+ */
 trait EditableUserCheckingMethods
-{
+{ 
+    protected function checkPreConditions() : void
+    {
+        $this->checkDefaultAdmin($this->model);
+    }
+
     protected function checkDefaultAdmin(Model $user) : void
     {
         if(!$user instanceof PixelUser)

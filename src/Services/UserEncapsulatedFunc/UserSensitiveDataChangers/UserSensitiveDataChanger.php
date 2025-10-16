@@ -5,6 +5,7 @@ namespace PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers;
 use PixelApp\Exceptions\JsonException;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use InvalidArgumentException;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\ExpectsSensitiveRequestData;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\UserSensitivePropChanger;
@@ -27,13 +28,30 @@ class UserSensitiveDataChanger
 
     protected function initPropChanger(string $changerClass) : UserSensitivePropChanger | ExpectsSensitiveRequestData
     {
-        $changer = (new $changerClass())->setAuthenticatable($this->user);
+        return new $changerClass(); 
+    }
 
-        if($changer instanceof ExpectsSensitiveRequestData)
+    protected function setPropChangerMainProps(UserSensitivePropChanger $propChanger) : void
+    {
+        $propChanger->setAuthenticatable($this->user);
+
+        if($propChanger instanceof ExpectsSensitiveRequestData)
         {
-            $changer->setData($this->data);
+            $propChanger->setData($this->data);
         }
-        return $changer;
+    }
+
+    protected function throwInvalidPropChangerChildClassException(string $changerClass) : void
+    {
+        throw new InvalidArgumentException(
+            sprintf('Class "%s" must extend %s.', $changerClass, UserSensitivePropChanger::class)
+        );
+    }
+    protected function throwInvalidPropChangerChildObjectException() : void
+    {
+        throw new InvalidArgumentException(
+            'User Property Changer must be an instance of ' . UserSensitivePropChanger::class
+        );
     }
     /**
      * @param string|UserSensitivePropChanger $changer
@@ -42,19 +60,25 @@ class UserSensitiveDataChanger
      */
     protected function getChangerInstance(string |UserSensitivePropChanger $changer) :UserSensitivePropChanger
     {
-        if($changer instanceof UserSensitivePropChanger) // if it is an object already
+        if (is_string($changer)) 
         {
-            return $changer;
+            if (!is_subclass_of($changer, UserSensitivePropChanger::class))
+            {
+                $this->throwInvalidPropChangerChildClassException($changer);
+            }
+
+            $changer = $this->initPropChanger($changer);
         }
 
-        if(is_subclass_of($changer , UserSensitivePropChanger::class)) // if it is a class
-        {
-            return $this->initPropChanger($changer);
+        if (!$changer instanceof UserSensitivePropChanger) {
+            $this->throwInvalidPropChangerChildObjectException();
         }
 
-        // if it is another type
-        throw new Exception("User Property Changer must be instance of UserSensitivePropChanger class !");
+        $this->setPropChangerMainProps($changer);
+
+        return $changer;
     }
+
     /**
      * @param string|UserSensitivePropChanger $propChanger
      * @return $this

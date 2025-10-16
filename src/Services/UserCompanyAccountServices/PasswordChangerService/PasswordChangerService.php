@@ -13,8 +13,7 @@ use PixelApp\Interfaces\EmailAuthenticatable;
 use PixelApp\Interfaces\TenancyInterfaces\CanSyncData;
 use PixelApp\Services\UserEncapsulatedFunc\CustomUpdatingService;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\PasswordChanger;
-use PixelApp\Services\UsersManagement\Traits\EditableUserCheckingMethods;
-
+  
 class PasswordChangerService extends CustomUpdatingService
 {
 

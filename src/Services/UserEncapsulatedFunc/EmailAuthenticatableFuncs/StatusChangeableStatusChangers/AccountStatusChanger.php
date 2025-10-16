@@ -23,7 +23,8 @@ abstract class AccountStatusChanger extends CustomUpdatingService
 {
     protected int $status;
     protected ?StatusChanger $statusChanger = null;
- 
+    protected static $statusNotificationMap = [];
+    
     public function __construct(Model $model)
     {
         if(!$model instanceof StatusChangeableAccount)

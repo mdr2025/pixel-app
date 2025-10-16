@@ -5,42 +5,21 @@ namespace  PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatu
 use Exception;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Models\PixelModelManager;
+use PixelApp\Notifications\UserNotifications\StatusNotifications\ActiveRegistrationNotification;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitiveDataChanger;
-use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\BranchChanger;
-use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\DepartmentChanger;
-use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\UserRoleChanger; 
-
 use PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\StatusChangeableStatusChangers\StatusChangerTypes\SignUpAccountStatusChangerServices\SignUpAccountApprovingService as BaseSignUpAccountApprovingService;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\AdminAssignablePropsManagers\AdminAssignablePropsManager;
+use PixelApp\Services\UsersManagement\Traits\EditableUserCheckingMethods;
 
 class SignUpAccountApprovingService extends BaseSignUpAccountApprovingService
 {
-    // protected static array $signUpApprovmentPropChangers = [];
+    use EditableUserCheckingMethods;
   
     protected function getRequestFormClass(): string
     {
         return PixelHttpRequestManager::getRequestForRequestBaseType( static::getApprovingRequestFormBaseClass() );
     }
 
-    // public static function mustCheckRoleId() : void
-    // {
-    //     static::$signUpApprovmentPropChangers[UserRoleChanger::class] = UserRoleChanger::class ;
-    //     static::getApprovingRequestFormBaseClass()::mustCheckRoleId();
-    // }
- 
-    // public static function mustCheckDepartmentId() : void
-    // {
-    //     static::$signUpApprovmentPropChangers[ DepartmentChanger::class] = DepartmentChanger::class ;
-    //     static::getApprovingRequestFormBaseClass()::mustCheckDepartmentId();
-    // }
-   
-    // public static function mustCheckBranchId() : void
-    // {
-    //     static::$signUpApprovmentPropChangers[BranchChanger::class] = BranchChanger::class ;
-    //     static::getApprovingRequestFormBaseClass()::mustCheckBranchId();
-    // }
-
-    
     protected function getUserModelClass() : string
     {
         return PixelModelManager::getUserModelClass();
@@ -50,7 +29,6 @@ class SignUpAccountApprovingService extends BaseSignUpAccountApprovingService
     {
         $userModelClass = $this->getUserModelClass();
         return AdminAssignablePropsManager::Singleton()->getSensitivePropChangersForClass($userModelClass);
-        // return static::$signUpApprovmentPropChangers;
     }  
     
     protected function initUserSensitiveDataChanger() : UserSensitiveDataChanger
@@ -77,5 +55,12 @@ class SignUpAccountApprovingService extends BaseSignUpAccountApprovingService
     {
         parent::changeAuthenticatableStatus();
         return $this->setUserRelationships();
+    }
+
+    protected function getNotificationClass() : ?string
+    {
+        return $this->model->status == "active" 
+               ? ActiveRegistrationNotification::class
+               : null;
     }
 }
