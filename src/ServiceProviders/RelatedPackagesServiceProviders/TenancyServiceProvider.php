@@ -7,6 +7,8 @@ namespace PixelApp\ServiceProviders\RelatedPackagesServiceProviders;
 use Illuminate\Support\Facades\Event; 
 use Illuminate\Support\ServiceProvider; 
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppClients\PixelAdminPanelAppClient;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppClients\PixelTenantAppCentralDomainClient;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppClients\PixelTenantAppTenantDomainClient;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppsConnectionManager;
 use PixelApp\CustomLibs\Tenancy\DomainTenantResolvers\CustomDomainTenantResolver;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager ;
@@ -145,16 +147,19 @@ class TenancyServiceProvider extends ServiceProvider
         });
     }
 
-    protected function doesItNeedAdminPanelConnection() : bool
+    protected function doesItNeedMicroServicesConnection() : bool
     {
-        return !PixelTenancyManager::isItAdminPanelApp() 
-               &&
-               PixelTenancyManager::isItTenancySupporterApp();
+        return !PixelTenancyManager::isItNormalApp() ;
     }
 
     protected function registerConnectionManagmentClasses() : void
     {
-        $this->registerAdminPanelAppClient();
+        if($this->doesItNeedMicroServicesConnection())
+        {
+            $this->registerAdminPanelAppClient();
+            $this->registerPixelTenantAppCentralDomainClient();
+            $this->registerPixelTenantAppTenantDomainClient();
+        }
     }
 
     protected function initPixelAppsConnectionManager() : PixelAppsConnectionManager
@@ -164,14 +169,29 @@ class TenancyServiceProvider extends ServiceProvider
 
     protected function registerAdminPanelAppClient() : void
     { 
-        if($this->doesItNeedAdminPanelConnection())
-        { 
             $this->initPixelAppsConnectionManager()
                  ->registerPixelAppClient(
                                         PixelAdminPanelAppClient::class ,
                                         PixelAdminPanelAppClient::getClientName()
                                      );
-        }
+    }
+
+    protected function registerPixelTenantAppCentralDomainClient() : void
+    { 
+            $this->initPixelAppsConnectionManager()
+                 ->registerPixelAppClient(
+                                            PixelTenantAppCentralDomainClient::class ,
+                                            PixelTenantAppCentralDomainClient::getClientName()
+                                         );
+    }
+    
+    protected function registerPixelTenantAppTenantDomainClient() : void
+    { 
+        $this->initPixelAppsConnectionManager()
+             ->registerPixelAppClient(
+                                          PixelTenantAppTenantDomainClient::class ,
+                                          PixelTenantAppTenantDomainClient::getClientName()
+                                    );
     }
 
     protected function bootEvents()
