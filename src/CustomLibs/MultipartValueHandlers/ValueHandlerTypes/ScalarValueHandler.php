@@ -8,7 +8,7 @@ class ScalarValueHandler implements MultipartValueHandler
 {
     public function supports(mixed $value): bool
     {
-        return !is_array($value);
+        return is_int($value) || is_string($value);
     }
 
     public function handle(string $name, mixed $value): array

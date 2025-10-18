@@ -40,11 +40,11 @@ class TenantPassportClientsSeederJob
         if(PixelTenancyManager::isItMonolithTenancyApp())
         {
 
-            TenantApprovingCancelingJob::dispatch($this->tenant , $exception);
+            TenantApprovingCancelingJob::dispatch($this->tenant  , $exception->getMessage() , $exception->getCode());
 
         }elseif(PixelTenancyManager::isItTenantApp())
         {
-            TenantConfiguringCancelingJob::dispatch($this->tenant , $exception);
+            TenantConfiguringCancelingJob::dispatch($this->tenant , $exception->getMessage() , $exception->getCode());
         }
 
 

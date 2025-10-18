@@ -305,7 +305,7 @@ class TenantCompany extends PixelCompany
 
    public function contacts()
    {
-       return $this->hasMany( $this->getCompanyContactModelClass() );
+       return $this->hasMany( $this->getCompanyContactModelClass()  , "company_id");
    }
  
    protected function getDefaultAdminModelClass() : string

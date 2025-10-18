@@ -100,14 +100,9 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
         $this->attchClientGrantMiddleware($route);
     }
 
-    protected function defineCompanyServerEmailVerificationRoute(bool $remoteServer = true) : void
+    protected function defineCompanyServerEmailVerificationRoute() : void
     {
-        $route = Route::post('company/verify-email', [CompanyAuthServerController::class , 'verifyDefaultAdminEmail']);
-
-        if($remoteServer)
-        {
-            $this->attchClientGrantMiddleware($route);
-        }
+        Route::post('company/verify-email', [CompanyAuthServerController::class , 'verifyDefaultAdminEmail']);
     }
   
     
@@ -198,6 +193,7 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
            $this->defineCompanyServerCheckStatusRoute($remoteServer);
            $this->defineCheckSubdomainServerRoute($remoteServer);
            $this->defineCheckCrNoServerRoute($remoteServer);
+           
            $this->definefetchCompanyRoute($remoteServer);
            $this->defineApprovedCompanyIDSFetchingRoute($remoteServer);
            $this->defineCompanyDefaultAdminsyncingDataServerRoute($remoteServer);
@@ -218,13 +214,9 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
            $this->defineCompanyClientRegisteringRoute();
            $this->defineCompanyClientForgetIdRoute(); 
 
-           /**
-            * @todo
-            * these routes maybe are not required for tenant app ... it is requried for central app or admin panel .... make sure later
-            */           
-        //    $this->defineCompanyClientCheckStatusRoute();
-        //    $this->defineCheckSubdomainClientRoute();
-        //    $this->defineCheckCrNoClientRoute();
+           $this->defineCompanyClientCheckStatusRoute();
+           $this->defineCheckSubdomainClientRoute();
+           $this->defineCheckCrNoClientRoute();
         });
     } 
  

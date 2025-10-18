@@ -10,6 +10,7 @@ abstract class PixelAppRouteIdentifier
     protected string $uri ;
     protected ?array $uriParameters  = null;  
     protected array $data = [];
+    protected bool $dataFormatIsReady = false;
 
 
     public function __construct(
@@ -49,26 +50,41 @@ abstract class PixelAppRouteIdentifier
     
     public function getData() : array
     {
+        $this->handleDataMultipartFormat();
+
         return $this->data;
     }
 
+    
     protected function setData(?array $data = null) : void
     {
-        if(!$data)
+        if($data)
         {
-            return;
+            $this->data = $data ;
         }
+    }
 
+    protected function handleDataMultipartFormat() : void
+    { 
         if(
+            !empty($this->data) // to skip the other condition checking if data is empty
+            &&
+            !$this->dataFormatIsReady
+            &&
             $this instanceof DataSendingRouteIdentifier 
             &&
             $this->shouldBeSentAsMultipart()
           )
         {
-            $data = $this->convertDataToMultipartData($data);
-        }
-        
-        $this->data = $data ;
+            $this->convertDataToMultipartData();
+        } 
+
+        $this->markDataFormatAsReady();
+    }
+
+    protected function markDataFormatAsReady() : void
+    {
+        $this->dataFormatIsReady = true;
     }
 
     protected function replaceUriParameters($uri) : string
@@ -95,9 +111,10 @@ abstract class PixelAppRouteIdentifier
         return new MultipartArrayConverter();
     }
 
-    protected function convertDataToMultipartData(array $data) : array
+    protected function convertDataToMultipartData() : void
     {
-        return $this->initMultipartArrayConverter()->convert($data);
+        $data = $this->initMultipartArrayConverter()->convert($this->data);
+        $this->setData($data);
     }
    
 }

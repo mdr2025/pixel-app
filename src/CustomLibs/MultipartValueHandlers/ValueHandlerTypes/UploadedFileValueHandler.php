@@ -5,7 +5,7 @@ namespace PixelApp\CustomLibs\MultipartValueHandlers\ValueHandlerTypes;
 use Illuminate\Http\UploadedFile;
 use PixelApp\CustomLibs\MultipartValueHandlers\Interfaces\MultipartValueHandler;
 
-class UploadedFileHandler implements MultipartValueHandler
+class UploadedFileValueHandler implements MultipartValueHandler
 {
     public function supports(mixed $value): bool
     {

@@ -22,12 +22,18 @@ class TenantConfiguringCancelingJob  implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     
     protected TenantCompany $tenant;
-    protected ?Throwable $failingException = null;
+    protected  ?string $configuringFailingExceptionMessage = null ;
+    protected ?int $configuringFailingExceptionCode = null ;
 
-    public function __construct(TenantCompany $tenant , ?Throwable $failingException = null)
+    public function __construct(
+                                TenantCompany $tenant ,
+                                ?string $configuringFailingExceptionMessage = null ,
+                                ?int $configuringFailingExceptionCode = null 
+                               )
     {
         $this->tenant = $tenant;
-        $this->failingException = $failingException;
+        $this->configuringFailingExceptionMessage = $configuringFailingExceptionMessage;
+        $this->configuringFailingExceptionCode = $configuringFailingExceptionCode;
     }
     
     /**
@@ -42,10 +48,21 @@ class TenantConfiguringCancelingJob  implements ShouldQueue
     protected function initTenantResourcesConfiguringCancelingClientService() : TenantResourcesConfiguringCancelingClientService
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(TenantResourcesConfiguringCancelingClientService::class);
-        return new $service($this->tenant , $this->failingException );
+        $failingException = $this->getConfiguringFailingException();
+        return new $service($this->tenant , $failingException );
     }
 
-    protected function getFailingExceptionMessage(array | string $messages) : string
+    protected function getConfiguringFailingException() : ?Exception
+    {
+        if($this->configuringFailingExceptionMessage )
+        {
+            return new Exception($this->configuringFailingExceptionMessage , $this->configuringFailingExceptionCode ?? 500);
+        }
+        
+        return null;
+    }
+
+    protected function getClientServiceFailingExceptionMessage(array | string $messages) : string
     {
         if(is_array($messages) && !empty($messages))
         {
@@ -65,7 +82,7 @@ class TenantConfiguringCancelingJob  implements ShouldQueue
         if(ResponseHelpers::getResponseStatus($response) == false)
         {
             $responseMessage = ResponseHelpers::getResponseMessages($response);
-            $exMessage = $this->getFailingExceptionMessage($responseMessage);
+            $exMessage = $this->getClientServiceFailingExceptionMessage($responseMessage);
             throw new Exception($exMessage);
         }
     }

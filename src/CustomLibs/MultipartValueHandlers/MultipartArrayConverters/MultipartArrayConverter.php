@@ -8,6 +8,7 @@ use PixelApp\CustomLibs\MultipartValueHandlers\ValueHandlerTypes\FilePathValueHa
 use PixelApp\CustomLibs\MultipartValueHandlers\ValueHandlerTypes\ScalarValueHandler;
 use PixelApp\CustomLibs\MultipartValueHandlers\ValueHandlerTypes\SplFileObjectHandler;
 use PixelApp\CustomLibs\MultipartValueHandlers\ValueHandlerTypes\StreamingValueHandler;
+use PixelApp\CustomLibs\MultipartValueHandlers\ValueHandlerTypes\UploadedFileValueHandler;
 
 class MultipartArrayConverter
 {
@@ -45,9 +46,10 @@ class MultipartArrayConverter
     protected function getDefaultMultipartValueHandlers() : array
     {
         return [
-                   FilePathValueHandler::class  => new FilePathValueHandler(),
                    ScalarValueHandler::class    => new ScalarValueHandler(),
                    ArrayValueHandler::class     => new ArrayValueHandler($this),
+                   FilePathValueHandler::class  => new FilePathValueHandler(),
+                   UploadedFileValueHandler::class => new UploadedFileValueHandler(),
                    SplFileObjectHandler::class  => new SplFileObjectHandler(),
                    StreamingValueHandler::class => new StreamingValueHandler()
         ];
@@ -57,15 +59,19 @@ class MultipartArrayConverter
     {
         $multipart = [];
 
-        foreach ($data as $key => $value) {
+        foreach ($data as $key => $value) 
+        {
             $fieldName = $prefix ? "{$prefix}[{$key}]" : $key;
-
-            foreach ($this->handlers as $handler) {
-                if ($handler->supports($value)) {
+            
+            foreach ($this->handlers as $handler) 
+            {
+                if ($handler->supports($value)) 
+                {
                     $multipart = array_merge($multipart, $handler->handle($fieldName, $value));
                     break;
                 }
             }
+
         }
 
         return $multipart;

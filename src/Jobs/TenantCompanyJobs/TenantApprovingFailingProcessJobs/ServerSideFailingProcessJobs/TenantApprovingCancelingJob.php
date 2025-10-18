@@ -2,7 +2,7 @@
 
 namespace PixelApp\Jobs\TenantCompanyJobs\TenantApprovingFailingProcessJobs\ServerSideFailingProcessJobs;
 
-
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -19,12 +19,18 @@ class TenantApprovingCancelingJob  implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     
     protected TenantCompany $tenant;
-    protected ?Throwable $failingException = null;
+    protected  ?string $failingExceptionMessage = null ;
+    protected ?int $failingExceptionCode = null ;
 
-    public function __construct(TenantCompany $tenant , ?Throwable $exception = null)
+    public function __construct(
+                                TenantCompany $tenant ,
+                                ?string $failingExceptionMessage = null ,
+                                ?int $failingExceptionCode = null 
+                               )
     {
         $this->tenant = $tenant;
-        $this->failingException = $exception;
+        $this->failingExceptionMessage = $failingExceptionMessage;
+        $this->failingExceptionCode = $failingExceptionCode;
     }
 
     /**
@@ -35,9 +41,9 @@ class TenantApprovingCancelingJob  implements ShouldQueue
         TenantDeletingDatabaseCustomJob::dispatch($this->tenant);
         RollbackApprovingTenantStatusChangingJob::dispatch($this->tenant);
 
-        if($this->failingException)
+        if($this->failingExceptionMessage)
         {
-            throw $this->failingException;
+            throw new Exception($this->failingExceptionMessage , $this->failingExceptionCode ?? 500);
         }
     }
 }

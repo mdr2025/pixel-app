@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners;
+namespace PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\TenantCompanyApprovingListeners;
 
 use Exception;
 use PixelApp\Events\TenancyEvents\TenantCompanyEvents\TenantCompanyApprovingEvents\TenantConfiguringCancelingEvent;
@@ -26,7 +26,11 @@ class TenantConfiguringCancelingEventListener
         
         $approvingCancelingFailingException = $this->customizeFailingException($event);
 
-        TenantApprovingCancelingJob::dispatch($tenant , $approvingCancelingFailingException);
+        TenantApprovingCancelingJob::dispatch(
+                                                $tenant ,
+                                                $approvingCancelingFailingException->getMessage() ,
+                                                $approvingCancelingFailingException->getCode()
+                                            );
     }
 
     protected function customizeFailingException(TenantConfiguringCancelingEvent $event) : Throwable

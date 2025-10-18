@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners;
+namespace PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\TenantCompanyApprovingListeners;
 
 use PixelApp\Jobs\TenantCompanyJobs\TenantApprovingProcessJobs\TenantDatabaseCreatingCustomJob;
 use Illuminate\Bus\Queueable;
@@ -40,6 +40,7 @@ class AdminPanelTenantCompanyApprovingListener implements ShouldQueue
                                         TenantDatabaseCreatingCustomJob::class,
                                         TenantResourcesConfiguringClientServiceJob::class
                                    ]);
+                    
         $job->passable = [$this->tenantCompany];
         return $job;
     }

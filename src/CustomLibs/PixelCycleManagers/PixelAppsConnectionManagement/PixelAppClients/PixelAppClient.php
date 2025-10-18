@@ -220,7 +220,7 @@ abstract class PixelAppClient
     {
         $pendingRequest = $this->initPendingRequest($withAccessToken);
 
-                $pendingRequest = $this->getConvenientForm($pendingRequest , $routeIdentifier);
+        $pendingRequest = $this->getConvenientForm($pendingRequest , $routeIdentifier);
 
         return $pendingRequest->post($routeIdentifier->getUri() , $routeIdentifier->getData());
     }

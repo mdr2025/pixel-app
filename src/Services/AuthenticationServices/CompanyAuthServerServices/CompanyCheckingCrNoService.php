@@ -20,16 +20,17 @@ class CompanyCheckingCrNoService
 
     public function checkCrNoValidity(string $crNo) : JsonResponse
     { 
-        if ($this->fetchTenant($crNo)) 
+        if (!$this->fetchTenant($crNo)) 
         {
             return response()->json([
                 "status" => 200,
                 "message" => "Valid",
             ]);
         }
+
         return response()->json([
             "status" => 424,
-            "message" => "Invalid",
+            "message" => "Invalid CR no .... Enter another one !",
         ]); 
     }
 }

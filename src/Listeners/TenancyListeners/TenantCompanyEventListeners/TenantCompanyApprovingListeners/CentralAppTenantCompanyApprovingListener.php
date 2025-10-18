@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners;
+namespace PixelApp\Listeners\TenancyListeners\TenantCompanyEventListeners\TenantCompanyApprovingListeners;
 
 use PixelApp\Jobs\TenantCompanyJobs\TenantConfiguringProcessJobs\TenantCompanyApprovingNotifierJob;
 use PixelApp\Jobs\TenantCompanyJobs\TenantApprovingProcessJobs\TenantDatabaseCreatingCustomJob;
