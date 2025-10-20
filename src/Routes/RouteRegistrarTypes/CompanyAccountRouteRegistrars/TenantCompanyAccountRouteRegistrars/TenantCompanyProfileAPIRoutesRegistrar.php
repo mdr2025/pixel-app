@@ -112,7 +112,7 @@ class TenantCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
     {
         $routeRegistrar = $this->initMainApiRouteRegistrar();
 
-        $this->attachGlobalMiddlewares($routeRegistrar);
+        $this->attachServerRouteMiddlewares($routeRegistrar);
 
         $this->defineCompanyProfileServerRoutes($routeRegistrar);
     }

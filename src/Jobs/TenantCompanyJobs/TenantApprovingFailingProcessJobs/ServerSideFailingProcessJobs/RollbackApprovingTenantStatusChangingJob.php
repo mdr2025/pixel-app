@@ -23,9 +23,9 @@ class RollbackApprovingTenantStatusChangingJob  implements ShouldQueue
         $this->tenant = $tenant;
     }
 
-    protected function returnTenantToDefaultRegistrationStatus() : void
-    {
-        $this->tenant->returnToDefaultRegistrationStatus();
+    protected function returnTenantToDefaultCase() : void
+    { 
+        $this->tenant->cancelApproving();
         $this->tenant->save();
     }
 
@@ -34,6 +34,6 @@ class RollbackApprovingTenantStatusChangingJob  implements ShouldQueue
      */
     public function handle()
     {
-        $this->returnTenantToDefaultRegistrationStatus();
+        $this->returnTenantToDefaultCase();
     }
 }

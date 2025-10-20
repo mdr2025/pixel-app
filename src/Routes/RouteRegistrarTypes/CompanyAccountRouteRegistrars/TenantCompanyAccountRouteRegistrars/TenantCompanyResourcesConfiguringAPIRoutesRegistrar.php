@@ -60,7 +60,7 @@ class TenantCompanyResourcesConfiguringAPIRoutesRegistrar extends PixelRouteRegi
         {
             $routeRegistrar = $this->initMainApiRouteRegistrar();
        
-            $this->attachGlobalMiddlewares($routeRegistrar);
+            $this->attachServerRouteMiddlewares($routeRegistrar);
 
             $routeRegistrar->domain($domain);
 
@@ -76,7 +76,7 @@ class TenantCompanyResourcesConfiguringAPIRoutesRegistrar extends PixelRouteRegi
     {
        $routeRegistrar = $this->initMainApiRouteRegistrar();
        
-       $this->attachGlobalMiddlewares($routeRegistrar);
+       $this->attachServerRouteMiddlewares($routeRegistrar);
 
        $routeRegistrar->group(function()
        {

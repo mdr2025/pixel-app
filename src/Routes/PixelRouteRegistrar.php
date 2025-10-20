@@ -13,6 +13,10 @@ abstract class PixelRouteRegistrar
     
     protected function getServerRouteExcludedMiddlewares() : array
     {
+        /**
+         * excluded because it is applied on the client route that call the server route 
+         * and it protected by client middleware ... so we are sre that we are calling it by our other machine (application)
+         */
         return [ 'throttle:api'];
     }
     /**

@@ -370,4 +370,16 @@ class TenantCompany extends PixelCompany
             }
         }
    }
+
+   protected function emptyDatabaseAttrs() : void
+   {
+        unset($this->attributes["tenancy_db_name"]);
+        unset($this->original["tenancy_db_name"]);
+   }
+   
+   public function cancelApproving() : void
+   {
+        $this->returnToDefaultRegistrationStatus();
+        $this->emptyDatabaseAttrs();
+   }
 }

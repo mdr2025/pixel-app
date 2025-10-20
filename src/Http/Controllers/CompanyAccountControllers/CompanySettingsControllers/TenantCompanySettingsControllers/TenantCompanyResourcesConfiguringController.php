@@ -14,13 +14,13 @@ class TenantCompanyResourcesConfiguringController extends Controller
     public function configureTenantResources() : JsonResponse
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(TenantResourcesConfiguringServerService::class);
-        return (new $service)->resetData();
+        return (new $service)->configure();
     }
 
     public function cancelTenantResourcesConfiguring() : JsonResponse
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(TenantResourcesConfiguringCancelingServerService::class);
-        return (new $service)->resetData();   
+        return (new $service)->cancel();   
     }
   
 }

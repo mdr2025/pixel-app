@@ -175,9 +175,7 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
     {
         $routeRegistrar = $this->initCompanyRouteRegistrar();
 
-        $this->attachGlobalMiddlewares($routeRegistrar);
-        
-        $this->exceptServerRouteMiddlewares($routeRegistrar);
+        $this->attachServerRouteMiddlewares($routeRegistrar);
 
         if($domain)
         {
