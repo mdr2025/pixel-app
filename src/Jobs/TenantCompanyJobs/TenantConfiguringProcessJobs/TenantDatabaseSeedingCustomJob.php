@@ -3,6 +3,7 @@
 namespace PixelApp\Jobs\TenantCompanyJobs\TenantConfiguringProcessJobs;
 
 use Exception;
+use Illuminate\Support\Facades\Artisan;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Jobs\TenantCompanyJobs\TenantApprovingFailingProcessJobs\ClientSideFailingProcessJobs\TenantConfiguringCancelingJob;
 use PixelApp\Jobs\TenantCompanyJobs\TenantApprovingFailingProcessJobs\ServerSideFailingProcessJobs\TenantApprovingCancelingJob;
@@ -10,6 +11,15 @@ use Stancl\Tenancy\Jobs\SeedDatabase;
 
 class TenantDatabaseSeedingCustomJob extends SeedDatabase
 {
+
+    
+    public function handle()
+    {
+        Artisan::call('tenant-company:seed ', [
+            'companyDomain' => $this->tenant->domain,
+        ]);
+    }
+
     /**
      * @throws Exception
      */
@@ -24,10 +34,6 @@ class TenantDatabaseSeedingCustomJob extends SeedDatabase
         {
             TenantConfiguringCancelingJob::dispatch($this->tenant  , $exception->getMessage() , $exception->getCode());
         }
-
-
-        // TenantDeletingDatabaseCustomJob::dispatch($this->tenant);
-        // TenantApprovingCancelingJob::dispatch($this->tenant);
-        // throw new Exception($exception->getMessage());
     }
+
 }

@@ -46,7 +46,7 @@ class TenantCompanyResourcesConfiguringAPIRoutesRegistrar extends PixelRouteRegi
     
     protected function getGlobalMiddlewares() : array
     {
-        return [ 'api' , 'client' ]  ;
+        return [ 'api'  ]  ;
     }
 
     protected function initMainApiRouteRegistrar() : RouteRegistrar

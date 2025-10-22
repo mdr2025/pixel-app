@@ -30,6 +30,16 @@ class TenantSuperAdminSeederJob
         $this->tenant = $tenant;
     }
 
+    
+    /**
+     * @throws Exception
+     */
+    public function handle()
+    {
+        $this->saveDefaultAdminIntoTenantDatabase();
+    }
+
+    
     /**
      * @param Throwable $exception
      * @return void
@@ -50,10 +60,6 @@ class TenantSuperAdminSeederJob
             TenantConfiguringCancelingJob::dispatch($this->tenant  , $exception->getMessage() , $exception->getCode());
         }
        
-       
-        // TenantDeletingDatabaseCustomJob::dispatch($this->tenant);
-        // TenantApprovingCancelingJob::dispatch($this->tenant);
-        // throw new Exception($exception->getMessage());
     }
 
     /**
@@ -95,13 +101,5 @@ class TenantSuperAdminSeederJob
             $this->getApprovedRegistrableAdmin()->save();
         });
         return $this;
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function handle()
-    {
-        $this->saveDefaultAdminIntoTenantDatabase();
     }
 }

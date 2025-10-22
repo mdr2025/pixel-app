@@ -27,6 +27,18 @@ class TenantPassportClientsSeederJob
         $this->tenant = $tenant;
     }
 
+        /**
+     * @throws Exception
+     */
+    public function handle()
+    {
+        $this->tenant->run(function (){
+            $client = $this->createNewClient();
+            $this->createPersonalAccessClient($client);
+        });
+
+    }
+    
     /**
      * @param Throwable $exception
      * @return void
@@ -46,11 +58,6 @@ class TenantPassportClientsSeederJob
         {
             TenantConfiguringCancelingJob::dispatch($this->tenant , $exception->getMessage() , $exception->getCode());
         }
-
-
-        // TenantDeletingDatabaseCustomJob::dispatch($this->tenant);
-        // TenantApprovingCancelingJob::dispatch($this->tenant);
-        // throw new Exception($exception->getMessage());
     }
 
     /**
@@ -99,15 +106,5 @@ class TenantPassportClientsSeederJob
 
         return $client ?? throw new Exception("Failed to create tenant passport client !");
     }
-    /**
-     * @throws Exception
-     */
-    public function handle()
-    {
-        $this->tenant->run(function (){
-            $client = $this->createNewClient();
-            $this->createPersonalAccessClient($client);
-        });
 
-    }
 }

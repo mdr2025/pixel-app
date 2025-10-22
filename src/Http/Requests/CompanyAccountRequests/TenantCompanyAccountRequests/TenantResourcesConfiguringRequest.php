@@ -2,9 +2,9 @@
 
 namespace PixelApp\Http\Requests\CompanyAccountRequests\TenantCompanyAccountRequests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use ValidatorLib\CustomFormRequest\BaseFormRequest;
 
-class TenantResourcesConfiguringRequest extends FormRequest
+class TenantResourcesConfiguringRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

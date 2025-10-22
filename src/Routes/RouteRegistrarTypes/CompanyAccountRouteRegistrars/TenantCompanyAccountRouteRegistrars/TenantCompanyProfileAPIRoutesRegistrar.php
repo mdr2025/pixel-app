@@ -35,12 +35,7 @@ class TenantCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
   
     protected function defineUpdateCompanyProfileServerRoute(bool $remoteServer = true) : void
     {
-        $route = Route::post('profile/update', [UserCompanyAccountServerController::class, 'updateCompanyProfile']);
-        
-        if($remoteServer)
-        {
-            $this->attchClientGrantMiddleware($route);
-        }
+        Route::post('profile/update', [UserCompanyAccountServerController::class, 'updateCompanyProfile']);
     }
 
     protected function defineUpdateCompanyProfileClientRoute() : void
@@ -51,13 +46,7 @@ class TenantCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
 
     protected function defineCompanyProfileServerRoute(  bool $remoteServer = true) : void
     { 
-        $route = Route::get('profile', [UserCompanyAccountServerController::class, 'companyProfile']);
-        
-        if($remoteServer)
-        {
-            $this->attchClientGrantMiddleware($route);
-        }
-        
+        Route::get('profile', [UserCompanyAccountServerController::class, 'companyProfile']);
     }
  
 

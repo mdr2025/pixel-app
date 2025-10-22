@@ -9,7 +9,6 @@ use Illuminate\Support\ServiceProvider;
 use PixelApp\Console\Commands\CreateCrudService;
 use PixelApp\Console\Commands\CreateStatisticCommand;
 use PixelApp\Console\Commands\RefreshTheProject;
-use PixelApp\Console\Commands\TenantCompanyApprovingTest;
 use Illuminate\Contracts\Debug\ExceptionHandler as LaravelExceptionHandlerInterface;
 use PixelApp\Config\ConfigValueManager;
 use PixelApp\Config\PixelConfigManager;
@@ -20,7 +19,9 @@ use PixelApp\Console\Commands\PassportConfiguringCommands\PixelPassportConfiguri
 use PixelApp\Console\Commands\PassportConfiguringCommands\PixelServerAppClientCredentialSetupCommand;
 use PixelApp\Console\Commands\PixelAppInitCommands\DefaultFontsHandling;
 use PixelApp\Console\Commands\PixelAppInitCommands\PreparePixelApp;
-use PixelApp\Console\Commands\TenantSeedCommand;
+use PixelApp\Console\Commands\TenancyCommands\TenantCompanyApprovingTest;
+use PixelApp\Console\Commands\TenancyCommands\TenantMigrateCommand;
+use PixelApp\Console\Commands\TenancyCommands\TenantSeedCommand;
 use PixelApp\CustomLibs\PixelCycleManagers\IOEncryptionManager\IOEncryptionManager;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppClients\PixelAdminPanelAppClient;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppsConnectionManager;
@@ -75,7 +76,8 @@ class PixelAppPackageServiceProvider extends ServiceProvider
                 CreateTrait::class,
                 RefreshTheProject::class,
                 TenantCompanyApprovingTest::class,
-                TenantSeedCommand::class
+                TenantSeedCommand::class,
+                TenantMigrateCommand::class
             ]);
         }
     }

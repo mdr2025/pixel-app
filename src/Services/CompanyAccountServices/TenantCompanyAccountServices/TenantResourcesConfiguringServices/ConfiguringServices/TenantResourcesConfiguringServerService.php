@@ -52,7 +52,7 @@ class TenantResourcesConfiguringServerService
 
     protected function getSuccessResponse() : JsonResponse
     {
-        return Response::success([] , "Tenant Resources Configuring Process Has Been Appended Tp Process Queue Successfully !");
+        return Response::success([] , "Tenant Resources Configuring Process Has Been Appended To Process Queue Successfully !");
     }
 
     protected function getErrorResponse(Exception $e) : JsonResponse

@@ -175,7 +175,8 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
     {
         $routeRegistrar = $this->initCompanyRouteRegistrar();
 
-        $this->attachServerRouteMiddlewares($routeRegistrar);
+        $this->attachGlobalMiddlewares($routeRegistrar);
+        $this->exceptServerRouteMiddlewares($routeRegistrar);
 
         if($domain)
         {
@@ -187,7 +188,7 @@ class CompanyAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
            $this->defineCompanyServerLoginRoute($remoteServer);
            $this->defineCompanyServerRegisteringRoute($remoteServer);
            $this->defineCompanyServerForgetIdRoute($remoteServer);
-           $this->defineCompanyServerEmailVerificationRoute($remoteServer);
+           $this->defineCompanyServerEmailVerificationRoute();
            $this->defineCompanyServerCheckStatusRoute($remoteServer);
            $this->defineCheckSubdomainServerRoute($remoteServer);
            $this->defineCheckCrNoServerRoute($remoteServer);

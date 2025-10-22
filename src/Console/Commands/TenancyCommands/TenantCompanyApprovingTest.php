@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Console\Commands;
+namespace PixelApp\Console\Commands\TenancyCommands;
 
 use PixelApp\Models\CompanyModule\TenantCompany;
 use Illuminate\Console\Command;

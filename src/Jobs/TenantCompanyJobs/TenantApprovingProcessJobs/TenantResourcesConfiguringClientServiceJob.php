@@ -69,10 +69,6 @@ class TenantResourcesConfiguringClientServiceJob implements ShouldQueue
     public function failed(Throwable $exception) : void
     {
         TenantApprovingCancelingJob::dispatch($this->tenant  , $exception->getMessage() , $exception->getCode());
-
-        // TenantDeletingDatabaseCustomJob::dispatch($this->tenant);
-        // TenantApprovingCancelingJob::dispatch($this->tenant);
-        // throw $exception;
     }
 
 }

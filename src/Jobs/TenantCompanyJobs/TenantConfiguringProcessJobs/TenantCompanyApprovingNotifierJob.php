@@ -25,6 +25,14 @@ class TenantCompanyApprovingNotifierJob
     {
         $this->tenant = $tenant;
     }
+    
+    /**
+     * @throws Exception
+     */
+    public function handle()
+    {
+        $this->sendCompanyApprovingNotification();
+    }
 
     protected function getNotification() : Notification
     {
@@ -50,11 +58,4 @@ class TenantCompanyApprovingNotifierJob
         $defaultAdmin->notify( $this->getNotification() );
     }
 
-    /**
-     * @throws Exception
-     */
-    public function handle()
-    {
-        $this->sendCompanyApprovingNotification();
-    }
 }
