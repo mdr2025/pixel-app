@@ -65,20 +65,24 @@ class PixelAppPackageServiceProvider extends ServiceProvider
 
     protected function defineCommands() : void
     {
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                PreparePixelApp::class,
-                PixelPassportConfiguringCommand::class,
-                PixelAppClientCustomCommand::class,
-                PixelServerAppClientCredentialSetupCommand::class,
-                DefaultFontsHandling::class,
-                CreateInterfaceCommand::class,
-                CreateTrait::class,
-                RefreshTheProject::class,
-                TenantCompanyApprovingTest::class,
-                TenantSeedCommand::class,
-                TenantMigrateCommand::class
-            ]);
+        if ($this->app->runningInConsole())
+        {
+
+            $this->app->booted(function () {
+                $this->commands([
+                    PreparePixelApp::class,
+                    PixelPassportConfiguringCommand::class,
+                    PixelAppClientCustomCommand::class,
+                    PixelServerAppClientCredentialSetupCommand::class,
+                    DefaultFontsHandling::class,
+                    CreateInterfaceCommand::class,
+                    CreateTrait::class,
+                    RefreshTheProject::class,
+                    TenantCompanyApprovingTest::class,
+                    TenantSeedCommand::class,
+                    TenantMigrateCommand::class
+                ]);
+            });
         }
     }
  
