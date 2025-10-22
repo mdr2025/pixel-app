@@ -10,6 +10,7 @@ use PixelApp\Console\Commands\CreateCrudService;
 use PixelApp\Console\Commands\CreateStatisticCommand;
 use PixelApp\Console\Commands\RefreshTheProject;
 use Illuminate\Contracts\Debug\ExceptionHandler as LaravelExceptionHandlerInterface;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use PixelApp\Config\ConfigValueManager;
 use PixelApp\Config\PixelConfigManager;
 use PixelApp\Console\Commands\CreateInterfaceCommand;
@@ -33,7 +34,7 @@ use PixelApp\PixelMacroableExtenders\PixelMacroableExtender;
 use PixelApp\ServiceProviders\Traits\ConfigFilesHandling;
 use Throwable;
 
-class PixelAppPackageServiceProvider extends ServiceProvider
+class PixelAppPackageServiceProvider extends ServiceProvider implements DeferrableProvider
 { 
     
     use ConfigFilesHandling;
