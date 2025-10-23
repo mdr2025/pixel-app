@@ -14,18 +14,18 @@ use Throwable;
  */
 class TenantResourcesConfiguringCancelingClientService extends AdminPanelConnectingClientService
 {   
-    protected TenantCompany $tenant;
+    protected string $companyDomain;
     protected ?Throwable $failingException = null;
 
-    public function __construct(TenantCompany $tenant , ?Throwable $failingException = null)
+    public function __construct(string $companyDomain , ?Throwable $failingException = null)
     {
-        $this->tenant = $tenant;    
+        $this->companyDomain = $companyDomain;    
         $this->failingException = $failingException;
     }
 
     protected function getRouteIdentifierFactory() : PixelAppRouteIdentifierFactory
     {
-        return new TenantResourcesConfiguringCancelingRouteIdentifierFactory($this->tenant->domain , $this->failingException);
+        return new TenantResourcesConfiguringCancelingRouteIdentifierFactory($this->companyDomain , $this->failingException);
     }
  
 }

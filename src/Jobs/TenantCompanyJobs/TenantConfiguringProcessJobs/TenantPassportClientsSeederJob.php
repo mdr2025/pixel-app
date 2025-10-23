@@ -38,7 +38,7 @@ class TenantPassportClientsSeederJob
         });
 
     }
-    
+
     /**
      * @param Throwable $exception
      * @return void
@@ -56,7 +56,7 @@ class TenantPassportClientsSeederJob
 
         }elseif(PixelTenancyManager::isItTenantApp())
         {
-            TenantConfiguringCancelingJob::dispatch($this->tenant , $exception->getMessage() , $exception->getCode());
+            TenantConfiguringCancelingJob::dispatch($this->tenant->domain , $exception->getMessage() , $exception->getCode());
         }
     }
 

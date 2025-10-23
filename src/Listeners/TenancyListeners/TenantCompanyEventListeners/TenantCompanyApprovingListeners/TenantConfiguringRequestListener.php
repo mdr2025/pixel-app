@@ -46,8 +46,7 @@ class TenantConfiguringRequestListener implements ShouldQueue
                                         TenantDatabaseMigratingCustomJob::class,
                                         TenantDatabaseSeedingCustomJob::class,
                                         TenantSuperAdminSeederJob::class,
-                                        TenantPassportClientsSeederJob::class,
-                                        TenantCompanyApprovingNotifierJob::class
+                                        TenantPassportClientsSeederJob::class
                                     ]);
         $job->passable = [$this->tenantCompany];
         return $job;
@@ -57,10 +56,16 @@ class TenantConfiguringRequestListener implements ShouldQueue
      * @return $this
      * @throws Throwable
      */
-    protected function executeJobPipeline(): self
+    protected function executeJobPipeline(): void
     {
         $this->getExcutableJobPipeline()->handle();
-        return $this;
+
+        $this->notifyDefaultAdmin(); 
+    }
+
+    protected function notifyDefaultAdmin() : void
+    {
+        TenantCompanyApprovingNotifierJob::dispatch($this->tenantCompany->domain);
     }
 
     protected function fetchTenantByDomain(string $companyDomain) : ?TenantCompany

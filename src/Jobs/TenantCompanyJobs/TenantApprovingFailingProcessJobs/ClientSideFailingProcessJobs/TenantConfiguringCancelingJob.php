@@ -21,17 +21,17 @@ class TenantConfiguringCancelingJob  implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     
-    protected TenantCompany $tenant;
+    protected string $companyDomain ;
     protected  ?string $configuringFailingExceptionMessage = null ;
     protected ?int $configuringFailingExceptionCode = null ;
 
     public function __construct(
-                                TenantCompany $tenant ,
+                                string $companyDomain  ,
                                 ?string $configuringFailingExceptionMessage = null ,
                                 ?int $configuringFailingExceptionCode = null 
                                )
     {
-        $this->tenant = $tenant;
+        $this->companyDomain = $companyDomain;
         $this->configuringFailingExceptionMessage = $configuringFailingExceptionMessage;
         $this->configuringFailingExceptionCode = $configuringFailingExceptionCode;
     }
@@ -45,11 +45,16 @@ class TenantConfiguringCancelingJob  implements ShouldQueue
         $this->processResponse($response);
     }
 
+    protected function fetchTenantByDomain(string $companyDomain) : ?TenantCompany
+    {
+        return TenantCompany::query()->where('domain', $companyDomain)->first();
+    }
+
     protected function initTenantResourcesConfiguringCancelingClientService() : TenantResourcesConfiguringCancelingClientService
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(TenantResourcesConfiguringCancelingClientService::class);
         $failingException = $this->getConfiguringFailingException();
-        return new $service($this->tenant , $failingException );
+        return new $service($this->companyDomain , $failingException );
     }
 
     protected function getConfiguringFailingException() : ?Exception

@@ -32,7 +32,7 @@ class TenantDatabaseSeedingCustomJob extends SeedDatabase
 
         }elseif(PixelTenancyManager::isItTenantApp())
         {
-            TenantConfiguringCancelingJob::dispatch($this->tenant  , $exception->getMessage() , $exception->getCode());
+            TenantConfiguringCancelingJob::dispatch($this->tenant->domain  , $exception->getMessage() , $exception->getCode());
         }
     }
 

@@ -9,6 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Models\CompanyModule\CompanyDefaultAdmin;
 use PixelApp\Models\CompanyModule\TenantCompany  ;
 
@@ -19,11 +20,11 @@ class TenantCompanyApprovingNotifierJob
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected TenantCompany $tenant;
+    protected string |TenantCompany $tenantDomain;
 
-    public function __construct(TenantCompany $tenant)
+    public function __construct(string |TenantCompany $tenantDomain )
     {
-        $this->tenant = $tenant;
+        $this->tenantDomain = $tenantDomain;
     }
     
     /**
@@ -31,17 +32,47 @@ class TenantCompanyApprovingNotifierJob
      */
     public function handle()
     {
+        $this->setTenant();
         $this->sendCompanyApprovingNotification();
     }
 
     protected function getNotification() : Notification
     {
-        return new CompanyApprovingNotification($this->tenant);
+        return new CompanyApprovingNotification($this->getTenant());
     }
 
     protected function getTenantDefaultAdmin() : ?CompanyDefaultAdmin
     {
-        return $this->tenant->defaultAdmin;
+        return $this->getTenant()->defaultAdmin;
+    }
+
+    protected function getTenant() : TenantCompany
+    {
+        if(!$this->tenantDomain instanceof TenantCompany)
+        {
+            $this->setTenant();
+        }
+
+        return $this->tenantDomain;
+    }
+
+    protected function setTenant() : void
+    {
+        if(is_string($this->tenantDomain))
+        {
+            $tenant = PixelTenancyManager::fetchApprovedTenantForDomain($this->tenantDomain);
+
+            if($tenant)
+            {
+                $this->tenantDomain  = $tenant;
+            }
+        }
+
+        if(!$this->tenantDomain instanceof TenantCompany)
+        {
+            throw new Exception("failed to notifiy the tenant default admin ... no approved tenant company passed to notifier class !");
+        }
+
     }
 
     /**
