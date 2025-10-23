@@ -10,7 +10,6 @@ use PixelApp\Console\Commands\CreateCrudService;
 use PixelApp\Console\Commands\CreateStatisticCommand;
 use PixelApp\Console\Commands\RefreshTheProject;
 use Illuminate\Contracts\Debug\ExceptionHandler as LaravelExceptionHandlerInterface;
-use Illuminate\Contracts\Support\DeferrableProvider;
 use PixelApp\Config\ConfigValueManager;
 use PixelApp\Config\PixelConfigManager;
 use PixelApp\Console\Commands\CreateInterfaceCommand;
@@ -34,7 +33,7 @@ use PixelApp\PixelMacroableExtenders\PixelMacroableExtender;
 use PixelApp\ServiceProviders\Traits\ConfigFilesHandling;
 use Throwable;
 
-class PixelAppPackageServiceProvider extends ServiceProvider implements DeferrableProvider
+class PixelAppPackageServiceProvider extends ServiceProvider
 { 
     
     use ConfigFilesHandling;
@@ -68,22 +67,24 @@ class PixelAppPackageServiceProvider extends ServiceProvider implements Deferrab
     {
         if ($this->app->runningInConsole())
         {
-
-            $this->app->booted(function () {
-                $this->commands([
-                    PreparePixelApp::class,
-                    PixelPassportConfiguringCommand::class,
-                    PixelAppClientCustomCommand::class,
-                    PixelServerAppClientCredentialSetupCommand::class,
-                    DefaultFontsHandling::class,
-                    CreateInterfaceCommand::class,
-                    CreateTrait::class,
-                    RefreshTheProject::class,
-                    TenantCompanyApprovingTest::class,
-                    TenantSeedCommand::class,
-                    TenantMigrateCommand::class
-                ]);
+            // Register TenantMigrateCommand with factory that returns instance without dependencies
+            $this->app->bind(TenantMigrateCommand::class, function ($app) {
+                return new TenantMigrateCommand();
             });
+            
+            $this->commands([
+                PreparePixelApp::class,
+                PixelPassportConfiguringCommand::class,
+                PixelAppClientCustomCommand::class,
+                PixelServerAppClientCredentialSetupCommand::class,
+                DefaultFontsHandling::class,
+                CreateInterfaceCommand::class,
+                CreateTrait::class,
+                RefreshTheProject::class,
+                TenantCompanyApprovingTest::class,
+                TenantSeedCommand::class,
+                TenantMigrateCommand::class,  // Will handle dependencies in its own handle() method
+            ]);
         }
     }
  
