@@ -9,7 +9,23 @@ use Illuminate\Database\Migrations\Migrator;
 
 class TenantMigrateCommand extends Migrate
 { 
-    use HasCompanyDomainArgument;
+    // use HasCompanyDomainArgument;
+
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'tenant-company:migrate {companyDomain : The company domain will be used for fetching}
+                {--database= : The database connection to use}
+                {--force : Force the operation to run when in production}
+                {--path=* : The path(s) to the migrations files to be executed}
+                {--realpath : Indicate any provided migration file paths are pre-resolved absolute paths}
+                {--schema-path= : The path to a schema dump file}
+                {--pretend : Dump the SQL queries that would be run}
+                {--seed : Indicates if the seed task should be re-run}
+                {--seeder= : The class name of the root seeder}
+                {--step : Force the migrations to be run so they can be rolled back individually}';
 
     /**
      * The console command description.
@@ -17,8 +33,6 @@ class TenantMigrateCommand extends Migrate
      * @var string
      */
     protected $description = 'Migrate migration files of an appoved tenant database.';
-
-    protected $name = 'tenant-company:migrate';
     
     /**
      * Create a new command instance.
@@ -31,7 +45,7 @@ class TenantMigrateCommand extends Migrate
     public function __construct()
     {
         // Don't call parent::__construct() to avoid requiring dependencies at registration time
-        // Call grandparent constructor directly
+        // Call grandparent constructor directly (Illuminate\Console\Command)
         \Illuminate\Console\Command::__construct();
     }
     
@@ -46,6 +60,8 @@ class TenantMigrateCommand extends Migrate
         // At this point, MigrationServiceProvider will be loaded automatically when requesting 'migrator'
         $this->migrator = $this->laravel->make('migrator');
         $this->dispatcher = $this->laravel->make(Dispatcher::class);
+       
+        $this->setTenantsParameterValue();
         
         // Now call parent handle() which will use $this->migrator and $this->dispatcher
         return parent::handle();
