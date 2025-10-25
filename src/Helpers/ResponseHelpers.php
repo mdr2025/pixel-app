@@ -9,23 +9,27 @@ class ResponseHelpers
 {
  
     //JsonResponse Handling Methods - start
-    static public function getResponseData(JsonResponse $response , bool $assocArray = false): stdClass|array
+    static public function getResponseData(JsonResponse $response , bool $assocArray = true): stdClass|array
     {
         return $response->getData($assocArray);
     }
+
     static public function IsResponseStatusSuccess(JsonResponse $response): bool
     {
-        return static::getResponseData($response)->status == "success";
+        $status = static::getResponseStatus($response);
+        return  static::getResponseStatus($response) 
+                &&
+                static::getResponseStatus($response) == "success";
     }
 
-    static public function getResponseStatus(JsonResponse $response): string
+    static public function getResponseStatus(JsonResponse $response): ?string
     {
-        return static::getResponseData($response)->status;
+        return static::getResponseData($response , false)->status ?? null;
     }
 
     static public function getResponseMessages(JsonResponse $response): array
     {
-        return static::getResponseData($response)->messages;
+        return static::getResponseData($response , false)->messages;
     }
 
     public static function isArrayOfStrings($array)

@@ -56,7 +56,7 @@ class TenantResourcesConfiguringClientServiceJob implements ShouldQueue
 
     protected function processResponse(JsonResponse $response) : void
     {
-        if(ResponseHelpers::getResponseStatus($response) == false)
+        if(!ResponseHelpers::IsResponseStatusSuccess($response))
         {
             $responseMessage = ResponseHelpers::getResponseMessages($response);
             $exMessage = $this->getFailingExceptionMessage($responseMessage);
