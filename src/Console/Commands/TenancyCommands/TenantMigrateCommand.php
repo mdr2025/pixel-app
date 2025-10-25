@@ -9,7 +9,7 @@ use Illuminate\Database\Migrations\Migrator;
 
 class TenantMigrateCommand extends Migrate
 { 
-    // use HasCompanyDomainArgument;
+    use HasCompanyDomainArgument;
 
     /**
      * The name and signature of the console command.

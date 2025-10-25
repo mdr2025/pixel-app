@@ -16,19 +16,7 @@ trait HasCompanyDomainArgument
             new InputArgument("companyDomain" , null , 'The company domain will be used for fetching')
         ], parent::getArguments());
     }
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-
-
-    public function handle()
-    {
-        $this->setTenantsParameterValue();
- 
-        parent::handle(); 
-    }
+    
  
     protected function fetchTenant() : ?TenantCompany
     {

@@ -19,4 +19,18 @@ class TenantSeedCommand extends Seed
 
     protected $name = 'tenant-company:seed'; 
 
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+
+
+    public function handle()
+    {
+        $this->setTenantsParameterValue();
+ 
+        parent::handle(); 
+    }
+    
  }
