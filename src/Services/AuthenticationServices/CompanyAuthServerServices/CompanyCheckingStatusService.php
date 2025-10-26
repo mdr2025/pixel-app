@@ -34,7 +34,7 @@ class CompanyCheckingStatusService
 
     function getTenantRegistrationStatus()
     {
-        return $this->company->registration_status;
+        return $this->company->status;
     }
     
     protected function fetchTenant() : ?TenantCompany
@@ -71,22 +71,22 @@ class CompanyCheckingStatusService
             ]);
         } 
         
-        if ($this->getTenantRegistrationStatus() == "approved" ) 
+        if ($this->getTenantRegistrationStatus() == $this->company->getApprovingStatusValue() ) 
         {
             return response()->json([
                 "message" => "Your company account has been approved , kindly check your email for company id"
             ], 422);
 
-        } elseif ($this->getTenantRegistrationStatus() == "rejected") 
+        } elseif ($this->getTenantRegistrationStatus() == $this->company->getRejectedStatusValue()) 
         {
             return response()->json([
-                "message" => "Your company account has been rejected"
+                "message" => "Your company account has been rejected , kindly contact support team"
             ], 422);
         }else
         {
             //in this case status == "pending"
             return response()->json([
-                "message" => "Your company account has not been approved yet"
+                "message" => "Your company account is not approved "
             ], 422);
 
         }

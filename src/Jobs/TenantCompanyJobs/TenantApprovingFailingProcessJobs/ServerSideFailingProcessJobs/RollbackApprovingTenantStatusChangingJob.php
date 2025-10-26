@@ -27,6 +27,8 @@ class RollbackApprovingTenantStatusChangingJob  implements ShouldQueue
     { 
         $this->tenant->cancelApproving();
         $this->tenant->save();
+        // dump($this->tenant->tenancy_db_name);
+        // dd($this->tenant->data);
     }
 
     /**

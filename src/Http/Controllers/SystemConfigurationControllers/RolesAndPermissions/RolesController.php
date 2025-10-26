@@ -93,7 +93,9 @@ class RolesController extends Controller
         BasePolicy::check('edit', Role::class); 
 
         $modelClass = $this->getRoleModeClass();
-        $role = $modelClass::nonDefaultRole()->firstOrFail($id);
+
+        $role = $modelClass::nonDefaultRole()->where("id" , $id)->firstOrFail();
+        
         $service = PixelServiceManager::getServiceForServiceBaseType(RoleInfoUpdatingService::class);
         return (new $service($role))->change($request);
     }

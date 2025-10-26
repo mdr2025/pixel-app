@@ -219,6 +219,11 @@ class TenantCompany extends PixelCompany
     {
         return "active";
     }
+    
+    public function getRejectedStatusValue()  :string
+    {
+        return "rejected";
+    }
 
     public function getAccountApprovingProps()
     { 
@@ -374,14 +379,20 @@ class TenantCompany extends PixelCompany
    protected function emptyDatabaseAttrs() : void
    {
         unset($this->attributes["tenancy_db_name"]);
-        unset($this->original["tenancy_db_name"]);
-        $this->setAttribute("data" , []);
-        $this->syncOriginal();
+        // unset($this->original["tenancy_db_name"]);
+        // dump($this->data);
    }
    
+   protected bool $secondSavingTest = false;
+
    public function cancelApproving() : void
    {
+    // dump($this->attributes);
         $this->returnToDefaultRegistrationStatus();
         $this->emptyDatabaseAttrs();
+        // $this->secondSavingTest = true; 
+        // dump("--------------------------------");
+        
+    // dump($this->attributes);
    }
 }

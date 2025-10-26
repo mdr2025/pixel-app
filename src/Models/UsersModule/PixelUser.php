@@ -144,6 +144,11 @@ implements
         return "active";
     }
 
+    public function getRejectedStatusValue()  :string
+    {
+        return "rejected";
+    }
+    
     public function getAccountApprovingProps()
     { 
         return [

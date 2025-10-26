@@ -9,6 +9,7 @@ interface StatusChangeableAccount
     public function isSystemMemberAccount()  :bool;
     public function isSignUpAccount() : bool;
     public function getApprovingStatusValue()  :string;
+    public function getRejectedStatusValue()  :string;
     public function getAccountApprovingProps();
     public function getDefaultStatusValue() : string; 
 }
