@@ -5,6 +5,7 @@ namespace PixelApp\Console\Commands\TenancyCommands;
 
 use PixelApp\Console\Commands\TenancyCommands\Traits\HasCompanyDomainArgument;
 use Stancl\Tenancy\Commands\Seed;
+use Symfony\Component\Console\Input\InputArgument;
 
 class TenantSeedCommand extends Seed
 { 
@@ -31,6 +32,13 @@ class TenantSeedCommand extends Seed
         $this->setTenantsParameterValue();
  
         parent::handle(); 
+    }
+
+    protected function getArguments()
+    {
+        return array_merge([
+            new InputArgument("companyDomain" , null , 'The company domain will be used for fetching')
+        ], parent::getArguments());
     }
     
  }

@@ -67,7 +67,7 @@ class TenantConfiguringCancelingJob  implements ShouldQueue
         return null;
     }
 
-    protected function getClientServiceFailingExceptionMessage(array | string $messages) : string
+    protected function getClientServiceFailingExceptionMessage(array | string | null $messages) : string
     {
         if(is_array($messages) && !empty($messages))
         {

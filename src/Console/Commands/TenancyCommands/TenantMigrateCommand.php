@@ -33,6 +33,19 @@ class TenantMigrateCommand extends Migrate
      * @var string
      */
     protected $description = 'Migrate migration files of an appoved tenant database.';
+
+    protected $name = 'tenant-company:migrate';
+
+    /**
+     * Override to provide custom tenant command name.
+     * This is used by ExtendsLaravelCommand trait from parent class.
+     *
+     * @return string
+     */
+    protected static function getTenantCommandName(): string
+    {
+        return 'tenant-company:migrate';
+    }
     
     /**
      * Create a new command instance.
@@ -47,6 +60,9 @@ class TenantMigrateCommand extends Migrate
         // Don't call parent::__construct() to avoid requiring dependencies at registration time
         // Call grandparent constructor directly (Illuminate\Console\Command)
         \Illuminate\Console\Command::__construct();
+
+        //when singature is set, we need to specify the parameters  
+        $this->specifyParameters();
     }
     
     /**
@@ -62,7 +78,7 @@ class TenantMigrateCommand extends Migrate
         $this->dispatcher = $this->laravel->make(Dispatcher::class);
        
         $this->setTenantsParameterValue();
-        
+
         // Now call parent handle() which will use $this->migrator and $this->dispatcher
         return parent::handle();
     }

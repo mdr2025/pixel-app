@@ -2,9 +2,9 @@
 
 namespace PixelApp\Http\Requests\CompanyAccountRequests\TenantCompanyAccountRequests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use ValidatorLib\CustomFormRequest\BaseFormRequest;
 
-class TenantResourcesConfiguringCancelingRequest extends FormRequest
+class TenantResourcesConfiguringCancelingRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class TenantResourcesConfiguringCancelingRequest extends FormRequest
     {
         return [
             "company_domain" => ["required" , "string"],
-            "messeage" => ["nullable" , "string"],
+            "message" => ["nullable" , "string"],
             "code" => ["nullable" , "integer"]
         ];
     }

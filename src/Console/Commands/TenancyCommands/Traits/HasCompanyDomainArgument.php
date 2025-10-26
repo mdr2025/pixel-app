@@ -10,13 +10,6 @@ use Exception;
 trait HasCompanyDomainArgument
 {
     
-    protected function getArguments()
-    {
-        return array_merge([
-            new InputArgument("companyDomain" , null , 'The company domain will be used for fetching')
-        ], parent::getArguments());
-    }
-    
  
     protected function fetchTenant() : ?TenantCompany
     {
@@ -42,7 +35,7 @@ trait HasCompanyDomainArgument
     {
         $tenant = $this->fetchTenant();
 
-        $this->input->setOption('tenants' , [ $tenant ]);
+        $this->input->setOption('tenants' , [$tenant ]);
     }
 
 }

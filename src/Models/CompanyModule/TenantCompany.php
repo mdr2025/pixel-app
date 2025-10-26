@@ -375,6 +375,7 @@ class TenantCompany extends PixelCompany
    {
         unset($this->attributes["tenancy_db_name"]);
         unset($this->original["tenancy_db_name"]);
+        $this->setAttributes("data" , []);
    }
    
    public function cancelApproving() : void

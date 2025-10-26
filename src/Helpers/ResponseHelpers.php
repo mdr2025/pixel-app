@@ -17,9 +17,9 @@ class ResponseHelpers
     static public function IsResponseStatusSuccess(JsonResponse $response): bool
     {
         $status = static::getResponseStatus($response);
-        return  static::getResponseStatus($response) 
+        return  $status
                 &&
-                static::getResponseStatus($response) == "success";
+                $status == "success";
     }
 
     static public function getResponseStatus(JsonResponse $response): ?string
@@ -29,7 +29,7 @@ class ResponseHelpers
 
     static public function getResponseMessages(JsonResponse $response): array
     {
-        return static::getResponseData($response , false)->messages;
+        return static::getResponseData($response , false)->messages ?? [];
     }
 
     public static function isArrayOfStrings($array)
