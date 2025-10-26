@@ -15,7 +15,7 @@ class TenantDatabaseSeedingCustomJob extends SeedDatabase
     
     public function handle()
     {
-        Artisan::call('tenant-company:seed ', [
+        Artisan::call('tenant-company:seed', [
             'companyDomain' => $this->tenant->domain,
         ]);
     }

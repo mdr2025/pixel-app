@@ -19,7 +19,7 @@ class TenantDatabaseMigratingCustomJob extends MigrateDatabase
      */
     public function handle()
     {
-         Artisan::call('tenant-company:migrate ', [
+         Artisan::call('tenant-company:migrate', [
             'companyDomain' => $this->tenant->domain,
         ]);
     }
