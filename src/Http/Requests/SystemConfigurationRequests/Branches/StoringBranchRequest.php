@@ -39,7 +39,7 @@ class StoringBranchRequest extends BaseFormRequest implements NeedsModelKeyAdvan
         return [
             "items" => ["required", "array", "min:1"],
             "items.*.name" => ["required", "string", "max:255"],
-            "items.*.status" => ["required", "boolean"],
+            "items.*.status" => ["nullable", "boolean"],
         ];
     }
 
@@ -52,7 +52,6 @@ class StoringBranchRequest extends BaseFormRequest implements NeedsModelKeyAdvan
             "items" => "Branches are required, you must submit at least one record",
             "items.*.name" => "Name is required",
             "items.*.name.unique" => "Name is already exists in our database",
-            "items.*.status" => "Status is required",
             "items.*.status.boolean" => "Status must be boolean",
         ];
     }

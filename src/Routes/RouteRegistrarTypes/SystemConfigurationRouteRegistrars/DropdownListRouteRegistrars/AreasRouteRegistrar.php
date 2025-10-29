@@ -48,7 +48,7 @@ class AreasRouteRegistrar extends PixelRouteRegistrar
    
     protected function defineImportingRoute() : void
     {
-        Route::get('system-configs/areas/import', [AreasController::class, 'import']);
+        Route::post('system-configs/areas/import', [AreasController::class, 'import']);
     }
     
     protected function defineExportingRoute() : void
@@ -63,7 +63,8 @@ class AreasRouteRegistrar extends PixelRouteRegistrar
   
     protected function defineAreasResourceRoute() : void
     {
-        Route::resource('system-configs/areas', AreasController::class)->parameters(["areas" => "area"]);
+        Route::resource('system-configs/areas', AreasController::class)->parameters(["areas" => "area"])
+        ->except(['create' , 'edit' ]);
     }
 
     protected function defineAreasRoutes(RouteRegistrar $routeRegistrar ) : void

@@ -49,7 +49,7 @@ class UpdatingBranchRequest extends BaseFormRequest implements NeedsModelKeyAdva
     {
         return [
             "name.unique" => "Branche Name is already Stored In Our Database !",
-            "status" => "Status must be boolean !",
+            "status.boolean" => "Status must be boolean !",
         ];
     }
 }

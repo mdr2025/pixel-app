@@ -41,7 +41,7 @@ class StoringDepartmentRequest extends BaseFormRequest implements NeedsModelKeyA
         return [
             "items" => ["required", "array"],
             "items.*.name" => ["required", "string"],
-            "items.*.status" => ["required", "boolean"],
+            "items.*.status" => ["nullable", "boolean"],
         ];
     }
 }

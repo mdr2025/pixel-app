@@ -32,18 +32,19 @@ class Cors
 
             // Set headers if not already set by Apache server
             if (!$response->headers->has('Access-Control-Allow-Origin')) {
-                $response->header('Access-Control-Allow-Origin', $origin);
+                $response->headers->set('Access-Control-Allow-Origin', $origin);
             }
             if (!$response->headers->has('Access-Control-Allow-Methods')) {
-                $response->header('Access-Control-Allow-Methods', implode(', ', $allowedMethods));
+                $response->headers->set('Access-Control-Allow-Methods', implode(', ', $allowedMethods));
             }
             if (!$response->headers->has('Access-Control-Allow-Headers')) {
-                $response->header('Access-Control-Allow-Headers', implode(', ', $allowedHeaders));
+                $response->headers->set('Access-Control-Allow-Headers', implode(', ', $allowedHeaders));
             }
-            $response->header('Access-Control-Max-Age', $maxAge);
+            $response->headers->set('Access-Control-Max-Age', $maxAge);
 
-            $response->header('Access-Control-Allow-Credentials', ' true')
-                     ->header('Access-Control-Expose-Headers', 'Has-Encrypted-Data, Encrypted-Props');
+            $response->headers->set('Access-Control-Allow-Credentials', ' true');
+            
+            $response->headers->set('Access-Control-Expose-Headers', 'Has-Encrypted-Data, Encrypted-Props');
 
             // Handle preflight OPTIONS request to avoid cors error when fetch data by browser
             if ($request->getMethod() === 'OPTIONS') {

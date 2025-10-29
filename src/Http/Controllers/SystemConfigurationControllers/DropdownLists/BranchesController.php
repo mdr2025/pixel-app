@@ -12,7 +12,7 @@ use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperatio
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchStoringService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchUpdatingService;
 use PixelApp\Services\PixelServiceManager;
-use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\BranchShowService;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchShowService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchesListingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\BranchesIndexingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\ChildrenBranchesListingService;
@@ -90,7 +90,7 @@ class BranchesController extends Controller
     public function show( $branch)
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(BranchShowService::class);
-        return (new $service($branch))->list();
+        return (new $service($branch))->show();
 
         // $branch = Branch::findOrFail($branch);
         // $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(SingleResource::class);

@@ -50,7 +50,8 @@ class CitiesRouteRegistrar extends PixelRouteRegistrar
   
     protected function defineCitiesResourceRoute() : void
     {
-        Route::resource('system-configs/cities', CitiesController::class)->parameters(["cities" => "city"]);
+        Route::resource('system-configs/cities', CitiesController::class)->parameters(["cities" => "city"])
+        ->except(['show' , 'create' , 'edit' ]);
     }
 
     protected function defineCitiesRoutes(RouteRegistrar $routeRegistrar ) : void

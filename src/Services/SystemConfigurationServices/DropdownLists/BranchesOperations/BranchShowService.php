@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations;
+namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations;
  
 use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\SingleResource;

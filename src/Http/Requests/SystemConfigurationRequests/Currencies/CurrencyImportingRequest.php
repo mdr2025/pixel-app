@@ -44,7 +44,7 @@ class CurrencyImportingRequest extends BaseFormRequest implements NeedsModelKeyA
         return [
             "id" => ["nullable" , "integer"],
             "name" => ["required", "string"],
-            "status" => ["required", "boolean"],
+            "status" => ["boolean", "boolean"],
             "code" => ["nullable", "string"],
             "symbol"=> ["nullable", "string"],
             "symbol_native"=> ["nullable", "string"],

@@ -65,7 +65,7 @@ class CurrenciesRouteRegistrar extends PixelRouteRegistrar
     
     protected function defineCurrenciesListingRoute() : void
     {
-        Route::get('currencies', [CurrenciesController::class, 'list']);
+        Route::get('list/currencies', [CurrenciesController::class, 'list']);
     }
   
     protected function defineCurrenciesResourceRoute() : void

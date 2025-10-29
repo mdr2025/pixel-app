@@ -48,7 +48,7 @@ class BranchesRouteRegistrar extends PixelRouteRegistrar
    
     protected function defineImportingRoute() : void
     {
-        Route::get('system-configs/branches/import', [BranchesController::class, 'import']);
+        Route::post('system-configs/branches/import', [BranchesController::class, 'import']);
     }
     
     protected function defineExportingRoute() : void
@@ -73,7 +73,9 @@ class BranchesRouteRegistrar extends PixelRouteRegistrar
 
     protected function defineBranchesResourceRoute() : void
     {
-        Route::resource('branches', BranchesController::class)->parameters(["branches" => "branch"]);
+        Route::resource('branches', BranchesController::class)
+             ->parameters(["branches" => "branch"])
+             ->except(['create' , 'edit' ]);
     }
 
     protected function defineBranchesRoutes(RouteRegistrar $routeRegistrar ) : void

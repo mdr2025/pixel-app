@@ -39,7 +39,7 @@ class BranchImportingRequest extends BaseFormRequest implements NeedsModelKeyAdv
         return [ 
             "id" => ["nullable" , "integer"],
             "name" => ["required", "string", "max:255"],
-            "status" => ["required", "boolean"],
+            "status" => ["nullable", "boolean"],
             "default" => ["required" , "boolean"]
         ];
     }
@@ -52,7 +52,6 @@ class BranchImportingRequest extends BaseFormRequest implements NeedsModelKeyAdv
         return [
             "name" => "Name is required",
             "name.unique" => "Name is already exists in our database",
-            "status" => "Status is required",
             "status.boolean" => "Status must be boolean",
         ];
     }

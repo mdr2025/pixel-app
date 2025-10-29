@@ -25,7 +25,8 @@ class BranchesIndexingService extends ModelIndexingService
 
     protected function eagerLoadRelations() : void
     {
-        $this->query->with(['parent' ]);
+        //to check later
+        // $this->query->with(['parent' ]);
     }
    
 }

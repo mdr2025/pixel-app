@@ -61,7 +61,8 @@ class DepartmentRouteRegistrar extends PixelRouteRegistrar
     }
     protected function defineDepartmentsResourceRoute() : void
     {
-        Route::resource('system-configs/departments', DepartmentsController::class)->parameters(["departments" => "department"]);
+        Route::resource('system-configs/departments', DepartmentsController::class)->parameters(["departments" => "department"])
+        ->except(['create' , 'edit' ]);
     }
 
     protected function defineDepartmentsRoutes(RouteRegistrar $routeRegistrar ) : void

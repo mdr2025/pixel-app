@@ -41,7 +41,7 @@ class DepartmentImportingRequest extends BaseFormRequest implements NeedsModelKe
         return [
             "id" => ["nullable" , "integer"],
             "name" => ["required", "string"],
-            "status" => ["required", "boolean"],
+            "status" => ["nullable", "boolean"],
         ];
     }
 }
