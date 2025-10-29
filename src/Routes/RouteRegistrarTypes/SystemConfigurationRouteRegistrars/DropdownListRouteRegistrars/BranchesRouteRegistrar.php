@@ -53,7 +53,7 @@ class BranchesRouteRegistrar extends PixelRouteRegistrar
     
     protected function defineExportingRoute() : void
     {
-        Route::get('system-configs/branches/export', [BranchesController::class, 'export']);
+        Route::post('system-configs/branches/export', [BranchesController::class, 'export']);
     }
 
     protected function defineChildBranchesListingRoute() : void

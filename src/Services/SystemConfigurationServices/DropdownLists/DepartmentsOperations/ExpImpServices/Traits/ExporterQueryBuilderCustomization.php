@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\ExpImpServices\Tratis;
+namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\ExpImpServices\Traits;
  
 trait ExporterQueryBuilderCustomization
 { 

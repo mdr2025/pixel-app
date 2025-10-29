@@ -60,7 +60,7 @@ class CurrenciesRouteRegistrar extends PixelRouteRegistrar
     
     protected function defineExportingRoute() : void
     {
-        Route::get('currencies/export', [CurrenciesController::class, 'export']);
+        Route::post('currencies/export', [CurrenciesController::class, 'export']);
     }
     
     protected function defineCurrenciesListingRoute() : void

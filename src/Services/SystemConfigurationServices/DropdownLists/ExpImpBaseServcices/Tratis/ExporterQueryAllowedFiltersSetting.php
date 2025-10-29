@@ -1,7 +1,7 @@
 <?php
 
  
-namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\Tratis;
+namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\Traits;
  
 
 trait ExporterQueryAllowedFiltersSetting

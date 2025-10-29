@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\Tratis;
+namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\Traits;
 
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder;

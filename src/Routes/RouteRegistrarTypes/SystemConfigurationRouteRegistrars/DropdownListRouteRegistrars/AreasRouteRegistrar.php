@@ -53,7 +53,7 @@ class AreasRouteRegistrar extends PixelRouteRegistrar
     
     protected function defineExportingRoute() : void
     {
-        Route::get('system-configs/areas/export', [AreasController::class, 'export']);
+        Route::post('system-configs/areas/export', [AreasController::class, 'export']);
     }
 
     protected function defineAreasListingRoute() : void

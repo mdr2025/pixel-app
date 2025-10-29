@@ -47,7 +47,7 @@ class DepartmentRouteRegistrar extends PixelRouteRegistrar
     }
     protected function defineDepartmentsExportingRoute() : void
     {
-        Route::get('system-configs/departments/export', [DepartmentsController::class, 'export']);
+        Route::post('system-configs/departments/export', [DepartmentsController::class, 'export']);
     }
 
     protected function defineDepartmentsImportingRoute() : void
