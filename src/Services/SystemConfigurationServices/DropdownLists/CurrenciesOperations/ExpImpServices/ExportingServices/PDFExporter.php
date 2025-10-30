@@ -4,9 +4,9 @@ namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\Currencies
 
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Department;
-use PixelApp\Services\SystemConfigurationServices\DropdownLists\CurrenciesOperations\ExpImpServices\Tratis\ExporterQueryAllowedFiltersSetting;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\CurrenciesOperations\ExpImpServices\Traits\ExporterQueryAllowedFiltersSetting;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\ExportingFunc\DropDownListPDFExporter;
-use PixelApp\Services\SystemConfigurationServices\DropdownLists\CurrenciesOperations\ExpImpServices\Tratis\ExporterQueryBuilderCustomization;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\CurrenciesOperations\ExpImpServices\Traits\ExporterQueryBuilderCustomization;
 
 class PDFExporter extends DropDownListPDFExporter
 {

@@ -8,8 +8,8 @@ use ExpImpManagement\ExportersManagement\Interfaces\ExportsCSVImportableData;
 use ExpImpManagement\ExportersManagement\Interfaces\SelfConstructableExporter;
 use ExpImpManagement\ImportersManagement\ImportableFileFormatFactories\CSVImportableFileFormatFactory\CSVImportableFileFormatFactory;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\ImportingFunc\DropDownListCSVFileFormatFactory;
-use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\Tratis\ExporterQueryBuilderCustomization;
-use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\Tratis\ExporterQueryAllowedFiltersSetting;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\Traits\ExporterQueryBuilderCustomization;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\Traits\ExporterQueryAllowedFiltersSetting;
 
 abstract class DropDownListCSVExporter 
          extends CSVExporter 

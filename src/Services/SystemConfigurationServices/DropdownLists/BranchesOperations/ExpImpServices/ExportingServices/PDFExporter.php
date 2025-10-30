@@ -5,7 +5,7 @@ namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOp
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Branch;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\ExportingFunc\DropDownListPDFExporter;
-use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\ExpImpServices\Tratis\ExporterQueryBuilderCustomization;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\ExpImpServices\Traits\ExporterQueryBuilderCustomization;
 
 class PDFExporter extends DropDownListPDFExporter
 {

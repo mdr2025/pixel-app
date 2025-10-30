@@ -4,7 +4,7 @@ namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOpera
 
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Area;
-use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\ExpImpServices\Tratis\ExporterQueryBuilderCustomization;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\ExpImpServices\Traits\ExporterQueryBuilderCustomization;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\ExportingFunc\DropDownListPDFExporter;
 
 

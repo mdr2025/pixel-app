@@ -6,8 +6,8 @@ use ExpImpManagement\ExportersManagement\Exporter\Traits\ExporterSelfConstructin
 use ExpImpManagement\ExportersManagement\ExporterTypes\PDFExporter\PDFExporter; 
 use ExpImpManagement\ExportersManagement\Interfaces\SelfConstructableExporter;
 use ExpImpManagement\ExportersManagement\Interfaces\SelfConstructablePDFExporter;
-use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\Tratis\ExporterQueryBuilderCustomization;
-use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\Tratis\ExporterQueryAllowedFiltersSetting;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\Traits\ExporterQueryBuilderCustomization;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\Traits\ExporterQueryAllowedFiltersSetting;
  
 abstract class DropDownListPDFExporter 
          extends PDFExporter 
