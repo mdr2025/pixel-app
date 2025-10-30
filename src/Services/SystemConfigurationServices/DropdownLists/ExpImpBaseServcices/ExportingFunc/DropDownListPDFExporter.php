@@ -19,6 +19,6 @@ abstract class DropDownListPDFExporter
    
     public function getViewRelevantPathForSelfConstructing() : string
     {
-        return "pixel-app::Reports.PDFTemplates";
+        return "Reports.PDFTemplates.TableTemplate";
     }
 }

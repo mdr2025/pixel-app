@@ -37,7 +37,7 @@
 @endsection
 
 @section("content")
-    @foreach($Data as $row)
+    @foreach($data as $row)
         <div class="card">
             @foreach($row as $key => $value)
                 <div class="info-row">

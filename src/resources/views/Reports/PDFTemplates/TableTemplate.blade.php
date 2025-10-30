@@ -26,7 +26,7 @@
     <table>
         <thead>
         <tr>
-            @foreach($keys as $key)
+            @foreach($dataKeys as $key)
                 <th>{{$key}}</th>
             @endforeach
         </tr>
