@@ -159,7 +159,7 @@ class BranchesController extends Controller
     public function export()
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(BranchesExportingService::class);
-        return (new $service())->baseExport();
+        return (new $service())->basicExport("branches");
 
         // $taxes = QueryBuilder::for(Branch::class)->allowedFilters($this->filterable)->datesFiltering()->customOrdering()->cursor();
         // $list  = new SheetCollection([

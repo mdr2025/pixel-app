@@ -142,7 +142,7 @@ class DepartmentsController extends Controller
     public function export()
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(DepartmentsExportingService::class);
-        return (new $service())->baseExport();
+        return (new $service())->basicExport("departments");
 
         // BasePolicy::check('read', Department::class);
         // // Retrieve the data to be exported

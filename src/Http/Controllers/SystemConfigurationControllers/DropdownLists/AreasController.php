@@ -110,7 +110,7 @@ class AreasController extends Controller
     public function export()
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(AreaExportingService::class);
-        return (new $service())->baseExport();
+        return (new $service())->basicExport("areas");
 
         // $taxes = QueryBuilder::for(Area::class)->allowedFilters($this->filterable)->datesFiltering()->customOrdering()->cursor();
         // $list  = new SheetCollection([

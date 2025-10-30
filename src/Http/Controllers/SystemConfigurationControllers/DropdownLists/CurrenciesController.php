@@ -92,7 +92,7 @@ class CurrenciesController extends PixelBaseController
     public function export()
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(CurrenciesExportingService::class);
-        return (new $service())->baseExport();
+        return (new $service())->basicExport("currencies");
 
         // $taxes = QueryBuilder::for(Currency::class)->allowedFilters($this->filterable)->datesFiltering()->customOrdering()->cursor();
         // $list  = new SheetCollection([
