@@ -5,6 +5,7 @@ namespace PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserS
 
 use Exception;
 use PixelApp\Models\SystemConfigurationModels\Department;
+use PixelApp\Rules\DepartmentBelongsToBranch;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\ExpectsSensitiveRequestData;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\HasValidationRules;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Traits\ExpectsSensitiveRequestDataFunc;
@@ -40,9 +41,18 @@ class DepartmentChanger
         return 'department_id';
     }
 
-    public function getValidationRules() : array
+    public function getValidationRules(array $data = []) : array
     {
-        return   ["required"  , "integer", "exists:departments,id"]  ;
+        $branchId = $data["branch_id"] ?? null;
+        if(!$branchId)
+        {
+            throw new Exception("The selected department is not dound in the branch .... Can't set the user to the selected department !");
+        }
+
+        return  [
+                    $this->getPropName() => [ "required"  , "integer", "exists:departments,id" , new DepartmentBelongsToBranch($branchId)],
+
+                ];
     }
 
     /**
@@ -51,6 +61,11 @@ class DepartmentChanger
     public function getPropChangesArray(): array
     {
         $value = $this->department?->id ?? $this->getPropNewRequestValue();
+        // if department changed, set dep_role to null directly on the user
+        if ($this->authenticatable && $this->authenticatable->department_id != $value) {
+            $this->authenticatable->dep_role = null;
+        }
+
         return $this->composeChangesArray( $value );
     }
 

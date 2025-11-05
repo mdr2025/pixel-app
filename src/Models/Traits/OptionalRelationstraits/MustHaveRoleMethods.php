@@ -21,8 +21,54 @@ trait MustHaveRoleMethods
         return new UserRoleChanger();
     }
     
-    protected function appendBranchIdCast() : void
+    protected function appendRoleFileds() : void
+    {
+        $this->injectRoleFillables();
+        $this->appendRoleIdCast();
+        $this->appendRleGuardedAttrs();
+    }
+
+    protected function injectRoleFillables() : void
+    {
+        $this->filables['role_id'] = 'role_id';
+        $this->fillables['previous_role_id'] = 'previous_role_id';
+    }
+
+    protected function appendRoleIdCast() : void
     { 
         $this->casts['role_id'] = 'integer';
     }
+    
+    protected function appendRleGuardedAttrs() : void
+    {
+        $this->guarded['role_id'] = 'role_id';
+    }
+
+    public function permissions(): array
+    {
+        return $this->role?->permissions->pluck("name")->toArray() ?? [];
+    }
+
+    public function HasPermission(string $permissionToCheck): bool
+    {
+        $userPermissions = $this->permissions();
+        return in_array($permissionToCheck, $userPermissions);
+    }
+    
+    /**
+     * Scope to exclude super admin users
+     */
+    public function scopeNotSuperAdmin($query) : void
+    {
+        $query->where('role_id', '!=', 1);
+    }
+    
+    /**
+     * an alias to scopeNotSuperAdmin - for compability with exists applications
+     */
+    public function scopeWithoutSuperAdmin($query): void
+    {
+        $this->scopeNotSuperAdmin($query);
+    }
+
 }

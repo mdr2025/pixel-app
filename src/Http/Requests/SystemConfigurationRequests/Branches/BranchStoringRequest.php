@@ -5,9 +5,10 @@ namespace PixelApp\Http\Requests\SystemConfigurationRequests\Branches;
 use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 use CRUDServices\Interfaces\ValidationManagerInterfaces\NeedsModelKeyAdvancedValidation;
 use PixelApp\Models\SystemConfigurationModels\Branch;
+use PixelApp\Rules\NotMainBranchName;
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 
-class StoringBranchRequest extends BaseFormRequest implements NeedsModelKeyAdvancedValidation
+class BranchStoringRequest extends BaseFormRequest implements NeedsModelKeyAdvancedValidation
 {
 
     /**
@@ -27,7 +28,9 @@ class StoringBranchRequest extends BaseFormRequest implements NeedsModelKeyAdvan
     public function getModelKeyAdvancedValidationRules(array $data = []): array
     {
         return [
-            "name" => ["unique:branches,name"],
+            'name' => ['unique:branches,name'],
+            'parent_id' => ['exists:branches,id'],
+            'country_id' => ['exists:countries,id'],
         ];
     }
 
@@ -37,9 +40,11 @@ class StoringBranchRequest extends BaseFormRequest implements NeedsModelKeyAdvan
     public function rules(): array
     {
         return [
-            "items" => ["required", "array", "min:1"],
-            "items.*.name" => ["required", "string", "max:255"],
-            "items.*.status" => ["nullable", "boolean"],
+            'items' => ['required', 'array', 'min:1'],
+            'items.*.name' => ['required', 'string', 'max:255', new NotMainBranchName()],
+            //" items.*.status"        => ["required", "boolean"],
+            'items.*.parent_id' => ['required', 'integer'],
+            'items.*.country_id' => ['required', 'integer'],
         ];
     }
 
@@ -51,8 +56,10 @@ class StoringBranchRequest extends BaseFormRequest implements NeedsModelKeyAdvan
         return [
             "items" => "Branches are required, you must submit at least one record",
             "items.*.name" => "Name is required",
-            "items.*.name.unique" => "Name is already exists in our database",
-            "items.*.status.boolean" => "Status must be boolean",
+            "name.unique" => "Name is already exists in our database",
+            //" items.*.status"                => "Status is required",
+            " items.*.status.boolean" => "Status must be boolean",
+            "items.*.parent_id.required" => "Parent Branch is required !"
         ];
     }
 }

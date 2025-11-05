@@ -16,15 +16,12 @@ return new class() extends Migration
     {
         Schema::create('user_profile', function (Blueprint $table) {
             $table->enum('gender', ['male', 'female'])->default('male');
-            $table->string('logo')->nullable();
+            $table->string('picture')->nullable();
             $table->enum('marital_status' , UserProfile::MARTIAL_STATUSES)->nullable();
             $table->enum('military_status' , UserProfile::MILITARY_STATUSES)->nullable();
-            $table->date('date_of_birth')->nullable();
             $table->string('national_id_number')->nullable()->unique();
             $table->string('passport_number')->nullable()->unique();
-
-            $table->foreignId("country_id")->constrained("countries")->cascadeOnUpdate();
-            $table->foreignId("city_id")->nullable()->constrained("cities")->cascadeOnUpdate();
+            $table->foreignId("nationality_id")->constrained("countries")->cascadeOnUpdate()->restrictOnDelete();
             $table->foreignId("user_id")->unique()->constrained("users")->cascadeOnDelete()->cascadeOnUpdate();
         });
     }

@@ -58,7 +58,7 @@ class RolesAndPermissionsRouteRegistrar extends PixelRouteRegistrar
     
     protected function defineRolesResourceRoute() : void
     {
-        Route::resource('roles', RolesController::class)->except(['edit']);
+        Route::resource('roles', RolesController::class)->except(['edit' , 'create']);
     }
     protected function defineAddPermissionRoute() : void
     {

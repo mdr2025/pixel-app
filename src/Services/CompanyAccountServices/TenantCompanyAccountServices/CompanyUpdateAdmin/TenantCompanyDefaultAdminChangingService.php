@@ -29,8 +29,7 @@ class TenantCompanyDefaultAdminChangingService  extends CompanyDefaultAdminChang
     }
      
     protected function syncDataWithAdminPanel(): void
-    {
- 
+    { 
         PixelTenancyManager::handleTenancySyncingData($this->newAdminUser); 
     }
 

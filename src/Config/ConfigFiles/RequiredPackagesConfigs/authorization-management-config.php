@@ -7,11 +7,15 @@ use PixelApp\Models\SystemConfigurationModels\CountryModule\City;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\Country;
 use PixelApp\Models\SystemConfigurationModels\Currency;
 use PixelApp\Models\SystemConfigurationModels\Department;
+use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Models\UsersModule\UserProfile;
 use PixelApp\Policies\AuthenticationPolicies\CompanyModulePolicies\CompanyModulePolicy;
 use PixelApp\Policies\AuthenticationPolicies\UsersModulePolicies\UsersModulePolicy;
 use PixelApp\Policies\IndependentGates\SuperAdminIndependentGates;
+use PixelApp\Policies\SystemConfigurationPolicies\DropDownListPolicies\AreaPolicy;
+use PixelApp\Policies\SystemConfigurationPolicies\DropDownListPolicies\BranchPolicy;
+use PixelApp\Policies\SystemConfigurationPolicies\DropDownListPolicies\DepartmentPolicy;
 use PixelApp\Policies\SystemConfigurationPolicies\DropDownListPolicies\DropDownListPolicy;
 use PixelApp\Policies\SystemConfigurationPolicies\RolesAndPermissionsPolicies\RolesAndPermissionsPolicies;
 use PixelApp\Policies\UserManagementPolicies\UserProfilePolicy;
@@ -24,13 +28,13 @@ return [
  
         /** System Configuration Policies */
         Role::class => RolesAndPermissionsPolicies::class,
+        RoleModel::class => RolesAndPermissionsPolicies::class,
         Permission::class => RolesAndPermissionsPolicies::class,
 
         /** DropDownList Policies */
-        Department::class => DropDownListPolicy::class,
-        Branch::class => DropDownListPolicy::class,
-        Area::class => DropDownListPolicy::class,
-        Country::class => DropDownListPolicy::class,
+        Department::class                 => DepartmentPolicy::class,
+        Area::class                       => AreaPolicy::class,
+        Branch::class                     => BranchPolicy::class,
         City::class => DropDownListPolicy::class,
         Currency::class => DropDownListPolicy::class,
        

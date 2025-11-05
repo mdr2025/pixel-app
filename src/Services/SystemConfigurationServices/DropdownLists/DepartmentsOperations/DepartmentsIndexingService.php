@@ -8,6 +8,9 @@ use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Department;
 use PixelApp\Services\CoreServices\ModelIndexingService;
 
+/**
+ * For referance
+ */
 class DepartmentsIndexingService extends ModelIndexingService
 { 
     public function __construct()

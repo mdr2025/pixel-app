@@ -51,7 +51,7 @@ class RoleDeletingService
     private function deleteSoftly(): bool
     {
         $this->role->deleted_at = now();
-        $this->role->disabled = 1;
+        $this->role->status = 1;
         if ($this->role->save()) {
             return true;
         }
@@ -76,7 +76,8 @@ class RoleDeletingService
             if ($this->IsDefaultRole()) {
                 throw new Exception("Can't Delete Any Default Role Or Its Permissions");
             }
-            if ($this->role->user()->count() != 0 ) {
+            
+            if ($this->role->user()->activeUsers()->count() > 0) {
                 throw new Exception("Role can not be deleted as it has assigned users");
             }
 

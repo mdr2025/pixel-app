@@ -31,6 +31,10 @@ use PixelApp\Jobs\TenantCompanyJobs\ExpImpManagementHandlingJobs\OldDataExporter
 use PixelApp\Jobs\UsersModule\AuthJobs\UserRevokedAccessTokensDeleterJob;
 use PixelApp\PixelMacroableExtenders\PixelMacroableExtender;
 use PixelApp\ServiceProviders\Traits\ConfigFilesHandling;
+use PixelApp\Services\Repositories\RepositryInterfaces\SystemConfigurationRepositryInterfaces\BranchRepositoryInterfaces\BranchRepositoryInterface;
+use PixelApp\Services\Repositories\RepositryInterfaces\SystemConfigurationRepositryInterfaces\DepartmentRepositoryInterface;
+use PixelApp\Services\Repositories\SystemSettings\SystemConfigurationRepositories\DropdownLists\BranchesOperations\BranchRepository;
+use PixelApp\Services\Repositories\SystemSettings\SystemConfigurationRepositories\DropdownLists\DepartmentsOperations\DepartmentRepository;
 use Throwable;
 
 class PixelAppPackageServiceProvider extends ServiceProvider
@@ -43,6 +47,8 @@ class PixelAppPackageServiceProvider extends ServiceProvider
         //merging config files
         $this->mergeConfigFiles(); 
         $this->registerIOEncryptionObjects();
+
+        $this->registerRepositryInterfaces();
 
         // $this->setOldDataExportersDeleterAltJob();
 
@@ -148,4 +154,21 @@ class PixelAppPackageServiceProvider extends ServiceProvider
         //                                                       OldDataExportersDeleterAltJob::class 
         //                                                   );
     // }
+
+    protected function registerRepositryInterfaces()  :void
+    {
+        $this->registerDepartmentRepositryInterface() ;
+        $this->registerBranchRepositoryInterface();
+    }
+
+    protected function registerDepartmentRepositryInterface() : void
+    {
+        $this->app->singleton(DepartmentRepositoryInterface::class , DepartmentRepository::class);
+    }
+
+    
+    protected function registerBranchRepositoryInterface() : void
+    {
+        $this->app->singleton(BranchRepositoryInterface::class , BranchRepository::class);
+    }
 }

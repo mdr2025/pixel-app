@@ -13,17 +13,18 @@ class RoleModel extends Role
     use SoftDeletes;
 
     protected $casts = [
-        'disabled' => 'boolean',
-        'editable' => 'boolean',
-        'deletable' => 'boolean',
-        'status' => 'boolean',
-        'default' => 'boolean'
+        'activate_button' => 'boolean',
+        'default' => 'boolean',
+        'delete_button' => 'boolean',
+        'edit_button' => 'boolean',
+        'status' => 'boolean'
     ];
 
     public function scopeActiveRole()
     {
-        return $this->where('disabled', 0);
+        return $this->where('status', 1);
     }
+
     public function scopeDefaultRole()
     {
         return $this->where('default', 1);
@@ -33,10 +34,12 @@ class RoleModel extends Role
     {
         return $this->where('default', 0);
     }
+    
     public function isActive() : bool
     {
-        return $this->disabled == 0;
+        return $this->status == 0;//wrong
     }
+    
     public function isDefault() : bool
     {
         return (bool) $this->default;

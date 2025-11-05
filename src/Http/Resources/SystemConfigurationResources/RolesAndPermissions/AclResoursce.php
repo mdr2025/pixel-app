@@ -11,7 +11,7 @@ class AclResoursce extends JsonResource
 {
     protected function getAllPermissions() : Collection
     {
-        return PixelModelManager::getPermissionModelClass()::query()->get("name");
+        return PixelModelManager::getPermissionModelClass()::query()->pluck("name");
     }
 
     protected function getPermissionsResourceClass() : string
@@ -26,10 +26,11 @@ class AclResoursce extends JsonResource
      */
     public function toArray($request)
     {
+        $permissions = $this->getAllPermissions();
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'permissions' => $this->getPermissionsResourceClass()::collection($this->getAllPermissions())
+            'permissions' => $this->getPermissionsResourceClass()::collection($permissions)
         ];
     }
 }

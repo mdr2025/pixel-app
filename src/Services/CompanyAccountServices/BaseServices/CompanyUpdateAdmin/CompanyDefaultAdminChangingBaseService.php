@@ -184,7 +184,7 @@ abstract class CompanyDefaultAdminChangingBaseService
     {
         /** @var PixelUser $user  */
         $user = auth()->user();
-        if (!$user->isDefaultUser()) 
+        if (!$user->isSuperAdmin()) 
         {
             throw new JsonException("you don't have the permissions required to change the system 's default admin email");
         }

@@ -8,6 +8,10 @@ use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Branch; 
 use PixelApp\Services\CoreServices\ModelListingService;
 
+
+/**
+ * For referance
+ */
 class SubBranchesListingService extends ModelListingService
 {
     protected function getModelClass() : string

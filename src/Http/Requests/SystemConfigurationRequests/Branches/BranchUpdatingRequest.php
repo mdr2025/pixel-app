@@ -8,7 +8,7 @@ use Illuminate\Validation\Rule;
 use PixelApp\Models\SystemConfigurationModels\Branch;
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 
-class UpdatingBranchRequest extends BaseFormRequest implements NeedsModelKeyAdvancedValidation
+class BranchUpdatingRequest extends BaseFormRequest implements NeedsModelKeyAdvancedValidation
 {
 
     /**
@@ -36,10 +36,16 @@ class UpdatingBranchRequest extends BaseFormRequest implements NeedsModelKeyAdva
      */
     public function rules(): array
     {
-        return [
-            "name" => ["nullable", "string", "max:255"],
-            "status" =>  ["nullable", "boolean"]
+        $key = request()->getPathInfo()[-1];
+        $rules = [
+            "name"      => ["nullable", "string", "max:255"],
+            "status"    =>  ["nullable", "boolean"],
         ];
+        if ($key != 1 && !request()->has('status')) {
+            $rules['parent_id']   = ["required_with:parent_id", "integer", "exists:branches,id"];
+            $rules['country_id']  = ["required_with:country_id", "integer", "exists:countries,id"];
+        }
+        return $rules;
     }
 
     /**
@@ -48,8 +54,9 @@ class UpdatingBranchRequest extends BaseFormRequest implements NeedsModelKeyAdva
     public function messages(): array
     {
         return [
-            "name.unique" => "Branche Name is already Stored In Our Database !",
-            "status.boolean" => "Status must be boolean !",
+            "name.unique"           => "Branch Name is already Stored In Our Database !",
+            "status"                => "Status must be boolean !",
+            "parent_id.required"    => "Parent Branch is required !"
         ];
     }
 }

@@ -17,12 +17,12 @@ class RolesListResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'disabled' => $this->disabled,
+            'activate_button' => $this->activate_button,
             'default' => $this->default,
-            'editable' => $this->editable,
-            'deletable' => $this->deletable,
+            'edit_button' => $this->edit_button,
+            'delete_button' => $this->delete_button,
             'status' => $this->status,
-             'user_count' => $this->user()->count(),
+            'user_count' => $this->user()->count(),
             'permissions_count' => $this->permissions()->count(),
         ];
     }

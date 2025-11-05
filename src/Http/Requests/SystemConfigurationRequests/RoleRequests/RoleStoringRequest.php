@@ -2,6 +2,8 @@
 
 namespace PixelApp\Http\Requests\SystemConfigurationRequests\RoleRequests;
 
+use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
+use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 
 class RoleStoringRequest extends BaseFormRequest
@@ -13,10 +15,7 @@ class RoleStoringRequest extends BaseFormRequest
      */
     public function authorize()
     {
-        /**
-         * @todo later
-         */
-        return true;
+        return BasePolicy::check('create' , RoleModel::class);
     }
 
     /**

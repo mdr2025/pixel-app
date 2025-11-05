@@ -39,7 +39,10 @@ class PermissionController extends Controller
         try {
             DB::beginTransaction();
             $permissionModelClass = PixelModelManager::getPermissionModelClass();
-            $permissions = $permissionModelClass::insert($data);
+        
+            //doesn't returns the created models
+            $permissionModelClass::insert($data);
+
             $permissionIds = $permissionModelClass::latest()->pluck('id')->take(count($data));
             foreach ($permissionIds as $id) {
                 DB::table('role_has_permissions')->insert([
@@ -52,9 +55,11 @@ class PermissionController extends Controller
             foreach ($data as $permission) {
                 $permissionNames[] = $permission['name'];
             }
+            
             db::commit();
             return response()->json($permissionNames, 201);
-        } catch (Exception $e) {
+        } catch (Exception $e)
+        {
             DB::rollBack();
             return response()->json([
                 "message" => $e->getMessage()

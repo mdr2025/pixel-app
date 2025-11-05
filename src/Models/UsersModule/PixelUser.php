@@ -5,10 +5,12 @@ namespace PixelApp\Models\UsersModule;
 use PixelApp\Models\PixelBaseModel ;  
 use AuthorizationManagement\Interfaces\HasAuthorizablePermissions;
 use CRUDServices\CRUDComponents\CRUDRelationshipComponents\OwnedRelationshipComponent;
+use CRUDServices\CRUDComponents\CRUDRelationshipComponents\ParticipatingRelationshipComponent;
 use CRUDServices\Interfaces\OwnsRelationships;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -24,6 +26,7 @@ use PixelApp\Events\TenancyEvents\DataSyncingEvents\TenancyDataSyncingEvent;
 use PixelApp\Interfaces\EmailAuthenticatable;
 use PixelApp\Interfaces\HasUUID;
 use PixelApp\Interfaces\TenancyInterfaces\CanSyncData;
+use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToBranch;
 use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\MustHaveRole;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\TenancyDataSyncingEventFactories\UsersModule\TenantUserDataSyncingEventFactory;
@@ -33,6 +36,7 @@ use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\
 use PixelApp\Traits\interfacesCommonMethods\EmailAuthenticatableMethods;
 use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeededFromChildes;
 use Spatie\Permission\Models\Role;
+use PixelApp\Traits\Models\Scopes\BranchFilterScope;
 
 class PixelUser extends PixelBaseModel
 implements
@@ -48,24 +52,97 @@ implements
     MustHaveRole,
     HasAdminAssignableProps
 {
-    use  Authenticatable, Authorizable, HasApiTokens, HasFactory, Notifiable, EmailAuthenticatableMethods, SoftDeletes , MustHaveRoleMethods;
+    use  Authenticatable,
+         Authorizable,
+         HasApiTokens,
+         HasFactory,
+         Notifiable,
+         EmailAuthenticatableMethods,
+         SoftDeletes ,
+         MustHaveRoleMethods,
+         BranchFilterScope;
   
-    public static $snakeAttributes = false;
     protected bool $fakedUsersStatus = false;
 
-    const USER_STATUS = ["active", "inactive"]; // Database column values
-    const SIGN_UP_STATUS = ["pending", "rejected"]; // Database column values
-    const SIGN_UP_STATUS_CHANGING_VALUES = ["active", "rejected"]; // Allowed values to use during status changing
-    const USER_STATUS_CHANGING_VALUES = ["active", "inactive"]; // Allowed values to use during status changing
-    const UserDefaultInitStatusValue = "pending";
-    const UserStatusNames = [
-        "pending",
-        "active",
-        "inactive",
-        "rejected"
+    // const USER_STATUS = ["active", "inactive"]; // Database column values
+    // const SIGN_UP_STATUS = ["pending", "rejected"]; // Database column values
+    // const SIGN_UP_STATUS_CHANGING_VALUES = ["active", "rejected"]; // Allowed values to use during status changing
+    // const USER_STATUS_CHANGING_VALUES = ["active", "inactive"]; // Allowed values to use during status changing
+    // const UserDefaultInitStatusValue = "pending";
+    // const UserStatusNames = [
+    //     "pending",
+    //     "active",
+    //     "inactive",
+    //     "rejected"
+    // ];
+    // const UserAllowedTypes = ["user", "signup"];
+    // const UserDefaultType = "signup"; 
+
+    // ========================================
+    // CONSTANTS
+    // ========================================
+
+    /**
+     * User Status Constants
+     */
+    public const ACTIVE_USER_STATUS = 'active';
+    public const INACTIVE_USER_STATUS = 'inactive';
+    public const PENDING_USER_STATUS = 'pending';
+    public const REJECTED_SIGN_UP_STATUS = 'rejected';
+
+    /**
+     * User Type Constants
+     */
+    public const USER_TYPE_USER = 'user';
+    public const USER_TYPE_SIGNUP = 'signup';
+
+   
+
+    /**
+     * Status Arrays for Validation and Filtering
+     */
+    public const USER_STATUS = [
+        self::ACTIVE_USER_STATUS,
+        self::INACTIVE_USER_STATUS
     ];
-    const UserAllowedTypes = ["user", "signup"];
-    const UserDefaultType = "signup"; 
+
+    public const SIGN_UP_STATUS = [
+        self::PENDING_USER_STATUS,
+        self::REJECTED_SIGN_UP_STATUS
+    ];
+
+    public const SIGN_UP_STATUS_CHANGING_VALUES = [
+        self::ACTIVE_USER_STATUS,
+        self::REJECTED_SIGN_UP_STATUS
+    ];
+
+    public const USER_STATUS_CHANGING_VALUES = [
+        self::ACTIVE_USER_STATUS,
+        self::INACTIVE_USER_STATUS
+    ];
+
+    public const USER_STATUS_VALUES = [
+        self::PENDING_USER_STATUS,
+        self::ACTIVE_USER_STATUS,
+        self::INACTIVE_USER_STATUS,
+        self::REJECTED_SIGN_UP_STATUS
+    ];
+
+    /**
+     * User Type Configuration
+     */
+    public const USER_ALLOWED_TYPES = [
+        self::USER_TYPE_USER,
+        self::USER_TYPE_SIGNUP
+    ];
+
+    public const USER_DEFAULT_TYPE = self::USER_TYPE_SIGNUP;
+    // public const USER_DEFAULT_INIT_STATUS = 0;
+    public const USER_DEFAULT_INIT_STATUS_VALUE = self::PENDING_USER_STATUS;
+
+    // ========================================
+    // MODEL PROPERTIES
+    // ========================================
 
     protected $table = "users";
     protected $fillable = [
@@ -80,9 +157,15 @@ implements
         'mobile',
         "country_id",
         'employee_id',
+        
     ];
 
-    protected $guarded = ['accepted_at', 'status', 'user_type', 'role_id' , 'default_user'];
+    protected $guarded = [
+                            'accepted_at',
+                            'status',
+                            'user_type', 
+                            'default_user'
+                         ];
 
     protected $casts = [
         'default_user' => 'boolean', 
@@ -98,68 +181,88 @@ implements
     {
         parent::__construct($attributes);
 
-        $this->handleOptionalRelationCasts();
+        $this->handleOptionalRelationFields();
     }
 
-    protected function handleOptionalRelationCasts() : void
+    protected function handleOptionalRelationFields() : void
     {
-        if(method_exists($this , 'appendDepartmentIdCast'))
+        if(method_exists($this , 'appendDepartmentFields'))
         {
-            $this->appendDepartmentIdCast();
+            $this->appendDepartmentFields();
         }
 
         
-        if(method_exists($this , 'appendBranchIdCast'))
+        if(method_exists($this , 'appendBranchFields'))
         {
-            $this->appendBranchIdCast();
+            $this->appendBranchFields();
         }
+
+        $this->appendRoleFileds();
     }
 
+    
+    /**
+     * The accessors to append to the model's array form.
+     */
+    protected $appends = [
+        'can_edit',
+        'can_change_email',
+        'can_change_status'
+    ];
+
+    // ========================================
+    // STATIC METHODS
+    // ========================================
+
+    /**
+     * Get status value by integer index
+     */
     public static function getStatusValue(int $statusIntValue): string
     {
-        return static::UserStatusNames[$statusIntValue] ?? static::UserDefaultInitStatusValue;
+        return static::USER_STATUS_VALUES[$statusIntValue] ?? static::USER_DEFAULT_INIT_STATUS_VALUE;
     }
+
 
     public function getSignUpAccountStatusChangableValues() : array
     {
-        return ["active", "rejected"];
+        return self::SIGN_UP_STATUS_CHANGING_VALUES;;
     }
     public function getAcceptedAccountStatusChangableValues() : array
     {
-        return ["active", "inactive"];
+        return self::USER_STATUS_CHANGING_VALUES;;
     }
 
     public function isSystemMemberAccount()  :bool
     {
-        return $this->user_type == "user";
+        return $this->user_type == self::USER_TYPE_USER;
     }
 
     public function isSignUpAccount() : bool
     {
-        return $this->user_type == "signup";
+        return $this->user_type == self::USER_TYPE_SIGNUP;
     }
 
     public function getApprovingStatusValue()  :string
     {
-        return "active";
+        return self::ACTIVE_USER_STATUS;
     }
 
     public function getRejectedStatusValue()  :string
     {
-        return "rejected";
+        return self::REJECTED_SIGN_UP_STATUS;
     }
     
     public function getAccountApprovingProps()
     { 
         return [
             "accepted_at" => now(),
-            "user_type" => "user"
+            "user_type" => $this->getApprovingStatusValue()
         ];
     }
 
     public function getDefaultStatusValue() : string
     {
-        return "pending";
+        return self::USER_DEFAULT_INIT_STATUS_VALUE;
     }
 
     public function generateName(): void
@@ -178,86 +281,108 @@ implements
         return $this->hasOne($this->getUserProfileModelClass(), "user_id", "id");
     }
 
-    protected function getSignatureModelClass() : string
-    {
-        return PixelModelManager::getModelForModelBaseType(Signature::class);
-    }
-
-    public function signature()
-    {
-        return $this->hasOne($this->getSignatureModelClass() , 'user_id', 'id');
-    }
-
-
-    public function permissions(): array
-    {
-        return $this->role?->permissions->pluck("name")->toArray() ?? [];
-    }
-
-    public function HasPermission(string $permissionToCheck): bool
-    {
-        $userPermissions = $this->permissions();
-        return in_array($permissionToCheck, $userPermissions);
-    }
-
-    protected function getUSerAttachmentModelClass() : string
+    protected function getUserAttachmentModelClass() : string
     {
         return PixelModelManager::getModelForModelBaseType(UserAttachment::class);
     }
 
     public function attachments(): HasMany
     {
-        return $this->hasMany($this->getUSerAttachmentModelClass(), 'user_id');
+        return $this->hasMany($this->getUserAttachmentModelClass(), 'user_id');
     }
+ 
+    /**
+     * Get the relationships that this model owns
+     */
     public function getOwnedRelationships(): array
     {
         return [
-            OwnedRelationshipComponent::create("profile", "user_id")->setUpdatingConditionColumns(["user_id"])->appendForignKeyToRequestData(),
-            OwnedRelationshipComponent::create("attachments", "user_id")->setUpdatingConditionColumns(['id', "user_id"])
+            OwnedRelationshipComponent::create("profile", "user_id")
+                ->setUpdatingConditionColumns(["user_id"])
+                ->appendForignKeyToRequestData(),
+            OwnedRelationshipComponent::create("attachments", "user_id")
+                ->setUpdatingConditionColumns(['id', "user_id"])
         ];
     }
-  
-    public function scopeNotSuperAdmin($query)
+
+     // ========================================
+    // PARTICIPATING RELATIONSHIPS
+    // ========================================
+
+    /**
+     * Get the relationships where this model participates
+     */
+    public function getParticipatingRelationships(): array
     {
-        $query->where('role_id', '!=', 1);
+        $reltionComponents = [];
+
+        if($this instanceof BelongsToBranch)
+        {
+            $reltionComponents[] = ParticipatingRelationshipComponent::create('accessibleBranches', $this->getBranchForeignKeyName());
+        }
+        return $reltionComponents;
     }
 
-    public function scopeActiveUsers($query)
+   /**
+     * Scope to get only allowed users (active users, not signups)
+     */
+    public function scopeAllowedUsers($query): void
     {
-        $query->whereIn('status', $this::USER_STATUS)->where('user_type', 'user');
+        $query->whereIn('status', $this::USER_STATUS)
+            ->where('user_type', $this::USER_TYPE_USER);
+
+        $this->applyViewAsFilter($query);
     }
 
-    public function scopeActiveSignup($query)
+    
+    /**
+     * Scope to get only signup users (pending/rejected)
+     */
+    public function scopeAllowedSignUps($query): void
     {
-        $query->whereIn('status', $this::SIGN_UP_STATUS)->where('user_type', 'signup');
+        $query->whereIn('status', $this::SIGN_UP_STATUS)
+              ->where('user_type', $this::USER_TYPE_SIGNUP);
     }
+
+    /**
+     * Scope to get only pending users
+     */
+    public function scopePendingUsers($query): void
+    {
+        $query->where('status', self::PENDING_USER_STATUS);
+    }
+
+    /**
+     * Scope to get only active users
+     */
+    public function scopeActiveUsers($query): void
+    {
+        $query->where('status', self::ACTIVE_USER_STATUS);
+    } 
  
-    public function scopeUser($query)
+    /**
+     * Scope to filter by email verification status
+     */
+    public function scopeEmailVerified($query, ?string $status = null): Builder
     {
-        $query->where("user_type" , 'user');
+        return match ($status) {
+            'verified' => $query->whereNotNull('email_verified_at'),
+            'not verified', 'not_verified' => $query->whereNull('email_verified_at'),
+            default => $query,
+        };
     }
 
-    public function scopeSignUpUser($query)
+    public function scopeSignup($query)
     {
-        $query->where("user_type" , 'signup');
+        $query->where('status', $this::USER_DEFAULT_INIT_STATUS_VALUE)
+             ->where('user_type', $this::USER_TYPE_SIGNUP);
     }
 
     public function scopeActive($query)
     {
-        $query->where('status', 'active');
-    }
-
-    public function scopeDefaultUser($query)
-    {
-        $query->where("default_user" , 1);
-    }
-
-    public function isDefaultUser(): bool
-    {
-        return $this->default_user == 1;
+        $query->where('status', $this::ACTIVE_USER_STATUS );
     }
  
-
     public function getTenancyDataSyncingEvent() : ?TenancyDataSyncingEvent
     {
         if($this->canSyncData())
@@ -274,12 +399,80 @@ implements
                &&
                tenant()
                &&
-               $this->isDefaultUser();
+               $this->isCreatedAsDefault();
     }
 
+    public function scopeDefaultUser($query)
+    {
+        //default_user == 1 is enough ... but when it is set to 0 manually
+        //we need another condition to fetch the default admin in system
+        $query->where("default_user" , 1)->orWhere("role_id" , 1);
+    }
+
+    
+    // ========================================
+    // ACCESSORS
+    // ========================================
+
+    /**
+     * Check if user can edit their profile
+     */
+    public function getCanEditAttribute(): bool
+    {
+        return $this->isEditableUser();
+    }
+
+    /**
+     * Check if user can change their email
+     */
+    public function getCanChangeEmailAttribute(): bool
+    {
+        return $this->isEditableUser();
+    }
+
+    /**
+     * Check if user can change their status
+     */
+    public function getCanChangeStatusAttribute(): bool
+    {
+        return $this->isSuperAdmin();
+    }
+
+
+    // ========================================
+    // PRIVATE METHODS
+    // ========================================
+
+    /**
+     * Apply view-as filter to queries
+     */
+    private function applyViewAsFilter(Builder $query): void
+    {
+        // Logic to be implemented later
+    }
+
+
+    /**
+     * Check if user is a super admin not a user with another role
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->role_id != 1;
+    }
+
+    public function isCreatedAsDefault(): bool
+    {
+        return $this->default_user == 1;
+    }
+     /**
+     * Check if user can edit their profile
+     */
     public function isEditableUser(): bool
     {
-        return !$this->isDefaultUser(); // add the conditions you need to make this user editable frm users management module
+        $isSuperAdmin = $this->isSuperAdmin();
+        $canEditHimself = $this->id == auth()->id();
+
+        return !$isSuperAdmin || ($isSuperAdmin && $canEditHimself);
     }
  
     public static function fakeAcceptedUsers() : void

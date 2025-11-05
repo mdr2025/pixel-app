@@ -39,9 +39,13 @@ class BranchChanger
         return 'branch_id';
     }
 
-    public function getValidationRules() : array
+    public function getValidationRules(array $data = []) : array
     {
-        return ["required"  , "integer", "exists:branches,id"]  ;
+        return [
+                    $this->getPropName()    => [ "required"  , "integer", "exists:branches,id"],
+                    'accessible_branches'   => ['nullable', 'array'],
+                    'accessible_branches.*' => ['integer', 'exists:branches,id'],
+               ];
     }
 
     /**

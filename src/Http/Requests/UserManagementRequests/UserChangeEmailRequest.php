@@ -2,8 +2,9 @@
 
 namespace PixelApp\Http\Requests\UserManagementRequests;
 
-
+use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 use Illuminate\Validation\Rule;
+use PixelApp\Models\UsersModule\PixelUser;
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 
 class UserChangeEmailRequest extends BaseFormRequest
@@ -15,7 +16,7 @@ class UserChangeEmailRequest extends BaseFormRequest
      */
     public function authorize()
     {
-        return true;
+        return BasePolicy::check('editEmployees', PixelUser::class);
     }
 
     /**

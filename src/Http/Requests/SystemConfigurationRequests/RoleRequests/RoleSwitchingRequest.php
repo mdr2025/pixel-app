@@ -2,6 +2,8 @@
 
 namespace PixelApp\Http\Requests\SystemConfigurationRequests\RoleRequests;
 
+use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
+use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 
 class RoleSwitchingRequest extends BaseFormRequest
@@ -13,14 +15,14 @@ class RoleSwitchingRequest extends BaseFormRequest
      */
     public function authorize()
     {
-        return true;
+        return BasePolicy::check("edit" , RoleModel::class);
     }
 
     public function messages()
     {
         return [
-            "disabled.required" => "Role Status Has Not Been Sent",
-            "disabled.boolean" => "A Role Status Value Must Be 1 Or 0"
+            "status.required" => "Role Status Has Not Been Sent",
+            "status.boolean" => "A Role Status Value Must Be 1 Or 0"
         ];
     }
 
@@ -32,7 +34,7 @@ class RoleSwitchingRequest extends BaseFormRequest
     public function rules($data)
     {
             return [
-                'disabled' => ['required' , 'boolean'],
+                'status' => ['required' , 'boolean'],
             ];
 
     }

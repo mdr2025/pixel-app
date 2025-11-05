@@ -24,15 +24,14 @@ class PermissionsSeeder extends Seeder
         return Str::replace(" " , "_" , $modelClass::getHighestRoleName());
     }
     
-   
-    protected function setDefaultPermissionsStringArray() : array
+    protected function getDefaultPermissionsStringArray() : array
     {
         return  PixelConfigManager::getPixelAppPackagePermissions();
     }
     
     protected function getAllPermissionStrings()  :array
     {
-        return  $this->setDefaultPermissionsStringArray()[ $this->getHighestRoleConfigKey() ] 
+        return  $this->getDefaultPermissionsStringArray()[ $this->getHighestRoleConfigKey() ] 
         ??
         throw new Exception("There is no permission to seed in acl config file ");
     }

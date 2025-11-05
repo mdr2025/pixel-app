@@ -34,19 +34,30 @@ class RolesController extends Controller
         BasePolicy::check('read', Role::class);
 
         $modelClass = $this->getRoleModeClass();
-        $data = $modelClass::orderBy('disabled', 'asc')->orderBy('default', 'desc')->get();
+        $data = $modelClass::orderBy('activate_button', 'asc')->orderBy('default', 'desc')->get();
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(RolesListResource::class);
         return $resourceClass::collection($data); 
     }
 
-    public function listAllRoles()
+    public function listAllRoles(Request $request)
     {
         BasePolicy::check('read', Role::class);
-
+        
         $modelClass = $this->getRoleModeClass();
-        $data = $modelClass::all();
-        $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(RolesListResource::class);
-        return $resourceClass::collection($data); 
+        $includeAdmin = $request->boolean('filter.has_admin', false);
+
+        // Query Builder Pattern أفضل
+        $roles = $modelClass::query()
+                            ->activeRole()
+                            ->when(!$includeAdmin, function ($query) {
+                                $highestRoleName = RoleModel::getHighestRoleName();
+                                return $query->where('name', '!=', $highestRoleName);
+                            })
+                            ->orderBy('default', 'desc')
+                            ->orderBy('name', 'asc')
+                            ->get();
+        
+        return RolesListResource::collection($roles);
     }
 
     public function listDefaultRoles()
@@ -130,7 +141,8 @@ class RolesController extends Controller
         BasePolicy::check('read', Permission::class); 
 
         $permissionModelClass = PixelModelManager::getPermissionModelClass();
-        $permissions = $permissionModelClass::get('name');
+        $permissions = $permissionModelClass::pluck('name');
+        
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(PermissionsResource::class);
         return $resourceClass::collection($permissions); 
     }

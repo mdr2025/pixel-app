@@ -2,7 +2,9 @@
 
 namespace PixelApp\Http\Requests\SystemConfigurationRequests\RoleRequests;
 
+use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 use Illuminate\Validation\Rule;
+use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 
 class RoleUpdatingRequest extends BaseFormRequest
@@ -14,7 +16,7 @@ class RoleUpdatingRequest extends BaseFormRequest
      */
     public function authorize()
     {
-        return true;
+        return BasePolicy::check("edit" , RoleModel::class);
     }
 
     public function messages()

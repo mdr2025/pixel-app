@@ -30,9 +30,12 @@ class UserRoleChanger
         return "role_id";
     }
 
-    public function getValidationRules() : array
+    public function getValidationRules(array $data = []) : array
     {
-        return   ["required"  , "integer", "exists:roles,id"] ;
+        return   [
+        
+                    $this->getPropName() => [ "required"  , "integer", "exists:roles,id"] 
+                 ]; 
                 
     }
 

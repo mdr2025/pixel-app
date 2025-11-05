@@ -4,5 +4,5 @@ namespace PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Inter
 
 interface HasValidationRules
 {
-    public function getValidationRules() : array;
+    public function getValidationRules(array $data = []) : array;
 }

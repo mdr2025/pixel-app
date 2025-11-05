@@ -1,0 +1,111 @@
+<?php
+
+namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations;
+
+use Illuminate\Http\Request;
+use PixelApp\Models\SystemConfigurationModels\Branch;
+use PixelApp\Services\PixelServiceManager;
+use PixelApp\Services\Repositories\RepositryInterfaces\SystemConfigurationRepositryInterfaces\BranchRepositoryInterfaces\BranchRepositoryInterface;
+
+class BranchService
+{
+
+    public function __construct()
+    {
+    }
+
+    protected function initBranchRepository() : BranchRepositoryInterface
+    {
+        return app(BranchRepositoryInterface::class);
+    }
+
+    public function getBranches(): array
+    {
+        // Return the list of branches
+        return [
+            'list' => $this->initBranchRepository()->getBranches()
+        ];
+    }
+    public function getBranchesTeams(): array
+    {
+
+        return [
+            'list' => $this->initBranchRepository()->getBranchesTeams()
+        ];
+    }
+
+    public function getFirstParentBranch()
+    {
+        return $this->initBranchRepository()->getFirstParentBranch();
+    }
+
+    public function getCountActiveBranches()
+    {
+        return $this->initBranchRepository()->getCountActiveBranches();
+    }
+
+    public function getListBranches()
+    {
+        return $this->initBranchRepository()->getListBranches();
+    }
+
+    public function getSubBranches()
+    {
+        return $this->initBranchRepository()->getSubBranches();
+    }
+
+    public function store()
+    {
+        $service = PixelServiceManager::getServiceForServiceBaseType(BranchStoringService::class);
+        return (new $service())->create();
+    }
+    
+    public function fetchBranchById() : ?Branch
+    {
+        return $this->initBranchRepository()->fetchBranchById();
+    }
+    
+    public function fetchBranchByIdOrFail() : Branch
+    {
+        return $this->initBranchRepository()->fetchBranchByIdOrFail();
+    }
+
+    public function update(Request $request, int $branchId)
+    {
+        $branch = $this->initBranchRepository()->fetchBranchByIdOrFail($branchId);
+
+        if (!is_null($request->status) && $branch->id == 1) {
+            return false;
+        }
+
+        $service = PixelServiceManager::getServiceForServiceBaseType(BranchUpdatingService::class);
+
+        return (new $service($branch))->update();
+    }
+
+    public function destroy(int $branchId)
+    {
+        $branch = $this->initBranchRepository()->fetchBranchByIdOrFail($branchId);
+        $service = PixelServiceManager::getServiceForServiceBaseType(BranchDeletingService::class);
+
+        return (new $service($branch))->delete();
+    }
+
+    public function addTeam()
+    {
+        return $this->initBranchRepository()->addMembersToDepartment();
+    }
+
+    public function import()
+    {
+        return (new BranchImporter())->import();
+    }
+    public function export()
+    {
+        return FileExport::export(Branch::class, BranchCSVImportableFileFormatFactory::class, '-Branch');
+    }
+    public function downloadFileFormat()
+    {
+        return FileExport::downloadFileFormat(BranchCSVImportableFileFormatFactory::class, '-Branch');
+    }
+}

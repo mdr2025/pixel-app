@@ -87,9 +87,6 @@ abstract class UpdatingBaseClass
             $this->initValidator($data)->setRequestData();
             $this->validateData();
 
-            if ($this->role->user()->count() != 0 && isset($this->data["disabled"]) &&$this->data["disabled"] == 1) {
-                throw new Exception("Role can not be deactivated as it has assigned users ");
-            }
             return $this->changerFun();
 
         } catch (Exception $e) {

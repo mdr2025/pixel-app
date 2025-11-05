@@ -1,10 +1,11 @@
 <?php
 
+use PixelApp\Models\SystemConfigurationModels\Branch;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateBranchesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,10 +17,11 @@ return new class extends Migration
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->foreignId('parent_id')->nullable()->constrained('branches')->cascadeOnUpdate()->restrictOnDelete();
+            $table->foreignId('country_id')->nullable()->constrained('countries')->cascadeOnUpdate()->restrictOnDelete();
+            $table->enum('type' , Branch::TYPE)->default(Branch::DEFAULT_TYPE);
             $table->tinyInteger('status')->default(1);
-            $table->tinyInteger('default')->default(0);
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
+            $table->timestamps();
             $table->softDeletes();
         });
     }
@@ -33,4 +35,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('branches');
     }
-};
+}

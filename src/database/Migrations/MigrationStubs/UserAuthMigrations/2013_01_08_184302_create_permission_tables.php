@@ -43,12 +43,13 @@ return new class extends Migration
             }
             $table->string('name');       // For MySQL 8.0 use string('name', 125);
             $table->string('guard_name'); // For MySQL 8.0 use string('guard_name', 125);
-            $table->tinyInteger('disabled')->default(0);
-            $table->boolean('default')->default(0);
-            $table->tinyInteger('editable')->default(1);
-            $table->tinyInteger('deletable')->default(1);
+            $table->tinyInteger('activate_button')->default(1);
+            $table->tinyInteger('default')->default(0);
+            $table->tinyInteger('edit_button')->default(1);
+            $table->tinyInteger('delete_button')->default(1);
             $table->tinyInteger('status')->default(1);
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
             $table->softDeletes();
             if ($teams || config('permission.testing')) {
                 $table->unique([$columnNames['team_foreign_key'], 'name', 'guard_name']);

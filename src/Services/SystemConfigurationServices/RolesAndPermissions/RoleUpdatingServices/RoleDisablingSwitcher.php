@@ -22,7 +22,7 @@ class RoleDisablingSwitcher extends UpdatingBaseClass
     //Use this Method When You Want To Work Without queue Job
     public function setUsersManager(): self
     {
-        if ($this->data["disabled"] == 0) {
+        if ($this->data["status"] == 0) {
             $this->usersManager = new SwitchBackAllRolePreviousUsers($this->role);
             return $this;
         }
@@ -47,7 +47,7 @@ class RoleDisablingSwitcher extends UpdatingBaseClass
      */
     private function updateRoleStatus(): bool
     {
-        $this->role->disabled = $this->data["disabled"];
+        $this->role->status = $this->data["status"];
         if ($this->role->save()) {
             return true;
         }
@@ -60,9 +60,24 @@ class RoleDisablingSwitcher extends UpdatingBaseClass
      */
     protected function changerFun(): JsonResponse
     {
-        if ($this->IsDefaultRole()) {
+        if ($this->IsDefaultRole())
+        {
             throw new Exception("Can't Change Disabling Status Of A Default Role");
         }
+
+        //need to check this condition ... because the related users default role switching funcs are already ready to handle this case 
+        if (
+                $this->role->user()->activeUsers()->count() != 0 
+                &&
+                isset($this->data["status"]) 
+                &&
+                $this->data["status"] == 0
+            )
+        {
+            throw new Exception("Role can not be deactivated as it has assigned users ");
+        }
+
+
         DB::beginTransaction();
 
         //If No Exception Is Thrown ... The Status Of Role Has Been Changed

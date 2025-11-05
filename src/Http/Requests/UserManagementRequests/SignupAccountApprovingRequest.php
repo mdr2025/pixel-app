@@ -1,9 +1,11 @@
 <?php
 
 namespace PixelApp\Http\Requests\UserManagementRequests;
- 
+
+use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 use Illuminate\Validation\Rule;
 use PixelApp\Models\PixelModelManager;
+use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\AdminAssignablePropsManagers\AdminAssignablePropsManager;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\HasValidationRules;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\UserSensitivePropChanger;
@@ -22,7 +24,7 @@ class SignupAccountApprovingRequest extends BaseFormRequest
      */
     public function authorize()
     {
-        return true;
+        return BasePolicy::check('approveSignUpUsers', PixelUser::class);
     }
 
     public function messages()
@@ -72,7 +74,7 @@ class SignupAccountApprovingRequest extends BaseFormRequest
         return AdminAssignablePropsManager::Singleton()->getSensitivePropChangersForClass($userModelClass);
     }
     
-    protected function getModelAssignablePropsRules() : array
+    protected function getModelAssignablePropsRules(array $data = []) : array
     {
         $propChangers = $this->getUserModelPropChangers();
         $propsRules = [];
@@ -84,7 +86,7 @@ class SignupAccountApprovingRequest extends BaseFormRequest
         {
             if($propChanger instanceof HasValidationRules)
             {
-                $propsRules[$propChanger->getPropName()] = $propChanger->getValidationRules();
+                $propsRules = array_merge($propsRules ,  $propChanger->getValidationRules($data));
             }
         }
 
@@ -99,7 +101,7 @@ class SignupAccountApprovingRequest extends BaseFormRequest
     public function rules($data)
     { 
         $rules  = ['status' => ["required", "string" , Rule::in(["active"])] ];
-        return array_merge($rules , $this->getModelAssignablePropsRules());
+        return array_merge($rules , $this->getModelAssignablePropsRules($data));
         
             // "role_id" => [  $this->getRoleIdRequirmentStatus() , "integer", "exists:roles,id"],
             // "department_id" => [ $this->getDepartmentIdRequirmentStatus() , "integer", "exists:departments,id"],

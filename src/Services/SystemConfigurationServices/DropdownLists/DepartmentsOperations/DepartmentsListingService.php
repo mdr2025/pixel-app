@@ -7,6 +7,9 @@ use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Department; 
 use PixelApp\Services\CoreServices\ModelListingService;
 
+/**
+ * For referance
+ */
 class DepartmentsListingService extends ModelListingService
 {
     protected function getModelClass() : string

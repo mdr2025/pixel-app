@@ -25,9 +25,9 @@ class UserProfile
     const MILITARY_STATUSES = ["Exempted" , "Service Completed" , "Student"];
 
     protected $fillable = [
-        'country_id',
+        'nationality_id',
         'city_id',
-        'logo',
+        'picture',
         'gender',
         'marital_status',
         'military_status',
@@ -40,7 +40,7 @@ class UserProfile
     public $timestamps = false;
 
     protected $casts = [
-        'country_id' => 'integer',
+        'nationality_id' => 'integer',
     ];
 
     public static function getUserModelClass() : string
@@ -69,13 +69,18 @@ class UserProfile
     public function getModelFileInfoArray(): array
     {
         return [
-            [ "RequestKeyName" => "logo" ]
+            [ "RequestKeyName" => "picture" ]
         ];
     }
-    public function country(): BelongsTo
+
+    public function nationality(): BelongsTo
     {
-        return $this->belongsTo($this->getCountryModelClass() , "country_id", "id")
-                    ->select("id", "name" , "code");
+        return $this->belongsTo($this->getCountryModelClass(), "nationality_id", "id")->select("id", "name", "code");
+    }
+    
+    public function country() : BelongsTo
+    {
+        return $this->nationality;
     }
 
 //    public function city(): BelongsTo

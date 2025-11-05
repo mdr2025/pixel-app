@@ -7,10 +7,15 @@ use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\UsersModule\Signature;
 
 trait HasUserSignatureMethods
-{
+{ 
+    
+    protected function getSignatureModelClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(Signature::class);
+    }
+
     public function signature() : HasOne
     {
-        $signatureClass = PixelModelManager::getModelForModelBaseType(Signature::class);
-        return $this->hasOne($signatureClass);
+        return $this->hasOne($this->getSignatureModelClass() , 'user_id', 'id');
     }
 }

@@ -39,7 +39,7 @@ class SignUpUsersIndexingService extends ModelIndexingService
 
     protected function setCustomScopes() : void
     {
-        $this->query->activeSignup()->datesFiltering()->customOrdering();
+        $this->query->signup()->datesFiltering()->customOrdering();
     }
 
     protected function getRequest() : Request

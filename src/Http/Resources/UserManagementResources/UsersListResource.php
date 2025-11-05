@@ -25,7 +25,7 @@ class UsersListResource extends JsonResource
         return [
             "id" => $this->id,
             "name" => $this->name,
-            'logo' => $this->whenLoaded('profile', fn() => (new $userProfileResourceClass($this->profile))?->toArray($request)["logo"] ?? null),
+            'picture' => $this->whenLoaded('profile', fn() => (new $userProfileResourceClass($this->profile))?->toArray($request)["picture"] ?? null),
         ];
     }
 }

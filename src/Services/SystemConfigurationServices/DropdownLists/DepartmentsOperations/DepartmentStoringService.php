@@ -4,21 +4,20 @@ namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\Department
 
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\StoringServices\MultiRowStoringService;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
-use PixelApp\Http\Requests\SystemConfigurationRequests\Departments\StoringDepartmentRequest;
+use PixelApp\Http\Requests\SystemConfigurationRequests\Departments\DepartmentStoringRequest;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Department;
 
 class DepartmentStoringService extends MultiRowStoringService
 {
-
     protected function getModelCreatingFailingErrorMessage(): string
     {
-        return "Failed To Create The Given Department !";
+        return 'Failed to create the record.';
     }
 
     protected function getModelCreatingSuccessMessage(): string
     {
-        return "The Department Has Been Created Successfully !";
+        return 'The record has been created successfully.';
     }
 
     protected function getModelClass(): string
@@ -28,7 +27,7 @@ class DepartmentStoringService extends MultiRowStoringService
 
     protected function getRequestClass(): string
     {
-        return PixelHttpRequestManager::getRequestForRequestBaseType(StoringDepartmentRequest::class);
+        return PixelHttpRequestManager::getRequestForRequestBaseType(DepartmentStoringRequest::class);
     }
 
 }

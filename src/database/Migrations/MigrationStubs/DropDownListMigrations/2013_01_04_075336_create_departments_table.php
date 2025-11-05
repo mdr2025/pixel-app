@@ -4,10 +4,10 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateDepartmentsTable extends Migration
 {
     /**
-     * Run the migratio ns.
+     * Run the migrations.
      *
      * @return void
      */
@@ -15,12 +15,13 @@ return new class extends Migration
     {
         Schema::create('departments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('branch_id')->nullable()->constrained('branches')->restrictOnDelete()->cascadeOnUpdate();
             $table->string('name');
-            $table->foreignId('parent_id')->nullable()->constrained('departments')->cascadeOnDelete();
             $table->boolean('status')->default(1);
-            $table->boolean("default")->default(0);
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
+            $table->boolean('is_default')->default(0);
+            $table->unique(['name', 'branch_id']);
+
+            $table->timestamps();
             $table->softDeletes();
         });
     }
@@ -34,4 +35,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('departments');
     }
-};
+} 

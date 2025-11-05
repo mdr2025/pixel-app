@@ -7,6 +7,9 @@ use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\SystemConfigurationModels\Branch;
 use PixelApp\Services\CoreServices\ModelIndexingService;
 
+/**
+ * For referance
+ */
 class BranchesIndexingService extends ModelIndexingService
 {
     protected function getModelClass() : string
