@@ -15,6 +15,9 @@ trait BranchFilterScope
      */
     public function scopeFilterByAccessibleBranches(Builder $query): Builder
     {
+        /**
+         * @var PixelUser $user
+         */
         $user = Auth::user();
         if (!$user || !$user->branch) {
             return $query;
@@ -30,6 +33,9 @@ trait BranchFilterScope
 
     public function scopeFilterByFilteredBranches(Builder $query): Builder
     {
+         /**
+         * @var PixelUser $user
+         */
         $user = Auth::user();
         if (!$user || !$user->branch) {
             return $query;

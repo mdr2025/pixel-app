@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\UserAccountResources\UserProfileSpecificDataResource;
+use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToCountry;
 use PixelApp\Services\UserCompanyAccountServices\UserProfileUpdatingServices\UserProfileUpdatingService;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\UserCompanyAccountServices\PasswordChangerService\PasswordChangerService;
@@ -36,7 +37,13 @@ class UserProfileController extends Controller
     {
         /** @var PixelUser $user */
         $user= auth()->user();
-        $user->load(['profile:user_id,logo,gender,country_id' ,'profile.country']);
+        $user->load(['profile:user_id,picture,gender,nationality_id']);
+
+        if($user->profile instanceof BelongsToCountry)
+        {
+            $user->load('profile.nationality');
+        }
+        
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(UserProfileSpecificDataResource::class);
         $data = [ "item" => new $resourceClass( $user  )  ];
 //        $data = [ "item" => new UserFullResource( $user  )  ];

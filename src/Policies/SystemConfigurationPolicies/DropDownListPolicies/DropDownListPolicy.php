@@ -7,7 +7,7 @@ use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 
 class DropDownListPolicy extends BasePolicy
 {
-
+ 
     /**
      * @return bool
      * @throws JsonException
@@ -15,7 +15,7 @@ class DropDownListPolicy extends BasePolicy
     public function read(): bool
     {
         return $this->permissionExaminer->addPermissionToCheck("read_sc-dropdown-lists")
-            ->hasPermissionsOrFail();
+                                                   ->hasPermissionsOrFail();
     }
 
     /**

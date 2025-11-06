@@ -113,7 +113,11 @@ class EmailChanger extends EmailAuthenticatableSensitivePropChanger implements E
      */
     public function fireCommittingDefaultEvents() : void
     {
-        if($this->emailHasChange)
+        /**
+         * Must check user because this method can be used before getPropChangesArray or changeUserProp methods
+         * So if user is not set an unexpected failing will happen
+         */
+        if($this->emailHasChange && $this->checkAuthenticatable())
         {
             event(new EmailChangingEvent($this->authenticatable , $this->oldEmail));
         }

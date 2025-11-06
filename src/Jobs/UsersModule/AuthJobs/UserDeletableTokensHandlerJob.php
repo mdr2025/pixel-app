@@ -98,7 +98,6 @@ class UserDeletableTokensHandlerJob  implements ShouldQueue
      */
     public function handle()
     {
-
         if($this->doesHaveOnlyCentralTokens())
         {
             $this->purgeCentralTokensExceedingGrace();

@@ -20,6 +20,7 @@ use PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\SignatureEm
 use PixelApp\Notifications\UserNotifications\ResetPasswordFormLinkNotification;
 use PixelApp\Services\AuthenticationServices\UserAuthServices\LogoutService\LogoutService;
 use PixelApp\Services\PixelServiceManager;
+use PixelApp\Services\UserEncapsulatedFunc\UserTokensHandlers\UserTokensRevoker;
 
 class PasswordResetNotificationSenderService
 {
@@ -73,10 +74,12 @@ class PasswordResetNotificationSenderService
         }
         return $this;
     }
+    
     public static function getPasswordResettingFrontendURI() : string
     {
-        return "user-reset-password";
+        return "reset-password";
     }
+
     public static function initVerificationLinkGenerator(EmailAuthenticatable $EmailAuthenticatable  ) : void
     {
         static::$passwordResettingLinkGenerator = (new SignatureEmailLinkGenerator($EmailAuthenticatable))

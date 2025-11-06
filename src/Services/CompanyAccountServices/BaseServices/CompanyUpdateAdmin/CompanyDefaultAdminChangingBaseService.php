@@ -89,7 +89,7 @@ abstract class CompanyDefaultAdminChangingBaseService
 
     protected function markOldAdminUserAsNonDefaultUser(PixelUser $user) : void
     {
-        $this->initDefaultUserPopChanger()->setAuthenticatable($user)->convertToNonDefaultUser()->changeAuthenticatableProp();
+        $this->initDefaultUserPopChanger()->setAuthenticatable($user)->convertToNormalUser()->changeAuthenticatableProp();
     }
 
     protected function markNewAdminUserAsDefaultUser() : void

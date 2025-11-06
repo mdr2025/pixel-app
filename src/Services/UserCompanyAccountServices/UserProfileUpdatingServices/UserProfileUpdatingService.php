@@ -105,7 +105,7 @@ class UserProfileUpdatingService extends UpdatingService
     /**
      * @throws Exception
      */
-    protected function doBeforeSuccessResponding(): void
+   protected function onBeforeDbCommit(): void
    {
        $this->fireEmailChangingEvent();
        $this->syncTenancyData();

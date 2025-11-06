@@ -3,15 +3,20 @@
 
 namespace PixelApp\Services\AuthenticationServices\UserAuthServices\LoginService;
 
+use PixelApp\Models\UsersModule\PixelUser;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\UserManagementResources\ModelResources\UserResource;
+use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\MustHaveRole;
 use PixelApp\Services\UserEncapsulatedFunc\UserTokensHandlers\UserTokensGenerator;
 use PixelApp\Services\UserEncapsulatedFunc\UserTokensHandlers\UserTokensRevoker;
 
+/**
+ * @property PixelUser $user
+ */
 trait RespondersTrait
 {
 
@@ -32,6 +37,13 @@ trait RespondersTrait
         return new UserTokensGenerator( $this->user );
     }
 
+    protected function loadUserPermissionRelations() : void
+    {
+        if($this->user instanceof MustHaveRole)
+        {
+            $this->user->load(["role:id,name", "role.permissions:name,id"]);
+        }
+    }
    /**
      * @return array
      * @throws Exception
@@ -40,7 +52,7 @@ trait RespondersTrait
     {
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(UserResource::class);
         return array_merge(
-            (new $resourceClass($this->user->load(["role:id,name", "role.permissions:name,id"])))->toArray(request()),
+            (new $resourceClass($this->user))->toArray(request()),
             $this->initUserTokensGenerator()->generateTokens()
         );
     }

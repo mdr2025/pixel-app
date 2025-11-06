@@ -49,7 +49,7 @@ class DepartmentsController extends Controller
                             ['user_id' => auth()->id(), 'request' => $request->all()]
                       );
             
-                      return Response::error($e->getMessage());
+            return Response::error($e->getMessage());
         }
     }
 

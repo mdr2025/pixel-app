@@ -3,7 +3,6 @@
 namespace PixelApp\Services\AuthenticationServices\UserAuthServices\EmailVerificationServices;
 
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
-use PixelApp\Events\TenancyEvents\TenantModelDataSyncNeedEvent;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\VerificationFuncs\VerificationBaseServices\EmailVerificationService;

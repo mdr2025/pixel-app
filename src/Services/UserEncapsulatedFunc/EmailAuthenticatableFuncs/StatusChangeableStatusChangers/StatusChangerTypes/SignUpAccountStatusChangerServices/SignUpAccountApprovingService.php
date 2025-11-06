@@ -5,10 +5,13 @@ namespace  PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\Stat
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse; 
 use PixelApp\Http\Requests\PixelHttpRequestManager;
-use PixelApp\Http\Requests\UserManagementRequests\SignupAccountApprovingRequest;  
+use PixelApp\Http\Requests\UserManagementRequests\SignupAccountApprovingRequest;
+use PixelApp\Traits\TransactionLogging;
 
 abstract class SignUpAccountApprovingService extends SignUpAccountStatusChanger
 {
+    
+
     protected static array $signUpApprovmentPropChangers = [];
 
     public function __construct(Model $model)
@@ -22,7 +25,6 @@ abstract class SignUpAccountApprovingService extends SignUpAccountStatusChanger
     {
         return $this->change();
     }
-
 
     protected static function getApprovingRequestFormBaseClass() :  string
     {

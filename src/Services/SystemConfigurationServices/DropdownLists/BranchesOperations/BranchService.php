@@ -60,14 +60,14 @@ class BranchService
         return (new $service())->create();
     }
     
-    public function fetchBranchById() : ?Branch
+    public function fetchBranchById(int $branchId) : ?Branch
     {
-        return $this->initBranchRepository()->fetchBranchById();
+        return $this->initBranchRepository()->fetchBranchById($branchId);
     }
     
-    public function fetchBranchByIdOrFail() : Branch
+    public function fetchBranchByIdOrFail(int $branchId) : Branch
     {
-        return $this->initBranchRepository()->fetchBranchByIdOrFail();
+        return $this->initBranchRepository()->fetchBranchByIdOrFail($branchId);
     }
 
     public function update(Request $request, int $branchId)
@@ -96,16 +96,16 @@ class BranchService
         return $this->initBranchRepository()->addMembersToDepartment();
     }
 
-    public function import()
-    {
-        return (new BranchImporter())->import();
-    }
-    public function export()
-    {
-        return FileExport::export(Branch::class, BranchCSVImportableFileFormatFactory::class, '-Branch');
-    }
-    public function downloadFileFormat()
-    {
-        return FileExport::downloadFileFormat(BranchCSVImportableFileFormatFactory::class, '-Branch');
-    }
+    // public function import()
+    // {
+    //     return (new BranchImporter())->import();
+    // }
+    // public function export()
+    // {
+    //     return FileExport::export(Branch::class, BranchCSVImportableFileFormatFactory::class, '-Branch');
+    // }
+    // public function downloadFileFormat()
+    // {
+    //     return FileExport::downloadFileFormat(BranchCSVImportableFileFormatFactory::class, '-Branch');
+    // }
 }

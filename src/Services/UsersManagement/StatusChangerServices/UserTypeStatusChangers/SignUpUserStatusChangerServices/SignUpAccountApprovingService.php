@@ -52,7 +52,7 @@ class SignUpAccountApprovingService extends BaseSignUpAccountApprovingService
          */
         ManyToManySelectedRequestDataMerger::mergeData('accessibleBranches',  $branchModel , 'accessible_branches');
 
-        return $this->change();
+        return parent::approve();
     }
 
     /**

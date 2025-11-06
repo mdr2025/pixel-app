@@ -18,7 +18,7 @@ class DefaultUserPopChanger extends UserSensitivePropChanger
         $this->defaultUser  = true;
         return $this;
     }
-    public function convertToNonDefaultUser()  :self
+    public function convertToNormalUser()  :self
     {
         $this->defaultUser = false;
         return $this;

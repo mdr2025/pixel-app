@@ -6,6 +6,8 @@ use PixelApp\Http\Controllers\PixelBaseController as Controller;
 use Illuminate\Http\JsonResponse;
 use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\UserManagementResources\ModelResources\UserResource;
+use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToBranch;
+use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\MustHaveRole;
 use PixelApp\Models\PixelBaseModel;
 use PixelApp\Services\AuthenticationServices\UserAuthServices\EmailVerificationServices\UserEmailVerificationService;
 use PixelApp\Services\AuthenticationServices\UserAuthServices\LoginService\LoginService;
@@ -71,7 +73,18 @@ class AuthController extends Controller
          * @var PixelBaseModel $loggedUser
          */ 
         $loggedUser = auth()->user();
-        $loggedUser->load(["role:id,name", "role.permissions:name,id"]);
+        $loggedUser->load(["role:id,name"]);
+        
+        if($loggedUser instanceof MustHaveRole)
+        {
+            $loggedUser->load("role.permissions:name,id");
+        }
+        
+        if($loggedUser instanceof BelongsToBranch)
+        {
+            $loggedUser->load("branch");
+        }
+
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(UserResource::class);
         return new $resourceClass(auth()->user($loggedUser));
     }

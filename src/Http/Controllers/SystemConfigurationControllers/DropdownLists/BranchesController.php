@@ -138,10 +138,10 @@ class BranchesController extends Controller
         );
     }
 
-    public function destroy(): JsonResponse
+    public function destroy(int $branch): JsonResponse
     {
         return $this->surroundWithTransaction(
-            fn() => $this->branchService->destroy(),
+            fn() => $this->branchService->destroy($branch),
             'Deleting Branch Record',
             ['user_id' => auth()->id(), 'request' => request()->all()]
         );
