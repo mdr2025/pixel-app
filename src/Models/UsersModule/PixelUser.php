@@ -30,6 +30,8 @@ use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToBranch;
 use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\MustHaveRole;
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Models\TenancyDataSyncingEventFactories\UsersModule\TenantUserDataSyncingEventFactory;
+use PixelApp\Models\Traits\OptionalRelationsTraits\BelongsToBranchMethods;
+use PixelApp\Models\Traits\OptionalRelationsTraits\BelongsToDepartmentMethods;
 use PixelApp\Models\Traits\OptionalRelationsTraits\MustHaveRoleMethods;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\HasAdminAssignableProps;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\StatusChangeableAccount;
@@ -60,7 +62,9 @@ implements
          EmailAuthenticatableMethods,
          SoftDeletes ,
          MustHaveRoleMethods,
-         BranchFilterScope;
+         BranchFilterScope,
+         BelongsToBranchMethods,
+         BelongsToDepartmentMethods;
   
     protected bool $fakedUsersStatus = false;
 

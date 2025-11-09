@@ -5,6 +5,8 @@ namespace PixelApp\Routes\RouteRegistrarTypes\UsersManagementRoutesRegistrars;
 use Illuminate\Support\Facades\Route;
 use PixelApp\Routes\PixelRouteRegistrar;
 use Illuminate\Routing\RouteRegistrar;
+use PixelApp\Config\PixelConfigManager;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelAppBootingManagers\PixelAppBootingManager;
 use PixelApp\Http\Controllers\UsersManagementControllers\UserController;
 use PixelApp\Routes\PixelRouteBootingManager;
 use PixelApp\Routes\PixelRouteManager;
@@ -49,12 +51,16 @@ class UsersAPIRoutesRegistrar extends PixelRouteRegistrar
     {
         Route::get('list/users-emails', [UserController::class, 'listDefaultUsers']);
     }
+    
     protected function defineUserBranchRoutes() : void
     {
-        Route::get('list/accessible-branches', [UserController::class , 'getAccessibleBranchesAndPrimaryBranchFromUser']);
-        Route::get('list/primary-branch', [UserController::class , 'getPrimaryBranchFromUser']);
-        Route::get('list/primary-and-filtered-branches', [UserController::class , 'getPrimaryBranchAndFilteredBranches']);
-        Route::get('list/users-by-branch', [UserController::class , 'getFilteredUsersByBranch']);
+        if(PixelConfigManager::isBranchesFuncDefined())
+        {
+            Route::get('list/accessible-branches', [UserController::class , 'getAccessibleBranchesAndPrimaryBranchFromUser']);
+            Route::get('list/primary-branch', [UserController::class , 'getPrimaryBranchFromUser']);
+            Route::get('list/primary-and-filtered-branches', [UserController::class , 'getPrimaryBranchAndFilteredBranches']);
+            Route::get('list/users-by-branch', [UserController::class , 'getFilteredUsersByBranch']);
+        }
     }
 
     protected function defineExportRoute() : void
