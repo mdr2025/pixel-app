@@ -1,7 +1,8 @@
 <?php
 
 namespace PixelApp\Http\Controllers\AuthenticationControllers\UserAuthenticationControllers;
- 
+
+use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 use PixelApp\Http\Controllers\PixelBaseController as Controller;
 use Illuminate\Http\JsonResponse;
 use PixelApp\Http\Resources\PixelHttpResourceManager;
@@ -9,6 +10,7 @@ use PixelApp\Http\Resources\UserManagementResources\ModelResources\UserResource;
 use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToBranch;
 use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\MustHaveRole;
 use PixelApp\Models\PixelBaseModel;
+use PixelApp\Models\UsersModule\UserProfile;
 use PixelApp\Services\AuthenticationServices\UserAuthServices\EmailVerificationServices\UserEmailVerificationService;
 use PixelApp\Services\AuthenticationServices\UserAuthServices\LoginService\LoginService;
 use PixelApp\Services\AuthenticationServices\UserAuthServices\LogoutService\LogoutService;
@@ -68,6 +70,8 @@ class AuthController extends Controller
 
     public function getLoggedUser(): UserResource
     {
+        BasePolicy::check("read_profile" , UserProfile::class);
+        
         /**
          * returns only user (main data , department , branch , role & permissions)
          * @var PixelBaseModel $loggedUser

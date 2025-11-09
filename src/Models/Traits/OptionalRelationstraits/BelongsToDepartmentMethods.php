@@ -28,7 +28,7 @@ trait BelongsToDepartmentMethods
         return new DepartmentChanger();
     }
 
-    protected function appendBranchFields() : void
+    protected function appendDepartmentFields() : void
     {
         $this->injectDepartmentFillables();
         $this->appendDepartmentIdCast();

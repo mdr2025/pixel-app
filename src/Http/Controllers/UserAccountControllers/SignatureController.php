@@ -2,6 +2,7 @@
 
 namespace PixelApp\Http\Controllers\UserAccountControllers;
 
+use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 use PixelApp\Http\Controllers\PixelBaseController as Controller;
 use PixelApp\Http\Resources\SingleResource; 
 use Illuminate\Support\Facades\Response;
@@ -24,6 +25,8 @@ class SignatureController extends Controller
 
     public function index()
     {
+        BasePolicy::check("read" , Signature::class);
+        
         $modelClass = $this->getSignatureModelClass();
 
         $data = QueryBuilder::for($modelClass)->get();
@@ -33,6 +36,8 @@ class SignatureController extends Controller
 
     public function list()
     {
+        BasePolicy::check("read" , Signature::class);
+
         $modelClass = $this->getSignatureModelClass();
 
         $data = QueryBuilder::for($modelClass)->get();
@@ -46,6 +51,7 @@ class SignatureController extends Controller
 
     public function store()
     {
+        BasePolicy::check("create" , Signature::class);
         $service = PixelServiceManager::getServiceForServiceBaseType(SignatureStoringService::class);
         return (new $service())->create();
     }
@@ -53,6 +59,8 @@ class SignatureController extends Controller
 
     public function show()
     {
+        BasePolicy::check("read" , Signature::class);
+
         $modelClass = $this->getSignatureModelClass();
 
         $data = $modelClass::where('user_id',auth()->user()->id)->firstOrFail();

@@ -49,8 +49,13 @@ $permissions = [
                                 "edit_umm-users-list",
                                 "delete_umm-users-list",
                                 //////////Profile///////////
-                                "read_profile"
-
+                                "read_profile",
+                                "edit_profile",
+                                /////////Signature/////////
+                                "read_Signature",
+                                "create_Signature",
+                                "edit_Signature",
+                                "delete_Signature",
                 ];
  
 $superAdminPermissions = array_merge($permissions, [

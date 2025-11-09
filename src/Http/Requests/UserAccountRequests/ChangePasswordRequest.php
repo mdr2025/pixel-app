@@ -2,6 +2,8 @@
 
 namespace PixelApp\Http\Requests\UserAccountRequests;
 
+use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
+use PixelApp\Models\UsersModule\UserProfile;
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 
 class ChangePasswordRequest extends BaseFormRequest
@@ -13,7 +15,7 @@ class ChangePasswordRequest extends BaseFormRequest
      */
     public function authorize()
     {
-        return true;
+        return BasePolicy::check("edit_profile" , UserProfile::class);
     }
 
     /**
