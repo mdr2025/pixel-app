@@ -14,7 +14,8 @@ use PixelApp\Config\ConfigFileIdentifiers\PixelAppRequiredPackagesConfigFileIden
 use PixelApp\Config\ConfigFileIdentifiers\PixelAppRequiredPackagesConfigFileIdentifiers\ExcelConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\PixelAppRequiredPackagesConfigFileIdentifiers\PassportConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\PixelAppRequiredPackagesConfigFileIdentifiers\PermissionConfigFileIdentifier;
-use PixelApp\Config\ConfigFileIdentifiers\PixelAppRequiredPackagesConfigFileIdentifiers\QueryBuilderConfigFileIdentifier; 
+use PixelApp\Config\ConfigFileIdentifiers\PixelAppRequiredPackagesConfigFileIdentifiers\QueryBuilderConfigFileIdentifier;
+use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\DepartmentsConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\IOEncryptingHandlerFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\PixelOptionalPackagesConfigFileIdentifires\TenancyConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\PixelAppACLConfigFileIdentifier;
@@ -48,7 +49,9 @@ class PixelConfigManager
             static::getPackageBaseConfigFileIdentifierClass(),
             static::getPixelAppACLConfigFileIdentifierClass() ,
             IOEncryptingHandlerFileIdentifier::class,
-            SystemResettingExcludedSeedingTablesFileIdentifier::class
+            SystemResettingExcludedSeedingTablesFileIdentifier::class,
+            DepartmentsConfigFileIdentifier::class
+
         ];
     }
  
