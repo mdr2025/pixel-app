@@ -48,47 +48,42 @@ class BranchesRouteRegistrar extends PixelRouteRegistrar
    
     protected function defineImportingRoute() : void
     {
-        Route::post('system-configs/branches/import', [BranchesController::class, 'import']);
+        Route::post('system-configs/import/branches', [BranchesController::class, 'import']);
     }
     
     protected function defineExportingRoute() : void
     {
-        Route::post('system-configs/branches/export', [BranchesController::class, 'export']);
+        Route::get('system-configs/excel/export/branches', [BranchesController::class, 'export']);
     }
 
-    protected function defineChildBranchesListingRoute() : void
+    protected function defineBranchTeamRoutes() : void
     {
-        Route::get('system-configs/branches/list-children', [BranchesController::class, 'listChildrenBranches'])->middleware('throttle:6,1');
+        Route::get('system-configs/branches-teams', [BranchesController::class, 'indexBranchTeams']);
+        Route::post('system-configs/branches-teams', [BranchesController::class, 'addTeam']);
     }
-
-    protected function defineSubBranchesListingRoute() : void
+    protected function defineBranchesMainFuncinalityRoutes() : void
     {
-        Route::get('list/sub-branches', [BranchesController::class, 'subBranches']);
-    }
-
-    protected function defineBranchesListingRoute() : void
-    {
-        Route::get('list/branches', [BranchesController::class, 'list']);
-    }
-
-    protected function defineBranchesResourceRoute() : void
-    {
-        Route::resource('branches', BranchesController::class)
-             ->parameters(["branches" => "branch"])
-             ->except(['create' , 'edit' ]);
+        Route::prefix('system-configs/branches')->controller(BranchesController::class)->group(function () {
+            Route::get('main-branch', 'getFirstParentBranch')->withoutMiddleware("throttle:api")->middleware('throttle:6,1');
+            Route::get('list', 'listBranches');
+            Route::get('sub-branches', 'subBranches');
+            Route::post('/{branch}', 'update');
+            Route::post('/', 'store');
+            Route::delete('/', 'destroy');
+            Route::get('/', 'index');
+        });
     }
 
     protected function defineBranchesRoutes(RouteRegistrar $routeRegistrar ) : void
     {  
         $routeRegistrar->group(function()
         {
-            $this->defineBranchesResourceRoute(); 
-            $this->defineBranchesListingRoute(); 
-            $this->defineSubBranchesListingRoute();
-            $this->defineChildBranchesListingRoute();
+            $this->defineBranchesMainFuncinalityRoutes(); 
             $this->defineImportableFormatDownloadingRoute();
             $this->defineImportingRoute();
             $this->defineExportingRoute();
+
+            $this->defineBranchTeamRoutes();
         });
     }
     

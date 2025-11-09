@@ -40,7 +40,7 @@ class UserProfileAPIRoutesRegistrar extends PixelRouteRegistrar
 
     protected function defineUpdateProfileRoute() : void
     { 
-        Route::put('update-profile', [UserProfileController::class, 'updateProfile']);
+        Route::post('update-profile', [UserProfileController::class, 'updateProfile']);
     }
   
     protected function defineProfileShowRoute() : void

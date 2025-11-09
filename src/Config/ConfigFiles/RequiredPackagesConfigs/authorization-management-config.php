@@ -11,7 +11,6 @@ use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Models\UsersModule\UserProfile;
 use PixelApp\Policies\AuthenticationPolicies\CompanyModulePolicies\CompanyModulePolicy;
-use PixelApp\Policies\AuthenticationPolicies\UsersModulePolicies\UsersModulePolicy;
 use PixelApp\Policies\IndependentGates\SuperAdminIndependentGates;
 use PixelApp\Policies\SystemConfigurationPolicies\DropDownListPolicies\AreaPolicy;
 use PixelApp\Policies\SystemConfigurationPolicies\DropDownListPolicies\BranchPolicy;
@@ -19,6 +18,7 @@ use PixelApp\Policies\SystemConfigurationPolicies\DropDownListPolicies\Departmen
 use PixelApp\Policies\SystemConfigurationPolicies\DropDownListPolicies\DropDownListPolicy;
 use PixelApp\Policies\SystemConfigurationPolicies\RolesAndPermissionsPolicies\RolesAndPermissionsPolicies;
 use PixelApp\Policies\UserManagementPolicies\UserProfilePolicy;
+use PixelApp\Policies\UserManagementPolicies\UsersModulePolicy;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -35,13 +35,13 @@ return [
         Department::class                 => DepartmentPolicy::class,
         Area::class                       => AreaPolicy::class,
         Branch::class                     => BranchPolicy::class,
-        City::class => DropDownListPolicy::class,
-        Currency::class => DropDownListPolicy::class,
+        City::class                       => DropDownListPolicy::class,
+        Currency::class                   => DropDownListPolicy::class,
        
         /** Authentication Policies */
-        TenantCompany::class                  => CompanyModulePolicy::class,
-        UserProfile::class     => UserProfilePolicy::class,
-        PixelUser::class                     => UsersModulePolicy::class,
+        TenantCompany::class                => CompanyModulePolicy::class,
+        UserProfile::class                  => UsersModulePolicy::class,
+        PixelUser::class                    => UsersModulePolicy::class,
     ],
     "independent_gates" => [
         SuperAdminIndependentGates::class

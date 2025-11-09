@@ -49,6 +49,14 @@ class UsersAPIRoutesRegistrar extends PixelRouteRegistrar
     {
         Route::get('list/users-emails', [UserController::class, 'listDefaultUsers']);
     }
+    protected function defineUserBranchRoutes() : void
+    {
+        Route::get('list/accessible-branches', [UserController::class , 'getAccessibleBranchesAndPrimaryBranchFromUser']);
+        Route::get('list/primary-branch', [UserController::class , 'getPrimaryBranchFromUser']);
+        Route::get('list/primary-and-filtered-branches', [UserController::class , 'getPrimaryBranchAndFilteredBranches']);
+        Route::get('list/users-by-branch', [UserController::class , 'getFilteredUsersByBranch']);
+    }
+
     protected function defineExportRoute() : void
     {
         Route::get('users-list/excel/export', [UserController::class, 'export']);
@@ -56,7 +64,7 @@ class UsersAPIRoutesRegistrar extends PixelRouteRegistrar
 
     protected function defineChangeAccountStatusRoute() : void
     {
-        Route::put('users-list/status/{user}', [UserController::class, 'changeAccountStatus']);
+        Route::post('users-list/status/{user}', [UserController::class, 'changeAccountStatus']);
     }
  
     protected function defineChangeEmailRoute() : void
@@ -66,12 +74,14 @@ class UsersAPIRoutesRegistrar extends PixelRouteRegistrar
 
     protected function defineUpdateRoute() : void
     { 
-        Route::put('users-list/update/{user}', [UserController::class, 'update']);
+        Route::post('users-list/update/{user}', [UserController::class, 'update']);
     }
   
     protected function defineResourceRoute() : void
     {
-        Route::resource('users-list', UserController::class)->parameters(['users-list'=>'user'])->except("destroy", "update");
+        Route::resource('users-list', UserController::class)
+             ->parameters(['users-list'=>'user'])
+             ->except("destroy", "update");
     }
 
     protected function defineUsersRoutes(RouteRegistrar $routeRegistrar ) : void
@@ -84,6 +94,7 @@ class UsersAPIRoutesRegistrar extends PixelRouteRegistrar
             $this->defineChangeAccountStatusRoute();
             $this->defineExportRoute();
             $this->defineDefaultUsersListingRoute();
+            $this->defineUserBranchRoutes();
             $this->defineUsersListingRoute();
             $this->definResbonsiablePersonsListingRoute();
             $this->definEmployeesListingUsersRoute();

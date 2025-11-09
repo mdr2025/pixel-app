@@ -18,20 +18,18 @@ class UserProfile
 {
     use HasFactory ;
 
-    protected $table = "user_profile";
+     protected $table = "user_profile";
     protected $primaryKey = "user_id";
 
-    const MARTIAL_STATUSES = ["Single" , "Married"];
-    const MILITARY_STATUSES = ["Exempted" , "Service Completed" , "Student"];
+    const MARTIAL_STATUSES = ["Single", "Married"];
+    const MILITARY_STATUSES = ["Exempted", "Service Completed", "Student"];
 
     protected $fillable = [
         'nationality_id',
-        'city_id',
         'picture',
         'gender',
         'marital_status',
         'military_status',
-        'date_of_birth',
         'passport_number',
         'national_id_number',
         "user_id"
@@ -62,7 +60,7 @@ class UserProfile
     {
         return [
                     "user" =>  static::getUserModelClass()  ,
-                    "country" => $this->getCountryModelClass() 
+                    "nationality" => $this->getCountryModelClass() 
                ];
     }
 
@@ -82,11 +80,7 @@ class UserProfile
     {
         return $this->nationality;
     }
-
-//    public function city(): BelongsTo
-//    {
-//        return $this->belongsTo(City::class, "city_id", "id")->select("id", "name" ,   "country_id");
-//    }
+ 
 
     public function getDocumentsStorageFolderName(): string
     {
@@ -96,5 +90,10 @@ class UserProfile
     protected static function newFactory()
     {
         return UserProfileFactory::new();
+    }
+
+    public function getPicture() : string
+    {
+        return $this->getFileFullPathAttrValue('picture');
     }
 }

@@ -21,11 +21,46 @@ class UsersListResource extends JsonResource
      */
     public function toArray($request)
     {
+        
+        $data = [
+                    "id" => $this->id,
+                    "name" => $this->name
+                ] ;
+
+        $this->appendPicture($data , $request);
+        $this->appendDisablingStatus($data , $request);
+
+        return $data;
+
+    }
+
+    protected function appendDisablingStatus(array &$data , $request) : void
+    {
+        $hasDepartmentFilter = $request->has('filter.department_id');
+
+        // Ensure 'is_disabled' is a boolean and explicitly check for 'true'
+        $isDisabledFilter = $request->has('filter.is_disabled') && filter_var($request->filter['is_disabled'], FILTER_VALIDATE_BOOLEAN) === true;
+
+
+        $data['isDisabled'] 
+        =
+        $isDisabledFilter && $hasDepartmentFilter
+        ? ($this->department_id != auth('api')->user()->department_id)
+        : false;
+    }
+
+    protected function appendPicture(array &$data , $request) : void
+    {
         $userProfileResourceClass = $this->getUserProfileResourceClass();
-        return [
-            "id" => $this->id,
-            "name" => $this->name,
-            'picture' => $this->whenLoaded('profile', fn() => (new $userProfileResourceClass($this->profile))?->toArray($request)["picture"] ?? null),
-        ];
+        
+        $data['picture'] 
+        = 
+        $this->whenLoaded(
+                            'profile',
+                            function() use ($userProfileResourceClass , $request)
+                            {
+                                return (new $userProfileResourceClass($this->profile))?->getPictureData($request) ?? null;
+                            }
+                         );
     }
 }

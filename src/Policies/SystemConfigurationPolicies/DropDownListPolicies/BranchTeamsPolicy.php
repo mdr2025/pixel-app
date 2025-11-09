@@ -36,7 +36,37 @@ class BranchTeamsPolicy extends BasePolicy
         return $this->permissionExaminer->addPermissionToCheck("add-team_sc-dropdown-lists-branch-teams")
             ->hasPermissionsOrFail();
     }
- 
+
+    /**
+     * @return bool
+     * @throws JsonException
+     */
+    public function addHseTeam(): bool
+    {
+        return $this->permissionExaminer->addPermissionToCheck("add-hse-team_sc-dropdown-lists-branch-teams")
+            ->hasPermissionsOrFail();
+    }
+
+    /**
+     * @return bool
+     * @throws JsonException
+     */
+    public function readStandardCommitteeTeams(): bool
+    {
+        return $this->permissionExaminer->addPermissionToCheck("read_sc-dropdown-lists-standard-committee-teams")
+            ->hasPermissionsOrFail();
+    }
+
+    /**
+     * @return bool
+     * @throws JsonException
+     */
+    public function addStandardCommitteeTeam(): bool
+    {
+        return $this->permissionExaminer->addPermissionToCheck("add-standard-committee-team_sc-dropdown-lists-branch-teams")
+            ->hasPermissionsOrFail();
+    }
+
     /**
      * @return bool
      * @throws JsonException

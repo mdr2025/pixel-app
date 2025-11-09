@@ -5,7 +5,7 @@ namespace  PixelApp\Services\UserEncapsulatedFunc\EmailAuthenticatableFuncs\Stat
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
-use PixelApp\Http\Requests\UserManagementRequests\SignupAccounRejectingRequest;
+use PixelApp\Http\Requests\UserManagementRequests\SignupAccountRejectingRequest;
 
 abstract class SignUpAccountRejectingService extends SignUpAccountStatusChanger
 {
@@ -17,7 +17,7 @@ abstract class SignUpAccountRejectingService extends SignUpAccountStatusChanger
 
     protected function getRequestFormClass(): string
     {
-        return PixelHttpRequestManager::getRequestForRequestBaseType(SignupAccounRejectingRequest::class);
+        return PixelHttpRequestManager::getRequestForRequestBaseType(SignupAccountRejectingRequest::class);
     }
  
     //it is just an alias method

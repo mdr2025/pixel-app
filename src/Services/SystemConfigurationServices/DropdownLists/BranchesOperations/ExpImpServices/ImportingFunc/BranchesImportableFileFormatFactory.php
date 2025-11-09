@@ -7,7 +7,7 @@ use ExpImpManagement\ImportersManagement\ImportableFileFormatFactories\FormatCol
 use ExpImpManagement\ImportersManagement\ImportableFileFormatFactories\ValidationDataTypeSetters\CSVCellValidationDataTypeSetters\ListCellValidationSetter;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\ImportingFunc\DropDownListCSVFileFormatFactory;
 
-class ImportableFileFormatFactory extends DropDownListCSVFileFormatFactory
+class BranchesImportableFileFormatFactory extends DropDownListCSVFileFormatFactory
 {
 
     protected function getColumnFormatInfoCompoenents() : array
@@ -15,6 +15,12 @@ class ImportableFileFormatFactory extends DropDownListCSVFileFormatFactory
         $columns = parent::getColumnFormatInfoCompoenents();
         $columns[] = (new CSVBooleanSelectingColumnInfo("D" , "Default Branch" , "Yes" , "No"))->setDatabaseFieldName('default')
                                                                                ->setCellDataValidation(new ListCellValidationSetter(["0" , "1"]));
+
+                                                                               
+        $columns[] = (new CSVFormatColumnInfoComponent("E" , "Parent Branch Id"))->setDatabaseFieldName('branch_id');
+        
+        $columns[] = (new CSVFormatColumnInfoComponent("E" , "Country Id"))->setDatabaseFieldName('country_id');
+        
         return $columns;
     }
 

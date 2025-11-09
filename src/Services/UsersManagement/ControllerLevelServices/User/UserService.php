@@ -170,9 +170,9 @@ class UserService
      *
      * @return array
      */
-    public function listDefaultUser(): array
+    public function listDefaultUsers(): array
     {
-        $data = $this->userRepository->listDefaultUser(UserConfig::getDefaultUserFilters());
+        $data = $this->userRepository->listDefaultUsers(UserConfig::getDefaultUserFilters());
 
         return [
             'data' => $data,

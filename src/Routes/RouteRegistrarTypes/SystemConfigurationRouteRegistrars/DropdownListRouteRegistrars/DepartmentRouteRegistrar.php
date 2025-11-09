@@ -43,16 +43,16 @@ class DepartmentRouteRegistrar extends PixelRouteRegistrar
     
     protected function defineDepartmentsListingRoute() : void
     {
-        Route::get('list/departments', [DepartmentsController::class, 'list']); 
+        Route::get('departments/list', [DepartmentsController::class, 'list']); 
     }
     protected function defineDepartmentsExportingRoute() : void
     {
-        Route::post('system-configs/departments/export', [DepartmentsController::class, 'export']);
+        Route::get('system-configs/excel/export/departments', [DepartmentsController::class, 'export']);
     }
 
     protected function defineDepartmentsImportingRoute() : void
     {
-        Route::post('system-configs/departments/import', [DepartmentsController::class, 'import']);
+        Route::post('system-configs/import/departments', [DepartmentsController::class, 'import']);
     }
 
     protected function defineDepartmentFileFormatDownloadingRoute() : void
@@ -62,7 +62,15 @@ class DepartmentRouteRegistrar extends PixelRouteRegistrar
     protected function defineDepartmentsResourceRoute() : void
     {
         Route::resource('system-configs/departments', DepartmentsController::class)->parameters(["departments" => "department"])
-        ->except(['create' , 'edit' ]);
+        ->only(['index' , 'store' ]);
+
+        //must be remove later .... it is defined above ... must handled on frontend first then here
+        Route::post('system-configs/departments/list', 'list');
+
+        Route::post('system-configs/departments/{department}', [DepartmentsController::class , 'update']);
+        Route::delete('system-configs/departments', [DepartmentsController::class , 'destroy']);
+        Route::post('system-configs/departments/assign-supervisors/{department}', [DepartmentsController::class , 'assignSupervisors']);
+
     }
 
     protected function defineDepartmentsRoutes(RouteRegistrar $routeRegistrar ) : void

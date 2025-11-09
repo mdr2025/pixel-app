@@ -30,7 +30,8 @@ class CentralDBDataSyncingEvent extends TenancyDataSyncingEvent
             string $centralAppModelClass , 
             string $modelIdKeyName ,
             string | int $modelIdKeyValue,
-            array $updatedData
+            array $modelUpdatedData,
+            array $modelRelationsUpdatedData = []
             // string $centralModelIdKeyName ,
             // string | int $centralModelIdKeyValue,
             // array $syncedAttributeNames
@@ -41,7 +42,8 @@ class CentralDBDataSyncingEvent extends TenancyDataSyncingEvent
              ->setCentralAppModelClass($centralAppModelClass)
              ->setModelIdKeyName($modelIdKeyName)
              ->setModelIdKeyValue($modelIdKeyValue)
-             ->setUpdatedData($updatedData);
+             ->setModelUpdatedData($modelUpdatedData)
+             ->setModelRelationsUpdatedData($modelRelationsUpdatedData);
             //  ->setCentralModelIdKeyName($centralModelIdKeyName)
             //  ->setCentralModelIdKeyValue($centralModelIdKeyValue);
     }

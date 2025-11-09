@@ -1,16 +1,16 @@
 <?php
 
-namespace PixelApp\Http\Requests\SystemConfigurationRequests\Departments;
+namespace App\Http\Requests\SystemSettings\SystemConfigurations\Branches;
 
-use PixelApp\Models\SystemConfigurationModels\Department;
+use PixelApp\Models\SystemConfigurationModels\Branch;
 use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 
-class DepartmentDownloadFileFormateRequest extends BaseFormRequest
+class BranchDownloadFileFormateRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {
-        return BasePolicy::check('read', Department::class);
+        return BasePolicy::check('read', Branch::class);
     }
 
     /**

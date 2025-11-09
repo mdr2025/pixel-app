@@ -31,6 +31,7 @@ class SignUpUserSeeder extends Seeder
         for ($i = 60000; $i < 60100;$i++){
             $firstName ='usman '.$i;
             $lastName ='ahmed '.$i;
+
             $this->getUSerModelClass()::create([
                 'first_name' => $firstName,
                 'last_name' => $lastName,
@@ -39,8 +40,8 @@ class SignUpUserSeeder extends Seeder
                 'password' => Hash::make(123456789),
                 'mobile' => $i,
                 'role_id'=>2,
-                'status'=>'pending',
-                'user_type'=>'signup',
+                'status'=>'active',
+                'user_type'=>'user',
                 'email_verified_at' => Carbon::now(),
                 'accepted_at' => Carbon::now(),
                 'verification_token' => null,

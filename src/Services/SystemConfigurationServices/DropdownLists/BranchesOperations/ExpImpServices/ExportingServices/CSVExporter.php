@@ -9,7 +9,7 @@ use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperatio
 
 class CSVExporter extends DropDownListCSVExporter
 {
-    use ExporterQueryBuilderCustomization;
+    use ExporterQueryBuilderCustomization ;
     
     public function getModelClassForSelfConstructing() : string
     {

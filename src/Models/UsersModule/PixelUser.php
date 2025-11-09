@@ -64,19 +64,6 @@ implements
   
     protected bool $fakedUsersStatus = false;
 
-    // const USER_STATUS = ["active", "inactive"]; // Database column values
-    // const SIGN_UP_STATUS = ["pending", "rejected"]; // Database column values
-    // const SIGN_UP_STATUS_CHANGING_VALUES = ["active", "rejected"]; // Allowed values to use during status changing
-    // const USER_STATUS_CHANGING_VALUES = ["active", "inactive"]; // Allowed values to use during status changing
-    // const UserDefaultInitStatusValue = "pending";
-    // const UserStatusNames = [
-    //     "pending",
-    //     "active",
-    //     "inactive",
-    //     "rejected"
-    // ];
-    // const UserAllowedTypes = ["user", "signup"];
-    // const UserDefaultType = "signup"; 
 
     // ========================================
     // CONSTANTS
@@ -155,7 +142,6 @@ implements
         'full_name',
         'password',
         'mobile',
-        "country_id",
         'employee_id',
         
     ];

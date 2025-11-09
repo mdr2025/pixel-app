@@ -30,7 +30,8 @@ class TenantDBDataSyncingEvent extends TenancyDataSyncingEvent
             string $tenantAppModelClass , 
             string $modelIdKeyName ,
             string | int $modelIdKeyValue,
-            array $updatedData
+            array $modelUpdatedData = [],
+            array $modelRelationsUpdatedData = []
             // string $tenantModelIdKeyName ,
             // string | int $tenantModelIdKeyValue,
             // array $syncedAttributeNames
@@ -42,7 +43,8 @@ class TenantDBDataSyncingEvent extends TenancyDataSyncingEvent
              ->setTenantAppModelClass($tenantAppModelClass)
              ->setModelIdKeyName($modelIdKeyName)
              ->setModelIdKeyValue($modelIdKeyValue)
-             ->setUpdatedData($updatedData);
+             ->setModelUpdatedData($modelUpdatedData)
+             ->setModelRelationsUpdatedData($modelRelationsUpdatedData);
     }
 
     

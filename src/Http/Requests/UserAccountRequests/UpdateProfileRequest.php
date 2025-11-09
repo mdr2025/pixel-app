@@ -47,8 +47,7 @@ class UpdateProfileRequest extends BaseFormRequest implements NeedsModelKeyAdvan
 
                         "national_id_number" => ["nullable" ,Rule::unique("user_profile", "national_id_number")->ignore($user_id, "user_id")],
                         "passport_number" => ["nullable" , Rule::unique("user_profile", "passport_number")->ignore($user_id, "user_id")],
-                        "country_id" => ["nullable" , "exists:countries,id"],
-                        "city_id" => ["nullable" , "exists:cities,id"],
+                        "nationality_id" => ["nullable" , "exists:countries,id"]
                  ];
     }
 
@@ -64,14 +63,12 @@ class UpdateProfileRequest extends BaseFormRequest implements NeedsModelKeyAdvan
             "full_name" => ["nullable" , "string"],
             "mobile" => ["required" ,  PhoneNumber::create()],
             "profile.gender" => ["nullable" , "string"  ],
-            "profile.country_id" => ["nullable" , "string" ],
-            "profile.city_id" => ["nullable" , "string" ],
+            "profile.nationality_id" => ["nullable" , "string" ], 
             "profile.national_id_number" => ["nullable" , "string" ],
             "profile.passport_number" => ["nullable" , "string" ],
             "profile.marital_status" => ["nullable" , "string" , Rule::in( UserProfile::MARTIAL_STATUSES )],
             "profile.military_status" => ["nullable" , "string", Rule::in( UserProfile::MILITARY_STATUSES )],
-            "profile.logo" => ["nullable" , (new SingleFileOrSinglePathString())->allowImageFilesOnly() ],
-            "profile.date_of_birth" => ["nullable" , "date"],
+            "profile.picture" => ["nullable" , (new SingleFileOrSinglePathString())->allowImageFilesOnly() ],
             'attachments' => ["nullable" , "array"],
             'attachments.*.path' => ["required" , new SingleFileOrSinglePathString()],
             'attachments.*.type' => ["required" , "string"],

@@ -83,7 +83,7 @@ class UserProfileFactory extends Factory
             'passport_files' => null,
             'passport_number' => $this->faker->randomDigit(),
             'logo' => null,
-            "country_id" => $this->countryIDS[rand(0 , $this->countriesCount)]
+            "nationality_id" => $this->countryIDS[rand(0 , $this->countriesCount)]
         ];
     }
 

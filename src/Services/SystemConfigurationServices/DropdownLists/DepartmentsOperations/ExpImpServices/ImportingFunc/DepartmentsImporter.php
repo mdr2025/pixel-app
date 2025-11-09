@@ -13,7 +13,7 @@ class DepartmentsImporter extends DropDownListCSVImporter
 {
     protected function getFormatFileName() : string
     {
-        return "departments";
+        return "Departments-Template";
     }
 
     public function getModelClassForSelfConstructing() : string
@@ -28,7 +28,11 @@ class DepartmentsImporter extends DropDownListCSVImporter
 
     public function getImportableTemplateFactoryForSelfConstructing() : CSVImportableFileFormatFactory
     {
-        return new ImportableFileFormatFactory($this->getFormatFileName());
+        
+        $fileName = $this->getFormatFileName();
+        $fileName = $this->handleTenantFileName($fileName);
+        
+        return new DepartmentsImportableFileFormatFactory($fileName);
     }
 
 }

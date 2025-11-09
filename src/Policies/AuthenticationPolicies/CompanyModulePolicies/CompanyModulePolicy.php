@@ -7,7 +7,7 @@ use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 
 class CompanyModulePolicy extends BasePolicy
 {
-    /**
+  /**
      * @return bool
      * @throws JsonException
      */

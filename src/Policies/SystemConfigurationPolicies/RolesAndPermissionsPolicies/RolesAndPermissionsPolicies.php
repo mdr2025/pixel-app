@@ -7,7 +7,7 @@ use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 
 class RolesAndPermissionsPolicies extends BasePolicy
 {
-    /**
+       /**
      * @return bool
      * @throws JsonException
      */

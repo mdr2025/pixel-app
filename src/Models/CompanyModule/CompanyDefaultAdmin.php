@@ -12,6 +12,8 @@ use PixelApp\Events\TenancyEvents\DataSyncingEvents\TenancyDataSyncingEvent;
 use PixelApp\Interfaces\OnlyAdminPanelQueryable;
 use PixelApp\Interfaces\TenancyInterfaces\CanSyncData;
 use PixelApp\Models\Interfaces\TrustedAttributesHandlerModel;
+use PixelApp\Models\PixelModelManager;
+use PixelApp\Models\SystemConfigurationModels\CountryModule\Country;
 use PixelApp\Models\TenancyDataSyncingEventFactories\CompanyModule\DefaultAdminDataSyncingEventFactory;
 use PixelApp\Models\Traits\TrustedAttributesHandlerModelMethods;
 
@@ -34,13 +36,23 @@ class CompanyDefaultAdmin
         'last_name',
         'password',
         'mobile',
-        'country_id', // change it later to nationality afeter changing it in front and auth structure
+        'nationality_id',
         'company_id'
     ];
  
     public function getConnectionName()
     {
         return config("database.defaultCentralConnection");
+    }
+
+    protected function getCountryModelClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(Country::class);
+    }
+
+    public function nationality() : BelongsTo
+    {
+        return $this->belongsTo($this->getCountryModelClass() , "nationality_id" , "id");
     }
  
     public function tenant()  : BelongsTo

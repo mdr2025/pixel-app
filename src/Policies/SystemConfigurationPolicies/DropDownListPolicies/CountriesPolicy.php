@@ -7,7 +7,7 @@ use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 
 class CountriesPolicy extends BasePolicy
 {
-    /**
+     /**
      * @return bool
      * @throws JsonException
      */

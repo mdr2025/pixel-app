@@ -62,13 +62,13 @@ class UserAuthenticationAPIRoutesRegistrar extends PixelRouteRegistrar
 
     protected function defineUserLoginRoute() : void
     {
-        Route::post('login', [AuthController::class, 'login'])->middleware("reqLimit");
+        Route::post('login', [AuthController::class, 'login']);
     }
  
 
     protected function defineUserRegisteringRoute() : void
     {
-        Route::post('register', [AuthController::class, 'register'])->middleware("reqLimit");
+        Route::post('register', [AuthController::class, 'register']);
     }
 
     protected function defineUserAuthRoutes(RouteRegistrar $routeRegistrar ) : void

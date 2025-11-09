@@ -23,8 +23,6 @@ class Department extends PixelBaseModel
 
     protected $fillable = [
         'name',
-        'status',
-        'is_default',
         'branch_id'
     ];
 

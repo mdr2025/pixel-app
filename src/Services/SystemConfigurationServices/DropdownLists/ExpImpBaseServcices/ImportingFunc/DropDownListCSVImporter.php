@@ -7,17 +7,22 @@ use ExpImpManagement\ImportersManagement\ImporterTypes\CSVImporter\CSVImporter;
 use ExpImpManagement\ImportersManagement\ImporterTypes\CSVImporter\Traits\CSVImporterSelfConstructing;
 use ExpImpManagement\ImportersManagement\Interfaces\SelfConstructableCSVImporter;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\ExpImpBaseServcices\ImportingFunc\DropDownListCSVFileFormatFactory;
+use PixelApp\Traits\ExportedFileNameGeneratingTrait;
 
 abstract class DropDownListCSVImporter 
          extends CSVImporter 
          implements SelfConstructableCSVImporter
 {
-    use CSVImporterSelfConstructing;
+    use CSVImporterSelfConstructing , ExportedFileNameGeneratingTrait;
 
     abstract protected function getFormatFileName() : string;
  
     public function getImportableTemplateFactoryForSelfConstructing() : CSVImportableFileFormatFactory
     {
-        return new DropDownListCSVFileFormatFactory($this->getFormatFileName());
+        
+        $fileName = $this->getFormatFileName();
+        $fileName = $this->handleTenantFileName($fileName);
+        
+        return new DropDownListCSVFileFormatFactory($fileName);
     }
 }

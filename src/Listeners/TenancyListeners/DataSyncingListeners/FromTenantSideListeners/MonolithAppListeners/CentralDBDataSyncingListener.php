@@ -4,6 +4,7 @@ namespace PixelApp\Listeners\TenancyListeners\DataSyncingListeners\FromTenantSid
 
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use PixelApp\Events\TenancyEvents\DataSyncingEvents\FromTenantSideEvents\MonolithAppEvents\CentralDBDataSyncingEvent;
 use PixelApp\Listeners\TenancyListeners\DataSyncingListeners\TenancyDataSyncingListener;
 use Stancl\Tenancy\Contracts\Tenant;
@@ -39,13 +40,13 @@ class CentralDBDataSyncingListener extends TenancyDataSyncingListener
 
     protected function getOnlySyncableAttrs() : array
     {
-        return $this->event->getUpdatedData();
+        return $this->event->getModelUpdatedData();
     }
 
     /**
      * @throws Exception
      */
-    protected function fetchCentralModel() : ?Model
+    protected function fetchCentralModel() : Model
     {
         $centralAppModelClass = $this->event->getCentralAppModelClass();
         
@@ -54,11 +55,18 @@ class CentralDBDataSyncingListener extends TenancyDataSyncingListener
             $this->throwFailingException("Central app model class must be a Model type !");
         }
 
-        return $centralAppModelClass::where(
+        $centralModel = $centralAppModelClass::where(
                                                 $this->event->getModelIdKeyName() ,
                                                 "=",
                                                 $this->event->getModelIdKeyValue()
                                             )->first();
+
+        if(!$centralModel)
+        {
+            $this->throwFailingException("Failed to find the central model need to sync its data in our database ! ... Related to type : " . $centralAppModelClass);
+        }
+
+        return $centralModel;
     }
 
     /**
@@ -68,12 +76,55 @@ class CentralDBDataSyncingListener extends TenancyDataSyncingListener
     {
         tenancy()->central(function()
         { 
-            if(! ($this->fetchCentralModel()?->forceFill( $this->getOnlySyncableAttrs() )->save() ?? false) )
-            {
-                $this->throwFailingException();
-            }
+            $centralModel = $this->fetchCentralModel();
+            $this->syncModelData($centralModel);
+            $this->syncModelRelationsData($centralModel);
         });
     }
+
+    protected function syncModelData(Model $centralModel) : void
+    {
+        if(! ($centralModel->forceFill( $this->getOnlySyncableAttrs() )->save() ?? false) )
+        {
+            $this->throwFailingException();
+        }
+    }
+
+    protected function isAssociatedArray($value) : bool
+    {
+        return is_array($value) && Arr::isAssoc($value);
+    }
+
+    protected function getRelationsUpdatedDataArray() : array
+    {
+        $array = $this->event->getModelRelationsUpdatedData();
+        return array_filter($array, function ($value, $key) {
+
+                    return is_string($key) 
+                        &&
+                        $this->isAssociatedArray($value ) 
+                        &&
+                        count($value) > 0;
+
+                }, ARRAY_FILTER_USE_BOTH);
+
+    }
+    protected function syncModelRelationsData(Model $centralModel) : void
+    {
+        foreach($this->getRelationsUpdatedDataArray() as $relation => $data)
+        {
+            $this->syncModelRelationData($centralModel , $relation , $data);
+        }
+    }
+
+    protected function syncModelRelationData(Model $centralModel , string $relation , array $data) : void
+    {
+        if(!$centralModel->{$relation}()->update($data))
+        {
+            $this->throwFailingException("Failed to update the central moedl relation : $relation");
+        }
+    }
+
     // protected function setTenantModel() :self
     // {
     //     $this->tenantModel = $this->event->getTenantModel();

@@ -13,15 +13,16 @@ class TenancyDataSyncingEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
  
-    protected string $modelIdKeyName ;
-    protected string | int $modelIdKeyValue;
-    protected array $updatedData = [];
+    protected ?string   $modelIdKeyName = null;
+    protected string | int | null $modelIdKeyValue = null;
+    protected array $modelUpdatedData = [];
+    protected array $modelRelationsUpdatedData = [];
     // protected Model  $chengedModel ;
     // protected array $syncedAttributeNames = []; 
  
 
     // Getter for $modelIdKeyName
-    public function getModelIdKeyName(): string
+    public function getModelIdKeyName(): ?string
     {
         return $this->modelIdKeyName;
     }
@@ -34,7 +35,7 @@ class TenancyDataSyncingEvent
     }
 
     // Getter for $modelIdKeyValue
-    public function getModelIdKeyValue(): string|int
+    public function getModelIdKeyValue(): string|int|null
     {
         return $this->modelIdKeyValue;
     }
@@ -47,18 +48,29 @@ class TenancyDataSyncingEvent
     }
 
     // Getter for $updatedData
-    public function getUpdatedData(): array
+    public function getModelUpdatedData(): array
     {
-        return $this->updatedData;
+        return $this->modelUpdatedData;
     }
 
     // Setter for $updatedData
-    public function setUpdatedData(array $updatedData): self
+    public function setModelUpdatedData(array $modelUpdatedData): self
     {
-        $this->updatedData = $updatedData;
+        $this->modelUpdatedData = $modelUpdatedData;
         return $this;
     }
 
+    public function getModelRelationsUpdatedData(): array
+    {
+        return $this->modelRelationsUpdatedData;
+    }
+
+    // Setter for $modelRelationsUpdatedData
+    public function setModelRelationsUpdatedData(array $modelRelationsUpdatedData ): self
+    {
+        $this->modelRelationsUpdatedData = $modelRelationsUpdatedData;
+        return $this;
+    }
     // public function getChangedModel(): Model
     // {
     //     return $this->chengedModel;

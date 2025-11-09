@@ -25,14 +25,15 @@ class RegisterRequest extends BaseFormRequest implements NeedsModelKeyAdvancedVa
     {
         return [
             "email" => ["unique:users,email"],
-            "mobile" => ["unique:users,mobile"]
+            "mobile" => ["unique:users,mobile"],
+            "branch_id" => ["exists:branches,id"],
         ];
     }
 
     public function getProfileAdvancedValidationRules(array $data = []): array
     {
         return [
-            "country_id" => [ "nullable" ,"exists:countries,id"]
+            "nationality_id" => [ "nullable" ,"exists:countries,id"]
         ];
     }
 
@@ -58,11 +59,12 @@ class RegisterRequest extends BaseFormRequest implements NeedsModelKeyAdvancedVa
             "last_name" => ["required", "string", "max:255"],
             'email' => ["required", "email"],
             'mobile' => ["required",  PhoneNumber::create() ],
+            'branch_id' => ["required", "numeric"],
             "password" => ["required", "string", "confirmed"],
             "profile" => [ "nullable" , "array" ],
-            "profile.country_id" => [ "nullable" , "numeric"  ],
-            "profile.logo" => [ "nullable" ,  (new SingleFileOrSinglePathString()) ],
-            "profile.gender" => [ "nullable" , "string" , Rule::in(['male', 'female'])],
+            "profile.nationality_id" => [ "required" , "numeric"  ],
+            "profile.picture" => [ "nullable" ,  (new SingleFileOrSinglePathString()) ],
+            "profile.gender" => [ "required" , "string" , Rule::in(['male', 'female'])],
 
         ];
     }

@@ -4,6 +4,7 @@ namespace PixelApp\Http\Requests\SystemConfigurationRequests\Departments;
  
 use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 use CRUDServices\Interfaces\ValidationManagerInterfaces\NeedsModelKeyAdvancedValidation;
+use Illuminate\Validation\Rule;
 use PixelApp\Models\SystemConfigurationModels\Department;
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 
@@ -29,7 +30,11 @@ class DepartmentImportingRequest extends BaseFormRequest implements NeedsModelKe
     public function getModelKeyAdvancedValidationRules(array $data = []): array
     {
         return [
-            "name" => ["unique:departments,name"],
+            "branch_id" => ["exists:branches,id"],
+            "name" => [ 
+                        Rule::unique('departments', 'name')
+                            ->where(fn($query) => $query->where('branch_id', $data['branch_id'] ?? null))
+                      ]
         ];
     }
 
@@ -42,6 +47,8 @@ class DepartmentImportingRequest extends BaseFormRequest implements NeedsModelKe
             "id" => ["nullable" , "integer"],
             "name" => ["required", "string"],
             "status" => ["nullable", "boolean"],
+            "is_default" => ["nullable" , "boolean"],
+            "branch_id" => ["required" , "integer"]
         ];
     }
 }

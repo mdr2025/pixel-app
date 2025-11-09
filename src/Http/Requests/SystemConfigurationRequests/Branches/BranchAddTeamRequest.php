@@ -28,9 +28,6 @@ class BranchAddTeamRequest extends BaseFormRequest
             'managers_ids' => 'nullable|array',
             'managers_ids.*' => 'integer|exists:users,id',
 
-            'engineers_ids' => 'nullable|array',
-            'engineers_ids.*' => 'integer|exists:users,id',
-
             'reps_ids' => 'nullable|array',
             'reps_ids.*' => 'integer|exists:users,id',
         ];

@@ -52,7 +52,7 @@ use PixelApp\Services\UserEncapsulatedFunc\RegistrableUserHandlers\RegistrableUs
 
     protected function injectAdminCountryId() : void
     {
-        $this->data["defaultAdmin"]["country_id"] = $this->data["country_id"];
+        $this->data["defaultAdmin"]["nationality_id"] = $this->data["country_id"];
     }
 
     /**

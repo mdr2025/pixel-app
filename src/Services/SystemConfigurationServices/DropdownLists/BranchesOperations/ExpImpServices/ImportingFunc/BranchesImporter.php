@@ -13,7 +13,7 @@ class BranchesImporter extends DropDownListCSVImporter
 {
     protected function getFormatFileName() : string
     {
-        return "branches";
+        return "Branch-Template";
     }
 
     public function getModelClassForSelfConstructing() : string
@@ -28,7 +28,10 @@ class BranchesImporter extends DropDownListCSVImporter
 
     public function getImportableTemplateFactoryForSelfConstructing() : CSVImportableFileFormatFactory
     {
-        return new ImportableFileFormatFactory($this->getFormatFileName());
+        $fileName = $this->getFormatFileName();
+        $fileName = $this->handleTenantFileName($fileName);
+        
+        return new BranchesImportableFileFormatFactory($fileName);
     }
 
 }

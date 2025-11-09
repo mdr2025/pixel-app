@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use PixelApp\Models\SystemConfigurationModels\Branch;
 use PixelApp\Services\PixelServiceManager;
 use PixelApp\Services\Repositories\RepositryInterfaces\SystemConfigurationRepositryInterfaces\BranchRepositoryInterfaces\BranchRepositoryInterface;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\ExpImpServices\ExportingServices\CSVExporter;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\ExpImpServices\ImportingFunc\BranchesImporter;
 
 class BranchService
 {
@@ -96,16 +98,21 @@ class BranchService
         return $this->initBranchRepository()->addMembersToDepartment();
     }
 
-    // public function import()
-    // {
-    //     return (new BranchImporter())->import();
-    // }
-    // public function export()
-    // {
-    //     return FileExport::export(Branch::class, BranchCSVImportableFileFormatFactory::class, '-Branch');
-    // }
-    // public function downloadFileFormat()
-    // {
-    //     return FileExport::downloadFileFormat(BranchCSVImportableFileFormatFactory::class, '-Branch');
-    // }
+    public function import()
+    {
+        $importer = PixelServiceManager::getServiceForServiceBaseType(BranchesImporter::class);
+        return (new $importer())->import();
+    }
+
+    public function export()
+    {
+        $exporter = PixelServiceManager::getServiceForServiceBaseType(BranchesImporter::class);
+        return (new $exporter())->exportUsingInternalFormatName();
+    }
+
+    public function downloadFileFormat()
+    {
+        $importer = PixelServiceManager::getServiceForServiceBaseType(BranchesImporter::class);
+        return (new $importer())->downloadFormat();
+    }
 }

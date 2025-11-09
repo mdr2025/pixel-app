@@ -145,11 +145,11 @@ class UserController extends Controller
         }   
     }
 
-    public function listDefaultUser()
+    public function listDefaultUsers()
     {
         try
         {
-            return response()->json($this->userService->listDefaultUser());
+            return response()->json($this->userService->listDefaultUsers());
 
         }catch(Exception $e)
         {

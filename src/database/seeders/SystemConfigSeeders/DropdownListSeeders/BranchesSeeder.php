@@ -32,6 +32,12 @@ class BranchesSeeder extends Seeder
 			return ;
 		}
 
-        Branch::create([ "name" => $this->getHeadquarterBranchName() ,"status" => 1 , "default" => 1 ]);
+         $mainBranch = new Branch([
+            'name' => Branch::getMainBranchName(),
+            'type' => 'main',
+            'country_id' => tenant()->country_id,
+        ]);
+
+        $mainBranch->save();
     }
 }

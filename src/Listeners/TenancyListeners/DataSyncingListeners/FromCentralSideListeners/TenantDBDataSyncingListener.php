@@ -5,6 +5,7 @@ namespace PixelApp\Listeners\TenancyListeners\DataSyncingListeners\FromCentralSi
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Stancl\Tenancy\Contracts\Tenant;
 use PixelApp\Events\TenancyEvents\DataSyncingEvents\FromCentralSideEvents\TenantDBDataSyncingEvent;
 
@@ -33,13 +34,13 @@ class TenantDBDataSyncingListener implements ShouldQueue
 
     protected function getOnlySyncableAttrs(): array
     {
-        return $this->event->getUpdatedData();
+        return $this->event->getModelUpdatedData();
     }
 
     /**
      * @throws Exception
      */
-    protected function getTenantModel(): ?Model
+    protected function getTenantModel(): Model
     {
         $TenantAppModelClass = $this->event->getTenantAppModelClass();
 
@@ -47,11 +48,17 @@ class TenantDBDataSyncingListener implements ShouldQueue
         {
             $this->throwFailingException("Tenant app model class must be a Model type !");
         }
-        return $TenantAppModelClass::where(
+        $tenantModel = $TenantAppModelClass::where(
                                                 $this->event->getModelIdKeyName(),
                                                 "=",
                                                 $this->event->getModelIdKeyValue()
                                             )->first();
+        if(!$tenantModel)
+        {
+            $this->throwFailingException("Failed to find the tenant model need to sync its data in our database ! ... Related to type : " . $TenantAppModelClass);
+        }
+
+        return $tenantModel;
     }
 
     protected function getTenantCompany(): Tenant
@@ -63,21 +70,57 @@ class TenantDBDataSyncingListener implements ShouldQueue
     {
         $this->getTenantCompany()->run(function () {
 
-            if (!($this->getTenantModel()?->forceFill($this->getOnlySyncableAttrs())->save() ?? false))
-            {
-                $this->throwFailingException();
-            }
+            $tenantModel = $this->getTenantModel();
+            $this->syncModelData($tenantModel);
+            $this->syncModelRelationsData($tenantModel);
+            
         });
     }
 
-    /**
-     * @return $this
-     */
-    // protected function setCentralModel(): self
-    // {
-    //     $this->centralModel = $this->event->getCentralModel();
-    //     return $this;
-    // }
+    
+    protected function syncModelData(Model $tenantModel) : void
+    {
+        if(! ($tenantModel->forceFill( $this->getOnlySyncableAttrs() )->save() ?? false) )
+        {
+            $this->throwFailingException();
+        }
+    }
+
+    protected function isAssociatedArray($value) : bool
+    {
+        return is_array($value) && Arr::isAssoc($value);
+    }
+
+    protected function getRelationsUpdatedDataArray() : array
+    {
+        $array = $this->event->getModelRelationsUpdatedData();
+        return array_filter($array, function ($value, $key) {
+
+                    return is_string($key) 
+                        &&
+                        $this->isAssociatedArray($value ) 
+                        &&
+                        count($value) > 0;
+
+                }, ARRAY_FILTER_USE_BOTH);
+
+    }
+    protected function syncModelRelationsData(Model $tenantModel) : void
+    {
+        foreach($this->getRelationsUpdatedDataArray() as $relation => $data)
+        {
+            $this->syncModelRelationData($tenantModel , $relation , $data);
+        }
+    }
+
+    protected function syncModelRelationData(Model $tenantModel , string $relation , array $data) : void
+    {
+        if(!$tenantModel->{$relation}()->update($data))
+        {
+            $this->throwFailingException("Failed to update the tenant moedl relation : $relation");
+        }
+    }
+
 
     protected function setEvent(TenantDBDataSyncingEvent $event): self
     {
@@ -92,8 +135,6 @@ class TenantDBDataSyncingListener implements ShouldQueue
      */
     public function handle(TenantDBDataSyncingEvent $event)
     {
-        $this->setEvent($event)
-        //->setCentralModel()
-        ->syncTenantModelData();
+        $this->setEvent($event)->syncTenantModelData();
     }
 }

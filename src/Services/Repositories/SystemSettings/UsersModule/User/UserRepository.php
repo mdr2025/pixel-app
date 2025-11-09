@@ -88,7 +88,7 @@ class UserRepository
                     ->toArray();
     }
 
-    public function listDefaultUser(array $filters = [])
+    public function listDefaultUsers(array $filters = [])
     {
         return $this->initUserSpatieQueryBuilder()
                     ->allowedFilters([...$filters])

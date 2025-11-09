@@ -7,6 +7,8 @@ use PixelApp\Models\ModelConfigs\DropdownLists\DepartmentsOperations\DepartmentC
 use PixelApp\Services\PixelServiceManager;
 use PixelApp\Services\Repositories\RepositryInterfaces\SystemConfigurationRepositryInterfaces\DepartmentRepositoryInterface;
 use PixelApp\Services\Repositories\SystemSettings\SystemConfigurationRepositories\DropdownLists\DepartmentsOperations\DepartmentRepository;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\ExpImpServices\ExportingServices\CSVExporter;
+use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\ExpImpServices\ImportingFunc\DepartmentsImporter;
 use PixelApp\Traits\FileExport;
 
 class DepartmentService
@@ -80,16 +82,18 @@ class DepartmentService
         return true;
     }
 
-    // public function import()
-    // {
-    //     return (new DepartmentImporter())->import();
-    // }
-    // public function export()
-    // {
-    //     return FileExport::export(Department::class, DepartmentCSVImportableFileFormatFactory::class, '-Department');
-    // }
-    // public function downloadFileFormat()
-    // {
-    //     return FileExport::downloadFileFormat(DepartmentCSVImportableFileFormatFactory::class, '-Department');
-    // }
+    public function import()
+    {
+        return (new DepartmentsImporter())->import();
+    }
+    
+    public function export()
+    {
+        return (new CSVExporter())->exportUsingInternalFormatName();
+    }
+
+    public function downloadFileFormat()
+    {
+        return (new DepartmentsImporter())->downloadFormat();
+    }
 }

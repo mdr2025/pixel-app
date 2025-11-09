@@ -42,7 +42,6 @@ class BranchStoringRequest extends BaseFormRequest implements NeedsModelKeyAdvan
         return [
             'items' => ['required', 'array', 'min:1'],
             'items.*.name' => ['required', 'string', 'max:255', new NotMainBranchName()],
-            //" items.*.status"        => ["required", "boolean"],
             'items.*.parent_id' => ['required', 'integer'],
             'items.*.country_id' => ['required', 'integer'],
         ];

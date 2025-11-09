@@ -27,7 +27,10 @@ class BranchImportingRequest extends BaseFormRequest implements NeedsModelKeyAdv
     public function getModelKeyAdvancedValidationRules(array $data = []): array
     {
         return [
+            "id" => ["nullable" , "unique:branches,id"],
             "name" => ["unique:branches,name"],
+            "parent_id" => ["exists:branches,id"],
+            "country_id" => ["exists:countries,id"]
         ];
     }
 
@@ -39,8 +42,10 @@ class BranchImportingRequest extends BaseFormRequest implements NeedsModelKeyAdv
         return [ 
             "id" => ["nullable" , "integer"],
             "name" => ["required", "string", "max:255"],
+            "parent_id" => ["required" , "integer" ],
+            "country_id" => ["required" , "integer" ],
             "status" => ["nullable", "boolean"],
-            "default" => ["required" , "boolean"]
+            "default" => ["nullable" , "boolean"],
         ];
     }
 

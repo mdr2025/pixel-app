@@ -1,11 +1,13 @@
 <?php
 
 namespace PixelApp\Http\Requests\UserManagementRequests;
- 
-use Illuminate\Validation\Rule; 
+
+use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
+use Illuminate\Validation\Rule;
+use PixelApp\Models\UsersModule\PixelUser;
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
 
-class SignupAccounRejectingRequest extends BaseFormRequest
+class SignupAccountRejectingRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +16,7 @@ class SignupAccounRejectingRequest extends BaseFormRequest
      */
     public function authorize()
     {
-        return true;
+        return BasePolicy::check('rejectSignUpUsers', PixelUser::class);
     }
 
     public function messages()

@@ -109,12 +109,21 @@ class TenantUserDataSyncingEventFactory extends TenancyDataSyncingEventFactory
         return $this->user->getTempCatchedKeyValue($keyName) ?? $this->user->{$keyName};
     }
 
+   
     protected function getUpdatedData() : array
-    { 
-        return $this->user->only( $this->getSyncedAttributeNames() );
+    {
+        return array_merge(
+                                $this->getModelUpdatedData(),
+                                $this->getModelProfileUpdatedData()
+                          );
     }
 
-    public function getSyncedAttributeNames(): array
+    protected function getModelUpdatedData() : array
+    {
+        return $this->user->only( $this->getSyncedModelAttributeNames() );
+    }
+
+    public function getSyncedModelAttributeNames(): array
     {
         /**
          * Here we can return any field we want ... there is no need to return the fields those are exist in fillables
@@ -124,7 +133,6 @@ class TenantUserDataSyncingEventFactory extends TenancyDataSyncingEventFactory
             $this->user->getEmailColumnName(),
             $this->user->getEmailVerificationDateColumnName(),
             $this->user->getEmailVerificationTokenColumnName(),
-            "country_id",
             'first_name',
             'last_name',
             'name',
@@ -133,4 +141,38 @@ class TenantUserDataSyncingEventFactory extends TenancyDataSyncingEventFactory
             'updated_at'
         ];
     }
+    
+   protected function getModelProfileUpdatedData() : array
+   {
+        return $this->user->profile?->only("nationality_id") ?? [];
+   }
+   
+    /**
+     * this can be used in more advanced case ... for now the profile columns handling is enough
+     */
+//    protected function getModelRelationsUpdatedData() : array
+//    {
+//         $relationColumns = [];
+
+//         foreach($this->getModelSyncedRelationsAttributeNames() as $relation => $propNames)
+//         {
+//             $relationColumns[] 
+//             =
+//             array_merge(
+//                 $relationColumns ,
+//                 $this->user->{$relation}?->only($propNames)
+//             );
+//         }
+
+//         return $relationColumns;
+//    }
+
+//     public function getModelSyncedRelationsAttributeNames(): array
+//     {
+//         return [
+            
+//             'profile' => [ 'nationality_id']
+//         ];
+//     }
+ 
 }

@@ -14,35 +14,23 @@ class UserProfileResource extends JsonResource
 {
     protected Request $request;
 
-    protected function getCityResourceClass() : string
+    public function getPictureData() : array
     {
-        return PixelHttpResourceManager::getResourceForResourceBaseType(CityResource::class);
+        return ["picture" => $this->resource->getPicture() ];
     }
-
-    protected function appendCityInfo(array $dataArrayToChange = []): array
-    {
-        if ($city = $this->resource->city)
-        {
-            $resourceClass = $this->getCityResourceClass();
-            $dataArrayToChange["city"] =  (new $resourceClass($city))->toArray($this->request); ;
-            unset($this->resource->city);
-        }
-        return $dataArrayToChange;
-    }
-
-    protected function getCountryResourceClass() : string
+    protected function getNationalityResourceClass() : string
     {
         return PixelHttpResourceManager::getResourceForResourceBaseType(CountryResource::class);
     }
 
-    protected function getCountryInfo(): array
+    protected function getNationalityInfo(): array
     {
         $data = [];
-        if ($country = $this->resource->country)
+        if ($nationality = $this->resource->nationality)
         {
-            $resourceClass = $this->getCountryResourceClass();
-            $data["country"] = (new $resourceClass( $country ) )->toArray($this->request);;
-            unset($this->resource->country);
+            $resourceClass = $this->getNationalityResourceClass();
+            $data["nationality"] = (new $resourceClass( $nationality ) )->toArray($this->request);
+            unset($this->resource->nationality);
         }
 
         return $data ;
@@ -63,7 +51,7 @@ class UserProfileResource extends JsonResource
         if(!$this->resource) { return [];}
 
         $this->setRequest($request);
-        $data = $this->getCountryInfo();
+        $data = $this->getNationalityInfo();
         
         
         // need to be handled by child class if it has city relation

@@ -53,7 +53,7 @@ class RolesAndPermissionsRouteRegistrar extends PixelRouteRegistrar
 
     protected function defineGettingAllPermissionsRoute() : void
     {
-        Route::get('all-permissions', [RolesController::class, 'allPermission']);
+        Route::get('list/all-permissions', [RolesController::class, 'allPermission']);
     }
     
     protected function defineRolesResourceRoute() : void

@@ -26,8 +26,7 @@ class CurrenciesSeeder extends Seeder
 			return ;
 		}
 
-        //
-        $data = [
+         $data = [
             [
                 'symbol' => '$',
                 'name' => 'US Dollar',

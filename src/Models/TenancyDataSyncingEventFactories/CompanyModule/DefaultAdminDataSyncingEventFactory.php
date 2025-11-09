@@ -61,7 +61,8 @@ class DefaultAdminDataSyncingEventFactory extends TenancyDataSyncingEventFactory
                     $this->getTenantAppModelClass(),
                     $this->getTenantModelIdKeyName(),
                     $this->getTenantModelIdKeyValue(),
-                    $this->getUpdatedData()
+                    $this->getModelUpdatedData(),
+                    $this->getModelRelationsUpdatedData()
                 );
     }
 
@@ -89,12 +90,12 @@ class DefaultAdminDataSyncingEventFactory extends TenancyDataSyncingEventFactory
         return $this->admin->getTempCatchedKeyValue($keyName) ?? $this->admin->{$keyName};
     }
 
-    protected function getUpdatedData() : array
+    protected function getModelUpdatedData() : array
     {
-        return $this->admin->only( $this->getSyncedAttributeNames() );
+        return $this->admin->only( $this->getSyncedModelAttributeNames() );
     }
-   
-    public function getSyncedAttributeNames(): array
+    
+    public function getSyncedModelAttributeNames(): array
     {
         /**
          * Here we can return any field we want ... there is no need to return the fields those are exist in fillables
@@ -109,9 +110,22 @@ class DefaultAdminDataSyncingEventFactory extends TenancyDataSyncingEventFactory
             'name',
             'password',
             'mobile',
-            'country_id'
+
         ];
     }
  
-  
+    
+   protected function getModelRelationsUpdatedData() : array
+   {
+        return $this->getSyncedAdminProfileUpdatedData();
+   }
+
+    public function getSyncedAdminProfileUpdatedData(): array
+    {
+        return [
+                    "profile" => [
+                        "nationality_id" => $this->Admin->nationality_id ?? null 
+                    ]
+                ];
+    } 
 }
