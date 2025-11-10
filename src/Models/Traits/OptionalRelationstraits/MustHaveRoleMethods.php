@@ -30,8 +30,8 @@ trait MustHaveRoleMethods
 
     protected function injectRoleFillables() : void
     {
-        $this->filables['role_id'] = 'role_id';
-        $this->fillables['previous_role_id'] = 'previous_role_id';
+        $this->fillable['role_id'] = 'role_id';
+        $this->fillable['previous_role_id'] = 'previous_role_id';
     }
 
     protected function appendRoleIdCast() : void

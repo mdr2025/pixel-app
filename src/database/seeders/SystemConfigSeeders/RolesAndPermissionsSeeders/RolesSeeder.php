@@ -50,11 +50,14 @@ class RolesSeeder extends Seeder
                 'delete_button' => 0, 'activate_button' => 0 ,
             ]);
 
+            return $roleOb;
+            
         }catch (Throwable $exception)
         {
             Log::error( $exception->getMessage() );
+
+            throw $exception;
         }
-        return $roleOb;
     }
 
     protected function getDefaultRoleDefaultPermissions(string $role) : array

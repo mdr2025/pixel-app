@@ -22,7 +22,7 @@ class CompanyAccount extends PixelCompany
 
     protected function initDefaultAdmin() : EmailAuthenticatable
     {
-        return $this->getUserModelClass()::defaultUser()->first()
+        return $this->getUserModelClass()::query()->defaultUser()->first()
                ??
                throw new Exception("Missed data seeding .... a default user must be assigned to the comapny account !");
     }
@@ -39,6 +39,6 @@ class CompanyAccount extends PixelCompany
           
     public function getDocumentsStorageFolderName(): string
     {
-        return "company/" . $this->hashed_id;
+        return "company-account/files";
     }
 }

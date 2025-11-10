@@ -16,7 +16,7 @@ use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeedToAccessPare
 
 abstract class PixelCompany 
         extends PixelBaseModel
-        implements  HasUUID , OwnsRelationships , MustUploadModelFiles , NeedToAccessParentRelationships , BelongsToCountry
+        implements   OwnsRelationships , MustUploadModelFiles , NeedToAccessParentRelationships , BelongsToCountry
 {
     
     abstract public function getDefaultAdmin()  : EmailAuthenticatable;   
@@ -27,16 +27,12 @@ abstract class PixelCompany
         'country_id',
         'logo', 
         'address',
-        'employees_no',
-        'branches_no',
         'cr_no',
         'email',
         'mobile'
     ];
 
     protected $casts = [
-        'employees_no'=>'integer',
-        'branches_no'=>'integer',
         'country_id'=>'integer',
     ];
 

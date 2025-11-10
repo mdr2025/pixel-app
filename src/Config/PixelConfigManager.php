@@ -167,11 +167,13 @@ class PixelConfigManager
         static::remergeConfigFile($fileFullName , $newConfigContent);
     }
 
-    public static function overrideConfigFileContent(string $configFilePath , array $fileConfigs) : void
+    public static function overrideConfigFileContent(string $fileName , string $configFilePath , array $fileConfigs) : void
     {
         $configFileContent = "<?php return " . var_export($fileConfigs , true) . " ;";
 
         File::put($configFilePath , $configFileContent);
+
+        static::remergeConfigFile($fileName , $fileConfigs);
     }
 
     public static function getMergedConfigFileContent(string $configFileName) : array

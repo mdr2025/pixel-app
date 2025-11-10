@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelPassportManager\PixelPassportManager;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelPassportManager\PixelPassportSetupManager;
 
 class PixelAppClientCustomCommand extends Command
 {
@@ -94,9 +95,9 @@ class PixelAppClientCustomCommand extends Command
         );
     }
 
-    protected function getMachineCredentialsClientConfigKey() : string
+     protected function getMachineCredentialsClientConfigKey() : string
     {
-        return "machine_client_credentials_client";
+        return PixelPassportSetupManager::getMachineCredentialsClientConfigKey();
     }
 
     protected function writeMachineCredentialsClientToConfig(Client $client) : void
@@ -107,6 +108,7 @@ class PixelAppClientCustomCommand extends Command
 
     protected function composeClientConfigsArray(Client $client) : array
     {
+        dd($client);
         return [
             PixelPassportManager::getClientIdKeyName() => $client->id,
             PixelPassportManager::getClientSecretKeyName() => $client->plainSecret

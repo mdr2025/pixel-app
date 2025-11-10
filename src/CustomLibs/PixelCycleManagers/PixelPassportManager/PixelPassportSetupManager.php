@@ -193,6 +193,11 @@ class PixelPassportSetupManager
         return $this;
     }
 
+    public static function getMachineCredentialsClientConfigKey()  : string
+    {
+        return "machine_client_credentials_client";
+    }
+
     public function setupPassport(bool $firstTimeSetup = true, Command $outputCommand)  : void
     {
         if(!app()->runningInConsole())

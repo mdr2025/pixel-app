@@ -29,6 +29,7 @@ use Stancl\Tenancy\Events\TenantSaved;
 use Stancl\Tenancy\Events\TenantUpdated;
 use Stancl\Tenancy\Events\UpdatingTenant;  
 use PixelApp\Interfaces\EmailAuthenticatable;
+use PixelApp\Interfaces\HasUUID;
 use PixelApp\Models\CompanyModule\PixelCompany\PixelCompany;
 use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToCountry;
 use PixelApp\Models\Interfaces\TrustedAttributesHandlerModel;
@@ -38,7 +39,7 @@ use PixelApp\Models\Traits\TrustedAttributesHandlerModelMethods;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\StatusChangeableAccount;
 
 class TenantCompany extends PixelCompany
-                    implements Tenant  , TenantWithDatabase  ,  OnlyAdminPanelQueryable , StatusChangeableAccount , TrustedAttributesHandlerModel , TrustedRelationAttributesHandlerModel 
+                    implements Tenant  , TenantWithDatabase  ,  OnlyAdminPanelQueryable , StatusChangeableAccount , TrustedAttributesHandlerModel , TrustedRelationAttributesHandlerModel , HasUUID
 {
 
     //laravel traits
@@ -63,6 +64,7 @@ class TenantCompany extends PixelCompany
     const REGISTRATIONS_STATUSES = ["pending" , "active" , "inactive" , "rejected"];
 
     public $fillable = [
+        'hashed_id',
         'name',
         'name_shortcut',
         'domain',
@@ -77,7 +79,7 @@ class TenantCompany extends PixelCompany
         'parent_id',
         'type'
     ];
-
+    
     public static function getTableName() : string
     {
         return "tenant_companies";
@@ -117,9 +119,12 @@ class TenantCompany extends PixelCompany
             'deleted_at'
         ];
     }
+
     protected $casts = [
         'employees_no'=>'integer',
         'branches_no'=>'integer',
+        'country_id'=>'integer',
+    
     ];
 
 

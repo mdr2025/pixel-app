@@ -127,10 +127,11 @@ class PixelPassportManager
     {
         $passprtConfigFileIdentifier = static::initPassportConfigFileIdentifier();
         
+        $passportConfigFileName = $passprtConfigFileIdentifier->getFileName();
         $passportFilePath = static::getPassportConfigFilePath($passprtConfigFileIdentifier);
         $passportConfigFileContent = static::getPassportUpdatedConfigFileContentArray($passprtConfigFileIdentifier , $key , $value);
         
-        PixelConfigManager::overrideConfigFileContent($passportFilePath , $passportConfigFileContent);
+        PixelConfigManager::overrideConfigFileContent($passportConfigFileName , $passportFilePath , $passportConfigFileContent);
     }
 
     public static function doesItSupportMachineClientCredentialsGrant() : bool

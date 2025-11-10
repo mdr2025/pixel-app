@@ -61,6 +61,7 @@ trait BelongsToBranchMethods
 
     protected function appendBranchFields() : void
     {
+        $this->fillable['branch_id'] = 'branch_id';
         $this->casts['branch_id'] = 'integer';
     }
 }
