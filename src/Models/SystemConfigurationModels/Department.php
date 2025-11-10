@@ -78,13 +78,19 @@ class Department extends PixelBaseModel
         $query->where('status', 1);
     }
 
+    public static function getDefaultDepartmentsConfigs() : array
+    {
+        dump("test for calling");
+        return config('departments');
+    }
+
+
     public function scopeHasDepartmentTeam(Builder $query, int $userId): Builder
     {
         return $query->whereHas('users', function ($q) use ($userId) {
                     $q->where('id', $userId)
                     ->whereIn('dep_role', [
                         PixelUser::DEP_TYPE_MANAGER,
-                        PixelUser::DEP_TYPE_ENGINEER,
                         PixelUser::DEP_TYPE_REP,
                     ]);
                 });

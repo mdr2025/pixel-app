@@ -15,7 +15,7 @@ use PixelApp\Http\Resources\SystemConfigurationResources\DropdownLists\Countries
  */
 class TenantCompanyResource extends JsonResource
 {
-    protected array $nonDesiredAttrs = [ "country_id" ,"hashed_id" , "updated_at" , "deleted_at" , "data" ];
+    protected array $nonDesiredAttrs = [ "hashed_id"  , "deleted_at" , "data" ];
 
     public function nonDesiredColumnsFilteringCallback(mixed $value, string|int $key): bool
     { 

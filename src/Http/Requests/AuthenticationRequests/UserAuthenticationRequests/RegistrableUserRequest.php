@@ -34,12 +34,7 @@ class RegistrableUserRequest extends BaseFormRequest
             'mobile' => ["required",  PhoneNumber::create() , "unique:users,mobile"],
             "password" => ["required", "string", "confirmed"],
             "profile" => [ "nullable" , "array" ],
-
-            /**
-             * @todo must change to nationality_id in front end + tenancy backend
-             * 
-             */
-            "profile.*.country_id" => [ "nullable" , "numeric"  , "exists:countries,id"],
+            "profile.*.nationality_id" => [ "nullable" , "numeric"  , "exists:countries,id"],
             "profile.*.picture" => [ "nullable" ,  (new SingleFileOrSinglePathString()) ],
             "profile.*.gender" => [ "nullable" , "string" , Rule::in(['male', 'female'])],
 

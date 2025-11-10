@@ -50,7 +50,7 @@ use PixelApp\Services\UserEncapsulatedFunc\RegistrableUserHandlers\RegistrableUs
         $this->data["mobile"] = $this->data["defaultAdmin"]["mobile"];
     }
 
-    protected function injectAdminCountryId() : void
+    protected function injectAdminNationalityId() : void
     {
         $this->data["defaultAdmin"]["nationality_id"] = $this->data["country_id"];
     }
@@ -61,16 +61,13 @@ use PixelApp\Services\UserEncapsulatedFunc\RegistrableUserHandlers\RegistrableUs
      */
     protected function overrideDefaultAdminData(): void
     {
-        $this->injectAdminCountryId();
-
-        $defaultAdmin = $this->data["defaultAdmin"];
-
-        $defaultAdmin = $this->initRegistrableUserDataFactory($defaultAdmin)
-                             ->makeUser()
-                             ->toArray();
-
         /** Overriding defaultAdmin data with registrable admin processed data */
-        $this->data["defaultAdmin"] = $defaultAdmin;
+        $this->data["defaultAdmin"] = $this->initRegistrableUserDataFactory($this->data["defaultAdmin"])
+                                           ->makeUser()
+                                           ->toArray();
+
+        $this->injectAdminNationalityId();
+ 
     }
 
 

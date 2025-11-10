@@ -107,8 +107,7 @@ class PixelAppClientCustomCommand extends Command
     }
 
     protected function composeClientConfigsArray(Client $client) : array
-    {
-        dd($client);
+    { 
         return [
             PixelPassportManager::getClientIdKeyName() => $client->id,
             PixelPassportManager::getClientSecretKeyName() => $client->plainSecret

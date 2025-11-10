@@ -25,10 +25,10 @@ class DepartmentsTableSeeder extends Seeder
 		$modelClass = $this->getDepartmentModelClass();
 		return $modelClass::create($data);
 	}
-	protected function getDefaultDepartments() : array
+	protected function getDefaultDepartmentsConfigs() : array
 	{
 		$modelClass = $this->getDepartmentModelClass();
-		return $modelClass::getDefaultDepartments();
+		return $modelClass::getDefaultDepartmentsConfigs();
 	}
 
 	protected function getMainBranchId() : int
@@ -38,6 +38,16 @@ class DepartmentsTableSeeder extends Seeder
 
 	}
 
+	protected function processDataRow(array $data) : array
+	{
+		return [
+			"name" => $data['name'],
+			"status" => $data['status'],
+			"is_default" => $data['is_default'],
+			"branch_id" => $this->getMainBranchId()
+		];
+	}
+
 	public function run()
 	{
 		if(!$this->doesAppNeedSeeding())
@@ -45,9 +55,13 @@ class DepartmentsTableSeeder extends Seeder
 			return ;
 		}
 
-        foreach ( $this->getDefaultDepartments() as $department )
+        foreach ( $this->getDefaultDepartmentsConfigs() as $department )
         {
-            $this->createNewDepartment([ "name" => $department , "status" => 1 , "is_default" => 1  , "branch_id" => $this->getMainBranchId()	]);
+			$branchId = $this->getMainBranchId();
+			$department = $this->processDataRow($department);
+			$department['branch_id'] = $branchId;
+
+			$this->createNewDepartment( $department );
         }
     }
 }

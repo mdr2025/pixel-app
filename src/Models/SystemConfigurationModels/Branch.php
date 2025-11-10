@@ -54,7 +54,7 @@ class Branch extends PixelBaseModel
             }
 
             // add new branch to all super admin users accessible branches
-            $superAdminUserIds = $this->getUserModelClass()::where('role_id', 1)->pluck('id');
+            $superAdminUserIds = static::getUserModelClass()::where('role_id', 1)->pluck('id');
             $branch->usersWithAccess()->attach($superAdminUserIds);
 
             //for remove this later
@@ -66,7 +66,7 @@ class Branch extends PixelBaseModel
 
         static::deleted(function (Branch $branch) {
             // Remove branch from all super admin users accessible branches
-            $superAdminUserIds = $this->getUserModelClass()::where('role_id', 1)->pluck('id');
+            $superAdminUserIds = static::getUserModelClass()::where('role_id', 1)->pluck('id');
             $branch->usersWithAccess()->detach($superAdminUserIds);
 
             //for remove this later
@@ -113,25 +113,25 @@ class Branch extends PixelBaseModel
         return $this->hasMany( $this->getDepartmentModelClass() , 'branch_id');
     }
 
-    protected function getUserModelClass() : string
+    protected static function getUserModelClass() : string
     {
         return PixelModelManager::getUserModelClass();
     }
 
     public function users(): HasMany
     {
-        return $this->hasMany( $this->getUserModelClass() , 'branch_id');
+        return $this->hasMany( static::getUserModelClass() , 'branch_id');
     }
 
     public function usersWithAccess(): BelongsToMany
     {
-        return $this->belongsToMany( $this->getUserModelClass() , 'accessible_branch_user', 'branch_id', 'user_id');
+        return $this->belongsToMany( static::getUserModelClass() , 'accessible_branch_user', 'branch_id', 'user_id');
     }
 
     public function team(): BelongsToMany
     {
         return $this->belongsToMany( 
-                                        $this->getUserModelClass() ,
+                                        static::getUserModelClass() ,
                                         'standard_committee_branch_team',
                                         'branch_id',
                                         'user_id'
