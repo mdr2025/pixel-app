@@ -27,7 +27,7 @@ class BranchesGetter extends QueryCustomizer
 
     protected function setQueryScopes() : self
     {
-        $this->getQuery()->scopes(['datesFiltering' , 'customOrdering']);
+        $this->getQuery()->datesFiltering()->customOrdering();
         return $this;
     }
 

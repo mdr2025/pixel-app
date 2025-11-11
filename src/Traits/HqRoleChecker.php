@@ -23,14 +23,9 @@ trait HqRoleChecker
 
         return false;
     }
-
-      protected function getBranchModelClass() : string
-    {
-        return PixelModelManager::getModelForModelBaseType(Branch::class);
-    }
-
+    
     private function getMainBranch(): Branch
     {
-        return $this->getBranchModelClass()::find(1);
+        return PixelModelManager::getModelForModelBaseType(Branch::class)::find(1);
     }
 }

@@ -7,8 +7,8 @@ use ExpImpManagement\ExportersManagement\ExporterTypes\CSVExporter\CSVExporter;
 use ExpImpManagement\ExportersManagement\Interfaces\SelfConstructableExporter;
 use ExpImpManagement\ImportersManagement\ImportableFileFormatFactories\CSVImportableFileFormatFactory\CSVImportableFileFormatFactory;
 use PixelApp\Models\PixelModelManager;
-use PixelApp\Services\UsersManagement\ExpImpServices\UsersExpImpGeneralFuncs\Tratis\ExporterQueryAllowedFiltersSetting;
-use PixelApp\Services\UsersManagement\ExpImpServices\UsersExpImpGeneralFuncs\Tratis\ExporterQueryBuilderCustomization;
+use PixelApp\Services\UsersManagement\ExpImpServices\UsersExpImpGeneralFuncs\Traits\ExporterQueryAllowedFiltersSetting;
+use PixelApp\Services\UsersManagement\ExpImpServices\UsersExpImpGeneralFuncs\Traits\ExporterQueryBuilderCustomization;
 
 abstract class UserCSVExporter extends CSVExporter implements SelfConstructableExporter
 {

@@ -24,19 +24,15 @@ trait BranchRoleChecker
 
         return false;
     }
-
-    protected function getBranchModelClass() : string
-    {
-        return PixelModelManager::getModelForModelBaseType(Branch::class);
-    }
-
+  
     private function getBranchById(?int $branchId): ?Branch
     {
-        if (!$branchId) {
+        if (!$branchId)
+        {
             return null;
         }
 
-        return $this->getBranchModelClass()::find($branchId);
+        return PixelModelManager::getModelForModelBaseType(Branch::class)::find($branchId);
     }
 }
 //Commented out for now

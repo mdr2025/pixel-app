@@ -21,8 +21,8 @@ class DepartmentUpdatingService extends UpdatingService
 
     protected function onBeforeDbCommit(): void
     {
-        $model = $this->Model;
-        if ($model->is_default == 1) {
+        if ($this->Model->is_default == 1)
+        {
             throw new Exception("You cannot update this department.");
         }
     }

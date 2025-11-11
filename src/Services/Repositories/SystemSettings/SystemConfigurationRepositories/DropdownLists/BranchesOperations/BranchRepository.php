@@ -143,8 +143,8 @@ class BranchRepository implements BranchRepositoryInterface
 
         // Define mapping between request keys and role types
         $roles = [
-            'managers_ids' => $userModelClass::DEP_TYPE_MANAGER,
-            'reps_ids' => $userModelClass::DEP_TYPE_REP,
+            'managers_ids' => PixelUser::DEP_TYPE_MANAGER,
+            'reps_ids' => PixelUser::DEP_TYPE_REP,
         ];
 
         // Loop through each roles and assign it
@@ -163,7 +163,7 @@ class BranchRepository implements BranchRepositoryInterface
             $userModelClass = $this->getUserModelClass();
 
             $userModelClass::where('department_id', $departmentId)
-                            ->whereIn('id', $request->$key)
+                            ->whereIn('id', $request->input($key))
                             ->update(['dep_role' => $role]);
         }
     }

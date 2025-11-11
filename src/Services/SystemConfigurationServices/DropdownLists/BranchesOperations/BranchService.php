@@ -72,13 +72,9 @@ class BranchService
         return $this->initBranchRepository()->fetchBranchByIdOrFail($branchId);
     }
 
-    public function update(Request $request, int $branchId)
+    public function update(int $branchId)
     {
         $branch = $this->initBranchRepository()->fetchBranchByIdOrFail($branchId);
-
-        if (!is_null($request->status) && $branch->id == 1) {
-            return false;
-        }
 
         $service = PixelServiceManager::getServiceForServiceBaseType(BranchUpdatingService::class);
 

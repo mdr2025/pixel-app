@@ -48,7 +48,7 @@ class FirstParentBranchGetter extends QueryCustomizer
 
     protected function setQueryScopes() : self
     {
-        $this->getQuery()->scopes(['datesFiltering']);
+        $this->getQuery()->datesFiltering();
         return $this;
     }
 

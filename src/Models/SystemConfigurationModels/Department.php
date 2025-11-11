@@ -40,7 +40,7 @@ class Department extends PixelBaseModel
     // or they are will be loaded separatety (n + 1 problem)
     public function getManagersIdsAttribute()
     {
-        return $this->managers?->pulck('id')->toArray() ?? [];
+        return $this->managers?->pluck('id')->toArray() ?? [];
 
         //to avoid executing a new query each time 
         //becase getSomePropertyAtrribute method is getting a value from attributes 
@@ -55,7 +55,7 @@ class Department extends PixelBaseModel
     // need to eager loading while handling acollection of departments ... or they are will be loaded separatety (n + 1 problem)
     public function getRepsIdsAttribute()
     {
-         return $this->reps?->pulck('id')->toArray() ?? [];
+         return $this->reps?->pluck('id')->toArray() ?? [];
 
         //to avoid executing a new query each time 
         //becase getSomePropertyAtrribute method is getting a value from attributes 
@@ -80,7 +80,6 @@ class Department extends PixelBaseModel
 
     public static function getDefaultDepartmentsConfigs() : array
     {
-        dump("test for calling");
         return config('departments');
     }
 

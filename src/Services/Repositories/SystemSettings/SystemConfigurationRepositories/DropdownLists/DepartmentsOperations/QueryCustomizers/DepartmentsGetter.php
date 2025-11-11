@@ -13,6 +13,7 @@ class DepartmentsGetter extends QueryCustomizer
     public function customizeQuery(Builder | QueryBuilder $query) : self
     {
         $this->setQuery($query);
+        
         return $this->setAllowedFilters()
                     ->setQueryScopes()
                     ->eagerLoadRelations();
@@ -27,7 +28,7 @@ class DepartmentsGetter extends QueryCustomizer
 
     protected function setQueryScopes() : self
     {
-        $this->getQuery()->scopes(['datesFiltering' , 'customOrdering']);
+        $this->getQuery()->datesFiltering()->customOrdering();
         return $this;
     }
 

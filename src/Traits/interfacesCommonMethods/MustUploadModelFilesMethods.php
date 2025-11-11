@@ -54,7 +54,7 @@ trait MustUploadModelFilesMethods
         return FileFullPathsHandler::MustUploadModelFiles($this) && FileFullPathsHandler::isItUploadedFilePropName($this , $attrName);
     }
 
-    public function getFileFullPathAttrValue(string $attrName): string|array
+    public function getFileFullPathAttrValue(string $attrName): string|array|null
     { 
         if ($this->isItUploadedFilePropName($attrName))
         {

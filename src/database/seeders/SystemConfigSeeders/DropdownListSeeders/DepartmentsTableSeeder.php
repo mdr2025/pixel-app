@@ -12,7 +12,8 @@ class DepartmentsTableSeeder extends Seeder
 {
     protected function doesAppNeedSeeding() : bool
 	{
-		return PixelConfigManager::isDepartmensFuncDefined();
+		//the branch seeds the default departments automaticaly once it is created
+		return !PixelConfigManager::isBranchesFuncDefined();
 	}
 
 	protected function getDepartmentModelClass() : string

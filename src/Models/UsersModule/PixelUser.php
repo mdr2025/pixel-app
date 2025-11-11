@@ -246,7 +246,7 @@ implements
     { 
         return [
             "accepted_at" => now(),
-            "user_type" => $this->getApprovingStatusValue()
+            "user_type" => static::USER_TYPE_USER
         ];
     }
 
@@ -428,6 +428,15 @@ implements
         return $this->isSuperAdmin();
     }
 
+    
+    /**
+     * Get the user's primary branch ID
+     */
+    public function getPrimaryBranchIdAttribute(): ?int
+    {
+        return $this->branch_id;
+    }
+
 
     // ========================================
     // PRIVATE METHODS
@@ -447,7 +456,7 @@ implements
      */
     public function isSuperAdmin(): bool
     {
-        return $this->role_id != 1;
+        return $this->role_id == 1;
     }
 
     public function isCreatedAsDefault(): bool

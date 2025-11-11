@@ -10,7 +10,7 @@ trait FilteredBranchesPermissions
 
     private static int $mainBranchId  = 1; // static value for main branch id
 
-    public function getFilteredBranchesPermissions(int $userId, array $filteredBranchIds = [], array $customRoleSettings = [], bool $useDefaultSettings = true, string $roleCheckerDepartment = 'HSE'): array
+    public function getFilteredBranchesPermissions(int $userId, array $filteredBranchIds = [], array $customRoleSettings = [], bool $useDefaultSettings = true, string $roleCheckerDepartment = 'Electric'): array
     {
         $permissions = [];
 
@@ -27,8 +27,8 @@ trait FilteredBranchesPermissions
          * value: the value of the role => it will be used to check if the user has the role
          */
         $defaultSettings = [
-            'managers' => ['enabled' => true, 'value' => ViewAsRoleConstants::BRANCH_HSE_MANAGER],
-            'engineers' => ['enabled' => true, 'value' => ViewAsRoleConstants::BRANCH_HSE_ENGINEER],
+            'managers' => ['enabled' => true, 'value' => ViewAsRoleConstants::BRANCH_EKECTRIC_MANAGER],
+            'reps' => ['enabled' => true, 'value' => ViewAsRoleConstants::BRANCH_EKECTRIC_REP],
         ];
 
         // merge default settings with custom settings if useDefaultSettings is true

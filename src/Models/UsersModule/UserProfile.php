@@ -92,7 +92,7 @@ class UserProfile
         return UserProfileFactory::new();
     }
 
-    public function getPicture() : string
+    public function getPicture() : ?string
     {
         return $this->getFileFullPathAttrValue('picture');
     }

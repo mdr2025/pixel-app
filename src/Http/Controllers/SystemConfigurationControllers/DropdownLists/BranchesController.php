@@ -121,17 +121,10 @@ class BranchesController extends Controller
         );
     }
 
-    public function update(Request $request, int $branch): JsonResponse
+    public function update(int $branch): JsonResponse
     {
-        return $this->surroundWithTransaction(function () use ($request, $branch) {
-            $response = $this->branchService->update($request, $branch);
-
-            if (!ResponseHelpers::IsResponseStatusSuccess($response))
-            {
-                return Response::error("Disabling Main Branch is not allowed. At least one branch must exist.");
-            }
-
-            return $response;
+        return $this->surroundWithTransaction(function () use ( $branch) {
+            return $this->branchService->update( $branch);
         },
             'Updating Branch',
             ['user_id' => auth()->id(), 'request' => request()->all()]

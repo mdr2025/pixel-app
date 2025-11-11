@@ -35,23 +35,6 @@ class UsersAPIRoutesRegistrar extends PixelRouteRegistrar
         $arrayToAppend["pixel-app-package-route-registrars"]["users-list-management"] = static::class;
     }
 
-    protected function definEmployeesListingUsersRoute()   : void
-    {
-        Route::get('list/employees', [UserController::class, 'list']); 
-    }
-    protected function definResbonsiablePersonsListingRoute()   : void
-    {
-        Route::get('list/responsible-persons', [UserController::class, 'list']);
-    }
-    protected function defineUsersListingRoute() : void
-    {
-        Route::get('list/users', [UserController::class, 'list']);
-    }
-    protected function defineDefaultUsersListingRoute() : void
-    {
-        Route::get('list/users-emails', [UserController::class, 'listDefaultUsers']);
-    }
-    
     protected function defineUserBranchRoutes() : void
     {
         if(PixelConfigManager::isBranchesFuncDefined())
@@ -61,6 +44,12 @@ class UsersAPIRoutesRegistrar extends PixelRouteRegistrar
             Route::get('list/primary-and-filtered-branches', [UserController::class , 'getPrimaryBranchAndFilteredBranches']);
             Route::get('list/users-by-branch', [UserController::class , 'getFilteredUsersByBranch']);
         }
+    }
+
+    protected function defineUsersListingRoute() : void
+    {
+        Route::get('list/users', [UserController::class, 'list']);
+        Route::get('list/users-emails', [UserController::class, 'listDefaultUsers']);
     }
 
     protected function defineExportRoute() : void
@@ -87,7 +76,7 @@ class UsersAPIRoutesRegistrar extends PixelRouteRegistrar
     {
         Route::resource('users-list', UserController::class)
              ->parameters(['users-list'=>'user'])
-             ->except("destroy", "update");
+             ->only("index" , "show");
     }
 
     protected function defineUsersRoutes(RouteRegistrar $routeRegistrar ) : void
@@ -98,12 +87,9 @@ class UsersAPIRoutesRegistrar extends PixelRouteRegistrar
             $this->defineUpdateRoute();
             $this->defineChangeEmailRoute();
             $this->defineChangeAccountStatusRoute();
-            $this->defineExportRoute();
-            $this->defineDefaultUsersListingRoute();
             $this->defineUserBranchRoutes();
             $this->defineUsersListingRoute();
-            $this->definResbonsiablePersonsListingRoute();
-            $this->definEmployeesListingUsersRoute();
+            $this->defineExportRoute();
         });
     }
     

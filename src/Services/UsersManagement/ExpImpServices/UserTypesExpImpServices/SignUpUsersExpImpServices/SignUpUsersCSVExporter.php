@@ -6,7 +6,7 @@ use ExpImpManagement\ImportersManagement\ImportableFileFormatFactories\CSVImport
 use PixelApp\Models\PixelModelManager;
 use PixelApp\Services\UsersManagement\ExpImpServices\UsersExpImpGeneralFuncs\UserCSVExporter;
 use PixelApp\Services\UsersManagement\ExpImpServices\UsersExpImpGeneralFuncs\UserCSVFileFormatFactory;
-use PixelApp\Services\UsersManagement\ExpImpServices\UserTypesExpImpServices\SignUpUsersExpImpServices\Tratis\ExporterQueryBuilderCustomization;
+use PixelApp\Services\UsersManagement\ExpImpServices\UserTypesExpImpServices\SignUpUsersExpImpServices\Traits\ExporterQueryBuilderCustomization;
 
 class SignUpUsersCSVExporter extends UserCSVExporter
 {

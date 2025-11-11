@@ -148,7 +148,18 @@ class Branch extends PixelBaseModel
 
         ];
     }
-# START SCOPES
+    
+    # START SCOPES
+    public function scopeSubBranch($query)
+    {
+        $query->whereNotNull('parent_id')->where('type' , 'child');
+    }
+    
+    public function scopeMainBranch($query)
+    {
+        $query->whereNull('parent_id')->where('type' , 'main');
+    }
+
     public function scopeActive($query)
     {
         $query->where('status', 1);

@@ -106,7 +106,7 @@ class DepartmentsController extends Controller
 
         if (!$result)
         {
-            return Response::error([], ['Supervisors assignment failed']);
+            return Response::error('Supervisors assignment failed');
         }
 
         return Response::success([], ['Supervisors assigned successfully']);

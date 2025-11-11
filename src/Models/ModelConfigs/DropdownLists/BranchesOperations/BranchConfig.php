@@ -8,8 +8,7 @@ class BranchConfig
     {
         return [
             'parent',
-            'country',
-            'hseManagers',
+            'country'
         ];
     }
     public static function getFilters(): array

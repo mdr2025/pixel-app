@@ -1,6 +1,6 @@
 <?php
 
-namespace  PixelApp\Services\UsersManagement\ExpImpServices\UsersExpImpGeneralFuncs\Tratis;
+namespace  PixelApp\Services\UsersManagement\ExpImpServices\UsersExpImpGeneralFuncs\Traits;
 
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder;

@@ -24,7 +24,7 @@ class SubBranchesListter extends QueryCustomizer
     }
     protected function setQueryScopes() : self
     {
-        $this->getQuery()->scopes(['active' ]);
+        $this->getQuery()->scopes(['subBranch' ,'active' ]);
         return $this;
     }
 

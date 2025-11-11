@@ -3,7 +3,7 @@
 namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations;
  
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\UpdatingServices\UpdatingService;
-
+use Exception;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Http\Requests\SystemConfigurationRequests\Branches\BranchUpdatingRequest;
 
@@ -34,6 +34,14 @@ class BranchUpdatingService extends UpdatingService
             $model->update([
                 'parent_id' => null
             ]);
+        }
+    }
+
+    protected function onAfterDbTransactionStart(): void
+    {
+        if (!is_null($this->data['status']) && $this->Model->id == 1)
+        {
+            throw new Exception("Disabling Main Branch is not allowed. At least one branch must exist.");
         }
     }
 }

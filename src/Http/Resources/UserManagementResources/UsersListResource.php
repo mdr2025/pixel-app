@@ -27,7 +27,7 @@ class UsersListResource extends JsonResource
                     "name" => $this->name
                 ] ;
 
-        $this->appendPicture($data , $request);
+        $data = $this->appendPicture($data , $request);
         $this->appendDisablingStatus($data , $request);
 
         return $data;
@@ -49,18 +49,22 @@ class UsersListResource extends JsonResource
         : false;
     }
 
-    protected function appendPicture(array &$data , $request) : void
+    protected function appendPicture(array $data , $request) : array
     {
+        return array_merge($data , $this->getProfilePictureData($request));
+    }
+
+    protected function getProfilePictureData($request) : array
+    {
+        
         $userProfileResourceClass = $this->getUserProfileResourceClass();
         
-        $data['picture'] 
-        = 
-        $this->whenLoaded(
-                            'profile',
-                            function() use ($userProfileResourceClass , $request)
-                            {
-                                return (new $userProfileResourceClass($this->profile))?->getPictureData($request) ?? null;
-                            }
-                         );
+        return $this->whenLoaded(
+                    'profile',
+                    function() use ($userProfileResourceClass , $request)
+                    {
+                        return (new $userProfileResourceClass($this->profile))?->getPictureData($request) ?? null;
+                    }
+                );
     }
 }

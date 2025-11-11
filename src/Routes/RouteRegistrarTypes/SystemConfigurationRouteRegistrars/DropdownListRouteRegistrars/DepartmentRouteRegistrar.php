@@ -41,10 +41,6 @@ class DepartmentRouteRegistrar extends PixelRouteRegistrar
         $arrayToAppend["pixel-app-package-route-registrars"]["dropdown-list"]["departmens"] = static::class;
     }
     
-    protected function defineDepartmentsListingRoute() : void
-    {
-        Route::get('departments/list', [DepartmentsController::class, 'list']); 
-    }
     protected function defineDepartmentsExportingRoute() : void
     {
         Route::get('system-configs/excel/export/departments', [DepartmentsController::class, 'export']);
@@ -59,16 +55,19 @@ class DepartmentRouteRegistrar extends PixelRouteRegistrar
     {
         Route::get('system-configs/download-file-format/departments', [DepartmentsController::class, 'importableFormalDownload']);
     }
+     
+
     protected function defineDepartmentsResourceRoute() : void
     {
-        Route::resource('system-configs/departments', DepartmentsController::class)->parameters(["departments" => "department"])
-        ->only(['index' , 'store' ]);
+        Route::resource('system-configs/departments', DepartmentsController::class)
+             ->parameters(["departments" => "department"])
+             ->only(['index' , 'store' ]);
 
         //must be remove later .... it is defined above ... must handled on frontend first then here
-        Route::post('system-configs/departments/list', [DepartmentsController::class , 'list']);
+        Route::get('system-configs/departments/list', [DepartmentsController::class , 'list']);
 
         Route::post('system-configs/departments/{department}', [DepartmentsController::class , 'update']);
-        Route::delete('system-configs/departments', [DepartmentsController::class , 'destroy']);
+        Route::delete('system-configs/departments/{department}', [DepartmentsController::class , 'destroy']);
         Route::post('system-configs/departments/assign-supervisors/{department}', [DepartmentsController::class , 'assignSupervisors']);
 
     }
@@ -80,8 +79,7 @@ class DepartmentRouteRegistrar extends PixelRouteRegistrar
             $this->defineDepartmentsResourceRoute(); 
             $this->defineDepartmentFileFormatDownloadingRoute();
             $this->defineDepartmentsImportingRoute(); 
-            $this->defineDepartmentsExportingRoute(); 
-            $this->defineDepartmentsListingRoute();  
+            $this->defineDepartmentsExportingRoute();
         });
     }
 

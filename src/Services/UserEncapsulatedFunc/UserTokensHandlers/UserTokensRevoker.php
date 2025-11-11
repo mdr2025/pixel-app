@@ -11,9 +11,9 @@ class UserTokensRevoker
 {
     protected array $accessTokenIDS = [];
 
-    public function addToRevoke (Token $tokens) : self
+    public function addToRevoke (Token $token) : self
     {
-        $this->accessTokenIDS[] = $tokens->id;
+        $this->accessTokenIDS[] = $token->id;
         return $this;
     }
 

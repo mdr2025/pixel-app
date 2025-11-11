@@ -11,8 +11,10 @@ class UserAuthorizationService
 
     public function getPermissions(): array
     {
-        $userId = auth()->id();
-        $roleId = auth()->user()->role_id;
+        $loggedUser = auth()->user();
+        $userId = $loggedUser->id;
+        $roleId = $loggedUser->role_id;
+
         $isSuperAdmin = $roleId == 1;
 
         $filteredBranchIds = request()->input('filtered_branches_ids', []);

@@ -127,6 +127,7 @@ class UserResource extends JsonResource
         }elseif( $this->doesItNeedTenantCompanyLogo())
         {
             $dataArrayToChange['company_logo'] = $this->fetchTenantCompanyLogo();
+
         }
 
         return $dataArrayToChange;

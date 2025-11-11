@@ -21,13 +21,13 @@ class DepartmentsGroupedByBranchGetter extends QueryCustomizer
  
     protected function eagerLoadRelations() : self
     {
-        $this->getQuery()->with(['branch', 'managers.profile']);
+        $this->getQuery()->with(['branch', 'managers.profile' , 'reps.profile']);
         return $this;
     }
 
     protected function setQueryScopes() : self
     {
-        $this->getQuery()->scopes(['datesFiltering' , 'customOrdering']);
+        $this->getQuery()->datesFiltering()->customOrdering();
         return $this;
     }
 

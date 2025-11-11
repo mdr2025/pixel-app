@@ -9,23 +9,12 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class DepartmentsLister extends QueryCustomizer
 {
-    protected Builder | QueryBuilder | null $query = null;
-
-    public function getQuery() : Builder | QueryBuilder | null 
-    {
-        return $this->query;
-    }
-    
-    protected function setQuery( Builder | QueryBuilder $query) : self
-    {
-        $this->query = $query;
-        return $this;
-    }
 
     public function customizeQuery(Builder | QueryBuilder $query) : self
     {
-        return $this->setQuery($query)
-                    ->setAllowedFilters()
+        $this->setQuery($query);
+        
+        return $this->setAllowedFilters()
                     ->setQueryScopes()
                     ->eagerLoadRelations()
                     ->orderRocords();

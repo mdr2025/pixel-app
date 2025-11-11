@@ -16,6 +16,7 @@ use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChange
 use PixelApp\Services\UsersManagement\UpdatingUserByAdminService\UpdatingUserByAdminService;
 use PixelApp\Services\PixelServiceManager;
 use PixelApp\Services\UsersManagement\ControllerLevelServices\User\UserService;
+use PixelApp\Services\UsersManagement\ExpImpServices\UserTypesExpImpServices\UserTypeExpImpServices\UserTypeCSVExporter;
 use PixelApp\Services\UsersManagement\ExpImpServices\UserTypesExpImpServices\UserTypeExpImpServices\UserTypeExportingService;
 use PixelApp\Services\UsersManagement\IndexingServices\UserTypeIndexingService;
 use PixelApp\Services\UsersManagement\ListingServices\DefaultUsersListingService;
@@ -109,8 +110,7 @@ class UserController extends Controller
     public function getPrimaryBranchAndFilteredBranches(): JsonResponse
     {
         try
-        {
-
+        { 
             $result = $this->userService->getPrimaryAndFilteredBranches();
             return Response::successList($result['total'], $result['data']);
 
@@ -149,7 +149,7 @@ class UserController extends Controller
     {
         try
         {
-            return response()->json($this->userService->listDefaultUsers());
+            return Response::success($this->userService->listDefaultUsers());
 
         }catch(Exception $e)
         {
@@ -167,7 +167,7 @@ class UserController extends Controller
     {
         try
         {
-            return response()->json($this->userService->getAccessibleBranchesAndPrimaryBranchFromUser());
+            return Response::success($this->userService->getAccessibleBranchesAndPrimaryBranchFromUser());
           
         }catch(Exception $e)
         {
@@ -184,9 +184,13 @@ class UserController extends Controller
     public function update(Request $request, int $user): JsonResponse
     {
         $user = $this->userService->findUserByIdOrFail($user);
+        $accessible_branches = $request->input('accessible_branches' , []) ;
 
         return $this->surroundWithTransaction(
-            fn(): JsonResponse => $this->userService->update($user, $request->input('accessible_branches')),
+            function() use ($user , $accessible_branches)
+            {
+                return $this->userService->update($user, $accessible_branches);
+            },
             'Update User',
             [
                 'user_id' => $user->id,
@@ -357,17 +361,17 @@ class UserController extends Controller
 //     //     ];
 //     // }
 
-//     public function export(){
-//         // BasePolicy::check('readEmployees', User::class);
-//         $service = PixelServiceManager::getServiceForServiceBaseType(UserTypeExportingService::class);
-//         return (new $service)->basicExport();
-//         // $columnHeaders = ['Name', 'Email', 'Mobile', 'Department', 'Role'];
-//         // $needed_columns = ['id', 'name', 'email', 'mobile', 'department_id', 'role_id']; // Dynamic array of column headers
-//         // $relationNames = ['department' => ['column' => 'name', 'display' => 'Department'], 'role' => ['column' => 'name', 'display' => 'Role']]; // Dynamic array of relation names
-//         // $data = User::with(['department', 'role'])->get($needed_columns);
+    public function export(UserReadingRequest $request)
+    {
+        $service = PixelServiceManager::getServiceForServiceBaseType(UserTypeCSVExporter::class);
+        return (new $service)->export("users-list");
+        // $columnHeaders = ['Name', 'Email', 'Mobile', 'Department', 'Role'];
+        // $needed_columns = ['id', 'name', 'email', 'mobile', 'department_id', 'role_id']; // Dynamic array of column headers
+        // $relationNames = ['department' => ['column' => 'name', 'display' => 'Department'], 'role' => ['column' => 'name', 'display' => 'Role']]; // Dynamic array of relation names
+        // $data = User::with(['department', 'role'])->get($needed_columns);
 
-//         // $excelFile = $this->initExcelService()->export($data->toArray(), new User(), $columnHeaders, $relationNames);
-//         // return response()->download($excelFile);
-//     }
+        // $excelFile = $this->initExcelService()->export($data->toArray(), new User(), $columnHeaders, $relationNames);
+        // return response()->download($excelFile);
+    }
     
 }

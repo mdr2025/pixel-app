@@ -7,8 +7,8 @@ use ExpImpManagement\ExportersManagement\ExporterTypes\PDFExporter\PDFExporter;
 use ExpImpManagement\ExportersManagement\Interfaces\SelfConstructableExporter;
 use ExpImpManagement\ExportersManagement\Interfaces\SelfConstructablePDFExporter;
 use PixelApp\Models\PixelModelManager;
-use PixelApp\Services\UsersManagement\ExpImpServices\UsersExpImpGeneralFuncs\Tratis\ExporterQueryAllowedFiltersSetting;
-use PixelApp\Services\UsersManagement\ExpImpServices\UsersExpImpGeneralFuncs\Tratis\ExporterQueryBuilderCustomization;
+use PixelApp\Services\UsersManagement\ExpImpServices\UsersExpImpGeneralFuncs\Traits\ExporterQueryAllowedFiltersSetting;
+use PixelApp\Services\UsersManagement\ExpImpServices\UsersExpImpGeneralFuncs\Traits\ExporterQueryBuilderCustomization;
 
 class UserPDFExporter extends PDFExporter implements SelfConstructableExporter , SelfConstructablePDFExporter
 {

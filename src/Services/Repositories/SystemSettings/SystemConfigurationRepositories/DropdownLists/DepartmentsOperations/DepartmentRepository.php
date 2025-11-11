@@ -53,7 +53,7 @@ class DepartmentRepository implements DepartmentRepositoryInterface
 
     public function getDepartmentsGroupByBranch()
     {
-        $query = $this->initBranchSpatieQueryBuilder();
+        $query = $this->initDepartmentSpatieQueryBuilder();
         return $this->initDepartmentsGroupedByBranchGetter()->customizeQuery($query)->getResult();
     }
 

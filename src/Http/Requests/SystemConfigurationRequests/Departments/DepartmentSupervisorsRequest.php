@@ -10,6 +10,7 @@ class DepartmentSupervisorsRequest extends BaseFormRequest
 {
     public function authorize()
     {
+        return true;
         return BasePolicy::check('hasDepartmentAccess', Department::class);
     }
 
@@ -24,7 +25,8 @@ class DepartmentSupervisorsRequest extends BaseFormRequest
     public function rules()
     {
         return [
-            'department_rep_ids.*' => ['exists:users,id'],
+            'department_rep_ids' => ['bail' ,'required' , 'array' , 'min:1' ],
+            'department_rep_ids.*' => ['bail' , 'integer', 'exists:users,id'],
         ];
     }
 }
