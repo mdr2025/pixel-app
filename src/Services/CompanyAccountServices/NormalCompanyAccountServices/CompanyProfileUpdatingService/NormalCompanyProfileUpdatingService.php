@@ -41,7 +41,7 @@ class NormalCompanyProfileUpdatingService extends CompanyProfileUpdatingBaseServ
 
     protected function loadCompanyRelations() : void
     {
-        $this->Model->load('user:id,hashed_id,name,mobile,email','country');
+        $this->Model->loadDefaultAdmin();
     }
 
     protected function getSuccessResponseData(): array

@@ -31,7 +31,7 @@ class NormalCompanyProfileGettingService extends CompanyProfileGettingBaseServic
     
     protected function loadCompanyRelations(PixelCompany $company) : void
     {
-       $company->load(['defaultAdmin:id,name,created_at,hashed_id,email,mobile','country:id,name,code']);
+       $company->loadDefaultAdmin();
     }
 
    protected function getSuccessResponse(PixelCompany $company) : JsonResponse

@@ -16,6 +16,7 @@ use PixelApp\Services\SystemConfigurationServices\DropdownLists\CurrenciesOperat
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\CurrenciesOperations\ExpImpServices\ImportingFunc\CurrenciesImporter;
 use Rap2hpoutre\FastExcel\SheetCollection;
 use Spatie\QueryBuilder\QueryBuilder;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CurrenciesController extends PixelBaseController
 {
@@ -89,7 +90,7 @@ class CurrenciesController extends PixelBaseController
         //     ->import();
     }
 
-    public function export()
+    public function export(): JsonResponse | StreamedResponse
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(CurrenciesExportingService::class);
         return (new $service())->basicExport("currencies");

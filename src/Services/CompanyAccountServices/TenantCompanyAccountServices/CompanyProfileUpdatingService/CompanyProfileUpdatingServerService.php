@@ -36,16 +36,18 @@ class CompanyProfileUpdatingServerService extends CompanyProfileUpdatingBaseServ
     protected function setTenantModelByDomain() : void
     {
         $class = $this->getTenantCompanyModelClass();
-        $model = $class::where("company_domain" , $this->data["company_domain"])->first();
+        $model = $class::where("domain" , $this->data["company_domain"])->first();
+
         if(!$model)
         {
             throw new Exception("There is not tenant company has this domain .");
         }
 
         $this->Model = $model;
+         
     }
     
-    protected function doBeforeOperationStart(): void
+    protected function onAfterDbTransactionStart(): void
     {
         $this->setTenantModelByDomain();
     }

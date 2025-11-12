@@ -16,7 +16,7 @@ use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\AreasListingingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\ExpImpServices\AreasExportingServices\AreaExportingService;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\AreasOperations\ExpImpServices\AreasImportingFunc\AreasImporter;
- 
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AreasController extends Controller
 {
@@ -107,7 +107,7 @@ class AreasController extends Controller
         //     ->import();
     }
 
-    public function export()
+    public function export(): JsonResponse | StreamedResponse
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(AreaExportingService::class);
         return (new $service())->basicExport("areas");

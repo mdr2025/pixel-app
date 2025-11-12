@@ -14,8 +14,8 @@ class TenantCompanyDataResettingJob extends CompanyDataResettingBaseJob
      */
     public function seedDatabase()
     {
-            Artisan::call('tenants:seed', [
-                '--tenants' => [tenant()->getTenantKey()],
+            Artisan::call('tenant-company:seed', [
+                'companyDomain' => tenant()->domain,
                 '--class'   => TenantDatabaseSeeder::class
             ]); 
     }

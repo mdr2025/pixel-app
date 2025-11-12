@@ -195,12 +195,13 @@ class PixelConfigManager
     public static function setPixelPackageConfigFileKeys(array $keys) : void
     {
         $configFileIdentifier  = static::initPackageBaseConfigFileIdentifier();
+        $configFileName = $configFileIdentifier->getFileName();
         $configFilePath = $configFileIdentifier->getFilePath();
 
         $configs = require $configFilePath;
         $configs = array_merge($configs , $keys);
         
-        static::overrideConfigFileContent($configFilePath , $configs);
+        static::overrideConfigFileContent($configFileName , $configFilePath , $configs);
     }
 
 }

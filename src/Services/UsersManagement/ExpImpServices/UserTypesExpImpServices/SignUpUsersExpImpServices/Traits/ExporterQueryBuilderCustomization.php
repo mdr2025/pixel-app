@@ -11,7 +11,7 @@ trait ExporterQueryBuilderCustomization
      
     protected function applySignUpUserScope($builder) : void
     {
-        $builder->scopes('signUpUser');
+        $builder->scopes('signup');
     }
     
     protected function initQueryBuilder() : Builder | DatabaseQueryBuilder | QueryBuilder

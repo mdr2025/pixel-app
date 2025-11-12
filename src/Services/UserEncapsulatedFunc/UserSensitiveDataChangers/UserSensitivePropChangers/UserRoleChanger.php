@@ -41,6 +41,7 @@ class UserRoleChanger
 
     public function getSuperAdminRoleData() : array
     {
+        dd([ $this->getPropName() => 1 ]);
         return [ $this->getPropName() => 1 ];
     }
 

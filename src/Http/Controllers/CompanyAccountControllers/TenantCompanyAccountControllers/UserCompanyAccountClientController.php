@@ -30,17 +30,17 @@ class UserCompanyAccountClientController extends Controller
         return (new $service())->getResponse(); 
     }
   
-    public function companyBranchList()
-    {
-        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyBranchesListClientService::class);
-        return (new $service)->getResponse();
-    }
+    // public function companyBranchList()
+    // {
+    //     $service = PixelServiceManager::getServiceForServiceBaseType(CompanyBranchesListClientService::class);
+    //     return (new $service)->getResponse();
+    // }
 
-    public function changeBranchStatus($id)
-    {
-        $service = PixelServiceManager::getServiceForServiceBaseType(BranchStatusChangingClientService::class);
-        return (new $service($id))->getResponse();
-    }
+    // public function changeBranchStatus($id)
+    // {
+    //     $service = PixelServiceManager::getServiceForServiceBaseType(BranchStatusChangingClientService::class);
+    //     return (new $service($id))->getResponse();
+    // }
 
     public function changeDefaultAdmin()
     {

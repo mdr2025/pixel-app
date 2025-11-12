@@ -29,6 +29,7 @@ use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperatio
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\ExpImpServices\ImportingFunc\BranchesImporter;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\BranchesOperations\SubBranchesListingService;
 use PixelApp\Traits\TransactionLogging;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class BranchesController extends Controller
 {
@@ -166,7 +167,7 @@ class BranchesController extends Controller
         );
     }
 
-    public function import(BranchImportingRequest $request): JsonResponse
+    public function import(Request $request): JsonResponse
     {
         return $this->surroundWithTransaction(
             fn() => $this->branchService->import(),
@@ -178,7 +179,7 @@ class BranchesController extends Controller
         );
     }
 
-    public function export(): JsonResponse
+    public function export(): JsonResponse | StreamedResponse
     {
         return $this->surroundWithTransaction(
             fn() => $this->branchService->export(),
@@ -191,7 +192,7 @@ class BranchesController extends Controller
         );
     }
 
-    public function downloadFileFormat(BranchDownloadFileFormateRequest $request): mixed
+    public function downloadFileFormat(BranchReadingRequest $request): mixed
     {
         return $this->surroundWithTransaction(
             fn() => $this->branchService->downloadFileFormat(),

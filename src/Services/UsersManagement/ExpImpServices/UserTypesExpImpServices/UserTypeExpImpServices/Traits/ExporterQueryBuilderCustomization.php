@@ -16,7 +16,7 @@ trait ExporterQueryBuilderCustomization
 
     protected function applyUserTypeScope($builder) : void
     {
-        $builder->scopes('user');
+        $builder->scopes('activeUsers');
     }
     protected function initQueryBuilder() : Builder | DatabaseQueryBuilder | QueryBuilder
     {

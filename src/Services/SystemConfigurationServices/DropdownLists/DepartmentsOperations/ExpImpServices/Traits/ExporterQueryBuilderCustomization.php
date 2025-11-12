@@ -6,7 +6,7 @@ trait ExporterQueryBuilderCustomization
 { 
     protected function SelectColumns($builder) : void
     {
-        $builder->select(['id', 'name', 'status' , 'default' , 'parent_id']);
+        $builder->select(['id', 'name', 'status' , 'is_default' , 'branch_id']);
     }
     
 

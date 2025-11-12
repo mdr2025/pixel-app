@@ -53,7 +53,7 @@ class DepartmentRouteRegistrar extends PixelRouteRegistrar
 
     protected function defineDepartmentFileFormatDownloadingRoute() : void
     {
-        Route::get('system-configs/download-file-format/departments', [DepartmentsController::class, 'importableFormalDownload']);
+        Route::get('system-configs/download-file-format/departments', [DepartmentsController::class, 'downloadFileFormat']);
     }
      
 

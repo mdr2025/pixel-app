@@ -3,7 +3,7 @@
 namespace PixelApp\Services\CompanyAccountServices\BaseServices\CompanyDataResettingService;
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Requests\CompanyAccountRequests\ResetCompanyDataRequest;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Services\Traits\GeneralValidationMethods;

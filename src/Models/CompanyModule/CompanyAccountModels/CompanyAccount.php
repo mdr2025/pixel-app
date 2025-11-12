@@ -27,6 +27,16 @@ class CompanyAccount extends PixelCompany
                throw new Exception("Missed data seeding .... a default user must be assigned to the comapny account !");
     }
 
+    public function getRelationValue($key)
+    {
+        if($key == "defaultAdmin") 
+        {
+            return $this->getDefaultAdmin();
+        }
+
+        parent::getRelationValue($key);
+    }
+    
     public function getDefaultAdmin()  : EmailAuthenticatable
     {
         if(!$this->defaultAdmin)

@@ -30,6 +30,7 @@ use PixelApp\Traits\TransactionLogging;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use PixelApp\Services\UsersManagement\ControllerLevelServices\SignUp\SignUpService;
+use PixelApp\Services\UsersManagement\ExpImpServices\UserTypesExpImpServices\SignUpUsersExpImpServices\SignUpUsersCSVExporter;
 
 class SignUpController extends Controller
 {
@@ -294,18 +295,18 @@ class SignUpController extends Controller
 //     // }
 
  
-//     public function export()
-//     {
-//         $service = PixelServiceManager::getServiceForServiceBaseType(SignUpUsersExportingService::class);
-//         return (new $service)->basicExport();
-//         // BasePolicy::check('readSignUpList', User::class);
-//         // $columnHeaders = ['First Name', 'Last Name', 'Name', 'Email', 'Mobile'];
-//         // $needed_columns = ['id', 'first_name', 'last_name', 'name', 'email', 'mobile']; // Dynamic array of column headers
-//         // $relationNames = ['department' => ['column' => 'name', 'display' => 'Department'], 'role' => ['column' => 'name', 'display' => 'Role']]; // Dynamic array of relation names
-//         // $relationNames = []; // Dynamic array of relation names
-//         // $data = User::get($needed_columns);
+    public function export(SignupUserReadingRequest $request)
+    {
+        $service = PixelServiceManager::getServiceForServiceBaseType(SignUpUsersCSVExporter::class);
+        return (new $service)->export("signup-list");
+        // BasePolicy::check('readSignUpList', User::class);
+        // $columnHeaders = ['First Name', 'Last Name', 'Name', 'Email', 'Mobile'];
+        // $needed_columns = ['id', 'first_name', 'last_name', 'name', 'email', 'mobile']; // Dynamic array of column headers
+        // $relationNames = ['department' => ['column' => 'name', 'display' => 'Department'], 'role' => ['column' => 'name', 'display' => 'Role']]; // Dynamic array of relation names
+        // $relationNames = []; // Dynamic array of relation names
+        // $data = User::get($needed_columns);
 
-//         // $excelFile = $this->initExcelService()->export($data->toArray(), new User(), $columnHeaders, $relationNames);
-//         // return response()->download($excelFile);
-//     }
+        // $excelFile = $this->initExcelService()->export($data->toArray(), new User(), $columnHeaders, $relationNames);
+        // return response()->download($excelFile);
+    }
 }

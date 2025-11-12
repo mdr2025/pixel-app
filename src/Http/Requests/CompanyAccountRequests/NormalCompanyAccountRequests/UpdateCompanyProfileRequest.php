@@ -52,9 +52,7 @@ class UpdateCompanyProfileRequest extends BaseFormRequest implements NeedsModelK
             "sector" => ["required" , "string" ],
             "address"          =>['nullable', 'string'],
             "country_id" => ["required" , "integer" ],
-            'logo' => ['nullable' , new SingleFileOrSinglePathString()],
-            // "employees_no"=>"required|string",
-            // 'branches_no',
+            'logo' => ['nullable' , new SingleFileOrSinglePathString()], 
         ];
     }
 }

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id(); 
             $table->string('name')->unique();
             $table->string('cr_no')->nullable()->unique();
+            $table->string('mobile' , 20)->index();
+            $table->string("email")->index();
             $table->string('sector');
             $table->string('logo')->nullable();
             $table->foreignId("country_id")->constrained("countries")->cascadeOnUpdate()->restrictOnDelete();

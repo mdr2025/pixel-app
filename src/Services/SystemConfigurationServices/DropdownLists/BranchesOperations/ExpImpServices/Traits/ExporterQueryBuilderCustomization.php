@@ -7,7 +7,7 @@ trait ExporterQueryBuilderCustomization
      
     protected function SelectColumns($builder) : void
     {
-        $builder->select(['id', 'name', 'status' , 'default']);
+        $builder->select(['id', 'name', 'status' , 'type' , 'country_id']);
     }
     
 

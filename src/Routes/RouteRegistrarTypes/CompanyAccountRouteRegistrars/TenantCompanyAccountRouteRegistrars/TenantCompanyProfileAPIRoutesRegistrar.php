@@ -33,7 +33,7 @@ class TenantCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
        $arrayToAppend["pixel-app-package-route-registrars"]["tenant-company-profile"] = static::class;
    }
   
-    protected function defineUpdateCompanyProfileServerRoute(bool $remoteServer = true) : void
+    protected function defineUpdateCompanyProfileServerRoute() : void
     {
         Route::post('profile/update', [UserCompanyAccountServerController::class, 'updateCompanyProfile']);
     }
@@ -44,7 +44,7 @@ class TenantCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
         
     }
 
-    protected function defineCompanyProfileServerRoute(  bool $remoteServer = true) : void
+    protected function defineCompanyProfileServerRoute() : void
     { 
         Route::get('profile', [UserCompanyAccountServerController::class, 'companyProfile']);
     }
@@ -70,12 +70,12 @@ class TenantCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
         });
     }
 
-    protected function defineCompanyProfileServerRoutes(RouteRegistrar $routeRegistrar  , bool $remoteServer = true) : void
+    protected function defineCompanyProfileServerRoutes(RouteRegistrar $routeRegistrar) : void
     {
-        $routeRegistrar->group(function() use ($remoteServer)
+        $routeRegistrar->group(function()
         {
-            $this->defineCompanyProfileServerRoute($remoteServer); 
-            $this->defineUpdateCompanyProfileServerRoute($remoteServer); 
+            $this->defineCompanyProfileServerRoute(); 
+            $this->defineUpdateCompanyProfileServerRoute(); 
         });
     }
     

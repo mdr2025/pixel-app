@@ -30,9 +30,14 @@ class UserCompanyAccountServerController extends Controller
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(CompanyProfileUpdatingServerService::class);
         $response = (new $service())->update();
-        return $this->checkResponse($response, $request);
+
+        return $response;
+
+        //to check later
+        //return $this->checkResponse($response, $request);
     }
     
+    //must check later ... no tenant can be fetched by tenant() in admin panel app
     protected function checkResponse(JsonResponse $response, Request $request): JsonResponse
     {
         if ($response->getStatusCode() == 200) 

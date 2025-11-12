@@ -4,6 +4,7 @@ namespace PixelApp\Http\Requests\CompanyAccountRequests\TenantCompanyAccountRequ
 
 use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 use CRUDServices\Interfaces\ValidationManagerInterfaces\NeedsModelKeyAdvancedValidation;
+use Exception;
 use Illuminate\Validation\Rule; 
 use PixelApp\Models\PixelModelManager;
 use ValidatorLib\CustomFormRequest\BaseFormRequest;
@@ -34,8 +35,8 @@ class UpdateCompanyProfileRequest extends BaseFormRequest implements NeedsModelK
     public function getModelKeyAdvancedValidationRules(array $data = []): array
     {
         return [
-            "name" => Rule::unique( $this->getTenantCompaniesTableName() )->ignore($data["id"]),
-            "cr_no" => Rule::unique( $this->getTenantCompaniesTableName() )->ignore($data["id"]),
+            "name" => Rule::unique( $this->getTenantCompaniesTableName() )->ignore($data["company_domain" ] , "domain"),
+            "cr_no" => Rule::unique( $this->getTenantCompaniesTableName() )->ignore($data["company_domain" ] , "domain"),
             "country_id" => [ 'exists:countries,id']
         ];
     }

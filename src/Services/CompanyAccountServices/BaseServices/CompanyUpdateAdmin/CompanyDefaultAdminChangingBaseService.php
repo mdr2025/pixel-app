@@ -2,7 +2,7 @@
 
 namespace PixelApp\Services\CompanyAccountServices\BaseServices\CompanyUpdateAdmin;
 
-
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use JsonException; 
@@ -80,11 +80,7 @@ abstract class CompanyDefaultAdminChangingBaseService
     
     protected function initDefaultUserPopChanger() : DefaultUserPopChanger
     {
-        if(!$this->defaultUserPopChanger)
-        {
-            $this->defaultUserPopChanger = new DefaultUserPopChanger();
-        }
-        return $this->defaultUserPopChanger;
+        return new DefaultUserPopChanger();
     }
 
     protected function markOldAdminUserAsNonDefaultUser(PixelUser $user) : void
@@ -103,11 +99,7 @@ abstract class CompanyDefaultAdminChangingBaseService
      
     protected function initUserRoleChanger() : UserRoleChanger
     {
-        if(!$this->userRoleChanger)
-        {
-            $this->userRoleChanger = new UserRoleChanger();
-        }
-        return $this->userRoleChanger;
+        return new UserRoleChanger();
     }
 
     protected function assignOldAdminUsernewRole(PixelUser $user)
@@ -123,12 +115,17 @@ abstract class CompanyDefaultAdminChangingBaseService
 
     protected function fetchNewAdminUser() : ?PixelUser
     {
-        return $this->getUserModelClass()::findOrFail($this->data["user_id"]);
+        return $this->getUserModelClass()::query()->activeUsers()->where("id" ,$this->data["user_id"])->first();
     }
     
     protected function setNewDefaultAdminUser() : void
     { 
-        $this->newAdminUser = $this->fetchNewAdminUser();
+        if(!$newAdmin = $this->fetchNewAdminUser())
+        {
+            throw new Exception("There is no active user has this credentials can be assigned to super admin role !");
+        }
+
+        $this->newAdminUser = $newAdmin;
     }
 
     protected function updateNewAdminRole(): self
@@ -138,7 +135,7 @@ abstract class CompanyDefaultAdminChangingBaseService
         $this->assignNewAdminUserAsSuperAdmin();
 
         $this->markNewAdminUserAsDefaultUser();
-
+ 
         $this->newAdminUser->save();
 
         return $this;

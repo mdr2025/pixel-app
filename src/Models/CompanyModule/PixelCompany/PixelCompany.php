@@ -42,6 +42,11 @@ abstract class PixelCompany
         return config("database.defaultCentralConnection");
     }
      
+    public function loadDefaultAdmin() : void
+    {
+        $this->setRelation("defaultAdmin" , $this->getDefaultAdmin());
+    }
+    
     public function getCompanyLogo() : string
     {
         return $this->getFileFullPathAttrValue('logo');

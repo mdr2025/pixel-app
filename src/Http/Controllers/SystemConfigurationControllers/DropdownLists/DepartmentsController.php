@@ -25,6 +25,7 @@ use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOpera
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\ExpImpServices\ImportingFunc\DepartmentsImporter;
 use PixelApp\Traits\TransactionLogging;
 use Rap2hpoutre\FastExcel\SheetCollection;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DepartmentsController extends Controller
 {
@@ -112,7 +113,7 @@ class DepartmentsController extends Controller
         return Response::success([], ['Supervisors assigned successfully']);
     }
 
-    public function import(DepartmentImportingRequest $request): JsonResponse
+    public function import(Request $request): JsonResponse
     {
         return $this->surroundWithTransaction(
             fn() => $this->departmentService->import(),
@@ -124,7 +125,7 @@ class DepartmentsController extends Controller
         );
     }
 
-    public function export(): JsonResponse
+    public function export(): JsonResponse | StreamedResponse
     {
         return $this->departmentService->export();
     }

@@ -35,17 +35,17 @@ class NormalCompanyProfileAPIRoutesRegistrar extends PixelRouteRegistrar
 
     protected function defineUpdateCompanyProfileRoute() : void
     {
-        Route::post('company/profile/update', [NormalCompanyAccountController::class, 'updateCompanyProfile']);
+        Route::post('normal-company/profile/update', [NormalCompanyAccountController::class, 'updateCompanyProfile']);
     }
  
     protected function defineCompanyProfileRoute() : void
     { 
-        Route::get('company', [NormalCompanyAccountController::class, 'companyProfile']);
+        Route::get('normal-company/profile', [NormalCompanyAccountController::class, 'companyProfile']);
     }
 
     protected function defineUpdateAdminInfoRoute() : void
     {    
-        Route::put('admin-info', [NormalCompanyAccountController::class, 'changeDefaultAdmin']);
+        Route::put('normal-company/change-admin', [NormalCompanyAccountController::class, 'changeDefaultAdmin']);
     }
 
     protected function defineCompanyAccountRoutes(RouteRegistrar $routeRegistrar ) : void

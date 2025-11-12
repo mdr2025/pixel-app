@@ -102,7 +102,7 @@ class BranchService
 
     public function export()
     {
-        $exporter = PixelServiceManager::getServiceForServiceBaseType(BranchesImporter::class);
+        $exporter = PixelServiceManager::getServiceForServiceBaseType(CSVExporter::class);
         return (new $exporter())->exportUsingInternalFormatName();
     }
 

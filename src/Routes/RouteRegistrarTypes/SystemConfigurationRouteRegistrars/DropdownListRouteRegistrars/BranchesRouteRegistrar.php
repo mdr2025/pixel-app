@@ -43,7 +43,7 @@ class BranchesRouteRegistrar extends PixelRouteRegistrar
 
     protected function defineImportableFormatDownloadingRoute() : void
     {
-        Route::get('system-configs/download-file-format/branches', [BranchesController::class, 'importableFormalDownload']);
+        Route::get('system-configs/download-file-format/branches', [BranchesController::class, 'downloadFileFormat']);
     }
    
     protected function defineImportingRoute() : void
