@@ -39,7 +39,7 @@ abstract class UserFactory extends Factory
             'last_name' => $last_name,
             "name" => $first_name . " " . $last_name,
             'email' => $this->faker->unique()->safeEmail(),
-            'password' => Hash::make(22442244),
+            'password' => Hash::make("123456789"),
             'mobile' => $this->faker->unique()->phoneNumber(),
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),

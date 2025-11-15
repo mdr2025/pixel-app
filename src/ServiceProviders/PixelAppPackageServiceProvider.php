@@ -10,6 +10,10 @@ use PixelApp\Console\Commands\CreateCrudService;
 use PixelApp\Console\Commands\CreateStatisticCommand;
 use PixelApp\Console\Commands\RefreshTheProject;
 use Illuminate\Contracts\Debug\ExceptionHandler as LaravelExceptionHandlerInterface;
+use Illuminate\Contracts\Http\Kernel as HttpKernel;
+use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
+use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider;
 use PixelApp\Config\ConfigValueManager;
 use PixelApp\Config\PixelConfigManager;
 use PixelApp\Console\Commands\CreateInterfaceCommand;
@@ -28,7 +32,7 @@ use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAp
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Exceptions\PixelAppExceptionHandler;
 use PixelApp\Jobs\TenantCompanyJobs\ExpImpManagementHandlingJobs\OldDataExportersDeleterAltJob;
-use PixelApp\Jobs\UsersModule\AuthJobs\UserRevokedAccessTokensDeleterJob;
+use PixelApp\Jobs\UsersModule\AuthJobs\UserDeletableTokensHandlerJob;
 use PixelApp\PixelMacroableExtenders\PixelMacroableExtender;
 use PixelApp\ServiceProviders\Traits\ConfigFilesHandling;
 use PixelApp\Services\Repositories\RepositryInterfaces\SystemConfigurationRepositryInterfaces\BranchRepositoryInterfaces\BranchRepositoryInterface;
@@ -50,10 +54,13 @@ class PixelAppPackageServiceProvider extends ServiceProvider
 
         $this->registerRepositryInterfaces();
 
-        // $this->setOldDataExportersDeleterAltJob();
+        $this->registerHttpKernel();
+        $this->registerConsoleKernel();
+        $this->registerCustomExceptionHandler();
 
-        // Bind the custom exception handler
-        //$this->app->singleton(LaravelExceptionHandlerInterface::class, PixelAppExceptionHandler::class);
+        $this->disableEventDiscovery();
+
+        $this->setOldDataExportersDeleterAltJob();
     }
 
     public function boot()
@@ -62,11 +69,35 @@ class PixelAppPackageServiceProvider extends ServiceProvider
   
         PixelTenancyManager::RegisterPixelTenancyOnNeed($this->app);
 
-        $this->booIOEncryptionFuncs();
+        $this->bootIOEncryptionFuncs();
         $this->scheduledObjectsHandling();
         $this->defineCommands();
         $this->handlePixelAppViews();
          
+    }
+
+
+    protected function registerHttpKernel() : void
+    {
+        $this->app->singleton(HttpKernel::class , '\App\Http\Kernel.php');
+    }
+
+    protected function registerConsoleKernel() : void
+    {
+        $this->app->singleton(ConsoleKernel::class , '\App\Console\Kernel.php');
+    }
+
+    protected function registerCustomExceptionHandler() : void
+    {
+        $this->app->singleton(ExceptionHandler::class, '\App\Exceptions\Handler.php');
+    }
+
+    /**
+     * to avoid auto discovering .... the events must be bind manualy in EventServiceProvider to avoid Listeners and Events Auto Discovering and Scaning
+     */
+    protected function disableEventDiscovery() : void
+    {
+        EventServiceProvider::disableEventDiscovery();
     }
 
     protected function defineCommands() : void
@@ -126,7 +157,7 @@ class PixelAppPackageServiceProvider extends ServiceProvider
         IOEncryptionManager::registerObjects($this->app);
     }
 
-    protected function booIOEncryptionFuncs() : void
+    protected function bootIOEncryptionFuncs() : void
     {
         IOEncryptionManager::bootFuncs();
     }
@@ -139,21 +170,20 @@ class PixelAppPackageServiceProvider extends ServiceProvider
      */
     protected function scheduledObjectsHandling()
     {
-        // $this->app->booted(function ()
-        // {
-        //     $schedule = $this->app->make(Schedule::class);
-        //     $schedule->job(UserRevokedAccessTokensDeleterJob::class)->daily()->at('00:00');
-        // });
+        $this->app->booted(function ()
+        {
+            $schedule = $this->app->make(Schedule::class);
+            $schedule->job(UserDeletableTokensHandlerJob::class)->daily()->at('00:00');
+        });
         
     }
 
-    // protected function setOldDataExportersDeleterAltJob() : void
-    // {
-        // To allow this code in pixelApp v.2
-        // Exporter::setOldDataExportersDeleterAlternativeJob(
-        //                                                       OldDataExportersDeleterAltJob::class 
-        //                                                   );
-    // }
+    protected function setOldDataExportersDeleterAltJob() : void
+    {
+        Exporter::setOldDataExportersDeleterAlternativeJob(
+                                                              OldDataExportersDeleterAltJob::class 
+                                                          );
+    }
 
     protected function registerRepositryInterfaces()  :void
     {

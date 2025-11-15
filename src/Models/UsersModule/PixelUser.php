@@ -158,12 +158,14 @@ implements
                          ];
 
     protected $casts = [
+        'email_verified_at' => 'datetime',
         'default_user' => 'boolean', 
         'accepted_at' => 'datetime'
     ];
 
     protected $hidden = [
         'password',
+        'remember_token',
         'pivot'
     ];
 

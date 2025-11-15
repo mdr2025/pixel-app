@@ -18,11 +18,11 @@ use PixelApp\Services\UserEncapsulatedFunc\RegistrableUserHandlers\RegistrableUs
 {
  
     protected function anyAdditionActions(): void {
-        $crNo = $this->data['related_cr_no'] ?? null;
-        if ($crNo){
-            $companyParent = $this->getModelClass()::where('cr_no', $crNo)->firstOrFail();
-            $this->data['parent_id'] = $companyParent->id;
-        }
+        // $crNo = $this->data['related_cr_no'] ?? null;
+        // if ($crNo){
+        //     $companyParent = $this->getModelClass()::where('cr_no', $crNo)->firstOrFail();
+        //     $this->data['parent_id'] = $companyParent->id;
+        // }
     }
      
     protected function getModelClass(): string

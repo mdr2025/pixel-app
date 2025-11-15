@@ -1,7 +1,9 @@
 <?php
 
 namespace PixelApp\ServiceProviders;
- 
+
+use Illuminate\Foundation\Bootstrap\RegisterProviders;
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str; 
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\PixelAppStubsManager;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\StubIdentifiers\StubIdentifier;
@@ -14,6 +16,7 @@ class LaravelServiceProviderStubsManager extends PixelAppStubsManager
         $this->replaceRouteServiceProvider();
         $this->replaceEventServiceProvider();
         $this->replaceAuthServiceProvider();
+
     }
     
     protected function getServiceProviderProjectPath(string $relevantPath) : string
@@ -64,21 +67,31 @@ class LaravelServiceProviderStubsManager extends PixelAppStubsManager
 
     protected function replaceEventServiceProvider() : void
     {
+        
+        $providerNameSpace = "\App\Providers\EventServiceProvider";
         $stubPath = static::getEventServiceProviderStubPath();
         $projectPath = static::getServiceProviderProjectPath("EventServiceProvider.php");
         $this->replaceServiceProviderFile($stubPath , $projectPath);
+
+        
+        $this->injectServiceProviderToBootstrapFile($providerNameSpace);
     }
 
     protected function replaceAuthServiceProvider() : void
     {
+        $providerNameSpace = "\App\Providers\AuthServiceProvider";
         $stubPath = static::getAuthServiceProviderStubPath();
         $projectPath = static::getServiceProviderProjectPath("AuthServiceProvider.php");
         $this->replaceServiceProviderFile($stubPath , $projectPath);
+
+        
+        $this->injectServiceProviderToBootstrapFile($providerNameSpace);
     }
 
     protected function replaceRouteServiceProvider() : void
     {
         $stubPath = static::getRouteServiceProviderStubPath();
+        $providerNameSpace = "\App\Providers\RouteServiceProvider";
         $projectPath = static::getServiceProviderProjectPath("RouteServiceProvider.php");
         $stubIdentifier = static::initStubIdentifier($stubPath , $projectPath);
 
@@ -94,6 +107,13 @@ class LaravelServiceProviderStubsManager extends PixelAppStubsManager
         });
 
         $this->replaceStubFile($stubIdentifier); 
+
+        $this->injectServiceProviderToBootstrapFile($providerNameSpace);
+    }
+
+    protected function injectServiceProviderToBootstrapFile(string $providerClass) :void
+    {
+        ServiceProvider::addProviderToBootstrapFile($providerClass);
     }
     
 }

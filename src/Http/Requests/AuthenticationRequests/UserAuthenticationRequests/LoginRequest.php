@@ -34,7 +34,7 @@ class LoginRequest extends BaseFormRequest
     {
         return [
             "email" => ["bail", "required", "email"],
-            "password" => ["bail", "required", "min:1"]
+            "password" => ["bail", "required", "strign" , "min:8"]
         ];
     }
 }

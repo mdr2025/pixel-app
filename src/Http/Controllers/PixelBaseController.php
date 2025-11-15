@@ -3,7 +3,6 @@
 namespace PixelApp\Http\Controllers;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Pagination\Paginator;
@@ -11,9 +10,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 
-class PixelBaseController extends BaseController
+abstract class PixelBaseController extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests, ValidatesRequests;
  
     public function paginateCollection($items, $perPage = 15, $page = null, $options = [],$type=null)
     {

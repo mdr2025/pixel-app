@@ -170,7 +170,7 @@ abstract class PixelAppClient
  
     protected function initPendingRequest(bool $withAccessToken = true) : PendingRequest
     {
-        $pendingRequest = Http::baseUrl($this->appRootApi);
+        $pendingRequest = Http::timeout(120)->baseUrl($this->appRootApi);
 
         if($withAccessToken)
         {

@@ -23,7 +23,14 @@ class testPHPMailer extends PixelBaseController
             $mail->IsHTML(true);
             $mail->Username = $email->username;
             $mail->Password = $email->password;
-            $mail->SetFrom($email->email_from, auth()->user()->name);
+
+            /**
+             * @var PixelUser $user
+             */
+            $user = auth()->user();
+            $userName = $user->name;
+            $mail->SetFrom($email->email_from, $userName);
+            
             $mail->Subject = "Test Subject";
             $mail->Body    = $text;
             $mail->addAddress("osmanarrow90@gmail.com", "Receiver Name");

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use PixelApp\Database\PixelDatabaseManager;
 
 abstract class CompanyDataResettingBaseJob implements ShouldQueue
@@ -75,7 +76,11 @@ abstract class CompanyDataResettingBaseJob implements ShouldQueue
 
     private function getTables(): array
     {
-        $dbTables = DB::getDoctrineSchemaManager()->listTableNames() ?? [];
+        $dbTables =  array_map(function($tableInfo)
+                    {
+                        return $tableInfo["name"];
+                    } , Schema::getTables());
+        
         $excludedTables = config('system-resetting-excluded-seeding-tables', []);
         //
         return array_diff($dbTables, $excludedTables);

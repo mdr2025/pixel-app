@@ -22,6 +22,6 @@ class PixelPassportRegisteringManager
 
     public function registerPassportObjects() : void
     { 
-        Passport::ignoreMigrations();
+        Passport::ignoreRoutes(); 
     }
 }

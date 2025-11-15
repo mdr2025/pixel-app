@@ -2,12 +2,17 @@
 
 namespace PixelApp\Services\AuthenticationServices\CompanyAuthServerServices;
 
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Response;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Http\Requests\AuthenticationRequests\CompanyAuthenticationRequests\CheckStatusRequest;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
+use PixelApp\Interfaces\EmailAuthenticatable;
+use PixelApp\Models\CompanyModule\CompanyDefaultAdmin;
 use PixelApp\Models\CompanyModule\TenantCompany;
+use PixelApp\Models\PixelModelManager;
 use PixelApp\Services\Traits\GeneralValidationMethods;
 
 class CompanyCheckingStatusService
@@ -15,6 +20,7 @@ class CompanyCheckingStatusService
 
     use GeneralValidationMethods;
 
+    protected CompanyDefaultAdmin $tenantCompanyDefaultAdmin;
     protected ?TenantCompany $company  = null;
 
     protected function getTenantCompanyModelClass() : string
@@ -26,51 +32,9 @@ class CompanyCheckingStatusService
     {
         return PixelHttpRequestManager::getRequestForRequestBaseType(CheckStatusRequest::class);
     }
-     
-    function isVerified()
-    {
-        return (bool) $this->company->defaultAdmin->email_verified_at ?? false;
-    }
 
-    function getTenantRegistrationStatus()
+    protected function responeBasedOnRegistationsStatus() : JsonResponse
     {
-        return $this->company->status;
-    }
-    
-    protected function fetchTenant() : ?TenantCompany
-    {
-        $modelClass = $this->getTenantCompanyModelClass();
-        return $modelClass::whereHas('defaultAdmin', 
-                                    function (Builder $query) 
-                                    {
-                                        $query->where('email', $this->data["admin_email"]);
-                                    })->first();
-    }
-    
-    protected function setTenantCompany() : void
-    {
-        $this->company = $this->fetchTenant();
-    }
-
-    public function checkStatus(): JsonResponse
-    {
-        $this->initValidator()->validateRequest()->setRequestData();
-        $this->setTenantCompany();
-
-        if(!$this->company)
-        {
-            return response()->json([
-                "message" => "Your email is not registered in our database"
-            ], 422);
-        }
-
-        if (!$this->isVerified()) 
-        {
-            return response()->json([
-                "message" => "Your company email has not been verified yet"
-            ]);
-        } 
-        
         if ($this->getTenantRegistrationStatus() == $this->company->getApprovingStatusValue() ) 
         {
             return response()->json([
@@ -90,5 +54,87 @@ class CompanyCheckingStatusService
             ], 422);
 
         }
+    }
+     
+    function isDefaultAdminVerified() : bool
+    {
+        return $this->company->defaultAdmin->isVerified();
+    }
+
+    protected function checkVerificationStatus() : void
+    {
+        if (!$this->isDefaultAdminVerified()) 
+        {
+            throw new Exception("Your company email has not been verified yet");
+        } 
+    }
+
+    function getTenantRegistrationStatus()
+    {
+        return $this->company->status;
+    }
+    
+    protected function fetchTenant() : ?TenantCompany
+    {
+        return $this->tenantCompanyDefaultAdmin->tenant;
+    }
+    
+    protected function setTenantCompany() : self
+    {
+        
+        $this->company = $this->fetchTenant();
+
+        if(!$this->company)
+        {
+            throw new Exception("The used email is not related to any of tenant companies !");
+        }
+
+        return $this;
+    }
+    protected function getCompanyDefaultAdminModelClass() : string
+    {
+        return PixelModelManager::getModelForModelBaseType(CompanyDefaultAdmin::class);
+    }
+
+    protected function fetchTenantCompanyDefaultAdmin() : ?CompanyDefaultAdmin
+    {
+        return $this->getCompanyDefaultAdminModelClass()::query()->where('email', $this->data["admin_email"])->first();
+    }
+
+    protected function setTenantCompanyDefaultAdmin() : self
+    {
+        $defaultAdmin = $this->fetchTenantCompanyDefaultAdmin();
+
+        if(!$defaultAdmin)
+        {
+            throw new Exception("Your email is not registered in our database");
+        }
+
+        $this->tenantCompanyDefaultAdmin = $defaultAdmin;
+
+        return $this;
+    }
+    protected function setTenantCompanyObjects() : self
+    {
+        return $this->setTenantCompanyDefaultAdmin()->setTenantCompany();
+    }
+
+    public function checkStatus(): JsonResponse
+    {
+        $this->initValidator()->validateRequest()->setRequestData();
+
+        try
+        {
+            $this->setTenantCompanyObjects()->checkVerificationStatus();
+
+            //the company is verified at this point
+
+            return $this->responeBasedOnRegistationsStatus();
+
+        }catch(Exception $e)
+        {
+            return Response::error($e->getMessage() , 422);
+        }
+        
     }
 }

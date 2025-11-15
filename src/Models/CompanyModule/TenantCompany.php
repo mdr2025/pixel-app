@@ -261,7 +261,7 @@ class TenantCompany extends PixelCompany
 
     public function generateCompanyIdString()  : self
     {
-        $this->company_id = "CO-" . random_int(100000, 999999);
+        $this->company_id = "CO-" . random_int(1000, 99999999);
         return $this;
     }
 

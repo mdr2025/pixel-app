@@ -38,6 +38,26 @@ class TenantCompanyResource extends JsonResource
         return request();
     }
 
+    protected function getcountryresource() : string
+    {
+        return PixelHttpResourceManager::getResourceForResourceBaseType(CountryResource::class);
+    }
+
+    protected function getDefaultAdminResourceClass() : string
+    {
+        return PixelHttpResourceManager::getResourceForResourceBaseType(DefaultAdminResource::class);
+    }
+ 
+    protected function getRelationCustomResourceClass(string $relation) : ?string
+    {
+        return match($relation)
+               {
+                    "defaultAdmin" => $this->getDefaultAdminResourceClass(),
+                    "country" => $this->getcountryresource(),
+                    default => null
+               };
+    }
+    
     protected function getRelationsProps(): array
     {
         $data = [];
@@ -64,25 +84,6 @@ class TenantCompanyResource extends JsonResource
         return $data;
     }
 
-    protected function getcountryresource() : string
-    {
-        return PixelHttpResourceManager::getResourceForResourceBaseType(CountryResource::class);
-    }
-
-    protected function getDefaultAdminResourceClass() : string
-    {
-        return PixelHttpResourceManager::getResourceForResourceBaseType(DefaultAdminResource::class);
-    }
- 
-    protected function getRelationCustomResourceClass(string $relation) : ?string
-    {
-        return match($relation)
-               {
-                    "defaultAdmin" => $this->getDefaultAdminResourceClass(),
-                    "country" => $this->getcountryresource(),
-                    default => null
-               };
-    }
     protected function getTenantCompanyProps() : array 
     {
         return $this->filterProps( $this->resource->attributesToArray() );
