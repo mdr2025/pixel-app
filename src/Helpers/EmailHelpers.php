@@ -16,12 +16,6 @@ class EmailHelpers
         return $verification_token;
     }
 
-    function codeExists($code, string $column)
-    {
-        $tenantCompanyClass = PixelModelManager::getTenantCompanyModelClass();
-        return $tenantCompanyClass::where($column, $code)->exists();
-    }
-
     // public static function generateVerificationCode($model, string $column)
     // {
 

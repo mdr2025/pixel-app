@@ -1,7 +1,8 @@
 <?php
 
 namespace PixelApp\Models\CompanyModule;
- 
+
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
 use Spatie\QueryBuilder\AllowedFilter;  
@@ -34,6 +35,7 @@ use PixelApp\Models\CompanyModule\PixelCompany\PixelCompany;
 use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToCountry;
 use PixelApp\Models\Interfaces\TrustedAttributesHandlerModel;
 use PixelApp\Models\Interfaces\TrustedRelationAttributesHandlerModel;
+use PixelApp\Models\ModelPropGeneratingStrategies\TenantCompanyModule\TenantCompanyIdPropGeneratingStg;
 use PixelApp\Models\Traits\OptionalRelationstraits\BelongsToCountryMethods;
 use PixelApp\Models\Traits\TrustedAttributesHandlerModelMethods;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\Interfaces\StatusChangeableAccount;
@@ -259,13 +261,22 @@ class TenantCompany extends PixelCompany
         return $this;
     }
 
-    public function generateCompanyIdString()  : self
+    
+    public function startUniqueCompanyIdQuery(string $companyIdString) : EloquentBuilder
     {
-        $this->company_id = "CO-" . random_int(1000, 99999999);
-        return $this;
+        return $this->newQuery()->where("company_id" , "!=" , $companyIdString);
     }
 
+    public function getCompanyIdGeneratingStg() : TenantCompanyIdPropGeneratingStg
+    {
+        return new TenantCompanyIdPropGeneratingStg($this);
+    }
 
+    public function fillCompanyId(string $companyIdString) 
+    {
+        $this->company_id = $companyIdString;
+    }
+    
     public function scopeFilter($query)
     {
         AllowedFilter::callback('details', function (Builder $query, $value) {
