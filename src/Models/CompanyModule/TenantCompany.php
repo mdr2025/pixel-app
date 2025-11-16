@@ -89,8 +89,9 @@ class TenantCompany extends PixelCompany
 
     public function getOneTimeFillingAttrs() : array
     {
-        return ['domain',  'sector'];
+        return ['hashed_id', 'domain',  'sector'];
     }
+     
      
     public static function getCustomColumns(): array
     {
@@ -276,7 +277,7 @@ class TenantCompany extends PixelCompany
     {
         $this->company_id = $companyIdString;
     }
-    
+
     public function scopeFilter($query)
     {
         AllowedFilter::callback('details', function (Builder $query, $value) {

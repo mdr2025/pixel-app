@@ -22,8 +22,15 @@ class CompanyAuthServerController extends Controller
 {
     public function register() : JsonResponse
     {
-        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyRegisteringService::class);
-        return (new $service())->create();
+        return $this->logOnFailureOnly(
+                    callback: function()
+                            {
+                                $service = PixelServiceManager::getServiceForServiceBaseType(CompanyRegisteringService::class);
+                                return (new $service())->create();
+                            },
+                    appendLoggedUserKeyToLog:false,
+                    operationName : 'Tenant Company Registering Operation'
+                );
     }
 
     /**
@@ -43,21 +50,39 @@ class CompanyAuthServerController extends Controller
 
     public function syncDefaultAdminData() : JsonResponse
     {
-        //temp func ... must developing a service later
-        $service = PixelServiceManager::getServiceForServiceBaseType(DefaultAdminInfoSyncingPort::class);
-        return (new $service)->sync(); 
+        return $this->surroundWithTransaction(
+                    function()
+                    {
+                        $service = PixelServiceManager::getServiceForServiceBaseType(DefaultAdminInfoSyncingPort::class);
+                        return (new $service)->sync(); 
+                    },
+                    "Default Admin Data Syncing Operation"
+                );
     }
 
     public function verifyDefaultAdminEmail(): JsonResponse
     {
-        $service = PixelServiceManager::getServiceForServiceBaseType(DefaultAdminEmailVerificationService::class);
-        return (new $service())->verify();
+         return $this->surroundWithTransaction(
+                    function()
+                    {
+                        $service = PixelServiceManager::getServiceForServiceBaseType(DefaultAdminEmailVerificationService::class);
+                        return (new $service())->verify();
+                    },
+                    "Default Admin Email Verifying Operation"
+                );
     }
 
     public function checkStatus(): JsonResponse
     {
-        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyCheckingStatusService::class);
-        return (new $service())->checkStatus();
+        return $this->logOnFailureOnly(
+            callback : function()
+            {
+                $service = PixelServiceManager::getServiceForServiceBaseType(CompanyCheckingStatusService::class);
+                return (new $service())->checkStatus();
+            },
+            operationName : 'Tenant Company Status Checking Operation'
+        );
+        
     }
 
     /**
@@ -65,8 +90,14 @@ class CompanyAuthServerController extends Controller
      */
     public function forgetId() : JsonResponse
     {
-        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyForgettingIdService::class);
-         return (new $service())->resendCompanyId();
+        return $this->logOnFailureOnly(
+                    callback : function()
+                    {
+                        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyForgettingIdService::class);
+                        return (new $service())->resendCompanyId();
+                    },
+                    operationName : 'Tenant Company Id Resending Operation'
+                );
     } 
 
     /**
@@ -74,25 +105,51 @@ class CompanyAuthServerController extends Controller
      */
     public function fetchCompany() : JsonResponse
     {
-        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyFetchingService::class);
-        return (new $service())->getTenantCompanyDomainResponse();
+        return $this->logOnFailureOnly(
+                    callback : function()
+                    {
+                        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyFetchingService::class);
+                        return (new $service())->getTenantCompanyDomainResponse();
+                    },
+                    operationName : 'Tenant Company Fetching Operation'
+                );
+        
     }
  
     public function fetchApprovedCompanyIDS() : JsonResponse
     {
-        $service = PixelServiceManager::getServiceForServiceBaseType(ApprovedTenantCompanyIDSFetchingService::class);
-        return (new $service())->getTenantCompanyIDS();
+        return $this->logOnFailureOnly(
+                    callback : function()
+                    {
+                        $service = PixelServiceManager::getServiceForServiceBaseType(ApprovedTenantCompanyIDSFetchingService::class);
+                        return (new $service())->getTenantCompanyIDS();
+                    },
+                    operationName : 'Approved Tenant Company Ids Fetching Operation'
+                );   
     }
  
     public function checkSubDomain($subdomain) : JsonResponse
     {
-        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyCheckingSubDomainService::class);
-        return (new $service())->checkSubDomainAvailability($subdomain);
+        return $this->logOnFailureOnly(
+                    callback : function() use ($subdomain)
+                    {
+                        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyCheckingSubDomainService::class);
+                        return (new $service())->checkSubDomainAvailability($subdomain);
+                    },
+                    operationName : 'Tenant Company Sub Domain Validaity Checking Operation'
+                );        
     }
 
     public function checkCrNo($crNo)   : JsonResponse
     { 
-        $service = PixelServiceManager::getServiceForServiceBaseType(CompanyCheckingCrNoService::class);
-       return (new $service)->checkCrNoValidity($crNo);
+        return $this->logOnFailureOnly(
+            callback : function() use ($crNo)
+            {
+                $service = PixelServiceManager::getServiceForServiceBaseType(CompanyCheckingCrNoService::class);
+                return (new $service)->checkCrNoValidity($crNo);
+            },
+            operationName : 'Tenant Company CR No Validaity Checking Operation'
+        );
     }
+
 }

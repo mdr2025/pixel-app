@@ -13,10 +13,13 @@ use PixelApp\Http\Resources\AuthenticationResources\CompanyAuthenticationResourc
 use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Models\CompanyModule\TenantCompany;
 use PixelApp\Services\Traits\GeneralValidationMethods;
+use PixelApp\Traits\LoggingOperationsWithoutTransactions;
+
 
 class CompanyLoginService
 {
-    use GeneralValidationMethods;
+    use GeneralValidationMethods  , LoggingOperationsWithoutTransactions;
+
     protected TenantCompany $company;
 
     protected function getRequestFormClass(): string
@@ -93,8 +96,22 @@ class CompanyLoginService
     public function login(): JsonResponse
     {
         $this->initValidator()->validateRequest()->setRequestData();
-        $this->setCompanyId()->setCompany()->setCompanySlug() ->checkCompanyApprovment();
-        return $this->getLoginResponse();
+        $this->setCompanyId()->setCompany();
+        
+
+        return $this->logOperationWithStatus(
+                    operationName: "Tenant Company Login Operation",
+                    loggingStartingMsg : "Tenant Company Login - start of operation" ,
+                    loggingSuccessMsg  : "Successfull Tenant Login Operation - Operation finished",
+                    appendLoggedUserKeyToLog: false,
+                    callback : function()
+                    {
+                        return $this->setCompanySlug()->checkCompanyApprovment()->getLoginResponse();
+                    },
+                    loggingContext : [
+                        "companyId" => $this->company->id
+                    ]
+                );
     }
 
     private function isValidCompanyId(string $companyId): bool

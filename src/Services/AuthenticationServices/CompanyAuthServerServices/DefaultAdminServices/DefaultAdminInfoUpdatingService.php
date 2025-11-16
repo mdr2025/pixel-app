@@ -3,6 +3,8 @@
 namespace PixelApp\Services\AuthenticationServices\CompanyAuthServerServices\DefaultAdminServices;
  
 use CRUDServices\CRUDServiceTypes\DataWriterCRUDServices\UpdatingServices\UpdatingService;
+use Exception;
+use Illuminate\Support\Facades\Log;
 use PixelApp\Http\Requests\AuthenticationRequests\CompanyAuthenticationRequests\DefaultAdminInfoUpdatingRequest;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Models\CompanyModule\CompanyDefaultAdmin;
@@ -57,6 +59,35 @@ class DefaultAdminInfoUpdatingService extends UpdatingService
     protected function onAfterDbTransactionStart(): void
     {
         $this->fillTenantCompanyDefaultAdminBeforeUpdating();
+    }
+
+    protected function getLoggingContext() : array
+    {
+        return [
+            "admin_id" => $this->Model->getKey(),
+            "company_id" => $this->Model->tenant->getKey()
+        ];
+    }
+
+    protected function logOperationFailing() : void
+    {
+        Log::error( $this->getModelUpdatingFailingErrorMessage() , $this->getLoggingContext() );
+    }
+
+    protected function logOnSuccess() : void
+    {
+        Log::info($this->getModelUpdatingSuccessMessage() , $this->getLoggingContext());
+    }
+
+    protected function doBeforeSuccessResponding() : void
+    {
+        $this->logOnSuccess();
+    }
+    
+    protected function doBeforeErrorResponding(?Exception $e = null) : void
+    {
+        $this->logOperationFailing();    
+        parent::doBeforeErrorResponding($e);
     }
     
 }

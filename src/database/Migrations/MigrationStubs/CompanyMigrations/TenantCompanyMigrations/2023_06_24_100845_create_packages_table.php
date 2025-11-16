@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreatePackagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,22 +17,19 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('description')->nullable();
-            $table->unsignedInteger('invoices_count')->nullable(); // null means that the package is not limited
-            $table->unsignedInteger('employees_count')->nullable();
-            $table->unsignedInteger('products_count')->nullable();
-            $table->unsignedInteger('clients_count')->nullable();
-            $table->unsignedInteger('vendors_count')->nullable();
-            $table->unsignedInteger('inventories_count')->nullable();
-            $table->unsignedInteger('treasueries_count')->nullable();
-            $table->unsignedInteger('assets_count')->nullable();
-            $table->unsignedInteger('quotations_count')->nullable();
-            $table->unsignedInteger('banks_accounts_count')->nullable();
-            $table->unsignedInteger('purchase_order_count')->nullable();
+
+            $table->unsignedInteger('users_no')->nullable();
+            $table->unsignedInteger('fire_sys_list_no')->nullable();
+            $table->unsignedInteger('logs_no')->nullable();
+            $table->unsignedInteger('maintenance_no')->nullable();
             $table->unsignedInteger('attachments_size')->nullable();
-            $table->unsignedInteger('free_subscrip_period');
-            $table->unsignedInteger('grace_period');
+
+            $table->unsignedInteger('free_subscrip_period')->nullable();
+            $table->unsignedInteger('grace_period')->nullable();
+
             $table->timestamps();
         });
+
     }
 
     /**
@@ -44,4 +41,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('packages');
     }
-};
+}

@@ -10,40 +10,18 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
+use PixelApp\Traits\LoggingOperationsWithoutTransactions;
+use PixelApp\Traits\ReadingOperationsLogging;
 use PixelApp\Traits\TransactionLogging;
 
 class PixelBaseController extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests , TransactionLogging;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests , TransactionLogging , LoggingOperationsWithoutTransactions;
  
-    protected function tryToReadLogOnFail(callable $callback , array $args = [] , ?string $loggingFailingMsg = null , array $loggingContext = [] , bool $appendRequestDataToLog = true , bool $appendLoggedUserKeyToLog = true) : mixed
-    {
-
-        try
-        {
-            return call_user_func($callback , ...$args);
-
-        }catch(Exception $e)
-        {
-
-            if($appendLoggedUserKeyToLog)
-            {
-                $loggingContext['user_id'] = auth()->id();
-            }
-
-            if($appendRequestDataToLog)
-            {
-                $loggingContext[ 'request' ] = request()->all();
-            }
-
-            Log::error( $loggingFailingMsg ?? $e->getMessage() , $loggingContext );
-
-            return Response::error($e->getMessage());
-        }
-
-    }
+  
 
     public function paginateCollection($items, $perPage = 15, $page = null, $options = [],$type=null)
     {

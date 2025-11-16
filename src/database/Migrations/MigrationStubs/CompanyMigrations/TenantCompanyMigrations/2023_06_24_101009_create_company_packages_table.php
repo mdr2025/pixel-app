@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateCompanyPackagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('package_id')->constrained('packages')->cascadeOnDelete();
             $table->foreignId('company_id')->constrained('tenant_companies')->cascadeOnDelete();
-            $table->enum('subscription_type', ['monthly', 'yearly']);
+            $table->enum('subscription_type', ['free','monthly', 'three_months','semi_annual','yearly','two_years']);
             $table->date('subscription_start_date');
             $table->date('subscription_end_date');
             $table->decimal('price');
@@ -34,4 +34,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('company_packages');
     }
-};
+}

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreatePackageOffersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('package_offers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('package_id')->constrained('packages')->cascadeOnDelete();
-            $table->enum('discount_type', ['monthly', 'yearly']);
+            $table->enum('discount_type', ['monthly', 'three_months', 'semi_annual', 'yearly', 'two_years']);
             $table->decimal('discount_value');
             $table->decimal('discount_percent');
             $table->enum('discount_period_type', ['days ', 'seconds']);
@@ -35,4 +35,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('package_offers');
     }
-};
+}
