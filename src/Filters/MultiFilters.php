@@ -5,6 +5,7 @@ namespace PixelApp\Filters;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\Filters\Filter;
 
+
 class MultiFilters implements Filter
 {
     /** @var array */
@@ -94,7 +95,8 @@ class MultiFilters implements Filter
     }
 
     /**
-     * Apply filter for relationship columns
+     * Apply filter for relationship columns, including nested relationships.
+     * Supports any depth of nested relationships using recursion.
      *
      * @param Builder $query
      * @param string $column
@@ -103,31 +105,34 @@ class MultiFilters implements Filter
     protected function applyRelationFilter(Builder $query, string $column, $value): void
     {
         $parts = explode('.', $column);
-        $relation = $parts[0];
-        $actualColumn = $parts[1];
-        $additionalColumn = $parts[2] ?? null;
 
-        $query->orWhereHas($relation, function ($q) use ($actualColumn, $additionalColumn, $value) {
-            if ($additionalColumn) {
-                $this->applyNestedRelationFilter($q, $actualColumn, $additionalColumn, $value);
-            } else {
-                $q->where($actualColumn, 'like', $this->getLikePattern($value));
-            }
-        });
+        if (count($parts) < 2) {
+            return; // Invalid format - must have at least relation.column
+        }
+
+        $this->buildNestedWhereHas($query, $parts, $value);
     }
 
     /**
-     * Apply filter for nested relationships
+     * Recursively build nested whereHas clauses for relationships of any depth.
      *
      * @param Builder $query
-     * @param string $relation
-     * @param string $column
+     * @param array $parts Array of relation names and final column name
      * @param mixed $value
      */
-    protected function applyNestedRelationFilter(Builder $query, string $relation, string $column, $value): void
+    protected function buildNestedWhereHas(Builder $query, array $parts, $value): void
     {
-        $query->whereHas($relation, function ($q) use ($column, $value) {
-            $q->where($column, 'like', $this->getLikePattern($value));
+        $relation = array_shift($parts); // Get first relation
+        $remainingParts = $parts; // Remaining relations + column
+
+        $query->orWhereHas($relation, function ($q) use ($remainingParts, $value) {
+            if (count($remainingParts) === 1) {
+                // Base case: last part is the column
+                $q->where($remainingParts[0], 'like', $this->getLikePattern($value));
+            } else {
+                // Recursive case: more relations to traverse
+                $this->buildNestedWhereHas($q, $remainingParts, $value);
+            }
         });
     }
 

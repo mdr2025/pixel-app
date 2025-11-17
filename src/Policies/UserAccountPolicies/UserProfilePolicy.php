@@ -2,7 +2,7 @@
 
 namespace PixelApp\Policies\UserAccountPolicies;
 
-use PixelApp\Exceptions\JsonException;
+use PixelApp\Exceptions\ExceptionTypes\JsonException;
 use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 
 class UserProfilePolicy extends BasePolicy

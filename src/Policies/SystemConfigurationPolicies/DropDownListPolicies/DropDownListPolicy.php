@@ -2,7 +2,7 @@
 
 namespace PixelApp\Policies\SystemConfigurationPolicies\DropDownListPolicies;
 
-use PixelApp\Exceptions\JsonException;
+use PixelApp\Exceptions\ExceptionTypes\JsonException;
 use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 
 class DropDownListPolicy extends BasePolicy

@@ -2,7 +2,7 @@
 
 namespace PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers;
 
-use PixelApp\Exceptions\JsonException;
+use PixelApp\Exceptions\ExceptionTypes\JsonException;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;

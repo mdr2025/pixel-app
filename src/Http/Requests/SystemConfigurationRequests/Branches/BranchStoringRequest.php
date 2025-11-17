@@ -55,9 +55,7 @@ class BranchStoringRequest extends BaseFormRequest implements NeedsModelKeyAdvan
         return [
             "items" => "Branches are required, you must submit at least one record",
             "items.*.name" => "Name is required",
-            "name.unique" => "Name is already exists in our database",
-            //" items.*.status"                => "Status is required",
-            " items.*.status.boolean" => "Status must be boolean",
+            "name.unique" => "Name is already exists in our database", 
             "items.*.parent_id.required" => "Parent Branch is required !"
         ];
     }

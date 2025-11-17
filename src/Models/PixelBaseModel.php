@@ -9,6 +9,7 @@ use CRUDServices\FilesOperationsHandlers\FilePathsRetrievingHandler\FileFullPath
 use CRUDServices\FilesOperationsHandlers\FilesHandler;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Interfaces\OnlyAdminPanelQueryable;
@@ -93,6 +94,7 @@ class PixelBaseModel extends Model implements StatisticsProviderModel
     }
 
     //NOTE: this not required in our case should disabled
+    //Note 2 : should be reviewed later
     /**
      * Retrieve the model for a bound value.
      *
@@ -101,15 +103,22 @@ class PixelBaseModel extends Model implements StatisticsProviderModel
      * @param  string|null  $field
      * @return \Illuminate\Database\Eloquent\Relations\Relation
      */
-    public function resolveRouteBindingQuery($query, $value, $field = null)
-    {
-        if ($this->getKeyType() == 'int' && !is_numeric($value)) {
-            throw new Exception("A route parameter must has int typed value to use in model route paramter bindings !");
-        }
+    // public function resolveRouteBindingQuery($query, $value, $field = null)
+    // {
+            // Log::error("Invalid route parameter value for " . get_class($this), [
+            //     'value' => $value, 
+            //     'key_type' => $this->getKeyType(),
+            //     'field' => $field,
+            //     'route' => request()->route()?->getName(),
+            //     'url' => request()->url()
+            // ]);
+    //     if ($this->getKeyType() == 'int' && !is_numeric($value)) {
+    //         throw new Exception("A route parameter must has int typed value to use in model route paramter bindings !");
+        // }
 
-        /**
-         * Here you can if the type is string and validate it to avoid query injection because laravel doesn't check the string typed value
-         */
-        return parent::resolveRouteBindingQuery($query, $value, $field);
-    }
+    //     /**
+    //      * Here you can if the type is string and validate it to avoid query injection because laravel doesn't check the string typed value
+    //      */
+    //     return parent::resolveRouteBindingQuery($query, $value, $field);
+    // }
 }

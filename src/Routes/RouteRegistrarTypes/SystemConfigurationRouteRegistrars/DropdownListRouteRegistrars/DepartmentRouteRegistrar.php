@@ -63,9 +63,7 @@ class DepartmentRouteRegistrar extends PixelRouteRegistrar
              ->parameters(["departments" => "department"])
              ->only(['index' , 'store' ]);
 
-        //must be remove later .... it is defined above ... must handled on frontend first then here
         Route::get('system-configs/departments/list', [DepartmentsController::class , 'list']);
-
         Route::post('system-configs/departments/{department}', [DepartmentsController::class , 'update']);
         Route::delete('system-configs/departments/{department}', [DepartmentsController::class , 'destroy']);
         Route::post('system-configs/departments/assign-supervisors/{department}', [DepartmentsController::class , 'assignSupervisors']);

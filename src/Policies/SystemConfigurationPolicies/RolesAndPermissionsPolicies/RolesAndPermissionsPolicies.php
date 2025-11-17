@@ -2,7 +2,7 @@
 
 namespace PixelApp\Policies\SystemConfigurationPolicies\RolesAndPermissionsPolicies;
 
-use PixelApp\Exceptions\JsonException;
+use PixelApp\Exceptions\ExceptionTypes\JsonException;
 use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 
 class RolesAndPermissionsPolicies extends BasePolicy

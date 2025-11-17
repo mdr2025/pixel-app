@@ -1,5 +1,5 @@
 <?php
-namespace PixelApp\Exceptions;
+namespace PixelApp\Exceptions\ExceptionTypes;
 
 use Throwable;
 

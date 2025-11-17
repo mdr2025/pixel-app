@@ -1,19 +1,19 @@
 <?php
 
-namespace PixelApp\Policies\AuthenticationPolicies\CompanyModulePolicies;
+namespace PixelApp\Policies\Dashboard;
 
 use PixelApp\Exceptions\ExceptionTypes\JsonException;
 use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 
-class CompanyModulePolicy extends BasePolicy
+class DashboardPolicy extends BasePolicy
 {
-  /**
+    /**
      * @return bool
      * @throws JsonException
      */
     public function read(): bool
     {
-        return $this->permissionExaminer->addPermissionToCheck("read_company-account")
+        return $this->permissionExaminer->addPermissionToCheck("read_dashboard")
             ->hasPermissionsOrFail();
     }
 
@@ -21,9 +21,9 @@ class CompanyModulePolicy extends BasePolicy
      * @return bool
      * @throws JsonException
      */
-    public function create(): bool
+    public function readStatistics(): bool
     {
-        return $this->permissionExaminer->addPermissionToCheck("create_company-account")
+        return $this->permissionExaminer->addPermissionToCheck("read_dashboard-statistics")
             ->hasPermissionsOrFail();
     }
 
@@ -31,9 +31,9 @@ class CompanyModulePolicy extends BasePolicy
      * @return bool
      * @throws JsonException
      */
-    public function edit(): bool
+    public function readReports(): bool
     {
-        return $this->permissionExaminer->addPermissionToCheck("edit_company-account")
+        return $this->permissionExaminer->addPermissionToCheck("read_dashboard-reports")
             ->hasPermissionsOrFail();
     }
 }

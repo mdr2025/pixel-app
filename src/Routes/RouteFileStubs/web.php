@@ -1,6 +1,6 @@
 <?php
 
-use PixelApp\Exceptions\JsonException;
+use PixelApp\Exceptions\ExceptionTypes\JsonException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route; 
 

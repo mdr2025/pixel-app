@@ -2,7 +2,7 @@
 
 namespace PixelApp\Policies\SystemConfigurationPolicies\DropDownListPolicies;
 
-use PixelApp\Exceptions\JsonException;
+use PixelApp\Exceptions\ExceptionTypes\JsonException;
 use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 
 class BranchPolicy extends BasePolicy
@@ -44,15 +44,6 @@ class BranchPolicy extends BasePolicy
     public function delete(): bool
     {
         return $this->permissionExaminer->addPermissionToCheck("delete_sc-dropdown-lists-branches")
-            ->hasPermissionsOrFail();
-    }
-    /**
-     * @return bool
-     * @throws JsonException
-     */
-    public function addHseTeam(): bool
-    {
-        return $this->permissionExaminer->addPermissionToCheck("add-hse-team_sc-dropdown-lists-branches")
             ->hasPermissionsOrFail();
     }
 }

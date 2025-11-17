@@ -10,6 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Laravel\Passport\Client;
 use Laravel\Passport\PersonalAccessClient;
+use PixelApp\CustomLibs\PixelCycleManagers\PixelPassportManager\PixelPassportManager;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Jobs\TenantCompanyJobs\TenantApprovingFailingProcessJobs\ClientSideFailingProcessJobs\TenantConfiguringCancelingJob;
 use PixelApp\Jobs\TenantCompanyJobs\TenantApprovingFailingProcessJobs\ServerSideFailingProcessJobs\TenantApprovingCancelingJob;
@@ -84,6 +85,9 @@ class TenantPassportClientsSeederJob
      */
     protected function getCentralAppClientSecret() : string
     {
+        /**
+         * @todo must get the value by PixelPassportManager ... later
+         */
         return config('passport.personal_access_client.secret') ??
                throw new Exception("Failed to create tenant passport client ... no central secret is found in passport config or env files!");
 

@@ -2,7 +2,7 @@
 
 namespace PixelApp\Traits\interfacesCommonMethods;
 
-use PixelApp\Exceptions\JsonException; 
+use PixelApp\Exceptions\ExceptionTypes\JsonException; 
 use Illuminate\Database\Eloquent\Model;
 use RuntimeCaching\Interfaces\ParentModelRuntimeCacheInterfaces\NeedToAccessParentRelationships;
 use RuntimeCaching\RuntimeCacheTypes\ParentModelRuntimeCache;

@@ -30,6 +30,7 @@ use PixelApp\CustomLibs\PixelCycleManagers\IOEncryptionManager\IOEncryptionManag
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppClients\PixelAdminPanelAppClient;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppsConnectionManagement\PixelAppsConnectionManager;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+use PixelApp\Exceptions\Handler;
 use PixelApp\Exceptions\PixelAppExceptionHandler;
 use PixelApp\Jobs\TenantCompanyJobs\ExpImpManagementHandlingJobs\OldDataExportersDeleterAltJob;
 use PixelApp\Jobs\UsersModule\AuthJobs\UserDeletableTokensHandlerJob;
@@ -89,7 +90,7 @@ class PixelAppPackageServiceProvider extends ServiceProvider
 
     protected function registerCustomExceptionHandler() : void
     {
-        $this->app->singleton(ExceptionHandler::class, '\App\Exceptions\Handler.php');
+        $this->app->singleton(ExceptionHandler::class, Handler::class);
     }
 
     /**

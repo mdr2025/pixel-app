@@ -11,14 +11,14 @@ class CountriesController extends Controller
 
     function list()
     {
-        $service = PixelServiceManager::getServiceForServiceBaseType(CountriesListingService::class);
-        return (new $service)->list();
-
-        // $data = QueryBuilder::for(Country::class)
-        //                     ->allowedFilters(['name'])
-        //                     ->customOrdering('id', 'asc')
-        //                     ->get(['id','name','code']);
-        // $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(CountriesCountryResource::class);
-        // return $resourceClass::collection($data); 
+        return $this->logOnFailureOnly(
+                    callback: function()
+                    {
+                        $service = PixelServiceManager::getServiceForServiceBaseType(CountriesListingService::class);
+                        return (new $service)->list();
+                    },
+                    operationName: "Countries Listing Operation",
+                    loggingFailingMsg:"Failed to retrieve countries list"
+                );
     }
 }

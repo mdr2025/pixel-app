@@ -93,6 +93,7 @@ class TenantCompany extends PixelCompany
     }
      
      
+    //to check later
     public static function getCustomColumns(): array
     {
         return [
@@ -104,21 +105,21 @@ class TenantCompany extends PixelCompany
             'country_id',
             'logo',
             'hashed_id',
-            'status',
+            'registration_status',
             'employees_no',
-            'branches_no', 
+            'branches_no',
             'package_status',
             'mobile',
             'address',
+            'active',
             'cr_no',
-            'contractor_approved_status',//later
-            'main_company_approved_status',//later
+            'contractor_approved_status',
+            'main_company_approved_status',
             'type',
-            'contractor_id',//later
-            'account_type',
-            'created_at' ,
-            'updated_at' ,
-            'accepted_at',
+            'contractor_id',
+            'created_at',
+            'abbreviation',
+            'updated_at',
             'deleted_at'
         ];
     }

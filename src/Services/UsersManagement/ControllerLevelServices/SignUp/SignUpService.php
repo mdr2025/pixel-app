@@ -12,9 +12,11 @@ use PixelApp\Services\UsersManagement\ControllerLevelServices\User\UserAuthoriza
 use PixelApp\Services\UsersManagement\EmailChangerService\EmailChangerService;
 use PixelApp\Services\AuthenticationServices\UserAuthServices\EmailVerificationServices\UserVerificationNotificationResendingService;
 use PixelApp\Services\UsersManagement\EmailChangerService\UserTypesEmailChangerServices\SignupUserEmailChangerService;
+use PixelApp\Services\UsersManagement\ExpImpServices\UserTypesExpImpServices\SignUpUsersExpImpServices\SignUpUsersCSVExporter;
 use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\SignUpUserStatusChangerServices\SignUpAccountApprovingService;
 use PixelApp\Services\UsersManagement\StatusChangerServices\UserTypeStatusChangers\SignUpUserStatusChangerServices\SignUpAccountRejectingService;
 use PixelApp\Services\UsersManagement\Statistics\SignupList\SignupUserStatisticsBuilder;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SignUpService
 {
@@ -125,6 +127,11 @@ class SignUpService
         return (new $service($user))->reject();
     }
 
+    public function export() : JsonResponse | StreamedResponse
+    {
+        $service = PixelServiceManager::getServiceForServiceBaseType(SignUpUsersCSVExporter::class);
+        return (new $service)->export("signup-list");
+    }
     /**
      * Get the sign up statistics.
      *

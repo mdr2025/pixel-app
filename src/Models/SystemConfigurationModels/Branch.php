@@ -3,6 +3,7 @@
 namespace PixelApp\Models\SystemConfigurationModels;
 
 use CRUDServices\CRUDComponents\CRUDRelationshipComponents\OwnedRelationshipComponent;
+use CRUDServices\Interfaces\OwnsRelationships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -17,7 +18,7 @@ use PixelApp\Models\SystemConfigurationModels\CountryModule\Country;
  * @property int $status
  * @property int $default
  */
-class Branch extends PixelBaseModel 
+class Branch extends PixelBaseModel implements OwnsRelationships
 {
     use HasFactory;
     protected $table = "branches";
@@ -36,57 +37,65 @@ class Branch extends PixelBaseModel
         'status' => 'boolean',
     ];
 
+    protected function afterCreated(Branch $branch) : void
+    {
+        $departments = config('departments', []);
+
+        foreach ($departments as $department)
+        {
+            $branch->departments()->create([
+                'name' => $department['name'],
+                'branch_id' => $branch->id,
+                'is_default' => $department['is_default'] ?? 0,
+                'status' => $department['status'] ?? 1,
+            ]);
+        }
+
+        // add new branch to all super admin users accessible branches
+        $superAdminUserIds = static::getUserModelClass()::where('role_id', 1)->pluck('id');
+        $branch->usersWithAccess()->attach($superAdminUserIds);
+
+        //for remove this later
+        // $superAdminUsers = User::where('role_id', 1)->get();
+        // foreach ($superAdminUsers as $user) {
+        //     $user->accessibleBranches()->attach($branch->id);
+        // }
+    }
 
     protected static function booted(): void
     {
         parent::booted();
 
-        static::created(function (Branch $branch) {
-            $departments = config('departments', []);
-
-            foreach ($departments as $department) {
-                $branch->departments()->create([
-                    'name' => $department['name'],
-                    'branch_id' => $branch->id,
-                    'is_default' => $department['is_default'] ?? 0,
-                    'status' => $department['status'] ?? 1,
-                ]);
-            }
-
-            // add new branch to all super admin users accessible branches
-            $superAdminUserIds = static::getUserModelClass()::where('role_id', 1)->pluck('id');
-            $branch->usersWithAccess()->attach($superAdminUserIds);
-
-            //for remove this later
-            // $superAdminUsers = User::where('role_id', 1)->get();
-            // foreach ($superAdminUsers as $user) {
-            //     $user->accessibleBranches()->attach($branch->id);
-            // }
+        static::created(function (Branch $branch)
+        {
+            $this->afterCreated($branch);
         });
 
-        static::deleted(function (Branch $branch) {
-            // Remove branch from all super admin users accessible branches
-            $superAdminUserIds = static::getUserModelClass()::where('role_id', 1)->pluck('id');
-            $branch->usersWithAccess()->detach($superAdminUserIds);
-
-            //for remove this later
-            // $superAdminUsers = User::where('role_id', 1)->get();
-            // foreach ($superAdminUsers as $user) {
-            //     $user->accessibleBranches()->detach($branch->id);
-            // }
+        static::deleted(function (Branch $branch)
+        {
+            $this->afterDeleted($branch);
         });
     }
 
-
-    # START RELATIONSHIPS
-    protected function getBranchModelClass() : string
+    protected function afterDeleted(Branch $branch) : void
     {
-        return PixelModelManager::getModelForModelBaseType(Branch::class);
+        // Remove branch from all super admin users accessible branches
+        $superAdminUserIds = static::getUserModelClass()::where('role_id', 1)->pluck('id');
+        $branch->usersWithAccess()->detach($superAdminUserIds);
+
+        //for remove this later
+        // $superAdminUsers = User::where('role_id', 1)->get();
+        // foreach ($superAdminUsers as $user) {
+        //     $user->accessibleBranches()->detach($branch->id);
+        // }
     }
+
+
+    # START RELATIONSHIPS 
 
     public function parent(): BelongsTo
     {
-        return $this->belongsTo( $this->getBranchModelClass() , 'parent_id');
+        return $this->belongsTo( static::class , 'parent_id');
     }
 
     protected function getCountryModelClass() : string
@@ -100,7 +109,7 @@ class Branch extends PixelBaseModel
     }
     public function children(): HasMany
     {
-        return $this->hasMany( $this->getBranchModelClass() , 'parent_id');
+        return $this->hasMany( static::class , 'parent_id');
     }
 
     protected function getDepartmentModelClass() : string
@@ -127,17 +136,7 @@ class Branch extends PixelBaseModel
     {
         return $this->belongsToMany( static::getUserModelClass() , 'accessible_branch_user', 'branch_id', 'user_id');
     }
-
-    public function team(): BelongsToMany
-    {
-        return $this->belongsToMany( 
-                                        static::getUserModelClass() ,
-                                        'standard_committee_branch_team',
-                                        'branch_id',
-                                        'user_id'
-                                   )
-                    ->withPivot('standard_committee_id');
-    }
+ 
     # END RELATIONSHIPS
     
     public function getOwnedRelationships(): array

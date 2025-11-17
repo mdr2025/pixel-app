@@ -5,6 +5,7 @@ namespace PixelApp\Http\Controllers\UserAccountControllers;
 use PixelApp\Http\Controllers\PixelBaseController as Controller;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\UserAccountResources\UserProfileSpecificDataResource;
@@ -22,21 +23,21 @@ class UserProfileController extends Controller
     public function updateProfile(): JsonResponse
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(UserProfileUpdatingService::class);
-        $user = auth()->user(); /** @var PixelUser $user */
+        $user = Auth::user(); /** @var PixelUser $user */
         return (new $service( $user ))->update();
     }
 
     public function changePassword(): JsonResponse
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(PasswordChangerService::class);
-        $user = auth()->user();
+        $user = Auth::user();
         return (new $service( $user ) )->change();
     }
 
     public function profile() : JsonResponse
     {
         /** @var PixelUser $user */
-        $user= auth()->user();
+        $user= Auth::user();
         $user->load(['profile:user_id,picture,gender,nationality_id']);
 
         if($user->profile instanceof BelongsToCountry)

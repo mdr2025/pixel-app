@@ -1,6 +1,6 @@
 <?php
 
-namespace PixelApp\Exceptions;
+namespace PixelApp\Exceptions\ExceptionTypes;
 
 use Exception;
 use Illuminate\Support\Facades\Response;

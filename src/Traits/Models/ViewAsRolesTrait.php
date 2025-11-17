@@ -2,6 +2,8 @@
 
 namespace PixelApp\Traits\Models;
 
+use Illuminate\Support\Facades\Auth;
+
 /**
  * @todo need to work on optional relations to be general in pixel-app package 
  */
@@ -12,7 +14,7 @@ trait ViewAsRolesTrait
      */
     public function isCreator(): bool
     {
-        return (int) $this->creator_id === (int) auth()->id();
+        return (int) $this->creator_id === (int) Auth::id();
     }
   
     /**
@@ -20,10 +22,11 @@ trait ViewAsRolesTrait
      */
     public function isOwnerRep(): bool
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $departmentIds = [];
         //
-        if (! $this->relationLoaded('owners')) {
+        if (! $this->relationLoaded('owners'))
+        {
             $this->load('owners');
         }
         $departmentIds = $this->owners?->pluck('id')->toArray();
@@ -37,7 +40,7 @@ trait ViewAsRolesTrait
      */
     public function isResponsibleDepartmentRep(): bool
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         if (! $this->relationLoaded('actions.departments')) {
             $this->load('actions.departments');

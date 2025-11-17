@@ -2,7 +2,7 @@
 
 namespace PixelApp\Http\Controllers\SystemConfigurationControllers\RolesAndPermissions;
 
-use PixelApp\Exceptions\JsonException;
+use PixelApp\Exceptions\ExceptionTypes\JsonException;
 use PixelApp\Http\Controllers\PixelBaseController as Controller;
 use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 use Illuminate\Http\JsonResponse;
@@ -46,7 +46,7 @@ class RolesController extends Controller
         $modelClass = $this->getRoleModeClass();
         $includeAdmin = $request->boolean('filter.has_admin', false);
 
-        // Query Builder Pattern أفضل
+        // Query Builder Pattern 
         $roles = $modelClass::query()
                             ->activeRole()
                             ->when(!$includeAdmin, function ($query) {

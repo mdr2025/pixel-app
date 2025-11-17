@@ -63,15 +63,18 @@ class BranchesRouteRegistrar extends PixelRouteRegistrar
     }
     protected function defineBranchesMainFuncinalityRoutes() : void
     {
-        Route::prefix('system-configs/branches')->controller(BranchesController::class)->group(function () {
-            Route::get('main-branch', 'getFirstParentBranch')->withoutMiddleware("throttle:api")->middleware('throttle:6,1');
-            Route::get('list', 'listBranches');
-            Route::get('sub-branches', 'subBranches');
-            Route::post('/{branch}', 'update');
-            Route::post('/', 'store');
-            Route::delete('/', 'destroy');
-            Route::get('/', 'index');
-        });
+        Route::prefix('system-configs/branches')
+            ->controller(BranchesController::class)
+            ->group(function () 
+            {
+                Route::get('main-branch', 'getFirstParentBranch')->withoutMiddleware("throttle:api")->middleware('throttle:6,1');
+                Route::get('list', 'listBranches');
+                Route::get('sub-branches', 'subBranches');
+                Route::post('/{branch}', 'update');
+                Route::post('/', 'store');
+                Route::delete('/', 'destroy');
+                Route::get('/', 'index');
+            });
     }
 
     protected function defineBranchesRoutes(RouteRegistrar $routeRegistrar ) : void

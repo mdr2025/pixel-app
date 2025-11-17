@@ -36,7 +36,7 @@ class UsersAPIRoutesRegistrar extends PixelRouteRegistrar
     }
 
     protected function defineUserBranchRoutes() : void
-    {
+    {  
         if(PixelConfigManager::isBranchesFuncDefined())
         {
             Route::get('list/accessible-branches', [UserController::class , 'getAccessibleBranchesAndPrimaryBranchFromUser']);

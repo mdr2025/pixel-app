@@ -73,7 +73,7 @@ class BranchRepository implements BranchRepositoryInterface
 
     public function getCountActiveBranches()
     {
-        return Branch::active()->count();
+        return $this->getBranchModelClass()::active()->count();
     }
 
     protected function initBranchesListter() : QueryCustomizer
@@ -126,6 +126,14 @@ class BranchRepository implements BranchRepositoryInterface
         return $userModelClass::where('department_id', $departmentId)->update(['dep_role' => null]);
     }
 
+    protected function getRequestKeysRoleTypesMap() : array
+    {
+        return [
+            'managers_ids' => PixelUser::DEP_TYPE_MANAGER,
+            'reps_ids' => PixelUser::DEP_TYPE_REP,
+        ];
+    }
+    
     public function addMembersToDepartment()
     {
         $userModelClass = $this->getUserModelClass();
@@ -142,10 +150,7 @@ class BranchRepository implements BranchRepositoryInterface
         $this->updateUserOnDepartmentCondition($departmentId);
 
         // Define mapping between request keys and role types
-        $roles = [
-            'managers_ids' => PixelUser::DEP_TYPE_MANAGER,
-            'reps_ids' => PixelUser::DEP_TYPE_REP,
-        ];
+        $roles = $this->getRequestKeysRoleTypesMap();
 
         // Loop through each roles and assign it
         foreach ($roles as $key => $role)

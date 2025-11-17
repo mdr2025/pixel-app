@@ -41,8 +41,7 @@ class RouteServiceProvider extends ServiceProvider
             PixelRouteManager::loadAPIRoutes();   
             PixelRouteManager::loadWebRoutes();
             PixelRouteManager::loadPixelAppPackageRoutes();
-
-            --loading-tenant-routes--
+            PixelRouteManager::loadTenantRoutes();
         }); 
     }
 

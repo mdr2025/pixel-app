@@ -2,7 +2,7 @@
 
 namespace  PixelApp\Services\UsersManagement\UpdatingUserByAdminService;
 
-use PixelApp\Exceptions\JsonException;
+use PixelApp\Exceptions\ExceptionTypes\JsonException;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;

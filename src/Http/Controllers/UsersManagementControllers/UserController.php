@@ -35,150 +35,79 @@ class UserController extends Controller
 
     public function index(UserReadingRequest $request): JsonResponse
     {
-        try
-        {
-            return response()->json($this->userService->getUsers());
-
-        }catch(Exception $e)
-        {
-             Log::error(
-                        "Failed Fetching Users List , Reason : " . $e->getMessage() ,
-                        ['user_id' => auth()->id(), 'request' => request()->all()]
-                      );
-
-            return Response::error("Failed Fetching Users List , Reason :" . $e->getMessage());
-        
-        } 
+        return $this->logOnFailureOnly(
+                    callback : fn()  => response()->json($this->userService->getUsers()),
+                    operationName : "Fetching Users List Operation"
+                );
     }
 
     public function list(): JsonResponse
     {
-        try
-        {
-            return Response::successList(
-                $this->userService->getUsersList()['total'],
-                $this->userService->getUsersList()['data']
-            );
-        }catch(Exception $e)
-        {
-             Log::error(
-                        "Failed Users Listing , Reason : " . $e->getMessage() ,
-                        ['user_id' => auth()->id(), 'request' => request()->all()]
-                      );
-
-            return Response::error("Failed Users Listing , Reason : " . $e->getMessage());
-        
-        }  
+        return $this->logOnFailureOnly(
+                    callback : function()
+                    {
+                        $total = $this->userService->getUsersList()['total'];
+                        $data = $this->userService->getUsersList()['data'];
+                        return Response::successList($total , $data);
+                    },
+                    operationName :  "Listing Users List Operation"
+                );
     }
 
     public function show(UserShowingRequest $request, int $user): JsonResponse
     {
-        try
-        {
-            return Response::success($this->userService->show($user));
-
-        }catch(Exception $e)
-        {
-             Log::error(
-                        "Failed User Showing , Reason : " . $e->getMessage() ,
-                        ['user_id' => auth()->id(), 'request' => request()->all()]
-                      );
-
-            return Response::error( "Failed User Showing , Reason : " . $e->getMessage());
-        
-        }  
+        return $this->logOnFailureOnly(
+                    callback : fn()  => Response::success($this->userService->show($user)),
+                    operationName : "User Showing Operation"
+                );
     }
 
     public function getFilteredUsersByBranch()
     {
-        try
-        {
-            return $this->userService->getFilteredUsersByBranch();
-        
-        }catch(Exception $e)
-        {
-             Log::error(
-                        "Failed User Users Listing by Branch , Reason : " . $e->getMessage() ,
-                        ['user_id' => auth()->id(), 'request' => request()->all()]
-                      );
-
-            return Response::error("Failed User Users Listing by Branch , Reason :" . $e->getMessage());
-        
-        }  
+        return $this->logOnFailureOnly(
+                    callback : fn()  => $this->userService->getFilteredUsersByBranch(),
+                    operationName : "Branch Filtered Users Getting Operation"
+                );
     }
 
     public function getPrimaryBranchAndFilteredBranches(): JsonResponse
     {
-        try
-        { 
-            $result = $this->userService->getPrimaryAndFilteredBranches();
-            return Response::successList($result['total'], $result['data']);
-
-        }catch(Exception $e)
-        {
-             Log::error(
-                        "Failed Primary Branch and Filtered Branches , Reason : " . $e->getMessage() ,
-                        ['user_id' => auth()->id(), 'request' => request()->all()]
-                      );
-
-            return Response::error("Failed Primary Branch and Filtered Branches , Reason : " . $e->getMessage());
-        
-        }   
+        return $this->logOnFailureOnly(
+                    callback : function()
+                    {
+                        $result = $this->userService->getPrimaryAndFilteredBranches();
+                        return Response::successList($result['total'], $result['data']);
+                    },
+                    operationName : "User Primary Branch and Filtered Branes Getting Operation"
+                );   
     }
 
     public function getPrimaryBranchFromUser(): JsonResponse
     {
-        try
-        {
-            $result = $this->userService->getPrimaryBranchFromUser();
-            return Response::successList($result['total'], $result['data']);
-
-        }catch(Exception $e)
-        {
-             Log::error(
-                        "Failed Primary Branch Getting , Reason : " . $e->getMessage() ,
-                        ['user_id' => auth()->id(), 'request' => request()->all()]
-                      );
-
-            return Response::error("Failed Primary Branch Getting , Reason :" . $e->getMessage());
-        
-        }   
+        return $this->logOnFailureOnly(
+                    callback : function()
+                    {
+                        $result = $this->userService->getPrimaryBranchFromUser();
+                        return Response::successList($result['total'], $result['data']);
+                    },
+                    operationName : "User Primary Branch Getting Operation"
+                );
     }
 
     public function listDefaultUsers()
     {
-        try
-        {
-            return Response::success($this->userService->listDefaultUsers());
-
-        }catch(Exception $e)
-        {
-             Log::error(
-                        "Failed Default Users Listing, Reason : " . $e->getMessage() ,
-                        ['user_id' => auth()->id(), 'request' => request()->all()]
-                      );
-
-            return Response::error("Failed Default Users Listing , Reason :" . $e->getMessage());
-        
-        }   
+        return $this->logOnFailureOnly(
+                    callback : fn()  => Response::success($this->userService->listDefaultUsers()),
+                    operationName : "Default Users Listing Operation"
+                );
     }
 
     public function getAccessibleBranchesAndPrimaryBranchFromUser()
     {
-        try
-        {
-            return Response::success($this->userService->getAccessibleBranchesAndPrimaryBranchFromUser());
-          
-        }catch(Exception $e)
-        {
-             Log::error(
-                        "Accessible Branches and Primary Branch getting , Reason : " . $e->getMessage() ,
-                        ['user_id' => auth()->id(), 'request' => request()->all()]
-                      );
-
-            return Response::error("Accessible Branches and Primary Branch getting  , Reason :" . $e->getMessage());
-        
-        }   
+        return $this->logOnFailureOnly(
+                    callback : fn()  => Response::success($this->userService->getAccessibleBranchesAndPrimaryBranchFromUser()),
+                    operationName : "Accessible Branches and Primary Branch getting Operation"
+                ); 
     }
 
     public function update(Request $request, int $user): JsonResponse
@@ -187,10 +116,7 @@ class UserController extends Controller
         $accessible_branches = $request->input('accessible_branches' , []) ;
 
         return $this->surroundWithTransaction(
-            function() use ($user , $accessible_branches)
-            {
-                return $this->userService->update($user, $accessible_branches);
-            },
+            fn() =>  $this->userService->update($user, $accessible_branches),
             'Update User',
             [
                 'user_id' => $user->id,
@@ -232,146 +158,10 @@ class UserController extends Controller
         return PixelModelManager::getUserModelClass();
     }
 
-//     public function index()
-//     {
-//         $service = PixelServiceManager::getServiceForServiceBaseType(UserTypeIndexingService::class);
-//         return (new $service)->index();
-
-//         // BasePolicy::check('readEmployees', User::class);
-//         // $data = QueryBuilder::for( $this->getUserModelClass() )
-//         //     ->with(['profile', 'profile.country', 'role', 'department'
-//         //     //,'branch']
-//         //     ])
-//         //     ->allowedFilters($this->filters())
-//         //     ->datesFiltering()
-//         //     ->activeUsers()
-//         //     ->customOrdering('accepted_at', 'desc')
-//         //     //->where('role_id', '!=', 1)
-//         //     ->paginate($request?->pageSize ?? 10);
-//         //     $statistics = (new UsersListStatisticsBuilder())->getStatistics();
-
-//         //     return Response::success(['list' => $data, 'statistics' => $statistics]);
-//     }
-    
-//     public function show($user)
-//     {
-//         $service = PixelServiceManager::getServiceForServiceBaseType(UserTypeShowService::class);
-//         return (new $service($user))->show();
-
-// // //      BasePolicy::check('readEmployees', User::class);
-// //         $user = $this->getUserModelClass()::findOrFail($user);
-// //         $data = ["item" => $user->only("id", "department_id", "role_id", "status")];
-// //         return Response::success($data);
-//     }
-
-
-//     public function list()
-//     {
-//         $service = PixelServiceManager::getServiceForServiceBaseType(UserTypeListingingService::class);
-//         return (new $service)->list();
-
-//         // $data = QueryBuilder::for( $this->getUserModelClass() )
-//         //     ->allowedFilters([
-//         //         AllowedFilter::callback('name', function (Builder $query, $value) {
-//         //             $query->where('first_name', 'LIKE', "%{$value}%")
-//         //                 ->orWhere('last_name', 'LIKE', "%{$value}%")
-//         //                 ->orWhere('mobile', 'LIKE', "%{$value}%")
-//         //                 ->orWhere('email', 'LIKE', "%{$value}%");
-//         //         })
-//         //     ])
-//         //     ->with(["profile:user_id,logo"])
-//         //     ->activeUsers()
-//         //     ->customOrdering('created_at', 'desc')
-//         //     ->select("id", "name")
-//         //     ->get();
-//         // $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(UsersListResource::class);
-         
-//         // return response()->json([
-//         //     "data" => $resourceClass::collection($data)
-//         // ]);
-//     }
-
-//     public function listDefaultUsers()
-//     {
-//         $service = PixelServiceManager::getServiceForServiceBaseType(DefaultUsersListingService::class);
-//         return (new $service)->list();
-
-//         // $data = QueryBuilder::for( $this->getUserModelClass() )
-//         //     ->allowedFilters([
-//         //         AllowedFilter::callback('name', function (Builder $query, $value) {
-//         //             $query->where('first_name', 'LIKE', "%{$value}%")
-//         //                 ->orWhere('last_name', 'LIKE', "%{$value}%")
-//         //                 ->orWhere('mobile', 'LIKE', "%{$value}%")
-//         //                 ->orWhere('email', 'LIKE', "%{$value}%");
-//         //         })
-//         //     ])
-//         //     ->notSuperAdmin()
-//         //     ->activeUsers()
-//         //     ->with(['profile:user_id,logo'])
-//         //     ->customOrdering('created_at', 'desc')
-//         //     ->select("id", "name", "email", "hashed_id")
-//         //     ->get();
-
-//         // return response()->json([
-//         //     "data" => $data
-//         // ]);
-//     }
- 
-//     public function update($user): JsonResponse
-//     {
-//         //        BasePolicy::check('editEmployees', User::class);
-//         $user = $this->getUserModelClass()::findOrFail($user);
-//         $service = PixelServiceManager::getServiceForServiceBaseType(UpdatingUserByAdminService::class);
-//         return (new $service($user))->change();
-//     }
-
-//     public function changeAccountStatus( $user): JsonResponse
-//     {
-//         //        BasePolicy::check('editEmployees', User::class);
-//         $user = $this->getUserModelClass()::findOrFail($user);
-//         $service = PixelServiceManager::getServiceForServiceBaseType(UserAccountStatusChanger::class);
-//         return (new $service($user))->change();
-//     }
-
-//     public function changeEmail($user): JsonResponse
-//     {
-//         //        BasePolicy::check('editEmployees', User::class);
-//         $user = $this->getUserModelClass()::findOrFail($user);
-//         $service = PixelServiceManager::getServiceForServiceBaseType(EmailChangerService::class);
-//         return (new $service($user))->change();
-//     }
-
-//     // public function filters(): array
-//     // {
-//     //     return  [
-//     //         AllowedFilter::custom('created_at' , new MultiFilters(['created_at' , 'accepted_at'])),
-//     //         "status",
-//     //         AllowedFilter::exact("gender", "profile.gender"),
-//     //         AllowedFilter::partial("national_id_number", "profile.national_id_number"),
-//     //         AllowedFilter::partial("passport_number", "profile.passport_number"),
-//     //         AllowedFilter::partial("country", "profile.country.name"),
-//     //         AllowedFilter::partial("department", 'department.name'),
-//     //         AllowedFilter::partial("role", 'role.name'),
-//     //         AllowedFilter::callback('name', function (Builder $query, $value) {
-//     //             $query->where('first_name', 'LIKE', "%{$value}%")
-//     //                 ->orWhere('last_name', 'LIKE', "%{$value}%")
-//     //                 ->orWhere('mobile', 'LIKE', "%{$value}%")
-//     //                 ->orWhere('email', 'LIKE', "%{$value}%");
-//     //         })
-//     //     ];
-//     // }
-
     public function export(UserReadingRequest $request)
     {
         $service = PixelServiceManager::getServiceForServiceBaseType(UserTypeCSVExporter::class);
         return (new $service)->export("users-list");
-        // $columnHeaders = ['Name', 'Email', 'Mobile', 'Department', 'Role'];
-        // $needed_columns = ['id', 'name', 'email', 'mobile', 'department_id', 'role_id']; // Dynamic array of column headers
-        // $relationNames = ['department' => ['column' => 'name', 'display' => 'Department'], 'role' => ['column' => 'name', 'display' => 'Role']]; // Dynamic array of relation names
-        // $data = User::with(['department', 'role'])->get($needed_columns);
-
-        // $excelFile = $this->initExcelService()->export($data->toArray(), new User(), $columnHeaders, $relationNames);
-        // return response()->download($excelFile);
     }
     
 }

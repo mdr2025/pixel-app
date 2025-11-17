@@ -2,7 +2,7 @@
 
 namespace  PixelApp\Services\UsersManagement\Statistics\UsersList;
 
-use PixelApp\Exceptions\JsonException;
+use PixelApp\Exceptions\ExceptionTypes\JsonException;
 use DataResourceInstructors\OperationComponents\Columns\Column;
 use DataResourceInstructors\OperationComponents\OperationConditions\WhereConditions\WhereConditionTypes\WhereConditionPrimaryTypes\AndWhereCondition;
 use DataResourceInstructors\OperationContainers\OperationGroups\OperationGroup;

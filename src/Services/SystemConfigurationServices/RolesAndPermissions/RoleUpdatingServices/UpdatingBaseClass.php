@@ -12,7 +12,7 @@ use PixelApp\Http\Requests\SystemConfigurationRequests\RoleRequests\RoleUpdating
 use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use ValidatorLib\JSONValidator;
 use ValidatorLib\Validator;
-use PixelApp\Exceptions\JsonException;
+use PixelApp\Exceptions\ExceptionTypes\JsonException;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
 
 abstract class UpdatingBaseClass

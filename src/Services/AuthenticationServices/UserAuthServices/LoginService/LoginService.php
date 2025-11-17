@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use PixelApp\Exceptions\JsonException;
+use PixelApp\Exceptions\ExceptionTypes\JsonException;
 use PixelApp\Http\Requests\AuthenticationRequests\UserAuthenticationRequests\LoginRequest;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Models\PixelModelManager;

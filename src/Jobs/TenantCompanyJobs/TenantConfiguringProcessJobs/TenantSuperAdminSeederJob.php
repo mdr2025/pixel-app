@@ -36,6 +36,9 @@ class TenantSuperAdminSeederJob
      */
     public function handle()
     {
+        /**
+         * @todo must check for password missing issue
+         */
         $this->saveDefaultAdminIntoTenantDatabase();
     }
 

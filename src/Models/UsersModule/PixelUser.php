@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\HasApiTokens;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
 use PixelApp\Database\Factories\UserModule\AcceptedUserFactory;
@@ -176,6 +177,18 @@ implements
         $this->handleOptionalRelationFields();
     }
 
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        // the array is important for casts injection implemented by optioanl relation traits
+        //in this method we ensure that laravel can get the casts array (after all injection operations are done) when calling this method
+        return $this->casts; 
+    }
+
     protected function handleOptionalRelationFields() : void
     {
         if(method_exists($this , 'appendDepartmentFields'))
@@ -261,6 +274,20 @@ implements
     {
         $this->name = "{$this->first_name} {$this->last_name}";
     }
+
+    /**
+     * @todo temp code - to enhancing later
+     */
+    public function generateEmployeeId()
+    {
+        $code = '#EMP-' . random_int(00000, 99999); // better than rand()
+
+        if ($this->codeExists($code)) {
+            return $this->generateEmployeeId();
+        }
+        return $code;
+    }
+
     //Relationships part - start
     
     protected function getUserProfileModelClass() : string
@@ -471,7 +498,7 @@ implements
     public function isEditableUser(): bool
     {
         $isSuperAdmin = $this->isSuperAdmin();
-        $canEditHimself = $this->id == auth()->id();
+        $canEditHimself = $this->id == Auth::id();
 
         return !$isSuperAdmin || ($isSuperAdmin && $canEditHimself);
     }

@@ -7,11 +7,16 @@ use Illuminate\Support\MessageBag;
 class ValidationHelpers
 {
 
-    static public function getErrorsIndexedArray(MessageBag $bag): array
+    static public function getErrorsIndexedArray(MessageBag | array $bag): array
     {
-        $errorBagArray = $bag->toArray();
+        if($bag instanceof MessageBag)
+        {
+            $errorBagArray = $bag->toArray();
+        }
+
         $array = [];
-        foreach ($errorBagArray as $messages) {
+        foreach ($errorBagArray as $messages)
+        {
             foreach ($messages as $message) {
                 $array[] = $message;
             }

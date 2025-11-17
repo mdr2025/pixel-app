@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
-use PixelApp\Exceptions\JsonException;
+use PixelApp\Exceptions\ExceptionTypes\JsonException;
 use PixelApp\Http\Requests\AuthenticationRequests\UserAuthenticationRequests\ForgetPasswordRequest;
 use PixelApp\Http\Requests\PixelHttpRequestManager;
 use PixelApp\Models\PixelModelManager;

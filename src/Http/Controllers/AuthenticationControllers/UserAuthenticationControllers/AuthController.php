@@ -5,6 +5,7 @@ namespace PixelApp\Http\Controllers\AuthenticationControllers\UserAuthentication
 use AuthorizationManagement\PolicyManagement\Policies\BasePolicy;
 use PixelApp\Http\Controllers\PixelBaseController as Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use PixelApp\Http\Resources\PixelHttpResourceManager;
 use PixelApp\Http\Resources\UserManagementResources\ModelResources\UserResource;
 use PixelApp\Models\Interfaces\OptionalRelationsInterfaces\BelongsToBranch;
@@ -76,7 +77,7 @@ class AuthController extends Controller
          * returns only user (main data , department , branch , role & permissions)
          * @var PixelBaseModel $loggedUser
          */ 
-        $loggedUser = auth()->user();
+        $loggedUser = Auth::user();
         $loggedUser->load(["role:id,name"]);
         
         if($loggedUser instanceof MustHaveRole)
@@ -90,11 +91,6 @@ class AuthController extends Controller
         }
 
         $resourceClass = PixelHttpResourceManager::getResourceForResourceBaseType(UserResource::class);
-        return new $resourceClass(auth()->user($loggedUser));
+        return new $resourceClass(Auth::user($loggedUser));
     }
-}
-  //        AuthenticatableUserManagement
-        //            Auth  :Login , Register , Password , Verification , Tokens , change-password
-        //            Management :
-        //                Signup =>  index , list , show , update (change email) , change status (accept , reject) , resend Verification  , export
-        //                User =>  index , list , show , update (change other data without owner type changing) , change email , change status (active , inactive)  , export
+} 
