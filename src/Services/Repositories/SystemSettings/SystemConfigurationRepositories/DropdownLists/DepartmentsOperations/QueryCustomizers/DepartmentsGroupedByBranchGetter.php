@@ -13,6 +13,7 @@ class DepartmentsGroupedByBranchGetter extends QueryCustomizer
     public function customizeQuery(Builder | QueryBuilder $query) : self
     {
         $this->setQuery($query);
+        
         return $this->setAllowedFilters()
                     ->setQueryScopes()
                     ->eagerLoadRelations();
@@ -21,7 +22,7 @@ class DepartmentsGroupedByBranchGetter extends QueryCustomizer
  
     protected function eagerLoadRelations() : self
     {
-        $this->getQuery()->with(['branch', 'managers.profile' , 'reps.profile']);
+        $this->getQuery()->with(['departments', 'departments.managers' , 'departments.reps']);
         return $this;
     }
 
@@ -49,6 +50,7 @@ class DepartmentsGroupedByBranchGetter extends QueryCustomizer
 
     public function getResult(): mixed
     {
-        return $this->getQuery()->paginate((int) (request()->pageSize ?? 10));
+        return  $this->getQuery()->paginate((int) (request()->pageSize ?? 10));
+                            
     }
 }

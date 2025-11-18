@@ -20,7 +20,7 @@ class BranchService
     {
         return app(BranchRepositoryInterface::class);
     }
-
+ 
     public function getBranches(): array
     {
         // Return the list of branches

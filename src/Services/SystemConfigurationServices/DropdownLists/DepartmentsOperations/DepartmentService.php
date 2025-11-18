@@ -31,7 +31,7 @@ class DepartmentService
     public function getDepartmentsGroupByBranch(): array
     {
         return [
-            'list' => $this->initDepartmentRepositry()->getDepartmentsGroupByBranch(DepartmentConfig::getFiltersForBranch()),
+            'list' => $this->initDepartmentRepositry()->getDepartmentsGroupByBranch(),
         ];
     }
     public function getCountActiveDepartments()

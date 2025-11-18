@@ -24,23 +24,23 @@ class UserRepository
     public function getUsers(array $filters = [], array $relations = [])
     {
         return $this->initUserSpatieQueryBuilder()
-            ->filterByFilteredBranches()
-            ->with([...$relations])
-            ->allowedFilters([...$filters])
-            ->datesFiltering()
-            ->allowedUsers()
-            ->customOrdering('accepted_at', 'desc')
-            ->paginate((int) request()->pageSize ?? 10);
+                    ->filterByFilteredBranches()
+                    ->with([...$relations])
+                    ->allowedFilters([...$filters])
+                    ->datesFiltering()
+                    ->allowedUsers()
+                    ->customOrdering('accepted_at', 'desc')
+                    ->paginate((int) request()->pageSize ?? 10);
     }
 
     public function getUsersList(array $filters = [], array $relations = [])
     {
         return $this->initUserSpatieQueryBuilder()
-            ->allowedFilters([...$filters])
-            ->with([...$relations])
-            ->allowedUsers()
-            ->customOrdering('created_at', 'desc')
-            ->get();
+                    ->allowedFilters([...$filters])
+                    ->with([...$relations])
+                    ->allowedUsers()
+                    ->customOrdering('created_at', 'desc')
+                    ->get();
     }
 
     public function getTotalActiveUsers()
