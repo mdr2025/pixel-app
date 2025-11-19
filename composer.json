@@ -28,6 +28,7 @@
         "pixel-softwares/runtime-caching": "^2.0.0",
         "pixel-softwares/statistics": "^2.0.0",
         "pixel-softwares/validator-lib": "^2.0.0",
+        "pixel-softwares/morphic-abstract-eloquent": "^2.0.0",
         "spatie/laravel-permission": "^6.0",
         "spatie/laravel-query-builder": "^6.0",
         "spatie/laravel-translatable": "^6.0",

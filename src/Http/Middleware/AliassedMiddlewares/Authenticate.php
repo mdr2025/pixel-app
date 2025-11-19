@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace PixelApp\Http\Middleware\AliassedMiddlewares;
 
 use Closure;
 use Illuminate\Http\Request;

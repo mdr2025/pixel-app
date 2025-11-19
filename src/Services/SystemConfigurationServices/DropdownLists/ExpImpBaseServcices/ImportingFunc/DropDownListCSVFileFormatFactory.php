@@ -17,7 +17,6 @@ class DropDownListCSVFileFormatFactory extends CSVImportableFileFormatFactory
             (new CSVFormatColumnInfoComponent("A" , 'Id'))->setDatabaseFieldName('id')
                                                          ->setCellDataValidation(new DecimalCellValidationSetter),
             (new CSVFormatColumnInfoComponent("B" , 'Name'))->setDatabaseFieldName('name')
-                                                            ->setCellDataValidation(new TextLengthCellValidationSetter(255)), 
             (new CSVBooleanSelectingColumnInfo("C" , 'Status' , "Yes" , "No"))->setDatabaseFieldName('status')
                                                               ->setCellDataValidation(new ListCellValidationSetter(["0" , "1"]))
             
