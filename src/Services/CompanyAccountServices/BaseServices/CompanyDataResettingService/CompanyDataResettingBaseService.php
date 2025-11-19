@@ -28,11 +28,11 @@ abstract class CompanyDataResettingBaseService
             //if no exception is thrown the execution will continue
             $this->initValidator()->validateRequest()->setRequestData();
 
-            $confirmName = $this->data["action"];
+            $confirmName = $this->data["text"];
             
             if ($confirmName !== "DELETE") 
             {
-                return Response::error(["You Have The Word Typed (DELETE) Wrongly, Please Type it Correctly."]);
+                return Response::error(["You didn't confirm the deleting operation .... Please write DELETE work to text field to confirm the deleting operation !"]);
             }
 
             $this->dispatchDataResettingJob();

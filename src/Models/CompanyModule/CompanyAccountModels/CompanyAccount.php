@@ -22,7 +22,7 @@ class CompanyAccount extends PixelCompany
 
     protected function initDefaultAdmin() : EmailAuthenticatable
     {
-        return $this->getUserModelClass()::query()->defaultUser()->first()
+        return $this->getUserModelClass()::query()->defaultSuperAdmin()->first()
                ??
                throw new Exception("Missed data seeding .... a default user must be assigned to the comapny account !");
     }

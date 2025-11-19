@@ -4,6 +4,7 @@ namespace PixelApp\Jobs\CompanyAccountSettingsJobs;
 
 use Database\Seeders\CompanyResetSeeder;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 
 class NormalCompanyDataResettingJob extends CompanyDataResettingBaseJob
 {
@@ -14,8 +15,14 @@ class NormalCompanyDataResettingJob extends CompanyDataResettingBaseJob
      */
     public function seedDatabase()
     {
-            Artisan::call('db:seed', [
-                '--class'   => CompanyResetSeeder::class
-            ]); 
+        $seederClass = CompanyResetSeeder::class;
+
+        Log::info("ResetCompanyDataJob: running seeder: {$seederClass}");
+        
+        Artisan::call('db:seed', [
+            '--class'   => $seederClass
+        ]); 
+        
+        Log::info('ResetCompanyDataJob: seeder completed.');
     }
 }

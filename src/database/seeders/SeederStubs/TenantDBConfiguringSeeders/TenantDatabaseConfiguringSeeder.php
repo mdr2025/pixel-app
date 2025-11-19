@@ -1,13 +1,13 @@
 <?php
 
-namespace Database\Seeders;
- 
-use Illuminate\Database\Seeder;
+namespace Database\Seeders\TenantDatabaseConfiguringSeeder;
+
+use Database\Seeders\TenantDatabaseSeeder;
 use PixelApp\Database\Seeders\GeneralSeeders\BaseDropDownListModulesSeeder;
 use PixelApp\Database\Seeders\SystemConfigSeeders\RolesAndPermissionsSeeders\PermissionsSeeder;
 use PixelApp\Database\Seeders\SystemConfigSeeders\RolesAndPermissionsSeeders\RolesSeeder;
 
-class TenantDatabaseSeeder extends Seeder
+class TenantDatabaseConfiguringSeeder extends TenantDatabaseSeeder
 {
     /**
      * Seed the application's database.

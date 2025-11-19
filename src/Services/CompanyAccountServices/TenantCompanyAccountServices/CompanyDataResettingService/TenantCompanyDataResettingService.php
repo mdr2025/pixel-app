@@ -10,7 +10,7 @@ class TenantCompanyDataResettingService extends CompanyDataResettingBaseService
     
     protected function dispatchDataResettingJob() : void
     {
-        TenantCompanyDataResettingJob::dispatch();
+        TenantCompanyDataResettingJob::dispatch($this->data['type']);
     }
 
 }

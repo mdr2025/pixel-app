@@ -418,14 +418,14 @@ implements
                &&
                tenant()
                &&
-               $this->isCreatedAsDefault();
+               $this->isCreatedAsDefaultSuperAdmin();
     }
 
-    public function scopeDefaultUser($query)
+    public function scopeDefaultSuperAdmin($query)
     {
         //default_user == 1 is enough ... but when it is set to 0 manually
         //we need another condition to fetch the default admin in system
-        $query->where("default_user" , 1)->orWhere("role_id" , 1);
+        $query->where("default_user" , 1)->Where("role_id" , 1);
     }
 
     
@@ -488,9 +488,9 @@ implements
         return $this->role_id == 1;
     }
 
-    public function isCreatedAsDefault(): bool
+    public function isCreatedAsDefaultSuperAdmin(): bool
     {
-        return $this->default_user == 1;
+        return $this->default_user == 1 && $this->isSuperAdmin();
     }
      /**
      * Check if user can edit their profile

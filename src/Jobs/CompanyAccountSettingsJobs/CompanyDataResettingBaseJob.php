@@ -8,8 +8,10 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use PixelApp\Database\PixelDatabaseManager;
+use PixelApp\Models\PixelModelManager;
 
 abstract class CompanyDataResettingBaseJob implements ShouldQueue
 {
@@ -22,7 +24,7 @@ abstract class CompanyDataResettingBaseJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(protected string $resetType)
     {
         //
     }
@@ -34,25 +36,40 @@ abstract class CompanyDataResettingBaseJob implements ShouldQueue
      */
     public function handle()
     {
-        // DB::beginTransaction();
-        // try {
-            //trucate tables
-            $this->trucateTables($this->getTables());
-
-            //seeding database
+        try {
+         
+            $this->trucateTables();
+         
             $this->seedDatabase();
 
+            $this->resetUsers();
+
+            Log::info('ResetCompanyDataJob: all operations completed successfully.');
+
                 // DB::commit(); 
-        // } catch (\Throwable $e) 
-        // {
-            //rollback the opened transaction 
-            // DB::rollBack(); 
+        }catch (\Throwable $e)
+        {
             
-        //     throw $e;
-        // } finally {
-        //     //ensure the foreing key check is enabled.
-        //     DB::statement('SET FOREIGN_KEY_CHECKS=1');
-        // }
+            Log::error('ResetCompanyDataJob failed: ' . $e->getMessage());
+            Log::error($e->getTraceAsString());
+            throw $e;
+
+        } finally {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1'); ///////////////
+        }
+    }
+
+    // reset users
+    private function resetUsers(): void
+    {
+        if ($this->resetType == 'full')
+        {
+            Log::info('ResetCompanyDataJob: resetting users...');
+            
+            PixelModelManager::getUserModelClass()::where('role_id', '!=', 1)->orWhereNull('role_id')->delete(); // delete all users except super admin
+
+            Log::info('ResetCompanyDataJob: users reset completed.');
+        }
     }
 
     private function truncateTable(string $table) : void
@@ -60,29 +77,53 @@ abstract class CompanyDataResettingBaseJob implements ShouldQueue
         PixelDatabaseManager::truncateDBTable($table);
     }
 
-    private function trucateTables(array $tables, int $chunkSize = 5, int $time = 0): void
+    private function trucateTables( int $chunkSize = 5, int $time = 0): void
     {
+        Log::info('ResetCompanyDataJob: starting truncateTables...');
+
         //disable foreign key check
         // DB::statement('SET FOREIGN_KEY_CHECKS=0');
         //trncate selected tables
-        foreach($tables as $table)
+        foreach($this->getTableNamesToTruncate() as $table)
         {
             $this->truncateTable($table);
         }
+
+        Log::info('ResetCompanyDataJob: truncateTables completed.');
+
         // collect($tables)->each(fn($table) => DB::table($table)->truncate());
         //enable foreign key check
         // DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
+// private function truncateTables(array $tables, int $chunkSize = 5, int $time = 0): void
+//     {
+//         //disable foreign key check
+//         DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
-    private function getTables(): array
+//         //truncate selected tables with error handling
+//         collect($tables)->each(fn($table) => DB::table($table)->truncate());
+
+//         //enable foreign key check
+//         DB::statement('SET FOREIGN_KEY_CHECKS=1');
+//     }
+
+    protected function getExcludedTablesBaseOnResetType() : array
     {
-        $dbTables =  array_map(function($tableInfo)
-                    {
-                        return $tableInfo["name"];
-                    } , Schema::getTables());
-        
-        $excludedTables = config('system-resetting-excluded-seeding-tables', []);
-        //
+        return config('system-resetting-excluded-tables', [])[$this->resetType];
+    }
+
+    protected function fetchDataBaseTableNames() : array
+    {
+        return array_map(function($tableInfo)
+                {
+                    return $tableInfo["name"];
+                } , Schema::getTables());
+    }
+    private function getTableNamesToTruncate(): array
+    {
+        $dbTables =  $this->fetchDataBaseTableNames();
+        $excludedTables = $this->getExcludedTablesBaseOnResetType();
+
         return array_diff($dbTables, $excludedTables);
     }
 }

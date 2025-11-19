@@ -2,7 +2,7 @@
 
 namespace PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers;
  
-class SystemResettingExcludedSeedingTablesFileIdentifier extends PixelBaseConfigFileIdentifier
+class SystemResettingExcludedTablesFileIdentifier extends PixelBaseConfigFileIdentifier
 { 
      
 
@@ -11,7 +11,7 @@ class SystemResettingExcludedSeedingTablesFileIdentifier extends PixelBaseConfig
      */
     public function getFileName() : string
     {
-        return "system-resetting-excluded-seeding-tables";
+        return "system-resetting-excluded-tables";
     } 
    
 }

@@ -15,4 +15,11 @@ class PixelSeedersManager
     {
         static::initPixelSeedersStubManager()->replaceSeederStubs();
     }
+
+    
+
+    public static function get() : string
+    {
+
+    }
 }

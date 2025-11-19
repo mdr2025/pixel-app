@@ -52,22 +52,25 @@ class RoleDeletingService
     {
         $this->role->deleted_at = now();
         $this->role->status = 1;
-        if ($this->role->save()) {
-            return true;
+        
+        if (!$this->role->save())
+        {
+            throw new Exception("Failed To Delete Role");
         }
-        throw new Exception("Failed To Delete Role");
+        
     }
 
     /**
      * @return true
      * @throws Exception
      */
-    private function forcedDelete(): bool
+    private function forcedDelete(): void
     {
-        if ($this->role->forceDelete()) {
-            return true;
+        if (!$this->role->forceDelete())
+        {
+            throw new Exception("Failed To Delete Role");
         }
-        throw new Exception("Failed To Delete Role");
+        
     }
 
     public function delete(bool $forcedDelete = false): JsonResponse

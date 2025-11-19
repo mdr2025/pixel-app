@@ -18,12 +18,12 @@ class SuperAdminIndependentGates extends IndependentGate
     {
         return Auth::user();
     }
-    protected function isLoggedUserASuperAdmin() : bool
+    protected function isLoggedUserDefaultSuperAdmin() : bool
     {
         $user = $this->getLoggedUser();
         if($user instanceof PixelUser)
         {
-            return $user->isSuperAdmin();
+            return $user->isCreatedAsDefaultSuperAdmin();
         }
 
         return Str::lower($user?->role?->name) == RoleModel::getHighestRoleName();
@@ -33,8 +33,7 @@ class SuperAdminIndependentGates extends IndependentGate
     {
         Gate::define("resetCompanyData", function ()
         {
-
-            return $this->isLoggedUserASuperAdmin();
+            return $this->isLoggedUserDefaultSuperAdmin();
             //return $this->permissionExaminer->addPermissionToCheck("reset-data_company-account")->hasPermissionsOrFail();
         });
     }

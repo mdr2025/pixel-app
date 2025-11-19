@@ -15,7 +15,6 @@ class ResetCompanyDataRequest extends BaseFormRequest
      */
     public function authorize()
     { 
-        //dd(BasePolicy::check('resetCompanyData', null));
         return Gate::check('resetCompanyData');
     }
 
@@ -25,7 +24,8 @@ class ResetCompanyDataRequest extends BaseFormRequest
     public function rules()
     {
         return [
-            'action' => 'string|max:10|in:DELETE',
+            'text' => 'required|string|max:10|in:DELETE',
+            'type' => 'required|string|in:partial,full', 
         ];
     }
 

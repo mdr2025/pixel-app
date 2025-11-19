@@ -10,7 +10,7 @@ class NormalCompanyDataResettingService extends CompanyDataResettingBaseService
     
     protected function dispatchDataResettingJob() : void
     {
-        NormalCompanyDataResettingJob::dispatch();
+        NormalCompanyDataResettingJob::dispatch($this->data['type']);
     }
 
 }

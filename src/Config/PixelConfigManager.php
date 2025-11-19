@@ -20,7 +20,7 @@ use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\IOEncry
 use PixelApp\Config\ConfigFileIdentifiers\PixelOptionalPackagesConfigFileIdentifires\TenancyConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\PixelAppACLConfigFileIdentifier;
 use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\PixelAppConfigFileIdentifier;
-use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\SystemResettingExcludedSeedingTablesFileIdentifier;
+use PixelApp\Config\ConfigFileIdentifiers\PixelBaseConfigFileIdentifiers\SystemResettingExcludedTablesFileIdentifier;
 use PixelApp\Config\Traits\ConfigValueGetters; 
 
 class PixelConfigManager
@@ -49,7 +49,7 @@ class PixelConfigManager
             static::getPackageBaseConfigFileIdentifierClass(),
             static::getPixelAppACLConfigFileIdentifierClass() ,
             IOEncryptingHandlerFileIdentifier::class,
-            SystemResettingExcludedSeedingTablesFileIdentifier::class,
+            SystemResettingExcludedTablesFileIdentifier::class,
             DepartmentsConfigFileIdentifier::class
 
         ];
