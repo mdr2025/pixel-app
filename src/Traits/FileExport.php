@@ -2,12 +2,15 @@
 
 namespace PixelApp\Traits;
 
+use Exception;
 use ExpImpManagement\ExportersManagement\ExporterTypes\CSVExporter\CSVExporter;
+use ExpImpManagement\ImportersManagement\ImportableFileFormatFactories\CSVImportableFileFormatFactory\CSVImportableFileFormatFactory;
 use Spatie\QueryBuilder\QueryBuilder;
 
 trait FileExport
 {
     use ExportedFileNameGeneratingTrait;
+
 
     /**
      * Export data to a CSV file.
@@ -16,18 +19,16 @@ trait FileExport
      * @param string $importableFormatFactory
      * @param string $fileName
      */
-    public static function export($model, $importableFormatFactory, string $fileName)
+    public function export(string $model, string $importableFormatFactory, string $fileName)
     {
-        $fileName = self::handleTenantFileName($fileName);
+        $this->validateImportableFileFactory($importableFormatFactory);
+
+        $fileName = $this->handleTenantFileName($fileName);
         $fileFormatFactory = new $importableFormatFactory($fileName);
         
-        /**
-         * @var CSVImporter $csvImporter
-         */
-        $csvImporter = (new CSVExporter($model))->useQueryBuilderClass(QueryBuilder::class);
-
-        return $csvImporter->useImportableFormatFileFactory($fileFormatFactory )
-                           ->export(self::handleTenantFileName($fileName));
+        return (new CSVExporter($model))->useImportableFormatFileFactory( $fileFormatFactory )
+                                                ->useQueryBuilderClass(QueryBuilder::class)
+                                                ->export($fileName);                   
     }
 
     /**
@@ -36,8 +37,18 @@ trait FileExport
      * @param string $importableFormatFactory
      * @param string $fileName
      */
-    public static function downloadFileFormat($importableFormatFactory, $fileName)
+    public function downloadFileFormat($importableFormatFactory, $fileName)
     {
-        return (new $importableFormatFactory(self::handleTenantFileName($fileName)))->downloadFormat();
+        $fileName = $this->handleTenantFileName($fileName);
+        
+        return (new $importableFormatFactory($fileName))->downloadFormat();
+    }
+
+    protected function validateImportableFileFactory(string $factoryClass) : void
+    {
+        if(!is_subclass_of($factoryClass , CSVImportableFileFormatFactory::class))
+        {
+            throw new Exception("The class " . $factoryClass . " Must be a child type of " . CSVImportableFileFormatFactory::class); 
+        }
     }
 }

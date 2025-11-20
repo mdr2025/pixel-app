@@ -4,6 +4,7 @@ namespace PixelApp\Services\UsersManagement\ControllerLevelServices\SignUp;
 
 use PixelApp\Traits\HandlesBranchIds;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use PixelApp\Models\ModelConfigs\UsersModule\SignUp\SignUpConfig;
 use PixelApp\Models\UsersModule\PixelUser;
 use PixelApp\Services\PixelServiceManager;
@@ -41,7 +42,7 @@ class SignUpService
      */
     public function getSignUpList(): array
     {
-        $filteredBranchIds = $this->getRequestedBranchIdsWithPrimary(auth()->id());
+        $filteredBranchIds = $this->getRequestedBranchIdsWithPrimary(Auth::id());
 
         return [
             'list' => $this->signUpRepository->getSignUpList(

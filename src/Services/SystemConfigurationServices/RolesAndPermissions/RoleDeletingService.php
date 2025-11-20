@@ -11,9 +11,12 @@ use PixelApp\Config\PixelConfigManager;
 use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleUsersManagement\RoleUsersManager;
 use PixelApp\Services\SystemConfigurationServices\RolesAndPermissions\RoleUsersManagement\SwitchAllRoleUsersToDefaultRole;
+use PixelApp\Traits\TransactionLogging;
 
 class RoleDeletingService
 {
+    use TransactionLogging;
+
     private RoleModel $role;
     private RoleUsersManager $usersManager;
     protected array $DefaultRoles;
@@ -75,16 +78,19 @@ class RoleDeletingService
 
     public function delete(bool $forcedDelete = false): JsonResponse
     {
-        try {
-            if ($this->IsDefaultRole()) {
+         return $this->surroundWithTransaction(function () use ($forcedDelete) {
+
+            if ($this->IsDefaultRole())
+            {
                 throw new Exception("Can't Delete Any Default Role Or Its Permissions");
             }
             
-            if ($this->role->user()->activeUsers()->count() > 0) {
+            if ($this->role->user()->activeUsers()->count() > 0)
+            {
                 throw new Exception("Role can not be deleted as it has assigned users");
             }
 
-            DB::beginTransaction();
+            
             //If It Fails To Switch Users .... An Exception Will Be Thrown And The Deleting Operation Will Stop
             $this->switchUsersToDefaultRole();
 
@@ -95,11 +101,8 @@ class RoleDeletingService
                 $this->deleteSoftly();
             }
 
-            DB::commit();
+
             return Response::success([], ["Role Has Been Deleted Successfully"]);
-        } catch (Exception $e) {
-            DB::rollBack();
-            return Response::error([$e->getMessage()]);
-        }
+        });
     }
 }

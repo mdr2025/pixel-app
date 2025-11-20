@@ -27,7 +27,7 @@ abstract class DropDownListCSVExporter
 
     protected function processFileName(string $fileName) : string
     {
-        return $this::handleTenantFileName($fileName);
+        return $this->handleTenantFileName($fileName);
     }
 
     public function getCSVImportableFileFormatFactory() : CSVImportableFileFormatFactory

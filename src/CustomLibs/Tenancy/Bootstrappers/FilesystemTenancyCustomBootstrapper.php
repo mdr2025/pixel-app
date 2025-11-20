@@ -120,7 +120,7 @@ class FilesystemTenancyCustomBootstrapper implements TenancyBootstrapper
     {
         Storage::forgetDisk($this->app['config']['tenancy.filesystem.disks']);
     }
-    protected function convertStorageFacadeToTenantContext(string $suffix) : self
+    protected function convertStorageFacadeToTenantContext(string $suffix ) : self
     {
         // Storage facade
         $this->forgetStorageTenancyDisks();
@@ -164,6 +164,7 @@ class FilesystemTenancyCustomBootstrapper implements TenancyBootstrapper
         }else{
             $suffix = $this->getFileSystemSuffix();
         }
+        
         $this->convertStorageFacadeToTenantContext($suffix);
     }
 

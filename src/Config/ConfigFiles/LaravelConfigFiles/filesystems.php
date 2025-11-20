@@ -53,7 +53,7 @@ return [
              * 3 - There is n differences between public and front_separated 's roots ... they will be used in the backend
              */
             'driver' => 'local',
-            'root' => storage_path('app'),
+            'root' => storage_path('app/public'),
             'url' =>  rtrim(env('BACKEND_APP_URL') , "/") . '/public/storage',
             'visibility' => 'public',
 //            'driver' => 'local',
@@ -77,7 +77,7 @@ return [
              * @todo
              * for later : think about using CustomFileHandler::getFileStoragePath , it fails in runtime becasue it uses a facade before registering it
              */
-            'root' => storage_path('app'),
+            'root' => storage_path('app/public'),
             'url' =>  rtrim(env('BACKEND_URL') , "/") .  '/storage' ,
             'visibility' => 'public',
             'throw' => false,

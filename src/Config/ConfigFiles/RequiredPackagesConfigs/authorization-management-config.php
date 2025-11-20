@@ -42,7 +42,6 @@ return [
        
         /** Authentication Policies */
         TenantCompany::class                => CompanyModulePolicy::class,
-        UserProfile::class                  => UsersModulePolicy::class,
         PixelUser::class                    => UsersModulePolicy::class,
         UserProfile::class                  => UserProfilePolicy::class,
         Signature::class                    => SignaturePolicy::class

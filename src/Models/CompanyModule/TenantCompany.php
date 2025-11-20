@@ -65,6 +65,8 @@ class TenantCompany extends PixelCompany
     const REGISTRATIONS_DEFAULT_STATUS = "pending";
     const REGISTRATIONS_STATUSES = ["pending" , "active" , "inactive" , "rejected"];
 
+    protected static $modelsShouldPreventAccessingMissingAttributes = false;
+    
     public $fillable = [
         'hashed_id',
         'name',

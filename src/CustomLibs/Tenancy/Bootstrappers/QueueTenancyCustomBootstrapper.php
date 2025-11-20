@@ -30,6 +30,8 @@ class QueueTenancyCustomBootstrapper implements TenancyBootstrapper
      *
      * This is useful when you're changing the tenant's state (e.g. properties in the `data` column) and want the next job to initialize tenancy again
      * with the new data. Features like the Tenant Config are only executed when tenancy is initialized, so the re-initialization is needed in some cases.
+     * 
+     * @deprecated This now has no effect, tenancy is always ended between queued jobs.
      *
      * @var bool
      */
@@ -42,7 +44,7 @@ class QueueTenancyCustomBootstrapper implements TenancyBootstrapper
      */
     public static function __constructStatic(Application $app)
     {
-        static::setUpJobListener($app->make(Dispatcher::class), $app->runningUnitTests());
+        static::setUpJobListener($app->make(Dispatcher::class));
     }
 
     public function __construct(Repository $config, QueueManager $queue)
@@ -53,7 +55,7 @@ class QueueTenancyCustomBootstrapper implements TenancyBootstrapper
         $this->setUpPayloadGenerator();
     }
 
-    protected static function setUpJobListener($dispatcher, $runningTests)
+    protected static function setUpJobListener($dispatcher)
     {
         $previousTenant = null;
 
@@ -63,20 +65,19 @@ class QueueTenancyCustomBootstrapper implements TenancyBootstrapper
             static::initializeTenancyForQueue($event->job->payload()['tenant_company_domain'] ?? null);
         });
 
-        if (version_compare(app()->version(), '8.64', '>=')) {
-            // JobRetryRequested only exists since Laravel 8.64
-            $dispatcher->listen(JobRetryRequested::class, function ($event) use (&$previousTenant) {
-                $previousTenant = tenant();
 
-                static::initializeTenancyForQueue($event->payload()['tenant_company_domain'] ?? null);
-            });
-        }
+        // JobRetryRequested only exists since Laravel 8.64
+        $dispatcher->listen(JobRetryRequested::class, function ($event) use (&$previousTenant) {
+            $previousTenant = tenant();
 
-        // If we're running tests, we make sure to clean up after any artisan('queue:work') calls
-        $revertToPreviousState = function ($event) use (&$previousTenant, $runningTests) {
-            if ($runningTests) {
-                static::revertToPreviousState($event, $previousTenant);
-            }
+            static::initializeTenancyForQueue($event->payload()['tenant_company_domain'] ?? null);
+        });
+
+
+        $revertToPreviousState = function ($event) use (&$previousTenant) {
+            
+            static::revertToPreviousState($event, $previousTenant);
+            
         };
 
         $dispatcher->listen(JobProcessed::class, $revertToPreviousState); // artisan('queue:work') which succeeds
@@ -86,40 +87,17 @@ class QueueTenancyCustomBootstrapper implements TenancyBootstrapper
     protected static function initializeTenancyForQueue($tenantDomain)
     {
         if (! $tenantDomain) {
-            // The job is not tenant-aware
+             // The job is not tenant-aware, so we make sure tenancy isn't initialized.
             if (tenancy()->initialized) {
-                // Tenancy was initialized, so we revert back to the central context
+                
                 tenancy()->end();
             }
 
             return;
         }
-
-        if (static::$forceRefresh) {
-            // Re-initialize tenancy between all jobs
-            if (tenancy()->initialized) {
-                tenancy()->end();
-            }
-
-            $tenant = PixelTenancyManager::fetchApprovedTenantForDomain($tenantDomain);
-            
-            tenancy()->initialize($tenant);
-
-            return;
-        }
-
-        if (tenancy()->initialized) {
-            // Tenancy is already initialized
-            if (tenant()->domain === $tenantDomain) {
-                // It's initialized for the same tenant (e.g. dispatchNow was used, or the previous job also ran for this tenant)
-                return;
-            }
-        }
-
+ 
         $tenant = PixelTenancyManager::fetchApprovedTenantForDomain($tenantDomain);
-
-        // Tenancy was either not initialized, or initialized for a different tenant.
-        // Therefore, we initialize it for the correct tenant.
+ 
         tenancy()->initialize($tenant);
     }
 
@@ -127,14 +105,20 @@ class QueueTenancyCustomBootstrapper implements TenancyBootstrapper
     {
         $tenantDomain = $event->job->payload()['tenant_company_domain'] ?? null;
 
-        // The job was not tenant-aware
         if (! $tenantDomain) {
+            // The job was not tenant-aware, so there's nothing to revert
             return;
         }
 
-        // Revert back to the previous tenant
-        if (tenant() && $previousTenant && $previousTenant->isNot(tenant())) {
+         if (tenant() && $previousTenant && $previousTenant->is(tenant())) {
+            // dispatchNow() was used and the tenant in the job is the same as the previous tenant
+            return;
+        }
+        
+         if (tenant() && $previousTenant && $previousTenant->isNot(tenant())) {
+            // Revert back to the previous tenant (since Tenancy v3.8.5 this should should *likely* not happen)
             tenancy()->initialize($previousTenant);
+            return;
         }
 
         // End tenancy

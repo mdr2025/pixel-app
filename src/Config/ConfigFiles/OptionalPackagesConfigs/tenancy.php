@@ -114,7 +114,7 @@ return [
          * See https://tenancyforlaravel.com/docs/v3/tenancy-bootstrappers/#filesystem-tenancy-boostrapper
          */
         'root_override' => [
-            // Disks whose roots should be overriden after storage_path() is suffixed.
+            // Disks whose roots should be overridden after storage_path() is suffixed.
             /** (UNCOMMENT THE LINES BELLOW IF YOU ONLY WANT TO GIVE EACH TENANT SEPARATED DISKS , BUT IN OUR CASE : EACH DISK WILL HAVE EVERY TENANT FILES THOSE SHOULD BE UPLOADED INTO THAT DISK) . */
 //             'local' => '%storage_path%/tenant_suffix_%tenant%/app/',
 //             'public' => '%storage_path%/tenant_suffix_%tenant%/app/public/',
@@ -182,14 +182,14 @@ return [
      * enabled. But it may be useful to disable them if you use external
      * storage (e.g. S3 / Dropbox) or have a custom asset controller.
      */
-    'routes' => true,
+    'routes' => false,
 
     /**
      * Parameters used by the tenants:migrate command.
      */
     'migration_parameters' => [
         '--force' => true, // This needs to be true to run migrations in production.
-        '--path' => [database_path('migrations/tenant/PixelStandartMigrations')],//temp path ... remove PixelStandartMigrations Folder name when you want to run all migrations
+        '--path' => config('database-paths',database_path('migrations/tenant/PixelStandartMigrations')),
         '--realpath' => true,
     ],
 
@@ -198,6 +198,6 @@ return [
      */
     'seeder_parameters' => [
         '--class' => 'TenantDatabaseSeeder', // root seeder class
-        '--force' => true,
+         // '--force' => true, // This needs to be true to seed tenant databases in production
     ],
 ];
