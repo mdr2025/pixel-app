@@ -19,7 +19,7 @@ class BaseDropDownListModulesSeeder extends Seeder
         $this->call([
             AllLocationDataDatabaseSeeder::class,
             BranchesSeeder::class,
-            DepartmentsTableSeeder::class,
+            // DepartmentsTableSeeder::class,
             CurrenciesSeeder::class
         ]);
     }

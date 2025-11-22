@@ -55,7 +55,7 @@ class PixelAppPackageServiceProvider extends ServiceProvider
 
         $this->registerRepositryInterfaces();
 
-        $this->registerHttpKernel();
+        // $this->registerHttpKernel();
         $this->registerConsoleKernel();
         $this->registerCustomExceptionHandler();
 
@@ -78,14 +78,14 @@ class PixelAppPackageServiceProvider extends ServiceProvider
     }
 
 
-    protected function registerHttpKernel() : void
-    {
-        $this->app->singleton(HttpKernel::class , '\App\Http\Kernel.php');
-    }
+    // protected function registerHttpKernel() : void
+    // {
+    //     $this->app->singleton(HttpKernel::class , '\App\Http\Kernel.php');
+    // }
 
     protected function registerConsoleKernel() : void
     {
-        $this->app->singleton(ConsoleKernel::class , '\App\Console\Kernel.php');
+        // $this->app->singleton(ConsoleKernel::class , '\App\Console\Kernel.php');
     }
 
     protected function registerCustomExceptionHandler() : void

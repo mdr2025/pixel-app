@@ -15,16 +15,7 @@ use PixelApp\Services\UserEncapsulatedFunc\RegistrableUserHandlers\RegistrableUs
  * @property TenantCompany $Model
  */
  class CompanyRegisteringService extends SingleRowStoringService
-{
- 
-    protected function anyAdditionActions(): void {
-        // $crNo = $this->data['related_cr_no'] ?? null;
-        // if ($crNo){
-        //     $companyParent = $this->getModelClass()::where('cr_no', $crNo)->firstOrFail();
-        //     $this->data['parent_id'] = $companyParent->id;
-        // }
-    }
-     
+{    
     protected function getModelClass(): string
     {
         return PixelTenancyManager::getTenantCompanyModelClass();;
@@ -76,7 +67,6 @@ use PixelApp\Services\UserEncapsulatedFunc\RegistrableUserHandlers\RegistrableUs
      */
     protected function onAfterDbTransactionStart(): void
     {
-        $this->anyAdditionActions();
         $this->overrideDefaultAdminData();
         $this->injectCompanyMobile();
     }

@@ -8,9 +8,9 @@ interface DepartmentRepositoryInterface
 {
     public function fetchDepartmentById(int $id) : ?Department;
     public function fetchDepartmentByIdOrFail(int $id) : Department;
+    public function fetchMainBranchFirstDepartment() : ?Department;
     public function getDepartments();
     public function getDepartmentsGroupByBranch();
     public function getCountActiveDepartments();
     public function getListDepartments();
-    public function validateUsersBelongToDepartmentOrUnassigned(array $usersIds, Department $department): bool;
 }

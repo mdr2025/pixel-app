@@ -37,7 +37,8 @@ class Branch extends PixelBaseModel implements OwnsRelationships
         'status' => 'boolean',
     ];
 
-    protected function afterCreated(Branch $branch) : void
+
+    protected function afterCreated(self $branch) : void
     {
         $departments = config('departments', []);
 
@@ -66,24 +67,24 @@ class Branch extends PixelBaseModel implements OwnsRelationships
     {
         parent::booted();
 
-        static::created(function (Branch $branch)
+        static::created(function (self $branch)
         {
             $this->afterCreated($branch);
         });
 
-        static::deleted(function (Branch $branch)
+        static::deleted(function (self $branch)
         {
             $this->afterDeleted($branch);
         });
     }
 
-    protected function afterDeleted(Branch $branch) : void
+    protected function afterDeleted(self $branch) : void
     {
         // Remove branch from all super admin users accessible branches
         $superAdminUserIds = static::getUserModelClass()::where('role_id', 1)->pluck('id');
         $branch->usersWithAccess()->detach($superAdminUserIds);
 
-        //for remove this later
+        //for remove this later`
         // $superAdminUsers = User::where('role_id', 1)->get();
         // foreach ($superAdminUsers as $user) {
         //     $user->accessibleBranches()->detach($branch->id);

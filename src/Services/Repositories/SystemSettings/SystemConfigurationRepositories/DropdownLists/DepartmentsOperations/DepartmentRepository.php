@@ -20,6 +20,21 @@ class DepartmentRepository implements DepartmentRepositoryInterface
         return  PixelModelManager::getModelForModelBaseType(Department::class);
     }
 
+    public function fetchMainBranchFirstDepartment() : ?Department
+    {
+        $branchModelClass = $this->getBranchModelClass();
+
+        return $this->initDepartmentSpatieQueryBuilder()
+                    ->whereHas(
+                        "branch" ,
+                        function($query) use ($branchModelClass)
+                        {
+                            $query->where("name" , $branchModelClass::getMainBranchName());
+                        })
+                    ->whereIn("name" , ["IT" , "HR"])
+                    ->first();
+    }
+
     public function fetchDepartmentById(int $id) : ?Department
     {
         return $this->getDepartmentModelClass()::find($id);
@@ -93,19 +108,5 @@ class DepartmentRepository implements DepartmentRepositoryInterface
     protected function getUserModelClass() : string
     {
         return PixelModelManager::getUserModelClass();
-    }
-
-    public function validateUsersBelongToDepartmentOrUnassigned(array $usersIds, Department $department): bool
-    {
-        $userModelClass = $this->getUserModelClass();
-
-        $count = $userModelClass::whereIn('id', $usersIds)
-                                ->where(function ($query) use ($department) {
-                                    $query->where('department_id', $department->id)
-                                        ->orWhereNull('department_id');
-                                })
-                                ->count();
-
-        return $count === count($usersIds);
     }
 }

@@ -15,7 +15,7 @@ trait BelongsToDepartmentMethods
      /**
      * Department Type Constants
      */
-    public const DEP_TYPES = ['manager', 'rep'];
+    public const DEP_TYPES = ['manager', 'rep' , 'engineer'];
     public const DEP_TYPE_MANAGER = 'manager';
     public const DEP_TYPE_REP = 'rep';
 

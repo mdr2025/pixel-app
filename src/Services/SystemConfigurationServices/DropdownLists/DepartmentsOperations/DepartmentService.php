@@ -2,14 +2,11 @@
 
 namespace PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations;
 
-use PixelApp\Models\SystemConfigurationModels\Department;
-use PixelApp\Models\ModelConfigs\DropdownLists\DepartmentsOperations\DepartmentConfig;
+
 use PixelApp\Services\PixelServiceManager;
 use PixelApp\Services\Repositories\RepositryInterfaces\SystemConfigurationRepositryInterfaces\DepartmentRepositoryInterface;
-use PixelApp\Services\Repositories\SystemSettings\SystemConfigurationRepositories\DropdownLists\DepartmentsOperations\DepartmentRepository;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\ExpImpServices\ExportingServices\CSVExporter;
 use PixelApp\Services\SystemConfigurationServices\DropdownLists\DepartmentsOperations\ExpImpServices\ImportingFunc\DepartmentsImporter;
-use PixelApp\Traits\FileExport;
 
 class DepartmentService
 {
@@ -60,27 +57,7 @@ class DepartmentService
         $department = $this->initDepartmentRepositry()->fetchDepartmentByIdOrFail($departmentId);
         $service = PixelServiceManager::getServiceForServiceBaseType(DepartmentDeletingService::class);
         return (new $service($department))->delete();
-    }
-
-    public function validateToAssignSupervisors($request, int $departmentId): bool
-    {
-        $department = $this->initDepartmentRepositry()->fetchDepartmentByIdOrFail($departmentId);
-
-        // Get users ids from request
-        $usersIds = $request->department_rep_ids ?? [];
-
-        // Validate users belong to department or unassigned
-        if (!empty($usersIds)) {
-            $isValid = $this->initDepartmentRepositry()->validateUsersBelongToDepartmentOrUnassigned($usersIds, $department);
-
-            if (!$isValid)
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
+    } 
 
     public function import()
     {

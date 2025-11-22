@@ -66,7 +66,6 @@ class DepartmentRouteRegistrar extends PixelRouteRegistrar
         Route::get('system-configs/departments/list', [DepartmentsController::class , 'list']);
         Route::post('system-configs/departments/{department}', [DepartmentsController::class , 'update']);
         Route::delete('system-configs/departments/{department}', [DepartmentsController::class , 'destroy']);
-        Route::post('system-configs/departments/assign-supervisors/{department}', [DepartmentsController::class , 'assignSupervisors']);
 
     }
 

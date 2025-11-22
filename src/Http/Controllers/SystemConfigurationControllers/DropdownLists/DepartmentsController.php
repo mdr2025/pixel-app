@@ -87,19 +87,7 @@ class DepartmentsController extends Controller
                     ['user_id' => Auth::id(), 'request' => request()->all()]
                 );
     }
-
-    public function assignSupervisors(DepartmentSupervisorsRequest $request, int $department): JsonResponse
-    {
-        $result = $this->departmentService->validateToAssignSupervisors($request, $department);
-
-        if (!$result)
-        {
-            return Response::error('Supervisors assignment failed');
-        }
-
-        return Response::success([], ['Supervisors assigned successfully']);
-    }
-
+ 
     public function import(Request $request): JsonResponse
     {
         return $this->surroundWithTransaction(

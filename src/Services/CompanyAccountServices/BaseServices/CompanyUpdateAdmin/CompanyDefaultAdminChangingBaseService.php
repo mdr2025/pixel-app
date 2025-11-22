@@ -90,7 +90,7 @@ abstract class CompanyDefaultAdminChangingBaseService
 
     protected function markNewAdminUserAsDefaultUser() : void
     {
-        $this->initDefaultUserPopChanger()->setAuthenticatable($this->newAdminUser)->convertToDefaultUser()->changeAuthenticatableProp();
+        $this->initDefaultUserPopChanger()->setAuthenticatable($this->newAdminUser)->markAsDefaultSuperAdminUser()->changeAuthenticatableProp();
     }
 
     //default prop changing methods - end of part

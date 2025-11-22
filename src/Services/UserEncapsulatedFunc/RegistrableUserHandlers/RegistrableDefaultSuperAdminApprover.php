@@ -12,6 +12,7 @@ use PixelApp\Models\SystemConfigurationModels\Branch;
 use PixelApp\Models\SystemConfigurationModels\Department;
 use PixelApp\Models\SystemConfigurationModels\RoleModel;
 use PixelApp\Models\UsersModule\PixelUser;
+use PixelApp\Services\Repositories\RepositryInterfaces\SystemConfigurationRepositryInterfaces\DepartmentRepositoryInterface;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\EmailAuthenticatableSensitivePropChangers\VerificationPropsChanger;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\BranchChanger;
 use PixelApp\Services\UserEncapsulatedFunc\UserSensitiveDataChangers\UserSensitivePropChangers\DefaultUserPopChanger;
@@ -76,9 +77,9 @@ class RegistrableDefaultSuperAdminApprover
      * @return $this
      * @throws Exception
      */
-    protected function convertToDefaultUser() : self
+    protected function markAsDefaultSuperAdminUser() : self
     {
-        (new DefaultUserPopChanger())->setAuthenticatable($this->user)->convertToDefaultUser()->changeAuthenticatablePropOrFail();
+        (new DefaultUserPopChanger())->setAuthenticatable($this->user)->markAsDefaultSuperAdminUser()->changeAuthenticatablePropOrFail();
         return  $this;
     }
     /**
@@ -128,6 +129,12 @@ class RegistrableDefaultSuperAdminApprover
     {
         return PixelModelManager::getModelForModelBaseType(Department::class);
     }
+
+    protected function initDepartmentRepositryInterface() : DepartmentRepositoryInterface
+    {
+        return app(DepartmentRepositoryInterface::class);
+    }
+
     /**
      * @return $this
      * @throws Exception
@@ -137,9 +144,10 @@ class RegistrableDefaultSuperAdminApprover
     {
         if($this->user instanceof BelongsToDepartment)
         { 
-            $departmentClass = $this->getDepartmentModelClass();
+            $defaultDeparment = $this->initDepartmentRepositryInterface()->fetchMainBranchFirstDepartment();
+
             (new DepartmentChanger())->setAuthenticatable( $this->user )
-                                     ->setDepartment( $departmentClass::findTeamManagementDepartment() )
+                                     ->setDepartment( $defaultDeparment )
                                      ->changeAuthenticatablePropOrFail();
         }
         
@@ -155,13 +163,13 @@ class RegistrableDefaultSuperAdminApprover
      * @throws Exception
       * @todo later : must be implemented by the child system (must be a func to do extra somthings by child classes )
      */
-    protected function setHeadQuarterBranch() : self
+    protected function setMainBranch() : self
     { 
         if($this->user instanceof BelongsToBranch)
         {
             $branchClass = $this->getBranchModelClass();
             (new BranchChanger())->setAuthenticatable( $this->user ) 
-                                 ->setBranch( $branchClass::findHeadquarter() )
+                                 ->setBranch( $branchClass::findMainBranch())
                                  ->changeAuthenticatablePropOrFail(); 
         }
         return $this;
@@ -177,11 +185,11 @@ class RegistrableDefaultSuperAdminApprover
          * operations on user
          */
         $this->setDefaultRole()
+             ->setMainBranch()
              ->setDefaultDepartment() 
-             ->setHeadQuarterBranch()
              ->setAcceptedAdminStatus()
              ->verifyAdmin()
-             ->convertToDefaultUser();
+             ->markAsDefaultSuperAdminUser();
  
         /**
          * returning the initialized and approved user

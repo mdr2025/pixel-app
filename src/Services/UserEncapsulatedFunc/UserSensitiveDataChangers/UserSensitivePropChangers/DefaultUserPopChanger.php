@@ -13,7 +13,7 @@ class DefaultUserPopChanger extends UserSensitivePropChanger
     {
         return 'default_user';
     }
-    public function convertToDefaultUser() : self
+    public function markAsDefaultSuperAdminUser() : self
     {
         $this->defaultUser  = true;
         return $this;

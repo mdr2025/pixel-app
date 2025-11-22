@@ -169,6 +169,7 @@ class BranchRepository implements BranchRepositoryInterface
 
             $userModelClass::where('department_id', $departmentId)
                             ->whereIn('id', $request->input($key))
+                            ->allowedUsers()
                             ->update(['dep_role' => $role]);
         }
     }
