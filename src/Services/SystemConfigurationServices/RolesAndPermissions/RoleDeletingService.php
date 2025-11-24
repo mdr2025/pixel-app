@@ -61,6 +61,7 @@ class RoleDeletingService
             throw new Exception("Failed To Delete Role");
         }
         
+        return true;
     }
 
     /**
@@ -89,10 +90,6 @@ class RoleDeletingService
             {
                 throw new Exception("Role can not be deleted as it has assigned users");
             }
-
-            
-            //If It Fails To Switch Users .... An Exception Will Be Thrown And The Deleting Operation Will Stop
-            $this->switchUsersToDefaultRole();
 
             //We Don't Check If Deleting Methods Gets true or False ... Because They Didn't Throw Any Exception That Means The Deleting Is Successful
             if ($forcedDelete) {

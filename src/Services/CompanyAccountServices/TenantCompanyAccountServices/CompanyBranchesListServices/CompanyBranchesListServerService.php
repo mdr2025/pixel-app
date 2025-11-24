@@ -64,7 +64,7 @@ class CompanyBranchesListServerService
            return response()->json(['list' => $branches]);
 
         }else{
-            return Response::error("There is no tenant company has this domain" , []);
+            return Response::error("There is no tenant company has this domain" );
         }
         
     }

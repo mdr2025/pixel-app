@@ -81,7 +81,8 @@ class TenantCompany extends PixelCompany
         'branches_no',
         'cr_no',
         'parent_id',
-        'type'
+        'type',
+        'abbreviation'
     ];
     
     public static function getTableName() : string

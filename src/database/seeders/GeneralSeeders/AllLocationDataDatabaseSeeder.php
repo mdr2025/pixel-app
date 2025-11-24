@@ -3,7 +3,7 @@
 namespace PixelApp\Database\Seeders\GeneralSeeders;
 
 use Illuminate\Database\Seeder;
-use PixelApp\Database\Seeders\SystemConfigSeeders\DropdownListSeeders\AreasSeeder;
+use PixelApp\Database\Seeders\SystemConfigSeeders\DropdownListSeeders\GeographicalAreasSeeder;
 use PixelApp\Database\Seeders\SystemConfigSeeders\DropdownListSeeders\CitiesSeeder;
 use PixelApp\Database\Seeders\SystemConfigSeeders\DropdownListSeeders\CountriesSeeder;
 
@@ -19,7 +19,7 @@ class AllLocationDataDatabaseSeeder extends Seeder
         $this->call([
            CountriesSeeder::class,
            CitiesSeeder::class,
-           AreasSeeder::class
+           GeographicalAreasSeeder::class
         ]);
     }
 }

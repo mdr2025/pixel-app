@@ -2,20 +2,27 @@
 
 namespace PixelApp\Database\Seeders;
 
-use Database\Seeders\CompanyResetSeeder;
-use Exception;
+use Illuminate\Support\Facades\File;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\PixelAppStubsManager;
 use PixelApp\CustomLibs\PixelCycleManagers\PixelAppStubsManager\StubIdentifiers\StubIdentifier;
 use PixelApp\CustomLibs\Tenancy\PixelTenancyManager;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class PixelSeedersStubManager extends PixelAppStubsManager
 {
 
     public function replaceSeederStubs() : void
     {
-        $this->replaceCompanyResetSeederStub();
-        $this->replaceDatabaseSeederStub();
-        $this->replaceTenantDatabaseSeederStub();
+        $stubFiles = $this->scanAllSeederStubs();
+        
+        foreach($stubFiles as $stubPath)
+        {
+            if($this->shouldReplaceStub($stubPath))
+            {
+                $this->replaceStubFileAutomatically($stubPath);
+            }
+        }
     }
     
     protected function initSeederStubIdentifier(string $stubPath , string $replacingPath) : StubIdentifier
@@ -23,45 +30,9 @@ class PixelSeedersStubManager extends PixelAppStubsManager
         return StubIdentifier::create($stubPath , $replacingPath);
     }
 
-    protected function replaceCompanyResetSeederStub() : void
-    {
-        $stubPath =  $this->getCompanyResetSeederStubPath();
-        $replacingPath = $this->getCompanyResetSeederProjectPath();
-        $stubIdentifier = $this->initSeederStubIdentifier($stubPath , $replacingPath );
-        
-        $this->replaceStubFile($stubIdentifier);
-    }
-
-    protected function replaceDatabaseSeederStub() : void
-    {
-        $stubPath =  $this->getDatabaseSeederStubPath();
-        $replacingPath = $this->getDatabaseSeederProjectPath(); 
-        $stubIdentifier = $this->initSeederStubIdentifier($stubPath , $replacingPath );
-        
-        $this->replaceStubFile($stubIdentifier);
-    }
-
-    
     protected function doesItNeedTenantStubReplacement() : bool
     {
         return $this->isItMonolithApp() || $this->isItTenantApp();
-    }
-
-    protected function replaceTenantDatabaseSeederStub() : void
-    {
-        if($this->doesItNeedTenantStubReplacement())
-        {
-            $stubPath =  $this->getTenantDatabaseSeederStubPath();
-            $replacingPath = $this->getTenantDatabaseSeederProjectPath();
-            $stubIdentifier = $this->initSeederStubIdentifier($stubPath , $replacingPath );
-            
-            $this->replaceStubFile($stubIdentifier);
-        }
-    }
-
-    protected function processRealPath(string $path)  :string
-    {
-        return realpath($path);
     }
 
     protected function getPackageSeederStubFolderPath() : string
@@ -69,66 +40,102 @@ class PixelSeedersStubManager extends PixelAppStubsManager
         return __DIR__ . "/SeederStubs";
     }
 
-    protected function getStubRealPath(string $stubFileName) : string
+    protected function scanAllSeederStubs() : array
     {
-        $path = $this->getPackageSeederStubFolderPath() . "/" . $stubFileName;
-        return $this->processRealPath($path);
+        $stubsPath = $this->getPackageSeederStubFolderPath();
+        
+        if(!is_dir($stubsPath))
+        {
+            return [];
+        }
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($stubsPath, RecursiveDirectoryIterator::SKIP_DOTS)
+        );
+        
+        $stubFiles = [];
+        foreach($iterator as $file)
+        {
+            if($file->isFile() && $file->getExtension() === 'php')
+            {
+                $stubFiles[] = $file->getPathname();
+            }
+        }
+        
+        return $stubFiles;
     }
 
-    protected function getCompanyResetSeederFileName() : string
+    protected function shouldReplaceStub(string $stubPath) : bool
     {
-        return "CompanyResetSeeder.php";
+        // Check if stub path contains "Tenant" keyword
+        if(stripos($stubPath, 'Tenant') !== false)
+        {
+            return $this->doesItNeedTenantStubReplacement();
+        }
+        
+        return true;
     }
 
-    protected function getCompanyResetSeederStubPath() : string
+    protected function replaceStubFileAutomatically(string $stubPath) : void
     {
-        $fileName = $this->getCompanyResetSeederFileName();
-        return $this->getStubRealPath( $fileName );
-    }
-    
-    protected function getCompanyResetSeederProjectPath() : string
-    {
-        $fileName = $this->getCompanyResetSeederFileName();
-        return $this->getProjectSeedersFilePath( $fileName );
-    }
-
-    protected function getDatabaseSeederFileName() : string
-    {
-        return "DatabaseSeeder.php";
+        $namespace = $this->extractNamespaceFromStub($stubPath);
+        if($namespace === null)
+        {
+            return;
+        }
+        
+        $fileName = basename($stubPath);
+        $replacingPath = $this->getProjectSeedersFilePathFromNamespace($namespace, $fileName);
+        $stubIdentifier = $this->initSeederStubIdentifier($stubPath, $replacingPath);
+        
+        $this->replaceStubFile($stubIdentifier);
     }
 
-    protected function getDatabaseSeederProjectPath() :  string
+    protected function extractNamespaceFromStub(string $stubPath) : ?string
     {
-        $fileName = $this->getDatabaseSeederFileName();
-        return $this->getProjectSeedersFilePath( $fileName );
+        if(!file_exists($stubPath))
+        {
+            return null;
+        }
+
+        $content = File::get($stubPath);
+        
+        if(preg_match('/namespace\s+([^;]+);/', $content, $matches))
+        {
+            return trim($matches[1]);
+        }
+
+        return null;
     }
 
-    protected function getDatabaseSeederStubPath() : string
+    protected function convertNamespaceToDirectoryPath(string $namespace) : string
     {
-        $fileName = $this->getDatabaseSeederFileName();
-        return $this->getStubRealPath( $fileName );
+        // Remove "Database\Seeders" prefix
+        $namespace = preg_replace('/^Database\\\\Seeders\\\\?/', '', $namespace);
+        
+        // Convert namespace separators to directory separators
+        $directoryPath = str_replace('\\', '/', $namespace);
+        
+        return $directoryPath;
     }
 
-    protected function getTenantDatabaseSeederFileName() : string
+    protected function getProjectSeedersFilePathFromNamespace(string $namespace, string $fileName) : string
     {
-        return "TenantDatabaseSeeder.php";
-    }
-
-    protected function getTenantDatabaseSeederProjectPath() :  string
-    {
-        $fileName = $this->getTenantDatabaseSeederFileName();
-        return $this->getProjectSeedersFilePath( $fileName );
-    }
-
-    protected function getTenantDatabaseSeederStubPath() : string
-    {
-        $fileName = $this->getTenantDatabaseSeederFileName();
-        return $this->getStubRealPath( $fileName );
-    }
-
-    protected function getProjectSeedersFilePath(string $fileName) : string
-    {
-        return database_path("seeders/" . $fileName);
+        $directoryPath = $this->convertNamespaceToDirectoryPath($namespace);
+        
+        $fullPath = database_path("seeders");
+        
+        if(!empty($directoryPath))
+        {
+            $fullPath .= "/" . $directoryPath;
+            // Ensure directory exists
+            if(!File::isDirectory($fullPath))
+            {
+                File::makeDirectory($fullPath, 0755, true);
+            }
+        }
+        
+        return $fullPath . "/" . $fileName;
     }
 
     protected function isItTenantApp() : bool

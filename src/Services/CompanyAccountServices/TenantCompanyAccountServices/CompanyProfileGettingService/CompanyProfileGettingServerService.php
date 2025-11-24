@@ -42,7 +42,7 @@ class CompanyProfileGettingServerService  extends CompanyProfileGettingBaseServi
 
     protected function getErrorResponse() : JsonResponse
     {
-        return Response::error("There is no such tenant company has this domain stored in the database !" , []);
+        return Response::error("There is no such tenant company has this domain stored in the database !" );
     }
     
     protected function getRequest() : Request

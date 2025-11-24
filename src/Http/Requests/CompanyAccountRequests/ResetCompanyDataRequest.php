@@ -36,7 +36,7 @@ class ResetCompanyDataRequest extends BaseFormRequest
     public function messages(): array
     {
         return [
-            'action' => 'Action "DELETE" must written correctly'
+            'text.required' => 'Please confirm the system reseting operaion by write DELETE to the field !'
         ];
     }
 }

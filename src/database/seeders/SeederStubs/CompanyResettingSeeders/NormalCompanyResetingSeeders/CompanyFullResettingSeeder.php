@@ -2,9 +2,16 @@
 
 namespace Database\Seeders\NormalCompanyResetingSeeders;
 
-use Database\Seeders\DatabaseSeeder;
+use Illuminate\Database\Seeder;
+use PixelApp\Database\Seeders\SystemConfigSeeders\DropdownListSeeders\BranchesSeeder;
+use PixelApp\Database\Seeders\SystemConfigSeeders\RolesAndPermissionsSeeders\PermissionsSeeder;
+use PixelApp\Database\Seeders\SystemConfigSeeders\RolesAndPermissionsSeeders\RolesSeeder;
 
-class CompanyFullResettingSeeder extends DatabaseSeeder
+/**
+ * This seeder can be used when a normal app company want to execute a  full reset data
+ * NOT ON NEW PROJECT SETUP PROCESS
+ */
+class CompanyFullResettingSeeder extends Seeder
 {
     /**
      * Seed the application's database.
@@ -13,6 +20,10 @@ class CompanyFullResettingSeeder extends DatabaseSeeder
      */
     public function run()
     {
-        parent::run();
+        $this->call([
+            PermissionsSeeder::class,
+            RolesSeeder::class,
+            BranchesSeeder::class
+        ]);
     }
 }

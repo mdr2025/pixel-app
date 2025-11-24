@@ -12,7 +12,7 @@ use PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\NormalComp
 use PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\TenantCompanyAccountRouteRegistrars\TenantCompanyProfileAPIRoutesRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\TenantCompanyAccountRouteRegistrars\TenantCompanyResourcesConfiguringAPIRoutesRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\CompanyAccountRouteRegistrars\TenantCompanyAccountRouteRegistrars\TenantCompanySettingsAPIRoutesRegistrar;
-use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\AreasRouteRegistrar;
+use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\GeographicalAreasRouteRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\BranchesRouteRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\CitiesRouteRegistrar;
 use PixelApp\Routes\RouteRegistrarTypes\SystemConfigurationRouteRegistrars\DropdownListRouteRegistrars\CountriesRouteRegistrar;
@@ -57,7 +57,7 @@ class PixelRouteManager
             TenantCompanySettingsAPIRoutesRegistrar::class,
 
             //system configuration route registrars
-            AreasRouteRegistrar::class,
+            GeographicalAreasRouteRegistrar::class,
             BranchesRouteRegistrar::class,
             CitiesRouteRegistrar::class,
             CountriesRouteRegistrar::class,

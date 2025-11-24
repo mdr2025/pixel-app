@@ -10,6 +10,9 @@
         'oauth_access_tokens',
         'oauth_refresh_tokens',
         'countries',
+        'cities',
+        'geo_areas',//@todo later
+        'currencies',
         'settings',
     ];
 

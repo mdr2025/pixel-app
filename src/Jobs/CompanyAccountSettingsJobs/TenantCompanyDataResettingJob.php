@@ -2,9 +2,9 @@
 
 namespace PixelApp\Jobs\CompanyAccountSettingsJobs;
 
-use Database\Seeders\TenantDatabaseSeeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
+use PixelApp\Database\Seeders\PixelSeedersManager;
 
 class TenantCompanyDataResettingJob extends CompanyDataResettingBaseJob
 {
@@ -15,20 +15,24 @@ class TenantCompanyDataResettingJob extends CompanyDataResettingBaseJob
      */
     public function seedDatabase()
     {
-        $seederClass = TenantDatabaseSeeder::class;
+        $seederClass = $this->getSeederClass();
 
         Log::info("ResetCompanyDataJob: running seeder: {$seederClass}");
           
         Artisan::call('tenant-company:seed', [
             'companyDomain' => tenant()->domain,
-            '--class'   => TenantDatabaseSeeder::class
+            '--class'   => $seederClass
         ]); 
 
         Log::info('ResetCompanyDataJob: seeder completed.');
     }
 
-    protected function getSeedingClass() : string
+    protected function getSeederClass() : string
     {
-        
+        return match($this->resetType) {
+            'full' => PixelSeedersManager::getTenantCompanyFullResettingSeederClass(),
+            'partial' => PixelSeedersManager::getTenantCompanyPartialResettingSeederClass(),
+            default => PixelSeedersManager::getTenantCompanyFullResettingSeederClass(),
+        };
     }
 }

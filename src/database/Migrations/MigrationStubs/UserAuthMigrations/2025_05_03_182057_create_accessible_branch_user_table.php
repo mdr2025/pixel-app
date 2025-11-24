@@ -15,7 +15,7 @@ class CreateAccessibleBranchUserTable extends Migration
     {
         Schema::create('accessible_branch_user', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('branch_id')->constrained('branches')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('branch_id')->constrained('branches')->restrictOnDelete()->cascadeOnUpdate();
             $table->primary(['user_id', 'branch_id']);
         });
     }

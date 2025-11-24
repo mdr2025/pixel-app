@@ -65,19 +65,6 @@ class RoleDisablingSwitcher extends UpdatingBaseClass
             throw new Exception("Can't Change Disabling Status Of A Default Role");
         }
 
-        //need to check this condition ... because the related users default role switching funcs are already ready to handle this case 
-        if (
-                $this->role->user()->activeUsers()->count() != 0 
-                &&
-                isset($this->data["status"]) 
-                &&
-                $this->data["status"] == 0
-            )
-        {
-            throw new Exception("Role can not be deactivated as it has assigned users ");
-        }
-
-
         DB::beginTransaction();
 
         //If No Exception Is Thrown ... The Status Of Role Has Been Changed

@@ -4,7 +4,7 @@ namespace PixelApp\Models\Traits\OptionalRelationsTraits;
 
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use PixelApp\Models\SystemConfigurationModels\CountryModule\City;
-use PixelApp\Models\SystemConfigurationModels\CountryModule\Area;
+use PixelApp\Models\SystemConfigurationModels\CountryModule\GeographicalArea;
 use PixelApp\Models\PixelModelManager;
 
 trait HasManyThroughCityMethods

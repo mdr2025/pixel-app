@@ -8,6 +8,9 @@ use PixelApp\Database\Seeders\GeneralSeeders\BaseDropDownListModulesSeeder;
 use PixelApp\Database\Seeders\SystemConfigSeeders\RolesAndPermissionsSeeders\PermissionsSeeder;
 use PixelApp\Database\Seeders\SystemConfigSeeders\RolesAndPermissionsSeeders\RolesSeeder;
 
+/**
+ * This seeder can be used on central context of monolith app , normal app , admin panel app
+ */
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -29,6 +32,11 @@ class DatabaseSeeder extends Seeder
         ]);
     }
 
+    /**
+     * Once this seeder is run on central app 
+     * it is not necessary for tenant app typed application  ... and maybe will be run accidentally and getting failure
+     * In tenant app typed application central context 's database is only used for jobs or similar things
+     */
     protected function doesAppNeedsCentralDBPermissions() : bool
     {
         return !PixelAppBootingManager::isBootingForTenantApp();
